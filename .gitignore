@@ -1,0 +1,11 @@
+node_modules/
+android/app/build/
+android/build/
+android/.gradle/
+android/.idea/
+android/local.properties
+*.apk
+server/alvorada.env
+server/node_modules
+tools/
+*.zip

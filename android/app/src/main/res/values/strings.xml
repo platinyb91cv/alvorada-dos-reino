@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">Alvorada dos Reinos</string>
+    <string name="title_activity_main">Alvorada dos Reinos</string>
+    <string name="package_name">cv.fabis.alvorada</string>
+    <string name="custom_url_scheme">cv.fabis.alvorada</string>
+</resources>
