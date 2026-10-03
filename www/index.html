@@ -1214,6 +1214,11 @@ function canPlace(type,tx,ty,o,margin,skipVis){
   }
   return true;
 }
+// doca: encaixa sozinha na margem mais próxima (até 6 casas) para não ser preciso acertar ao quadrado
+function placeSnap(type,tx,ty){const d=BLDS[type];if(!d.dock||canPlace(type,tx,ty,ME))return{tx,ty,ok:canPlace(type,tx,ty,ME)};
+  let best=null,bd=1e9;for(let y=ty-6;y<=ty+6;y++)for(let x=tx-6;x<=tx+6;x++){const dd=(x-tx)*(x-tx)+(y-ty)*(y-ty);if(dd<bd&&canPlace(type,x,y,ME)){bd=dd;best={tx:x,ty:y,ok:true}}}
+  return best||{tx,ty,ok:false}}
+function setPlaceAt(w){const d=BLDS[placing.type];const q=placeSnap(placing.type,Math.floor(w.x-d.w/2+.5),Math.floor(w.y-d.h/2+.5));placing.tx=q.tx;placing.ty=q.ty}
 function placeBuilding(o,type,tx,ty,builders){
   const d=BLDS[type];
   if(P[o].age<d.age)return null;
@@ -3556,7 +3561,7 @@ function cmdRetreat(units){const tc=homeOf(ME);if(!tc){toast('Não há Centro da
 function infoHTML(){
   if(placing){const d=BLDS[placing.type];
     if(placing.line){const n=placing.a?lineTiles(placing.a,placing.b||placing.a).filter(([x,y])=>canPlace(placing.type,x,y,ME)).length:0;return `<img class="port" src="${portrait('b',placing.type,ME)}" alt=""><div class="txt"><h3>${d.name}</h3><div class="muted">${costHTML(d.cost)} por segmento${n?' · '+n+' segmentos':''}</div><div class="muted">${!placing.a?'Toca no início da muralha.':'Toca no fim e depois em ✔️.'}</div></div>`}
-    return `<img class="port" src="${portrait('b',placing.type,ME)}" alt=""><div class="txt"><h3>${d.name}</h3><div class="muted">${costHTML(d.cost)}</div><div class="muted">${placing.tx==null?'Toca no mapa para escolher o local.':'Toca em ✔️ para confirmar ou toca noutro sítio.'}</div></div>`}
+    return `<img class="port" src="${portrait('b',placing.type,ME)}" alt=""><div class="txt"><h3>${d.name}</h3><div class="muted">${costHTML(d.cost)}</div><div class="muted">${placing.tx==null?(d.dock?'Toca perto da água: a Doca encaixa sozinha na margem.':'Toca no mapa para escolher o local.'):'Toca em ✔️ para confirmar ou toca noutro sítio.'}</div></div>`}
   if(!sel.length){return `<div class="txt"><h3>${AGES[P[ME].age]}</h3><div class="muted">Toca numa unidade ou edifício.</div><div class="stats2"><span>${ri('pop')} Aldeões ${ents.filter(e=>e.kind==='u'&&e.o===ME&&e.type==='aldeao').length}</span><span><i class="ic">${IC.army}</i> Exército ${ents.filter(e=>e.kind==='u'&&e.o===ME&&e.d.mil).length}</span></div></div>`}
   if(sel.length>1){const g={};for(const e of sel)g[e.type]=(g[e.type]||0)+1;
     const hold=sel.filter(u=>u.stance==='hold').length,def=sel.filter(u=>u.stance==='defend').length,pat=sel.filter(u=>u.patrol).length;
@@ -3629,7 +3634,7 @@ function ownUnitsSel(){return sel.filter(e=>e.o===ME&&e.kind==='u')}
 function tap(sx,sy,touch,right){
   const w=s2w(sx,sy);
   if(placing&&placing.line){const t0={x:Math.floor(w.x),y:Math.floor(w.y)};if(!placing.a){placing.a=t0;placing.b=t0}else if(touch){placing.b=t0}else{placing.b=t0;confirmPlace()}uiDirty=true;return}
-  if(placing){const d=BLDS[placing.type];placing.tx=Math.floor(w.x-d.w/2+.5);placing.ty=Math.floor(w.y-d.h/2+.5);uiDirty=true;if(!touch)confirmPlace();return}
+  if(placing){setPlaceAt(w);uiDirty=true;if(!touch)confirmPlace();return}
   const e=pickAt(sx,sy,touch);
   const units=ownUnitsSel();
   const selB=sel.length===1&&sel[0].kind==='b'&&sel[0].o===ME&&sel[0].done&&sel[0].d.train?sel[0]:null;
@@ -3702,7 +3707,7 @@ function confirmPlace(){
   if(!placing||placing.tx==null)return;
   const d=BLDS[placing.type];
   if(!canAfford(ME,d.cost)){toast('Recursos insuficientes',true);return}
-  if(!canPlace(placing.type,placing.tx,placing.ty,ME)){toast('Não é possível construir aqui',true);return}
+  if(!canPlace(placing.type,placing.tx,placing.ty,ME)){toast(BLDS[placing.type].dock?'A Doca tem de ficar em terra, colada à água (lago ou rio já explorado).':'Não é possível construir aqui',true);return}
   act('place',{t:placing.type,tx:placing.tx,ty:placing.ty,u:ids(placing.builders.filter(alive))});
   placing=null;menuMode=null;uiDirty=true;
 }
@@ -3727,7 +3732,7 @@ cv.addEventListener('pointerdown',e=>{
 });
 cv.addEventListener('pointermove',e=>{
   if(!running)return;
-  if(placing&&e.pointerType==='mouse'&&!pointers.size){const w=s2w(e.clientX,e.clientY);const d=BLDS[placing.type];if(placing.line){if(placing.a)placing.b={x:Math.floor(w.x),y:Math.floor(w.y)}}else{placing.tx=Math.floor(w.x-d.w/2+.5);placing.ty=Math.floor(w.y-d.h/2+.5)}}
+  if(placing&&e.pointerType==='mouse'&&!pointers.size){const w=s2w(e.clientX,e.clientY);const d=BLDS[placing.type];if(placing.line){if(placing.a)placing.b={x:Math.floor(w.x),y:Math.floor(w.y)}}else setPlaceAt(w)}
   if(!pointers.has(e.pointerId))return;
   pointers.set(e.pointerId,{x:e.clientX,y:e.clientY});
   const g=gesture;if(!g)return;
