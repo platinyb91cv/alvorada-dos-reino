@@ -14,13 +14,13 @@ No painel do domínio krioldns.uk, cria um registo **A**:
 
 | Nome | Tipo | Valor |
 |---|---|---|
-| `jogo` | A | `169.58.189.68` |
+| `jogo` | A | `109.199.111.194` |
 
 ### 2. Enviar os ficheiros
 Corre isto no teu PC, na pasta onde está o zip:
 
 ```bash
-scp alvorada-dos-reinos.zip root@169.58.189.68:/opt/
+scp alvorada-dos-reinos.zip root@109.199.111.194:/opt/
 ```
 
 ### 3. Instalar no VPS
