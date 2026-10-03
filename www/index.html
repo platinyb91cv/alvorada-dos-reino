@@ -20,7 +20,7 @@
 }
 [hidden]{display:none!important}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;-webkit-user-select:none;user-select:none}
-html,body{margin:0;height:100%;background:var(--ink);color:var(--parch);font-family:var(--f-body);overflow:hidden;touch-action:none;overscroll-behavior:none}
+html,body{-webkit-touch-callout:none;margin:0;height:100%;background:var(--ink);color:var(--parch);font-family:var(--f-body);overflow:hidden;touch-action:none;overscroll-behavior:none}
 #app{position:fixed;inset:0}
 #game{position:absolute;inset:0;width:100%;height:100%;display:block;touch-action:none}
 button{font-family:inherit;color:inherit}
@@ -56,7 +56,7 @@ i[data-ic]{display:inline-flex;font-style:normal}
 .net{display:flex;align-items:center;gap:6px;height:26px;padding:0 10px;border-radius:13px;background:rgba(0,0,0,.35);font-size:12px;color:var(--parch);white-space:nowrap;max-width:200px;overflow:hidden}
 .net i{width:8px;height:8px;border-radius:50%;background:#7fd05a;flex:none}.net.mid i{background:#e2c14a}.net.bad i,.net.off i{background:var(--bad)}.net.off{color:var(--bad)}
 /* botões laterais */
-#side{position:absolute;right:calc(env(safe-area-inset-right,0px) + 10px);top:calc(env(safe-area-inset-top,0px) + 54px);display:flex;flex-direction:column;gap:8px;z-index:5}
+#side{position:absolute;right:calc(env(safe-area-inset-right,0px) + 10px);top:calc(env(safe-area-inset-top,0px) + 54px);display:flex;flex-direction:column;flex-wrap:wrap-reverse;align-content:flex-start;gap:8px;z-index:5;max-height:calc(100% - env(safe-area-inset-top,0px) - 54px - var(--botH,118px) - env(safe-area-inset-bottom,0px) - 10px)}
 #side button{width:48px;height:48px;border-radius:12px;background:linear-gradient(160deg,rgba(64,47,32,.95),rgba(26,18,12,.95));border:1px solid rgba(184,137,58,.6);box-shadow:0 3px 8px rgba(0,0,0,.45),inset 0 1px 0 rgba(255,255,255,.08);color:#f0dfbd;font-size:24px;cursor:pointer;display:flex;align-items:center;justify-content:center;position:relative;font-family:var(--f-display);font-weight:800}
 #bSpeed{font-size:15px!important;letter-spacing:.02em}
 #side button:active{transform:translateY(1px)}
@@ -91,8 +91,9 @@ i[data-ic]{display:inline-flex;font-style:normal}
 .group span{position:relative;width:34px;height:34px;border-radius:6px;border:1px solid rgba(184,137,58,.6);background:#1a120c;display:flex;align-items:center;justify-content:center}
 .group span img{width:100%;height:100%;object-fit:contain}.group span em{position:absolute;right:1px;bottom:-1px;font-style:normal;font-size:10px;font-weight:800;color:#fff;text-shadow:0 1px 2px #000}
 .ri{display:inline-flex;width:14px;height:14px;vertical-align:-2px}
-#cmds{--cb:48px;--cbw:56px;flex:1;min-width:0;display:grid;grid-auto-flow:column;grid-template-rows:repeat(2,var(--cb));grid-auto-columns:var(--cbw);gap:5px;align-content:center;justify-content:end;overflow-x:auto;overflow-y:hidden;touch-action:pan-x;scrollbar-width:none;overscroll-behavior:contain}
+#cmds{--cb:48px;--cbw:56px;flex:1;min-width:0;display:grid;grid-auto-flow:column;grid-template-rows:repeat(2,var(--cb));grid-auto-columns:var(--cbw);gap:5px;align-content:center;justify-content:end;justify-content:safe end;overflow-x:auto;overflow-y:hidden;touch-action:pan-x;scrollbar-width:none;overscroll-behavior:contain}
 #cmds::-webkit-scrollbar{display:none}
+#cmds.more{-webkit-mask-image:linear-gradient(90deg,#000 calc(100% - 26px),transparent);mask-image:linear-gradient(90deg,#000 calc(100% - 26px),transparent)}
 #cmds.one{grid-template-rows:var(--cb);--cb:58px;--cbw:60px}#cmds.one .cmd>img{width:36px;height:36px}
 .cmd{position:relative;border-radius:9px;border:1px solid #6b4f2a;background:linear-gradient(#4a3624,#2b1f15);box-shadow:inset 0 1px 0 rgba(255,255,255,.1),0 2px 4px rgba(0,0,0,.5);cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:2px 0 3px;color:#f0dfbd;font-size:24px;line-height:1;overflow:hidden}
 .cmd>img{width:30px;height:30px;object-fit:contain;filter:drop-shadow(0 1px 1px rgba(0,0,0,.6))}
@@ -128,8 +129,22 @@ i[data-ic]{display:inline-flex;font-style:normal}
 .help b{color:var(--brass)}
 .stats{display:grid;grid-template-columns:auto auto auto;gap:4px 18px;font-variant-numeric:tabular-nums;text-align:left}
 .stats .h{color:var(--brass);font-weight:700}
-@media (max-height:420px){#bottom{height:calc(100px + env(safe-area-inset-bottom,0px));padding-top:7px}#mini{width:132px;height:66px}#cmds{--cb:40px;--cbw:48px;gap:4px}.cmd{font-size:18px;border-radius:7px}.cmd>img{width:22px;height:22px}.cmd .em{width:22px;height:22px;font-size:15px}.cmd small{font-size:9px}#cmds.one{--cb:54px;--cbw:56px}#cmds.one .cmd>img{width:30px;height:30px}.port{width:52px;height:52px}#side button{width:42px;height:42px;font-size:21px}#side{gap:6px;top:calc(env(safe-area-inset-top,0px) + 50px)}}
-@media (max-width:760px){.res{min-width:58px;padding-right:7px}.res b{font-size:13px}.res i{width:21px;height:21px;font-size:16px}#ageName{font-size:11px}#clock{display:none}}
+@media (max-height:430px){:root{--botH:94px}
+  #top{height:calc(env(safe-area-inset-top,0px) + 36px);gap:6px}.res{height:27px;min-width:56px;padding-right:7px}.res i{width:21px;height:21px;font-size:16px}.res b{font-size:13.5px}
+  #agePlate{height:28px}.emb{width:22px;height:22px;font-size:10.5px}#btnMenu{width:38px;height:38px}
+  #bottom{height:calc(94px + env(safe-area-inset-bottom,0px));padding-top:6px;padding-bottom:calc(env(safe-area-inset-bottom,0px) + 5px);gap:8px}
+  #mini{width:124px;height:62px}#info{flex-basis:210px;min-width:150px;padding:5px 7px;gap:7px}.port{width:50px;height:50px}#info h3{font-size:13px}.hpbar{height:12px}
+  #cmds{--cb:40px;--cbw:48px;gap:4px}#cmds.one{--cb:52px;--cbw:56px}#cmds.one .cmd>img{width:30px;height:30px}.cmd{font-size:19px;border-radius:7px}.cmd>img{width:24px;height:24px}.cmd .em{width:24px;height:24px;font-size:15px}.cmd small{font-size:8.5px;margin-top:1px}
+  #side{top:calc(env(safe-area-inset-top,0px) + 44px);gap:6px;max-height:calc(100% - env(safe-area-inset-top,0px) - 44px - 94px - env(safe-area-inset-bottom,0px) - 8px)}#side button{width:42px;height:42px;font-size:21px;border-radius:10px}
+  #toast{top:calc(env(safe-area-inset-top,0px) + 42px)}
+  /* menus: cabem sem deslizar */
+  .card{gap:9px}.card h1{font-size:clamp(26px,5.2vw,40px)}.sub{font-size:10.5px}#sMenu .card>p,#sLogin .card>p:not(#lgStatus){font-size:14px}#sMenu .card>p{display:none}
+  .big{font-size:14.5px;padding:8px 16px;min-width:104px}.row{gap:7px}.accchip{font-size:14px;padding:3px 10px 3px 3px}.accchip .av{width:26px;height:26px}
+  .code{font-size:36px}.pfstats b{font-size:17px}
+  .group{flex-wrap:nowrap;overflow:hidden}.group span{width:31px;height:31px;flex:none}}
+@media (max-height:340px){.card h1{font-size:24px}.sub{display:none}}
+@media (max-width:760px){.res{min-width:56px;padding-right:7px}.res b{font-size:13px}.res i{width:21px;height:21px;font-size:16px}#ageName{font-size:11px}#clock{display:none}}
+@media (max-width:700px){.agetx{display:none}#agePlate{padding:0 3px}.resbar{gap:4px}.res small{right:-4px}#info{flex-basis:180px;min-width:130px}}
 @media (max-width:560px){#info{flex-basis:130px;min-width:110px;font-size:12px}.port{display:none}#mini{width:116px;height:58px}}
 /* conta */
 .gbtn{display:flex;align-items:center;justify-content:center;gap:12px;min-width:260px;padding:12px 22px;border-radius:24px;border:1px solid #dadce0;background:#fff;color:#1f1f1f;font:600 16px var(--f-body);cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,.35)}
@@ -154,6 +169,11 @@ i[data-ic]{display:inline-flex;font-style:normal}
 .erate{font-size:18px}.erate b{color:var(--trim-hi)}.erate .up{color:var(--good);font-weight:800}.erate .down{color:var(--bad);font-weight:800}
 .modal{position:absolute;inset:0;z-index:40;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,.55)}
 .mcard{display:flex;flex-direction:column;gap:14px;align-items:center;padding:20px 26px;border-radius:12px;background:linear-gradient(#33251a,#1a120c);border:1px solid var(--brass);box-shadow:0 20px 50px rgba(0,0,0,.6)}
+/* telemóvel em pé durante o jogo */
+#rotate{display:none}
+@media (orientation:portrait) and (max-width:720px){body.ingame #rotate{display:flex;position:fixed;inset:0;z-index:60;flex-direction:column;gap:14px;align-items:center;justify-content:center;text-align:center;padding:24px;background:radial-gradient(ellipse at 50% 40%,#3a2a1a,#120c08);color:var(--parch);font-size:17px}
+  #rotate svg{width:84px;height:84px;color:var(--trim-hi);animation:rot 2.2s ease-in-out infinite}#rotate b{font-family:var(--f-display);color:var(--trim-hi);font-size:22px}}
+@keyframes rot{0%,20%{transform:rotate(0)}50%,80%{transform:rotate(-90deg)}100%{transform:rotate(0)}}
 /* modo online */
 input{font-family:inherit;-webkit-user-select:text;user-select:text;touch-action:auto}
 .olform{display:flex;flex-direction:column;gap:12px;align-items:stretch;width:min(360px,100%)}
@@ -208,6 +228,7 @@ input{font-family:inherit;-webkit-user-select:text;user-select:text;touch-action
     <button id="bChat" title="Conversar" hidden><i data-ic="chat"></i></button>
     <button id="bSpeed" title="Velocidade">1×</button>
   </div>
+  <div id="rotate" aria-live="polite"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><rect x="7" y="2.5" width="10" height="19" rx="2"/><path d="M11 18.5h2"/></svg><b>Roda o telemóvel</b><span>O jogo joga-se com o ecrã deitado.</span></div>
   <div id="toast"></div>
   <div id="netWait" hidden><i></i><span>À espera…</span></div>
   <div id="chatBox" hidden>
@@ -3179,7 +3200,7 @@ function netOnSnap(d){
   if(d.s.v!==GAME_VER){netFail('Versões diferentes do jogo. Atualizem os dois para a mesma versão.');return}
   if(fresh){netEnterGame(true)}
   applySnap(d.s,fresh);
-  if(fresh){running=true;paused=false;speed=1;netModeUI();for(const id of ['sMenu','sEnd','sHelp','sPause','sOnline'])$(id).hidden=true;audioGameStart()}
+  if(fresh){running=true;paused=false;speed=1;netModeUI();document.body.classList.add('ingame');for(const id of ['sMenu','sEnd','sHelp','sPause','sOnline'])$(id).hidden=true;audioGameStart()}
   NET.turn=d.t;NET.delay=d.delay||NET.delay;NET.acc=0;NET.waitT=0;NET.epoch=d.ep||NET.epoch;NET.lastSnapT=d.t;
   for(const H of [NET.myHash,NET.peerHash])for(const k of [...H.keys()])if(k>=d.t)H.delete(k);
   const peer=1-NET.slot;
@@ -3447,7 +3468,7 @@ function mkCmd(icon,label,fn,cls,title){const b=document.createElement('button')
 let menuMode=null;
 function statsLine(t){const d=UNITS[t];return `${d.name}: ❤${d.hp} ⚔${d.atk} 🛡${d.arm}${d.range?' 🎯'+d.range:''} 👟${d.speed} ⏱${d.time}s${d.desc?' · '+d.desc:''}`}
 const FORM_ICON={livre:'f_livre',linha:'f_linha',coluna:'f_coluna',defensiva:'f_defensiva',cerco:'f_cerco'};
-function buildCmds(){const r=buildCmds0();const box=$('cmds');box.classList.toggle('one',box.children.length<=Math.floor(box.clientWidth/65));box.scrollLeft=0;return r}
+function buildCmds(){const r=buildCmds0();const box=$('cmds');box.classList.toggle('one',box.children.length<=Math.floor(box.clientWidth/65));box.scrollLeft=0;requestAnimationFrame(()=>box.classList.toggle('more',box.scrollWidth>box.clientWidth+4));if(!box._sc){box._sc=1;box.addEventListener('scroll',()=>box.classList.toggle('more',box.scrollLeft+box.clientWidth<box.scrollWidth-4),{passive:true})}return r}
 function buildCmds0(){
   const box=$('cmds');box.innerHTML='';const p=P[ME];
   if(placing){
@@ -3768,8 +3789,8 @@ window.addEventListener('pagehide',()=>{if(running)saveGame(true)});
 $('bSound').onclick=()=>{AUD.on=soundOn=!AUD.on;$('bSound').textContent='Som: '+(AUD.on?'ligado':'desligado');audioApplyVol();audioSave();try{localStorage.setItem('alv_sound',AUD.on?'1':'0')}catch(e){}};
 for(const [id,k] of [['vMusic','music'],['vSfx','sfx'],['vAmb','amb']]){const el=$(id);el.oninput=()=>{AUD.vol[k]=el.value/100;audioApplyVol()};el.onchange=()=>{audioSave();if(k==='sfx'){audioPause(false);snd('ui_click',null,null,{force:1});if(paused)setTimeout(()=>{if(paused)audioPause(true)},250)}}}
 document.querySelectorAll('#diffRow button').forEach(b=>b.onclick=()=>{difficulty=+b.dataset.d;document.querySelectorAll('#diffRow button').forEach(x=>x.classList.toggle('sel',x===b));try{localStorage.setItem('alv_diff',difficulty)}catch(e){}});
-$('bPlay').onclick=()=>{sfx('click');netLeaveGame();startGame()};
-$('bOnline').onclick=()=>{sfx('click');lobbyOpen()};
+$('bPlay').onclick=()=>{sfx('click');mobileLandscape();netLeaveGame();startGame()};
+$('bOnline').onclick=()=>{sfx('click');mobileLandscape();lobbyOpen()};
 $('olCreate').onclick=()=>lobbyGo('create');$('olRefresh').onclick=()=>lobbyGo('list');
 $('lgGoogle').onclick=()=>accGoogle();$('lgPreview').onclick=()=>accPreview();$('accChip').onclick=()=>profileOpen();
 $('bFriends').onclick=()=>friendsOpen();$('bRank').onclick=()=>rankOpen();
@@ -3806,7 +3827,7 @@ function startGame(seed){
   cam={x:0,y:0,z:vw<700?.85:1};
   resize();centerCam(G.starts[ME].x,G.starts[ME].y);
   updVis();
-  running=true;paused=false;speed=1;$('bSpeed').textContent='1×';netModeUI();
+  running=true;paused=false;speed=1;$('bSpeed').textContent='1×';netModeUI();document.body.classList.add('ingame');
   $('sMenu').hidden=true;$('sEnd').hidden=true;$('sHelp').hidden=true;$('sPause').hidden=true;$('sOnline').hidden=true;
   uiDirty=true;resDirty=true;
   toast('Recolhe recursos e prepara-te: o reino rival não vai esperar.');
@@ -3875,12 +3896,13 @@ function loadGame(){
   if(!SPR.oak)makeSprites();buildTerrain();resetChunks();FCACHE.clear();
   cam=d.cam||{x:0,y:0,z:1};resize();clampCam();
   recount();updVis();
-  audioGameStart();running=true;paused=false;speed=1;$('bSpeed').textContent='1×';
+  audioGameStart();running=true;paused=false;speed=1;$('bSpeed').textContent='1×';document.body.classList.add('ingame');
   for(const id of ['sMenu','sEnd','sHelp','sPause'])$(id).hidden=true;
   uiDirty=true;resDirty=true;toast('Jogo carregado');
   return true;
 }
-function showMenu(){if(!ACC.user&&!ACC.preview){showLogin();return}accChip();$('sMenu').hidden=false;$('bCont').hidden=!hasSave();audioToMenu()}
+function mobileLandscape(){if(isNative())return;try{if(!matchMedia('(pointer:coarse)').matches)return;const d=document.documentElement;const go=()=>{try{screen.orientation&&screen.orientation.lock&&screen.orientation.lock('landscape').catch(()=>{})}catch(e){}};if(!document.fullscreenElement&&d.requestFullscreen)d.requestFullscreen({navigationUI:'hide'}).then(go).catch(()=>{});else go()}catch(e){}}
+function showMenu(){document.body.classList.remove('ingame');if(!ACC.user&&!ACC.preview){showLogin();return}accChip();$('sMenu').hidden=false;$('bCont').hidden=!hasSave();audioToMenu()}
 function checkEnd(){
   if(G.over)return;
   for(let o=0;o<2;o++){
@@ -3889,7 +3911,7 @@ function checkEnd(){
   }
 }
 function endGame(win,wonder,why){
-  running=false;if(!NET.on)clearSave();$('endRate').hidden=true;
+  running=false;document.body.classList.remove('ingame');if(!NET.on)clearSave();$('endRate').hidden=true;
   if(NET.on)netReport(win,why||(wonder?'wonder':'normal'));else accRecordSP(win);ambStop();MUS.want='menu';audioPause(false);snd(win?'victory':'defeat',null,null,{force:1});
   $('endTitle').textContent=win?'Vitória':'Derrota';
   $('endText').textContent=why==='forfeit'?'O adversário não voltou à partida. Vitória por desistência.':why==='peer_quit'?'O adversário saiu da partida.':why==='resign_me'?'Desististe da partida.':why==='resign_peer'?'O adversário desistiu. Vitória!':wonder?(win?'A tua Maravilha resistiu. O teu reino entra para a história.':'A Maravilha do rival resistiu. O reino deles entra para a história.'):win?'O reino rival caiu. A tua aldeia governa estas terras.':'A tua aldeia foi conquistada. Tenta outra estratégia.';
