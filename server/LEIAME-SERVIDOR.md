@@ -98,6 +98,16 @@ Envia o zip novo, descompacta-o por cima e corre `systemctl restart alvorada`.
 
 Os dois jogadores têm de ter a mesma versão da app. Se não tiverem, o jogo avisa.
 
+## Trocar a chave secreta do servidor
+```bash
+bash /opt/alvorada/server/trocar-chave.sh
+```
+O script:
+1. gera a chave nova no próprio VPS (ela nunca sai dali);
+2. mostra uma linha SQL com o resumo SHA-256 da chave, para colares no Supabase;
+3. reinicia o serviço;
+4. mostra a linha para apagar as chaves antigas.
+
 ## Contas e base de dados
 O Supabase e o login Google configuram-se uma vez. Os passos estão em `../supabase/LEIAME-SUPABASE.md`.
 

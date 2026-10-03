@@ -54,5 +54,6 @@ nginx -t && systemctl reload nginx
 echo "== 5/6 HTTPS (certbot)"
 if ! getent hosts "$DOM" >/dev/null; then echo "AVISO: o DNS de $DOM ainda não aponta para este VPS. Cria o registo A e corre: certbot --nginx -d $DOM"; else
   certbot --nginx -d "$DOM" --non-interactive --agree-tos --register-unsafely-without-email --redirect || echo "AVISO: certbot falhou; corre manualmente: certbot --nginx -d $DOM"; fi
+if ! grep -q "^ALV_SERVER_SECRET=..*" "$DIR/server/alvorada.env"; then echo "AVISO: falta a chave do servidor. Corre: bash $DIR/server/trocar-chave.sh (sem ela as partidas não são registadas)"; fi
 echo "== 6/6 Verificação"
 curl -fsS "https://$DOM/health" && echo && echo "PRONTO: abre https://$DOM no navegador." || echo "Verifica o DNS/HTTPS. Registo: journalctl -u alvorada -n 50"

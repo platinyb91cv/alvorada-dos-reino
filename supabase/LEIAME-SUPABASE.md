@@ -13,10 +13,19 @@ O jogo já vem configurado com este endereço e com a chave publicável. Essa ch
 
 Os resultados online só entram através da função `record_match`, que exige a chave secreta do servidor. Assim, um jogador não consegue dar pontos a si próprio.
 
+### Regras da pontuação (anti-batota)
+- **Dois relatórios:** o servidor só regista uma vitória quando os dois jogadores enviam o mesmo resultado. Se só um enviar, conta apenas se o outro estiver desligado há 90 s (abandono). Se os resultados não coincidirem, a partida fica em disputa e não dá pontos.
+- **Partidas curtas:** com menos de 3 minutos, medidos pelo relógio do servidor, não dão pontos.
+- **Limite diário:** no máximo 3 partidas com pontos por dia contra o mesmo adversário.
+- **Ressincronizações:** uma partida com mais de 4 ressincronizações do estado completo não dá pontos.
+- **Amigos:** "quem está ligado" e os convites só funcionam entre amigos aceites.
+
 ## 1. Criar as tabelas (uma vez)
 No Supabase, abre **SQL Editor → New query**. Cola e corre, por esta ordem:
 1. `migrations/20261003000000_alvorada_online.sql`
-2. `migrations/20261003000100_server_key.sql`
+2. `migrations/20261003000200_regras_elo.sql` (regras anti-batota do Elo e lista de amigos para o servidor)
+
+A chave do servidor não vem em nenhum ficheiro. Gera-a no VPS com `bash /opt/alvorada/server/trocar-chave.sh`: o script mostra a linha SQL com o resumo SHA-256 para colares aqui.
 
 Se preferires, posso ser eu a aplicá-las pelo conector do Supabase. Basta aprovares o pedido quando aparecer.
 

@@ -13,7 +13,9 @@ const SB_URL=(process.env.SUPABASE_URL||'').replace(/\/$/,'');
 const SB_KEY=process.env.SUPABASE_KEY||'';                // chave publicável (sb_publishable_…)
 const SB_SECRET=process.env.ALV_SERVER_SECRET||'';        // chave do servidor para registar partidas
 const DEV=!SB_URL;                                        // sem Supabase: modo de desenvolvimento (aceita nomes)
-const RESULT_WAIT=+process.env.RESULT_WAIT||20000;
+const FORFEIT_MS=+process.env.FORFEIT_MS||90000;        // um resultado de um só jogador só conta se o outro estiver desligado há tanto tempo
+const LONE_MAX_MS=+process.env.LONE_MAX_MS||600000;      // se o outro continuar ligado e calado, a partida fica em disputa (sem Elo)
+const FRIENDS_TTL=60000;
 const ROOM_TTL=10*60*1000,REJOIN_MS=3*60*1000,MAX_ROOMS=500;
 const ABC='ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
 const rooms=new Map();
@@ -24,6 +26,12 @@ async function verifyUser(token){
   const rows=await sbFetch('/rest/v1/profiles?select=id,username,avatar_url,rating&id=eq.'+encodeURIComponent(u.id),{headers:{Authorization:'Bearer '+token}});
   const p=rows&&rows[0];if(!p)throw new Error('perfil em falta');
   return{id:p.id,name:p.username,avatar:p.avatar_url||null,rating:p.rating}}
+async function friendsOf(ws){
+  if(DEV)return null; // desenvolvimento: sem restrições
+  if(ws.fr&&Date.now()-ws.frT<FRIENDS_TTL)return ws.fr;
+  try{const ids=await sbFetch('/rest/v1/rpc/friend_ids',{method:'POST',body:JSON.stringify({p_secret:SB_SECRET,p_user:ws.user.id})});ws.fr=new Set(ids||[]);ws.frT=Date.now()}
+  catch(e){log('erro ao ler amigos',e.message);ws.fr=ws.fr||new Set()}
+  return ws.fr}
 const pub=u=>u?{id:u.id,name:u.name,avatar:u.avatar,rating:u.rating}:null;
 const REASON=r=>/^resign/.test(r)?'resign':r==='peer_quit'||r==='forfeit'||r==='abandono'?'abandono':r==='wonder'?'wonder':'normal';
 async function recordMatch(r,winnerSlot,reason,disputed){
@@ -31,18 +39,30 @@ async function recordMatch(r,winnerSlot,reason,disputed){
   const dur=Math.round((Date.now()-M.t0)/1000);
   const host=M.host,guest=M.guest;let res={host_delta:0,guest_delta:0,host_rating:host.rating,guest_rating:guest.rating};
   if(!DEV&&SB_SECRET){
-    try{res=await sbFetch('/rest/v1/rpc/record_match',{method:'POST',body:JSON.stringify({p_secret:SB_SECRET,p_room:r.code,p_host:host.id,p_guest:guest.id,p_winner:winnerSlot==null?null:(winnerSlot===0?host.id:guest.id),p_reason:REASON(reason),p_duration:dur,p_seed:M.seed||0,p_disputed:!!disputed})})}
-    catch(e){log('erro ao registar partida',r.code,e.message);return}
+    const body={p_secret:SB_SECRET,p_room:r.code,p_host:host.id,p_guest:guest.id,p_winner:winnerSlot==null?null:(winnerSlot===0?host.id:guest.id),p_reason:REASON(reason),p_duration:dur,p_seed:M.seed||0,p_disputed:!!disputed,p_resyncs:M.snaps||0};
+    try{res=await sbFetch('/rest/v1/rpc/record_match',{method:'POST',body:JSON.stringify(body)})}
+    catch(e){
+      // base de dados ainda sem a migração nova (sem p_resyncs): tenta a versão antiga
+      if(/p_resyncs|function|not find/i.test(e.message)){try{delete body.p_resyncs;res=await sbFetch('/rest/v1/rpc/record_match',{method:'POST',body:JSON.stringify(body)})}catch(e2){log('erro ao registar partida',r.code,e2.message);return}}
+      else{log('erro ao registar partida',r.code,e.message);return}}
+  }else{res.rated=!disputed&&winnerSlot!=null&&dur>=180;if(!res.rated)res.why=disputed?'disputa':dur<180?'curta':'sem_vencedor'
   }
-  log('partida registada',r.code,'vencedor',winnerSlot,REASON(reason),disputed?'(disputa)':'',JSON.stringify(res));
+  log('partida registada',r.code,'vencedor',winnerSlot,REASON(reason),disputed?'(disputa)':'','duração',dur+'s','ressincronizações',M.snaps||0,JSON.stringify(res));
   const out=[[0,res.host_delta,res.host_rating],[1,res.guest_delta,res.guest_rating]];
-  for(const [s,delta,rating] of out){const p=r.p[s];if(p&&p.user)p.user.rating=rating;if(p&&p.ws)send(p.ws,{type:'rated',delta,rating,disputed:!!disputed})}}
+  for(const [s,delta,rating] of out){const p=r.p[s];if(p&&p.user)p.user.rating=rating;if(p&&p.ws)send(p.ws,{type:'rated',delta,rating,disputed:!!disputed,unrated:res.rated===false,why:res.why||null})}}
 function onResult(r,slot,m){
   const M=r.match;if(!M||M.done)return;const w=m.winner===0||m.winner===1?m.winner:null;
-  M.reports[slot]={w,reason:String(m.reason||'normal')};
+  M.reports[slot]={w,reason:String(m.reason||'normal'),at:Date.now()};
   const a=M.reports[0],b=M.reports[1];
   if(a&&b){if(a.w===b.w)recordMatch(r,a.w,a.reason==='normal'?b.reason:a.reason,false);else recordMatch(r,null,'disputa',true);return}
-  clearTimeout(M.timer);M.timer=setTimeout(()=>{const x=M.reports[0]||M.reports[1];if(x)recordMatch(r,x.w,x.reason,false)},RESULT_WAIT)}
+  // só um relatório: conta apenas se o outro jogador estiver desligado há FORFEIT_MS (abandono);
+  // se o outro continuar ligado, espera pelo relatório dele (um cliente alterado não ganha sozinho)
+  clearInterval(M.timer);M.timer=setInterval(()=>{
+    if(M.done){clearInterval(M.timer);return}
+    const x=M.reports[0]||M.reports[1];const s=M.reports[0]?0:1;const o=r.p[1-s];const now=Date.now();
+    const offFor=!o?Infinity:o.ws?0:now-(o.left||now);
+    if(offFor>=FORFEIT_MS){recordMatch(r,x.w,'abandono',false);return}
+    if(now-x.at>LONE_MAX_MS)recordMatch(r,null,'disputa',true)},Math.min(5000,FORFEIT_MS/3))}
 const log=(...a)=>console.log(new Date().toISOString(),...a);
 const MIME={'.html':'text/html; charset=utf-8','.js':'text/javascript','.css':'text/css','.json':'application/json','.png':'image/png','.svg':'image/svg+xml','.woff2':'font/woff2','.ico':'image/x-icon','.webmanifest':'application/manifest+json'};
 const server=http.createServer((req,res)=>{
@@ -68,13 +88,13 @@ function leave(ws,final){
 }
 wss.on('connection',(ws,req)=>{
   ws.alive=true;ws.on('pong',()=>ws.alive=true);ws.n=0;ws.t0=Date.now();
-  ws.on('message',raw=>{
+  ws.on('message',async raw=>{
     // limite simples de mensagens (turnos são 10/s; folga para estado completo e conversa)
     const now=Date.now();if(now-ws.t0>10000){ws.t0=now;ws.n=0}if(++ws.n>600){send(ws,{type:'error',msg:'Demasiadas mensagens'});return}
     let m;try{m=JSON.parse(raw)}catch(e){return}
     const r=ws.room&&rooms.get(ws.room);
     if(m.type==='auth'){
-      if(m.refresh&&ws.user&&ws.tok){verifyUser(ws.tok).then(u=>{Object.assign(ws.user,u)}).catch(()=>{});return}
+      if(m.refresh&&ws.user){const t=m.token?String(m.token):ws.tok;if(!t||DEV)return;verifyUser(t).then(u=>{if(u.id!==ws.user.id)return;ws.tok=t;Object.assign(ws.user,u)}).catch(()=>{});return}
       if(DEV){ws.user={id:'dev-'+crypto.randomBytes(4).toString('hex'),name:String(m.dev&&m.dev.name||'Jogador').slice(0,16),avatar:null,rating:1000};users.set(ws.user.id,ws);send(ws,{type:'authed',user:pub(ws.user)});return}
       if(!m.token){send(ws,{type:'error',code:'auth',msg:'É preciso entrar com a conta Google'});return}
       verifyUser(String(m.token)).then(u=>{ws.user=u;ws.tok=String(m.token);const old=users.get(u.id);if(old&&old!==ws&&!old.room){try{old.close()}catch(e){}}users.set(u.id,ws);send(ws,{type:'authed',user:pub(u)})})
@@ -83,11 +103,12 @@ wss.on('connection',(ws,req)=>{
     if(m.type!=='ping'&&!ws.user){send(ws,{type:'error',code:'auth',msg:'É preciso entrar com a conta Google'});return}
     switch(m.type){
     case 'list':send(ws,{type:'rooms',rooms:[...rooms.values()].filter(x=>x.public&&!x.started&&x.p[0]&&x.p[0].ws&&!x.p[1]).slice(0,30).map(x=>({room:x.code,host:pub(x.p[0].user)}))});break;
-    case 'presence':{const on={};for(const id of (Array.isArray(m.ids)?m.ids:[]).slice(0,200)){const w=users.get(id);if(w&&w.readyState===1){const R=w.room&&rooms.get(w.room);on[id]=R&&R.started&&!(R.match&&R.match.done)?'playing':'online'}}send(ws,{type:'presence',on});break}
+    case 'presence':{const fr=await friendsOf(ws);const on={};for(const id of (Array.isArray(m.ids)?m.ids:[]).slice(0,200)){if(fr&&!fr.has(id))continue;const w=users.get(id);if(w&&w.readyState===1){const R=w.room&&rooms.get(w.room);on[id]=R&&R.started&&!(R.match&&R.match.done)?'playing':'online'}}send(ws,{type:'presence',on});break}
     case 'invite':{const now=Date.now();if(now-(ws.invT||0)<2500)break;ws.invT=now;const w=users.get(m.to);const R=rooms.get(String(m.room||''));
       if(!R||R.p[0]?.ws!==ws){send(ws,{type:'error',msg:'Cria uma sala primeiro'});break}
-      if(w&&w.readyState===1){send(w,{type:'invite',from:pub(ws.user),room:R.code});send(ws,{type:'invited',ok:true,name:w.user&&w.user.name})}else send(ws,{type:'invited',ok:false});break}
-    case 'decline':{const w=users.get(m.to);if(w)send(w,{type:'declined',from:pub(ws.user)});break}
+      const fr=await friendsOf(ws);if(fr&&!fr.has(m.to)){ws.fr=null;const fr2=await friendsOf(ws);if(!fr2.has(m.to)){send(ws,{type:'error',msg:'Só podes convidar amigos'});break}}
+      if(w&&w.readyState===1){send(w,{type:'invite',from:pub(ws.user),room:R.code});(ws.invFrom=ws.invFrom||new Set());w.invFrom=w.invFrom||new Set();ws.invFrom.add(w.user.id);send(ws,{type:'invited',ok:true,name:w.user&&w.user.name})}else send(ws,{type:'invited',ok:false});break}
+    case 'decline':{const w=users.get(m.to);if(w&&w.invFrom&&w.invFrom.has(ws.user.id))send(w,{type:'declined',from:pub(ws.user)});break}
     case 'result':if(r&&r.match)onResult(r,ws.slot,m);break;
     case 'ping':if(LAG)setTimeout(()=>send(ws,{type:'pong',t:m.t}),LAG*2);else send(ws,{type:'pong',t:m.t});break;
     case 'create':{
@@ -115,6 +136,7 @@ wss.on('connection',(ws,req)=>{
     case 'relay':{
       if(!r)break;const o=other(r,ws.slot);r.last=Date.now();
       if(m.d&&m.d.g==='start'&&ws.slot===0&&r.p[1]){r.started=true;r.public=false;r.match={t0:Date.now(),seed:+m.d.seed||0,host:r.p[0].user,guest:r.p[1].user,reports:[null,null],done:false}}
+      if(m.d&&m.d.g==='snap'&&r.match&&!r.match.done)r.match.snaps=(r.match.snaps||0)+1;
       if(o&&o.ws){const out=JSON.stringify({type:'relay',d:m.d});if(LAG)setTimeout(()=>send(o.ws,out),LAG);else send(o.ws,out)}
       break}
     case 'leave':leave(ws,true);break;

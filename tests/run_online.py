@@ -29,7 +29,7 @@ RANDOM_ORDERS=r"""(n)=>{const s=__S();const mine=s.ents.filter(e=>e.kind==='u'&&
     else{const v=us.find(u=>u.type==='aldeao');if(v){const tx=Math.floor(v.x)+2,ty=Math.floor(v.y)+2;if(canPlace('casa',tx,ty,ME))act('place',{t:'casa',tx,ty,u:[v.id]})}}}
   return mine.length}"""
 async def main():
-  env=dict(os.environ,PORT=str(PORT),HOST='127.0.0.1',FAKE_LAG=str(LAG),SUPABASE_URL=f'http://127.0.0.1:{MOCK}',SUPABASE_KEY='sb_publishable_teste',ALV_SERVER_SECRET='s3cr3t',RESULT_WAIT='3000',MOCK_PORT=str(MOCK))
+  env=dict(os.environ,PORT=str(PORT),HOST='127.0.0.1',FAKE_LAG=str(LAG),SUPABASE_URL=f'http://127.0.0.1:{MOCK}',SUPABASE_KEY='sb_publishable_teste',ALV_SERVER_SECRET='s3cr3t',FORFEIT_MS='12000',MOCK_MIN_DUR='30',MOCK_PORT=str(MOCK))
   mock=subprocess.Popen(['node','mock_supabase.js'],env=env,stdout=subprocess.DEVNULL)
   srv=subprocess.Popen(['node','../server/server.js'],env=env,stdout=open('/tmp/claude-0/-home-claude/415342e0-77a1-5a94-8f8a-71375aa47804/scratchpad/srv.log','w'),stderr=subprocess.STDOUT)
   time.sleep(1)
@@ -87,6 +87,10 @@ async def main():
     hs=await asyncio.gather(*[pg.evaluate("()=>({my:[...NET.myHash],d:NET.desync,rs:NET.resync})") for pg in (A,B)])
     after=[t for t in dict(hs[0]['my']) if t>snapT and t in dict(hs[1]['my'])];same=bool(after) and all(dict(hs[0]['my'])[t]==dict(hs[1]['my'])[t] for t in after)
     rep(ok and same and hs[0]['rs']==1,'Recuperação de dessincronização',f"diferença detetada pelos dois; estado completo reenviado {hs[0]['rs']} vez (turno {snapT}); verificações seguintes iguais={same} ({len(after)})")
+    # 3b batota: um cliente alterado diz "ganhei" a meio da partida; o outro continua ligado
+    await A.evaluate("()=>netSend({type:'result',winner:0,reason:'normal',dur:999})");await asyncio.sleep(7)
+    stt=json.loads(urlopen(f'http://127.0.0.1:{MOCK}/__state').read());still=await B.evaluate("()=>NET.game&&running")
+    rep(len(stt['M'])==0 and still,'Resultado falso recusado',f"partidas registadas: {len(stt['M'])} (o outro jogador continua ligado e não confirmou); jogo continua={still}")
     # 4 conversa
     await B.evaluate("()=>chatSend('Olá do outro lado!')");await asyncio.sleep(1.5)
     got=await A.evaluate("()=>[...document.querySelectorAll('#toast .chat')].map(d=>d.textContent).join('|')")
@@ -123,7 +127,7 @@ async def main():
     await A.evaluate("()=>{NET.lostT=Date.now()-91000}");await asyncio.sleep(1)
     ta=await A.evaluate("()=>document.getElementById('endText').textContent")
     rep('desistência' in ta,'Adversário não volta',ta)
-    await asyncio.sleep(4.5)
+    await asyncio.sleep(16)
     stt=json.loads(urlopen(f'http://127.0.0.1:{MOCK}/__state').read())
     reasons=[m['reason'] for m in stt['M']]
     rep(len(stt['M'])==2 and reasons==['resign','abandono'],'Registo das partidas',f"partidas registadas no Supabase: {reasons}; pontos: "+', '.join(f"{p['username']} {p['rating']} ({p['wins']}V/{p['losses']}D)" for p in stt['P']))
@@ -157,6 +161,11 @@ async def main():
     rl=await F.evaluate("()=>document.getElementById('olRooms').innerText.split(String.fromCharCode(10)).join(' ')")
     await F.screenshot(path='/tmp/claude-0/-home-claude/415342e0-77a1-5a94-8f8a-71375aa47804/scratchpad/acc_rooms.png')
     rep('Eva' in rl and '1200' in rl,'Salas públicas',rl[:80])
+    # Eva não é amiga da Ana: não vê se está ligada nem a pode convidar
+    pres=await E.evaluate("async()=>{NET.presence=null;netSend({type:'presence',ids:['u-ana','u-rui']});await new Promise(r=>setTimeout(r,800));return NET.presence}")
+    errE=await E.evaluate("async()=>{const t=[];const o=toast;toast=(m,b)=>{t.push(m);o(m,b)};netSend({type:'invite',to:'u-ana',room:NET.room});await new Promise(r=>setTimeout(r,800));toast=o;return t.join('|')}")
+    gotInv=await F.evaluate("()=>!document.getElementById('invite').hidden")
+    rep(pres=={} and 'amigos' in errE and not gotInv,'Só amigos',f"estado dos não-amigos devolvido: {pres}; convite recusado: {errE}")
     # jogo contra o computador conta no perfil
     await F.click('#olBack');await F.click('#bPlay');await F.wait_for_timeout(500);await F.evaluate("()=>endGame(true)");await F.wait_for_timeout(800)
     stt=json.loads(urlopen(f'http://127.0.0.1:{MOCK}/__state').read());ana=[p for p in stt['P'] if p['id']=='u-ana'][0]
