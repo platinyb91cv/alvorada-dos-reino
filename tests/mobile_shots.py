@@ -11,7 +11,7 @@ AUDIT=r"""()=>{const out=[];const vw=innerWidth,vh=innerHeight;
    if(r.right>vw+1||r.bottom>vh+1||r.left<-1||r.top<-1)out.push('fora do ecrã: '+id+' '+[r.left,r.top,r.right,r.bottom].map(Math.round));
    if(el.matches('button,.cmd')&&(r.width<38||r.height<36))out.push('alvo pequeno: '+id+' '+Math.round(r.width)+'x'+Math.round(r.height));
    if(el.scrollWidth>el.clientWidth+2&&el.matches('.res,.cmd'))out.push('texto cortado: '+id)}
- const sc=document.querySelector('.screen:not([hidden]) .card');if(sc&&sc.scrollHeight>sc.clientHeight+2)out.push('cartão com scroll: '+(sc.parentElement.id)+' '+sc.scrollHeight+'>'+sc.clientHeight);
+ const sc=document.querySelector('.screen:not([hidden]) .card,.screen:not([hidden]) .panel');if(sc&&sc.scrollHeight>sc.clientHeight+2)out.push('cartão com scroll: '+(sc.parentElement.id)+' '+sc.scrollHeight+'>'+sc.clientHeight);
  const b=document.getElementById('bottom'),t=document.getElementById('top');if(b&&t&&!b.closest('[hidden]')){out.push('mapa visível: '+Math.round(b.getBoundingClientRect().top-t.getBoundingClientRect().bottom)+'px de '+vh+'px ('+Math.round((b.getBoundingClientRect().top-t.getBoundingClientRect().bottom)/vh*100)+'%)')}
  return out}"""
 async def main():
