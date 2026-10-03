@@ -5,8 +5,14 @@ alter table public.matches add column if not exists rated boolean not null defau
 alter table public.matches add column if not exists resyncs int not null default 0;
 create index if not exists matches_pair_idx on public.matches (least(host_id, guest_id), greatest(host_id, guest_id), created_at desc);
 
-drop function if exists public.record_match(text,text,uuid,uuid,uuid,text,int,bigint,boolean);
-create function public.record_match(
+-- a versão antiga fica guardada com outro nome e sem permissões (não se apaga nada)
+do $$ begin
+  if exists (select 1 from pg_proc p join pg_namespace n on n.oid=p.pronamespace where n.nspname='public' and p.proname='record_match' and p.pronargs=9) then
+    alter function public.record_match(text,text,uuid,uuid,uuid,text,int,bigint,boolean) rename to record_match_v1;
+    revoke execute on function public.record_match_v1(text,text,uuid,uuid,uuid,text,int,bigint,boolean) from public, anon, authenticated;
+  end if;
+end $$;
+create or replace function public.record_match(
   p_secret text, p_room text, p_host uuid, p_guest uuid, p_winner uuid,
   p_reason text, p_duration int, p_seed bigint, p_disputed boolean default false, p_resyncs int default 0)
 returns json language plpgsql security definer set search_path = '' as $$
@@ -61,3 +67,5 @@ begin
 end $$;
 revoke execute on function public.friend_ids(text,uuid) from public, anon, authenticated;
 grant execute on function public.friend_ids(text,uuid) to anon;
+
+notify pgrst, 'reload schema';
