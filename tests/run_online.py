@@ -170,6 +170,12 @@ async def main():
     await F.click('#olBack');await F.click('#bPlay');await F.wait_for_timeout(500);await F.evaluate("()=>endGame(true)");await F.wait_for_timeout(800)
     stt=json.loads(urlopen(f'http://127.0.0.1:{MOCK}/__state').read());ana=[p for p in stt['P'] if p['id']=='u-ana'][0]
     rep(ana['sp_wins']==1,'Vitória contra o computador',f"sp_wins={ana['sp_wins']}")
+    # apagar a conta (exigido pela Play Store): dois toques em Apagar → volta ao login e o perfil desaparece
+    await E.evaluate("()=>{netLeaveGame&&netLeaveGame();document.getElementById('sOnline').hidden=true;profileOpen()}");await E.wait_for_timeout(800)
+    await E.click('#pfDelete');t1=await E.evaluate("()=>document.getElementById('pfDelete').textContent");await E.click('#pfDelete')
+    okDel=await wait(E,"()=>!document.getElementById('sLogin').hidden",6000)
+    stt=json.loads(urlopen(f'http://127.0.0.1:{MOCK}/__state').read());gone=not any(p['id']=='u-eva' for p in stt['P'])
+    rep(okDel and gone and 'outra vez' in t1,'Apagar conta',f"1.º toque pede confirmação ({t1}); depois volta ao login={okDel}; perfil apagado no servidor={gone}")
     rep(not errs,'Erros JavaScript',str(errs[:3]) if errs else 'nenhum')
     await b.close()
   finally:

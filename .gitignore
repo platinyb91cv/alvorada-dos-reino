@@ -9,3 +9,8 @@ server/alvorada.env
 server/node_modules
 tools/
 *.zip
+
+# chaves de assinatura
+*.jks
+*.jks.b64
+*.keystore

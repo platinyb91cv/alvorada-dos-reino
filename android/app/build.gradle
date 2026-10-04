@@ -7,8 +7,9 @@ android {
         applicationId "cv.fabis.alvorada"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 1
-        versionName "1.0"
+        // número de versão: o GitHub Actions passa ALV_VERSION_CODE (nº da execução) para cada envio à Play Store ser maior
+        versionCode((System.getenv("ALV_VERSION_CODE") ?: "1").toInteger())
+        versionName "1.0." + (System.getenv("ALV_VERSION_CODE") ?: "1")
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         aaptOptions {
              // Files and dirs to omit from the packaged assets dir, modified to accommodate modern web apps.
@@ -16,8 +17,21 @@ android {
             ignoreAssetsPattern = '!.svn:!.git:!.ds_store:!*.scc:.*:!CVS:!thumbs.db:!picasa.ini:!*~'
         }
     }
+    signingConfigs {
+        release {
+            // chave de envio (upload key) da Play Store: vem dos segredos do GitHub, nunca do repositório
+            def ks = System.getenv("ALV_KEYSTORE")
+            if (ks) {
+                storeFile file(ks)
+                storePassword System.getenv("ALV_KEYSTORE_PASS")
+                keyAlias System.getenv("ALV_KEY_ALIAS") ?: "alvorada"
+                keyPassword System.getenv("ALV_KEY_PASS") ?: System.getenv("ALV_KEYSTORE_PASS")
+            }
+        }
+    }
     buildTypes {
         release {
+            if (System.getenv("ALV_KEYSTORE")) signingConfig signingConfigs.release
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }

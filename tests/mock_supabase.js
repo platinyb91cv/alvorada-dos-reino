@@ -32,6 +32,7 @@ http.createServer((req,res)=>{
         return send(res,200,{host_delta:dh,guest_delta:-dh,rated,why,host_rating:h.rating,guest_rating:g.rating})}
       if(fn==='friend_ids'){if(B.p_secret!==SECRET)return send(res,400,{message:'chave do servidor inválida'});return send(res,200,F.filter(f=>f.status==='accepted'&&(f.user_id===B.p_user||f.friend_id===B.p_user)).map(f=>f.user_id===B.p_user?f.friend_id:f.user_id))}
       if(!uid)return send(res,401,{message:'sem sessão'});
+      if(fn==='delete_my_account'){P.delete(uid);for(let i=F.length-1;i>=0;i--)if(F[i].user_id===uid||F[i].friend_id===uid)F.splice(i,1);for(const m of M){if(m.host_id===uid)m.host_id=null;if(m.guest_id===uid)m.guest_id=null}return send(res,204,null)}
       if(fn==='record_sp'){P.get(uid)[B.p_win?'sp_wins':'sp_losses']++;return send(res,204,null)}
       if(fn==='add_friend'){const o=[...P.values()].find(r=>r.friend_code===String(B.p_code).toUpperCase());if(!o)return send(res,200,'nao_encontrado');if(o.id===uid)return send(res,200,'proprio');
         const rev=F.find(f=>f.user_id===o.id&&f.friend_id===uid);if(rev){rev.status='accepted';return send(res,200,'aceite')}if(F.find(f=>f.user_id===uid&&f.friend_id===o.id))return send(res,200,'ja_pedido');F.push({user_id:uid,friend_id:o.id,status:'pending'});return send(res,200,'pedido')}

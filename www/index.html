@@ -206,7 +206,22 @@ body.ingame #menuBg{display:none}
 #grade{position:absolute;inset:0;pointer-events:none;z-index:1;display:none;
   background:radial-gradient(ellipse at 50% 48%,rgba(10,8,20,0) 52%,rgba(10,8,20,.34) 100%),linear-gradient(225deg,rgba(255,214,150,.09),rgba(255,214,150,0) 45%,rgba(40,40,90,.09))}
 body.ingame:not(.gfx-leve) #grade{display:block}
+#coach{position:absolute;left:50%;bottom:calc(118px + env(safe-area-inset-bottom,0px) + 10px);transform:translateX(-50%);z-index:7;width:min(460px,calc(100% - 150px));padding:10px 14px 11px;border-radius:14px;
+  background:linear-gradient(180deg,#261f50,#15122f);border:1px solid rgba(255,206,130,.5);box-shadow:0 12px 30px rgba(0,0,0,.45);color:#f5e9d6;pointer-events:auto;animation:coachIn .45s cubic-bezier(.2,.7,.2,1)}
+#coach[hidden]{display:none}
+@keyframes coachIn{from{opacity:0;transform:translate(-50%,8px)}to{opacity:1;transform:translate(-50%,0)}}
+#coach .ch-top{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:4px}
+#coach .ch-step{font:700 12.5px var(--f-body);color:#ffd994}
+#coach .ch-skip{border:0;background:none;color:rgba(242,228,212,.65);font:600 12.5px var(--f-body);cursor:pointer;padding:4px 2px;text-decoration:underline}
+#coach .ch-txt{margin:0;font-size:15px;line-height:1.4}#coach .ch-txt b{color:#ffd994}
+#coach .ch-bar{height:4px;border-radius:2px;background:rgba(255,255,255,.1);margin-top:8px;overflow:hidden}#coach .ch-bar i{display:block;height:100%;background:linear-gradient(90deg,#ffd27a,#f7a650);transition:width .4s}
+#coach.done{border-color:#7fd05a}
+@media (max-height:430px){#coach{bottom:auto;top:calc(env(safe-area-inset-top,0px) + 42px);left:calc(env(safe-area-inset-left,0px) + 8px);transform:none;padding:7px 11px 8px;width:min(330px,42%);animation:none}#coach .ch-txt{font-size:13px;line-height:1.35}body.coaching #toast{left:auto;right:calc(env(safe-area-inset-right,0px) + 66px);transform:none;align-items:flex-end;max-width:calc(58% - 70px)}body.coaching #toast div{white-space:normal}#coach .ch-top{margin-bottom:2px}#coach .ch-step,#coach .ch-skip{font-size:11.5px}#coach .ch-bar{margin-top:5px}}
+@media (prefers-reduced-motion:reduce){#coach{animation:none}}
 /* conta */
+.pfdanger{display:flex;justify-content:space-between;align-items:center;gap:12px;width:100%;margin-top:4px;padding-top:10px;border-top:1px solid rgba(255,220,170,.12);font-size:13.5px}
+.pfdanger a{color:rgba(242,228,212,.7)}.pfdanger button{border:1px solid rgba(229,87,106,.5);background:rgba(229,87,106,.1);color:#ffb3bd;border-radius:9px;padding:7px 12px;font:700 13.5px var(--f-body);cursor:pointer}
+.pfdanger button.arm{background:#c2394e;color:#fff;border-color:#e65a6c}
 .gbtn{display:flex;align-items:center;justify-content:center;gap:12px;min-width:260px;padding:12px 22px;border-radius:24px;border:1px solid #dadce0;background:#fff;color:#1f1f1f;font:600 16px var(--f-body);cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,.35)}
 .gbtn svg{width:22px;height:22px}.gbtn:disabled{opacity:.5;cursor:default}
 .accchip{display:flex;align-items:center;gap:8px;padding:4px 12px 4px 4px;border-radius:22px;border:1px solid rgba(184,137,58,.6);background:rgba(0,0,0,.3);color:var(--parch);cursor:pointer;font-size:15px}
@@ -291,6 +306,7 @@ input{font-family:inherit;-webkit-user-select:text;user-select:text;touch-action
   </div>
   <div id="rotate" aria-live="polite"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><rect x="7" y="2.5" width="10" height="19" rx="2"/><path d="M11 18.5h2"/></svg><b>Roda o telemóvel</b><span>O jogo joga-se com o ecrã deitado.</span></div>
   <div id="toast"></div>
+  <div id="coach" hidden role="status" aria-live="polite"><div class="ch-top"><span class="ch-step"></span><button class="ch-skip" type="button">Saltar tutorial</button></div><p class="ch-txt"></p><div class="ch-bar"><i></i></div></div>
   <div id="netWait" hidden><i></i><span>À espera…</span></div>
   <div id="chatBox" hidden>
     <div class="quick"><button>Olá! 👋</button><button>Bom jogo!</button><button>Ataque! ⚔️</button><button>Espera aí</button><button>Bem jogado 👏</button><button>Desculpa 😅</button></div>
@@ -346,6 +362,7 @@ input{font-family:inherit;-webkit-user-select:text;user-select:text;touch-action
         <nav class="links">
           <button id="bFriends"><i data-ic="friends"></i>Amigos</button>
           <button id="bRank"><i data-ic="trophy"></i>Classificação</button>
+          <button id="bTut"><i data-ic="flag"></i>Tutorial</button>
           <button id="bHelp"><i data-ic="book"></i>Como jogar</button>
         </nav>
       </div>
@@ -385,6 +402,7 @@ input{font-family:inherit;-webkit-user-select:text;user-select:text;touch-action
       <h4>Últimas partidas online</h4>
       <div id="pfHist" class="hist"></div>
       <div class="row"><button class="big" id="pfBack">Voltar</button><button class="big" id="pfLogout">Sair da conta</button></div>
+      <div class="pfdanger"><a href="https://jogo.krioldns.uk/privacidade.html" target="_blank" rel="noopener">Política de privacidade</a><button type="button" id="pfDelete">Apagar a minha conta</button></div>
     </div>
   </div>
 
@@ -2862,6 +2880,7 @@ function render(){UCFM=0;
   // fantasma do edifício
   if(placing&&placing.tx!=null&&!placing.line){const s=bldSprite(placing.type,P[ME].age,ME,BLDS[placing.type].gate?'x':placing.type==='torre'?1:0);const p=proj(placing.tx,placing.ty);c.globalAlpha=ghostOk?.6:.35;c.drawImage(s.cv,p.x-s.ox,p.y-s.oy,s.CW,s.CH);c.globalAlpha=1}
   if(placing&&placing.line&&placing.a){const tl=lineTiles(placing.a,placing.b||placing.a);for(const [x,y] of tl){const ok=canPlace(placing.type,x,y,ME);const s=bldSprite(placing.type,0,0,15);const q=proj(x,y);c.globalAlpha=ok?.55:.25;c.drawImage(s.cv,q.x-s.ox,q.y-s.oy,s.CW,s.CH);c.globalAlpha=1}}
+  tutArrow(c,t);
   if(GFX==='alto')drawClouds(c,t);
   // barras de vida
   for(const [,k,e,p] of draw){
@@ -3728,6 +3747,13 @@ async function accAfterLogin(){
 function accEnterMenu(){$('sLogin').hidden=true;accChip();if(!running)showMenu()}
 function accChip(){const p=ACC.profile;const el=$('accChip');if(!p){el.hidden=true;return}el.hidden=false;
   el.innerHTML=`${avatarHTML({name:p.username,avatar:p.avatar_url})}<span class="nm">${esc(p.username)}</span><span class="rt" title="Pontuação online">${p.rating}</span>`}
+let delArm=0;
+async function accDeleteAccount(){const b=$('pfDelete');
+  if(Date.now()-delArm>4000){delArm=Date.now();b.classList.add('arm');b.textContent='Toca outra vez para apagar para sempre';setTimeout(()=>{if(Date.now()-delArm>=4000){b.classList.remove('arm');b.textContent='Apagar a minha conta'}},4100);return}
+  delArm=0;b.disabled=true;b.textContent='A apagar…';
+  try{const {error}=await ACC.sb.rpc('delete_my_account');if(error)throw error;clearSave();try{localStorage.removeItem('alv_profile')}catch(e){}
+    await accLogout();showLogin('A tua conta e os teus dados foram apagados.')}
+  catch(e){b.disabled=false;b.classList.remove('arm');b.textContent='Apagar a minha conta';toast('Não foi possível apagar a conta. Tenta outra vez.',true)}}
 async function accLogout(){try{await ACC.sb.auth.signOut()}catch(e){}ACC.user=null;ACC.profile=null;ACC.preview=false;try{localStorage.removeItem('alv_profile')}catch(e){}netClose();showLogin('Sessão terminada.')}
 async function accRecordSP(win){if(!ACC.sb||ACC.preview||!ACC.user)return;try{await ACC.sb.rpc('record_sp',{p_win:!!win});if(ACC.profile){ACC.profile[win?'sp_wins':'sp_losses']++}}catch(e){}}
 // ---------- ecrãs: perfil, classificação, amigos ----------
@@ -4117,14 +4143,16 @@ window.addEventListener('pagehide',()=>{if(running)saveGame(true)});
 $('bSound').onclick=()=>{AUD.on=soundOn=!AUD.on;$('bSound').textContent='Som: '+(AUD.on?'ligado':'desligado');audioApplyVol();audioSave();try{localStorage.setItem('alv_sound',AUD.on?'1':'0')}catch(e){}};
 for(const [id,k] of [['vMusic','music'],['vSfx','sfx'],['vAmb','amb']]){const el=$(id);el.oninput=()=>{AUD.vol[k]=el.value/100;audioApplyVol()};el.onchange=()=>{audioSave();if(k==='sfx'){audioPause(false);snd('ui_click',null,null,{force:1});if(paused)setTimeout(()=>{if(paused)audioPause(true)},250)}}}
 document.querySelectorAll('#diffRow button').forEach(b=>b.onclick=()=>{difficulty=+b.dataset.d;document.querySelectorAll('#diffRow button').forEach(x=>x.classList.toggle('sel',x===b));try{localStorage.setItem('alv_diff',difficulty)}catch(e){}});
-$('bPlay').onclick=()=>{sfx('click');mobileLandscape();netLeaveGame();gameMode='normal';startGame()};
+$('bPlay').onclick=()=>{sfx('click');mobileLandscape();netLeaveGame();gameMode='normal';startGame();let seen=null;try{seen=localStorage.getItem('alv_tut')}catch(e){}if(!seen)tutStart()};
+$('bTut').onclick=()=>{sfx('click');mobileLandscape();netLeaveGame();gameMode='normal';const d0=difficulty;difficulty=0;startGame();difficulty=d0;tutStart()};
+document.querySelector('#coach .ch-skip').onclick=()=>tutEnd(!(G&&G.tut&&TUT_STEPS[G.tut.i].end));
 $('bBuild').onclick=()=>{sfx('click');mobileLandscape();netLeaveGame();gameMode='build';startGame()};
 $('bOnline').onclick=()=>{sfx('click');mobileLandscape();lobbyOpen()};
 $('olCreate').onclick=()=>lobbyGo('create');$('olRefresh').onclick=()=>lobbyGo('list');
 $('lgGoogle').onclick=()=>accGoogle();$('lgPreview').onclick=()=>accPreview();$('accChip').onclick=()=>profileOpen();
 $('bFriends').onclick=()=>friendsOpen();$('bRank').onclick=()=>rankOpen();
 for(const id of ['pfBack','rkBack','frBack'])$(id).onclick=()=>{$('sProfile').hidden=$('sRank').hidden=$('sFriends').hidden=true;showMenu()};
-$('pfLogout').onclick=()=>accLogout();$('frAdd').onclick=()=>friendsAdd();$('frCode').addEventListener('keydown',e=>{if(e.key==='Enter')friendsAdd()});
+$('pfLogout').onclick=()=>accLogout();$('pfDelete').onclick=()=>accDeleteAccount();$('frAdd').onclick=()=>friendsAdd();$('frCode').addEventListener('keydown',e=>{if(e.key==='Enter')friendsAdd()});
 $('ivYes').onclick=()=>inviteAnswer(true);$('ivNo').onclick=()=>inviteAnswer(false);$('olJoinB').onclick=()=>lobbyGo('join');$('olRejoin').onclick=()=>lobbyGo('rejoin');
 $('olJoin').addEventListener('keydown',e=>{if(e.key==='Enter')lobbyGo('join')});
 $('olStart').onclick=()=>netHostStart();$('olUrl').addEventListener('change',()=>{const c=netLoadCfg();c.url=$('olUrl').value.trim();try{localStorage.setItem('alv_net',JSON.stringify(c))}catch(e){}netClose();lobbyOpen()});$('olShare').onclick=()=>lobbyShare();$('olBack').onclick=()=>lobbyLeave();
@@ -4162,6 +4190,7 @@ function startGame(seed){
   running=true;paused=false;speed=1;$('bSpeed').textContent='1×';netModeUI();document.body.classList.add('ingame');
   $('sMenu').hidden=true;$('sEnd').hidden=true;$('sHelp').hidden=true;$('sPause').hidden=true;$('sOnline').hidden=true;
   uiDirty=true;resDirty=true;
+  $('coach').hidden=true;document.body.classList.remove('coaching');
   toast(mode==='build'?'Modo construção: sem inimigos. Faz crescer a tua cidade ao teu ritmo.':'Recolhe recursos e prepara-te: o reino rival não vai esperar.');
   const tc0=ents.find(e=>e.kind==='b'&&e.o===ME);setSel([tc0]);audioGameStart();
 }
@@ -4183,7 +4212,7 @@ const SAVE_KEY='alv_save_v1';
 function serialize(){
   const ref=x=>x&&!x.dead?x.id:null;
   const su=e=>({k:'u',id:e.id,o:e.o,t:e.type,x:+e.x.toFixed(4),y:+e.y.toFixed(4),hp:e.hp,s:e.state,c:e.carry,ct:e.ctype,gk:e.gkind,tg:ref(e.target),gr:ref(e.gres),bd:ref(e.bld),de:e.dest,am:e.amove,fa:e.faith,hm:e.home,st:e.stance||null,gu:e.guard||null,pa:e.patrol||null,cg:e.cargo?e.cargo.map(su):null});
-  return JSON.stringify({v:1,difficulty,nid,G:{seed:G.seed,time:G.time,starts:G.starts,wonder:G.wonder||null,fishRespawn:G.fishRespawn||[],lake:G.lake||null,form:G.form||'livre',mode:G.mode||'normal'},
+  return JSON.stringify({v:1,difficulty,nid,G:{seed:G.seed,time:G.time,starts:G.starts,wonder:G.wonder||null,fishRespawn:G.fishRespawn||[],lake:G.lake||null,form:G.form||'livre',mode:G.mode||'normal',tut:G.tut||null},
     P:P.map(p=>({res:p.res,age:p.age,techs:p.techs,stats:p.stats})),
     terr:Array.from(terr).join(''),vis:Array.from(vis).join(''),
     res:[...byId.values()].filter(e=>e.kind==='r').map(r=>[r.id,r.rk,r.amt,r.max,r.tx,r.ty,r.var,r.carcass?1:r.fish?2:0]),
@@ -4198,7 +4227,7 @@ function loadGame(){
   let d=null;try{d=JSON.parse(localStorage.getItem(SAVE_KEY))}catch(e){}
   if(!d||d.v!==1){toast('Não há jogo guardado',true);return false}
   difficulty=d.difficulty;
-  G={seed:d.G.seed,time:d.G.time,starts:d.G.starts,wonder:d.G.wonder,amoveNext:false,over:false,fishRespawn:d.G.fishRespawn||[],lake:d.G.lake||null,form:d.G.form||'livre',cmdMode:null,mode:d.G.mode||'normal'};gameMode=G.mode;
+  G={seed:d.G.seed,time:d.G.time,starts:d.G.starts,wonder:d.G.wonder,amoveNext:false,over:false,fishRespawn:d.G.fishRespawn||[],lake:d.G.lake||null,form:d.G.form||'livre',cmdMode:null,mode:d.G.mode||'normal',tut:d.G.tut||null};gameMode=G.mode;
   P=mkPlayers();d.P.forEach((p,i)=>{Object.assign(P[i].res,p.res);P[i].age=p.age;P[i].techs=p.techs||{};P[i].stats=p.stats});
   rndSeed(d.G.seed+Math.floor(d.G.time));
   terr=Uint8Array.from(d.terr,ch=>+ch);blk=new Uint8Array(W*H);bldAt=new Int32Array(W*H);resAt=new Array(W*H).fill(null);
@@ -4230,7 +4259,7 @@ function loadGame(){
   recount();updVis();
   audioGameStart();running=true;paused=false;speed=1;$('bSpeed').textContent='1×';document.body.classList.add('ingame');
   for(const id of ['sMenu','sEnd','sHelp','sPause'])$(id).hidden=true;
-  uiDirty=true;resDirty=true;toast('Jogo carregado');
+  uiDirty=true;resDirty=true;toast('Jogo carregado');tutShow();
   return true;
 }
 function mobileLandscape(){if(isNative())return;try{if(!matchMedia('(pointer:coarse)').matches)return;const d=document.documentElement;const go=()=>{try{screen.orientation&&screen.orientation.lock&&screen.orientation.lock('landscape').catch(()=>{})}catch(e){}};if(!document.fullscreenElement&&d.requestFullscreen)d.requestFullscreen({navigationUI:'hide'}).then(go).catch(()=>{});else go()}catch(e){}}
@@ -4325,7 +4354,34 @@ function menuBgDraw(t){
     for(let i=0;i<6;i++){const ox=-Math.abs(i-2.5)*13*(i<3?1:1)-(i>2?3:0),oy=(i-2.5)*9,fl=Math.sin(t*9+i*1.3)*3.2,x=bx+ox,y=by+oy;g.beginPath();g.moveTo(x-5,y-fl*.4);g.quadraticCurveTo(x-2.5,y-3-fl,x,y);g.quadraticCurveTo(x+2.5,y-3-fl,x+5,y-fl*.4);g.stroke()}}
 }
 addEventListener('resize',()=>{if(MBG.L&&!document.body.classList.contains('ingame')){try{menuBgBuild();menuBgDraw((performance.now()-MBG.t0)/1000)}catch(e){}}});
-function showMenu(){menuBgStart();document.body.classList.remove('ingame');if(!ACC.user&&!ACC.preview){showLogin();return}accChip();$('sMenu').hidden=false;$('bCont').hidden=!hasSave();audioToMenu()}
+
+/* ---------------- tutorial guiado (primeira partida) ---------------- */
+const TUT_STEPS=[
+  {t:'Toca no <b>Centro da Vila</b> e depois em <b>Aldeão</b> para treinar mais um trabalhador.',ok:()=>P[ME].stats.trained>=1,tg:()=>myB('centro')},
+  {t:'Seleciona um aldeão e toca nos <b>arbustos de bagas</b> (vermelhos) para recolher comida.',ok:()=>vil(v=>v.gres&&v.gres.kind==='r'&&v.gres.rk==='food'),tg:()=>nearRes(r=>r.rk==='food'&&!r.fish&&!r.carcass)},
+  {t:'Agora manda outro aldeão <b>cortar madeira</b>: seleciona-o e toca numa árvore.',ok:()=>vil(v=>v.gres&&v.gres.kind==='r'&&v.gres.rk==='wood'),tg:()=>nearRes(r=>r.rk==='wood')},
+  {t:'Precisas de espaço para mais gente. Seleciona um aldeão → <b>Construir</b> → <b>Casa</b>, e toca num sítio livre.',ok:()=>!!myB('casa'),tg:()=>null},
+  {t:'Constrói um <b>Quartel</b> (aldeão → Construir) e treina lá um <b>Guerreiro</b>.',ok:()=>ents.some(e=>e.o===ME&&e.type==='guerreiro'),tg:()=>myB('quartel')},
+  {t:'Junta <b>400 de comida</b> e toca em <b>Avançar de Idade</b> no Centro da Vila para chegar à Idade do Bronze.',ok:()=>P[ME].age>=1||ents.some(e=>e.o===ME&&e.kind==='b'&&e.queue&&e.queue.some(q=>q.k==='age')),tg:()=>myB('centro'),prog:()=>Math.min(1,P[ME].res.food/400)},
+  {t:'Muito bem! Agora faz crescer a aldeia e o exército, e derruba o <b>Centro da Vila</b> do rival. O rival começa a atacar daqui a pouco.',ok:()=>false,end:1}];
+function myB(t){return ents.find(e=>e.o===ME&&e.kind==='b'&&e.type===t)||null}
+function vil(f){return ents.some(e=>e.o===ME&&e.type==='aldeao'&&f(e))}
+function nearRes(f){const tc=myB('centro');if(!tc)return null;let best=null,bd=1e9;for(const r of byId.values()){if(r.kind!=='r'||!f(r)||!vis[idx(r.tx,r.ty)])continue;const d=hyp(r.tx-tc.tx,r.ty-tc.ty);if(d<bd){bd=d;best=r}}return best}
+function tutStart(){if(!G||NET.on)return;G.tut={i:0,t:0,done:0};if(AI){AI.nextAttack=Math.max(AI.nextAttack,99999)}tutShow();try{localStorage.setItem('alv_tut','1')}catch(e){}}
+function tutEnd(skip){if(!G||!G.tut)return;G.tut=null;$('coach').hidden=true;document.body.classList.remove('coaching');if(AI)AI.nextAttack=AI.t+(skip?240:300);if(skip)toast('Tutorial terminado. O rival vai começar a preparar-se.')}
+function tutShow(){const T=G&&G.tut;const el=$('coach');document.body.classList.toggle('coaching',!!T);if(!T){el.hidden=true;return}const st=TUT_STEPS[T.i];el.hidden=false;el.classList.toggle('done',!!st.end);
+  el.querySelector('.ch-step').textContent=st.end?'Tutorial concluído':'Passo '+(T.i+1)+' de '+(TUT_STEPS.length-1);
+  el.querySelector('.ch-txt').innerHTML=st.t;el.querySelector('.ch-skip').textContent=st.end?'Fechar':'Saltar tutorial';
+  el.querySelector('.ch-bar i').style.width=(st.end?100:(T.i/(TUT_STEPS.length-1)*100+(st.prog?st.prog()*100/(TUT_STEPS.length-1):0)))+'%'}
+function tutTick(dt){const T=G.tut;if(!T)return;T.t+=dt;if(T.t<.4)return;T.t=0;const st=TUT_STEPS[T.i];
+  if(st.end){T.done=(T.done||0)+.4;if(T.done>9)tutEnd(false);return}
+  if(st.prog)tutShow();
+  if(st.ok()){T.i++;snd('research',null,null,{force:1});buzz(25);tutShow()}}
+function tutArrow(c,t){const T=G&&G.tut;if(!T)return;const st=TUT_STEPS[T.i];if(!st||!st.tg)return;const e=st.tg();if(!e)return;
+  const cp=e.kind==='b'?proj(e.tx+e.w/2,e.ty+e.h/2):proj(e.tx+.5,e.ty+.5);const hgt=e.kind==='b'?(BHEIGHT[e.type]||50)+26:46;const y=cp.y-hgt-Math.abs(Math.sin(t*4))*8;
+  c.save();c.translate(cp.x,y);c.fillStyle='#ffd27a';c.strokeStyle='rgba(40,20,0,.75)';c.lineWidth=2;c.beginPath();c.moveTo(0,10);c.lineTo(-9,-2);c.lineTo(-4,-2);c.lineTo(-4,-14);c.lineTo(4,-14);c.lineTo(4,-2);c.lineTo(9,-2);c.closePath();c.fill();c.stroke();
+  c.globalAlpha=.35+.25*Math.sin(t*4);c.strokeStyle='#ffd27a';c.lineWidth=2.5;c.beginPath();c.ellipse(0,hgt+Math.abs(Math.sin(t*4))*8,18,9,0,0,7);c.stroke();c.restore()}
+function showMenu(){menuBgStart();$('coach').hidden=true;document.body.classList.remove('coaching');document.body.classList.remove('ingame');if(!ACC.user&&!ACC.preview){showLogin();return}accChip();$('sMenu').hidden=false;$('bCont').hidden=!hasSave();audioToMenu()}
 function checkEnd(){
   if(G.over)return;
   for(let o=0;o<2;o++){
@@ -4335,7 +4391,7 @@ function checkEnd(){
   }
 }
 function endGame(win,wonder,why){
-  running=false;document.body.classList.remove('ingame');if(!NET.on)clearSave();$('endRate').hidden=true;
+  running=false;$('coach').hidden=true;document.body.classList.remove('coaching');document.body.classList.remove('ingame');if(!NET.on)clearSave();$('endRate').hidden=true;
   if(NET.on)netReport(win,why||(wonder?'wonder':'normal'));else if(G.mode!=='build')accRecordSP(win);ambStop();MUS.want='menu';audioPause(false);snd(win?'victory':'defeat',null,null,{force:1});
   $('endTitle').textContent=win?'Vitória':'Derrota';
   $('endText').textContent=why==='forfeit'?'O adversário não voltou à partida. Vitória por desistência.':why==='peer_quit'?'O adversário saiu da partida.':why==='resign_me'?'Desististe da partida.':why==='resign_peer'?'O adversário desistiu. Vitória!':wonder?(win?'A tua Maravilha resistiu. O teu reino entra para a história.':'A Maravilha do rival resistiu. O reino deles entra para a história.'):win?'O reino rival caiu. A tua aldeia governa estas terras.':'A tua aldeia foi conquistada. Tenta outra estratégia.';
@@ -4365,6 +4421,7 @@ function step(dt){
   if(G.wonder){const w=byId.get(G.wonder.id);
     if(!w){toast(G.wonder.o===ME?'A nossa Maravilha foi destruída!':'Destruímos a Maravilha do rival!',G.wonder.o===ME);G.wonder=null}
     else{G.wonder.t-=dt;if(G.wonder.t<=0&&!G.over){G.over=true;const win=G.wonder.o===ME;setTimeout(()=>endGame(win,true),600)}}}
+  if(G.tut)tutTick(dt);
   checkEnd();
 }
 let last=performance.now(),uiT=0;
