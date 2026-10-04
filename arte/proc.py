@@ -61,7 +61,11 @@ for u,(f,th,wk,at,trunk) in UNITS.items():
     lum=(rgb[:,:,0]*.3+rgb[:,:,1]*.59+rgb[:,:,2]*.11)[...,None]
     rgb=np.where(pink[...,None],np.clip(lum*1.25+40,0,255).repeat(3,2),rgb)
     proc[key]=np.dstack([rgb,a*255]).astype(np.uint8)
-  seq=wk+at
+  # pose parada: o quadro da linha 1 com as pernas mais juntas
+  def spread(key):
+    al=proc[key][:,:,3]>100;ys,xs=np.nonzero(al);fb=ys.max();sel=ys>fb-(fb-ys.min())*.14;return xs[sel].max()-xs[sel].min()
+  idle=min([(0,c) for c in range(4)],key=spread)
+  seq=wk+at+[idle]
   # caixa comum a todos os quadros (mantém o movimento relativo)
   boxes=[];
   for key in seq:
@@ -86,7 +90,7 @@ for u,i,im in allf:
 H=y+rowh
 at=Image.new('RGBA',(W,H),(0,0,0,0))
 for u,i,im in allf:at.paste(im,pos[(u,i)][:2])
-for u in frames:meta[u]['f']=[list(pos[(u,i)]) for i in range(8)]
+for u in frames:meta[u]['f']=[list(pos[(u,i)]) for i in range(9)]
 import io
 buf=io.BytesIO();at.save(buf,'WEBP',quality=80,method=6);open('anim.webp','wb').write(buf.getvalue());at.save('anim_atlas.png')
 json.dump(meta,open('anim.json','w'))
