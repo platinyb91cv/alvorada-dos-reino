@@ -2439,6 +2439,21 @@ const ANIM={ready:false,img:null,meta:{"guerreiro": {"fx": 39.0, "fy": 110.5, "h
 function animFrame(t,team,tier,anim,f,ph){
   const m=ANIM.meta[t];const k=ANIM.H[t]/m.h;
   const i=anim==='walk'?(((f>>1)+(ph||0))&3):anim==='idle'?(m.f[8]?8:0):(anim==='atk'||anim==='conv'||anim==='heal')?4+Math.min(3,anim==='atk'?Math.floor(f*4/6):f%4):0;
+  const human=!t.startsWith('cav')&&t!=='ariete'&&t!=='catapulta';
+  if(anim==='walk'&&human&&m.f[8]){ // passo articulado sobre a pose parada: pernas alternadas a partir da anca, corpo a subir e descer
+    const [sx,sy,w,h]=m.f[8];const step=(((f+(ph||0)*2)%8)+8)%8;const pad=8,W2=w*k+pad*2,H2=h*k+pad*2,ax=m.fx*k+pad,ay=m.fy*k+pad;
+    return uSprite(['anw',t,team,step,tier].join('|'),W2,H2,ax,ay,tier,c=>{c.imageSmoothingEnabled=true;c.imageSmoothingQuality='high';
+      const A=recolorImg(ANIM,team),sn=Math.sin(step/8*Math.PI*2),hipY=-m.h*.38*k,legA=sn*.34,bob=-(1-Math.abs(sn))*1.1,sway=sn*.02;
+      const part=(x0,x1,y0,y1,rot,px,py)=>{c.save();if(rot){c.translate(px,py);c.rotate(rot);c.translate(-px,-py)}c.beginPath();c.rect(x0,y0,x1-x0,y1-y0);c.clip();c.drawImage(A,sx,sy,w,h,-m.fx*k,-m.fy*k,w*k,h*k);c.restore()};
+      const L=-m.fx*k-4,Rr=(w-m.fx)*k+4,T=-m.fy*k-4,B=(h-m.fy)*k+4;
+      const lw=m.h*k*.125,img=()=>c.drawImage(A,sx,sy,w,h,-m.fx*k,-m.fy*k,w*k,h*k);
+      const fw=lw*2.4,y1=hipY+1.5;
+      const leg=(sg,rot,px)=>{c.save();c.translate(px,hipY);c.rotate(rot);c.translate(-px,-hipY);c.beginPath();c.moveTo(0,hipY);c.lineTo(sg*lw,hipY);c.lineTo(sg*fw,B);c.lineTo(0,B);c.closePath();c.clip();img();c.restore()};
+      c.translate(0,bob);
+      leg(1,-legA,1.5);leg(-1,legA,-1.5);       // pernas da frente e de trás
+      // resto (tronco, cabeça e armas fora da zona das pernas) fica inteiro
+      c.save();c.translate(0,hipY);c.rotate(sway);c.translate(0,-hipY);c.beginPath();c.rect(L,T,Rr-L,B-T);c.moveTo(-lw,y1);c.lineTo(lw,y1);c.lineTo(fw,B);c.lineTo(-fw,B);c.closePath();c.clip('evenodd');img();c.restore()});
+  }
   const [sx,sy,w,h]=m.f[i];const pad=4,W2=w*k+pad*2,H2=h*k+pad*2,ax=m.fx*k+pad,ay=m.fy*k+pad;
   return uSprite(['an',t,team,i,tier].join('|'),W2,H2,ax,ay,tier,c=>{c.imageSmoothingEnabled=true;c.imageSmoothingQuality='high';
     c.drawImage(recolorImg(ANIM,team),sx,sy,w,h,-m.fx*k,-m.fy*k,w*k,h*k)});
