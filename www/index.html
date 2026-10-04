@@ -480,7 +480,9 @@ input{font-family:inherit;-webkit-user-select:text;user-select:text;touch-action
 /* =====================================================================
    ALVORADA DOS REINOS — RTS original em HTML5 Canvas
    ===================================================================== */
-const W=80,H=80,T=32;
+let W=112,H=112;const T=32,MAP_N=112;
+// tamanho do mapa (mapas guardados antigos podem ser 80×80)
+function setMapSize(n){if(n===W&&n===H)return;W=H=n;gS=new Float32Array(W*H);stamp=new Int32Array(W*H);came=new Int32Array(W*H);closedS=new Int32Array(W*H);reachMap=new Uint8Array(W*H)}
 const $=id=>document.getElementById(id);
 const cv=$('game'),ctx=cv.getContext('2d');
 const mini=$('mini'),mctx=mini.getContext('2d');
@@ -589,37 +591,50 @@ function newPlayer(id,col,dark){return{id,col,dark,res:{food:200,wood:200,gold:0
 
 /* ---------------- geração do mapa ---------------- */
 function genMap(seed){
+  const A=W*H/6400; // fator de área face ao mapa original 80×80
   for(let attempt=0;attempt<20;attempt++){
     rndSeed(seed+attempt*977);
     terr=new Uint8Array(W*H);blk=new Uint8Array(W*H);bldAt=new Int32Array(W*H);resAt=new Array(W*H).fill(null);
     ents=[];byId=new Map();nid=1;
+    const M=Math.round(W*.15);
     const diag=rnd()<.5;
-    const s0=diag?{x:13,y:13}:{x:W-14,y:13};
-    const s1=diag?{x:W-14,y:H-14}:{x:13,y:H-14};
+    const s0=diag?{x:M,y:M}:{x:W-M-1,y:M};
+    const s1=diag?{x:W-M-1,y:H-M-1}:{x:M,y:H-M-1};
     if(rnd()<.5){G.starts=[s1,s0]}else G.starts=[s0,s1];
     const far=(x,y,d)=>G.starts.every(s=>hyp(s.x-x,s.y-y)>d);
+    const disk=(cx,cy,r,ph,a1,a2)=>{for(let y=Math.floor(cy-r*1.4-2);y<=cy+r*1.4+2;y++)for(let x=Math.floor(cx-r*1.4-2);x<=cx+r*1.4+2;x++){if(!inb(x,y))continue;const a=datan2(y-cy,x-cx);const rr=r*(1+a1*dsin(a*3+ph)+a2*dsin(a*5-ph));if(hyp(x-cx,y-cy)<rr)terr[idx(x,y)]=1}};
     // lago central navegável
-    {const cx=W/2+(rnd()-.5)*8,cy=H/2+(rnd()-.5)*8,r=7.5+rnd()*2.5,ph=rnd()*6;G.lake={x:cx,y:cy,r};
-      for(let y=Math.floor(cy-r-3);y<=cy+r+3;y++)for(let x=Math.floor(cx-r-3);x<=cx+r+3;x++){if(!inb(x,y))continue;const a=datan2(y-cy,x-cx);const rr=r*(1+.18*dsin(a*3+ph)+.1*dsin(a*5-ph));if(hyp(x-cx,y-cy)<rr)terr[idx(x,y)]=1}}
+    const cx0=W/2+(rnd()-.5)*8,cy0=H/2+(rnd()-.5)*8,r0=8+rnd()*3;G.lake={x:cx0,y:cy0,r:r0};disk(cx0,cy0,r0,rnd()*6,.18,.1);
+    // mar num dos cantos livres (sem base), com costa recortada
+    const corners=diag?[{x:W-1,y:0},{x:0,y:H-1}]:[{x:0,y:0},{x:W-1,y:H-1}];
+    const sc=corners[rnd()<.5?0:1],SR=W*(.26+rnd()*.05),sph=rnd()*6;G.sea={x:sc.x,y:sc.y,r:SR};
+    for(let y=0;y<H;y++)for(let x=0;x<W;x++){const a=datan2(y-sc.y,x-sc.x);const rr=SR*(1+.07*dsin(a*7+sph)+.05*dsin(a*13-sph)+.03*dsin(a*23+sph*2));if(hyp(x-sc.x,y-sc.y)<rr)terr[idx(x,y)]=1}
+    // ilhas no mar
+    for(let i=0;i<2;i++){const a=datan2(H/2-sc.y,W/2-sc.x)+(rnd()-.5)*1.2,d=SR*(.35+rnd()*.35),ix=Math.round(sc.x+dcos(a)*d),iy=Math.round(sc.y+dsin(a)*d);
+      for(let y=iy-3;y<=iy+3;y++)for(let x=ix-3;x<=ix+3;x++)if(inb(x,y)&&hyp(x-ix,y-iy)<2.2+rnd()*1.2)terr[idx(x,y)]=0}
+    // rio sinuoso do mar até ao lago (navegável)
+    {let x=sc.x+(W/2-sc.x)*.0,y=sc.y;const tx=cx0,ty=cy0;let ang=datan2(ty-y,tx-x),wv=rnd()*6;const w0=1.3+rnd()*.5;G.river=[];
+      for(let st=0;st<W*3;st++){const want=datan2(ty-y,tx-x);ang+=Math.max(-.12,Math.min(.12,(want-ang+Math.PI*3)%(Math.PI*2)-Math.PI))*.35+dsin(st*.11+wv)*.09;
+        x+=dcos(ang)*.8;y+=dsin(ang)*.8;if(st%3===0)G.river.push({x,y});
+        for(let yy=Math.floor(y-w0-1);yy<=y+w0+1;yy++)for(let xx=Math.floor(x-w0-1);xx<=x+w0+1;xx++)if(inb(xx,yy)&&hyp(xx-x,yy-y)<w0)terr[idx(xx,yy)]=1;
+        if(hyp(x-tx,y-ty)<r0*.7)break}}
+    // ribeiros curtos que nascem no rio e morrem em terra
+    for(let i=0;i<2;i++){if(!G.river.length)break;const p0=G.river[Math.floor(G.river.length*(.25+rnd()*.5))];let x=p0.x,y=p0.y,ang=rnd()*6.28;
+      for(let st=0;st<10+rnd()*10;st++){ang+=(rnd()-.5)*.6;x+=dcos(ang)*.8;y+=dsin(ang)*.8;const w=Math.max(.55,.95-st*.03);
+        for(let yy=Math.floor(y-1);yy<=y+1;yy++)for(let xx=Math.floor(x-1);xx<=x+1;xx++)if(inb(xx,yy)&&hyp(xx-x,yy-y)<w&&far(xx,yy,12))terr[idx(xx,yy)]=1}}
     // lagos
-    const nl=2+Math.floor(rnd()*3);
-    for(let i=0;i<nl;i++){
-      let cx,cy,k=0;do{cx=6+rnd()*(W-12);cy=6+rnd()*(H-12);k++}while(!far(cx,cy,17)&&k<50);
-      const r=2.5+rnd()*3,ph=rnd()*6;
-      for(let y=Math.floor(cy-r-2);y<=cy+r+2;y++)for(let x=Math.floor(cx-r-2);x<=cx+r+2;x++){
-        if(!inb(x,y))continue;const a=datan2(y-cy,x-cx);const rr=r*(1+.25*dsin(a*3+ph)+.12*dsin(a*5-ph));
-        if(hyp(x-cx,y-cy)<rr)terr[idx(x,y)]=1;
-      }
-    }
+    const nl=Math.round((2+Math.floor(rnd()*3))*A*.8);
+    for(let i=0;i<nl;i++){let cx,cy,k=0;do{cx=6+rnd()*(W-12);cy=6+rnd()*(H-12);k++}while(!far(cx,cy,18)&&k<50);disk(cx,cy,2.5+rnd()*3,rnd()*6,.25,.12)}
     for(let y=0;y<H;y++)for(let x=0;x<W;x++){if(terr[idx(x,y)]!==0)continue;
       for(let dy=-1;dy<=1;dy++)for(let dx=-1;dx<=1;dx++){if(inb(x+dx,y+dy)&&terr[idx(x+dx,y+dy)]===1){terr[idx(x,y)]=2}}}
+    // praias largas junto ao mar
+    for(let y=0;y<H;y++)for(let x=0;x<W;x++){const i=idx(x,y);if(terr[i]===0&&hyp(x-sc.x,y-sc.y)<SR*1.09)terr[i]=2}
     for(let i=0;i<W*H;i++)if(terr[i]===1)blk[i]=1;
     // florestas
-    const nf=20+Math.floor(rnd()*6);
-    for(let i=0;i<nf;i++){
-      let cx,cy,k=0;do{cx=rnd()*W;cy=rnd()*H;k++}while(!far(cx,cy,11)&&k<60);
-      forest(cx,cy,2+rnd()*3.5,.78);
-    }
+    const nf=Math.round((20+Math.floor(rnd()*6))*A);
+    for(let i=0;i<nf;i++){let cx,cy,k=0;do{cx=rnd()*W;cy=rnd()*H;k++}while(!far(cx,cy,11)&&k<60);forest(cx,cy,2+rnd()*3.8,.78)}
+    // palmeiras/bosques nas margens do rio
+    for(const q of G.river)if(rnd()<.18)forest(q.x+(rnd()-.5)*6,q.y+(rnd()-.5)*6,1.6,.6);
     // bordas com floresta
     for(let y=0;y<H;y++)for(let x=0;x<W;x++){if((x<2||y<2||x>W-3||y>H-3)&&rnd()<.6&&far(x,y,9))addRes('wood',x,y)}
     // recursos de cada base
@@ -632,17 +647,26 @@ function genMap(seed){
       p=at(a0+Math.PI*1.45,8);cluster('gold',p.x,p.y,5);
       p=at(a0+Math.PI*1.75,9);cluster('stone',p.x,p.y,4);
       p=at(a0+Math.PI*.3,13);cluster('food',p.x,p.y,5);
+      p=at(a0+Math.PI*1.1,17);cluster('gold',p.x,p.y,6);
+      p=at(a0+Math.PI*.8,18);cluster('stone',p.x,p.y,5);
     }
-    for(let i=0;i<6;i++){let cx,cy,k=0;do{cx=5+rnd()*(W-10);cy=5+rnd()*(H-10);k++}while(!far(cx,cy,16)&&k<50);cluster(i%2?'gold':'stone',Math.round(cx),Math.round(cy),4+Math.floor(rnd()*3))}
-    // limpar zona inicial (exceto o que foi colocado de propósito fora do raio)
+    // minas e bagas espalhadas (as melhores no centro, perto da água)
+    const nm=Math.round(6*A)+2;
+    for(let i=0;i<nm;i++){let cx,cy,k=0;do{cx=5+rnd()*(W-10);cy=5+rnd()*(H-10);k++}while(!far(cx,cy,18)&&k<50);cluster(i%3===0?'stone':i%3===1?'gold':'food',Math.round(cx),Math.round(cy),4+Math.floor(rnd()*4))}
+    for(let i=0;i<3;i++){const a=rnd()*6.28,d=r0+3+rnd()*4;cluster('gold',Math.round(cx0+dcos(a)*d),Math.round(cy0+dsin(a)*d),6)}
+    // limpar zona inicial
     for(const s of G.starts)for(let y=s.y-4;y<=s.y+4;y++)for(let x=s.x-4;x<=s.x+4;x++){
       if(!inb(x,y))continue;const i=idx(x,y);if(resAt[i]){resAt[i]=null;blk[i]=0}if(terr[i]===1){terr[i]=0;blk[i]=0}
     }
-    // conectividade
-    if(connected(G.starts[0],G.starts[1]))return true;
+    // conectividade por terra e por água (lago ↔ mar)
+    if(connected(G.starts[0],G.starts[1])&&waterLinked(G.lake,G.sea))return true;
   }
   return true;
 }
+function waterLinked(a,b){const st=[];for(let y=Math.floor(a.y-2);y<=a.y+2;y++)for(let x=Math.floor(a.x-2);x<=a.x+2;x++)if(inb(x,y)&&terr[idx(x,y)]===1)st.push(idx(x,y));
+  if(!st.length)return false;const seen=new Uint8Array(W*H);for(const i of st)seen[i]=1;const q=st.slice();
+  while(q.length){const i=q.pop();const x=i%W,y=(i/W)|0;if(hyp(x-b.x,y-b.y)<b.r*.8)return true;for(const [dx,dy] of [[1,0],[-1,0],[0,1],[0,-1]]){const nx=x+dx,ny=y+dy;if(!inb(nx,ny))continue;const j=idx(nx,ny);if(!seen[j]&&terr[j]===1){seen[j]=1;q.push(j)}}}
+  return false}
 function forest(cx,cy,r,dens){
   for(let y=Math.floor(cy-r-1);y<=cy+r+1;y++)for(let x=Math.floor(cx-r-1);x<=cx+r+1;x++){
     if(!inb(x,y))continue;const d=hyp(x-cx,y-cy)/r;if(d<1&&rnd()<dens*(1.15-d*.4))addRes('wood',x,y);
@@ -745,7 +769,7 @@ function curTile(u){setMover(u);for(const [ex,ey] of [[0,0],[-.03,0],[.03,0],[0,
 function capOf(u){return u.d.carry||CARRY}
 /* ---------------- A* ---------------- */
 let PF_REACHED=true;
-const gS=new Float32Array(W*H),stamp=new Int32Array(W*H),came=new Int32Array(W*H),closedS=new Int32Array(W*H);let gen=0;
+let gS=new Float32Array(W*H),stamp=new Int32Array(W*H),came=new Int32Array(W*H),closedS=new Int32Array(W*H);let gen=0;
 const heap=[];
 function hpush(i,f){heap.push([f,i]);let k=heap.length-1;while(k>0){const p=(k-1)>>1;if(heap[p][0]<=heap[k][0])break;[heap[p],heap[k]]=[heap[k],heap[p]];k=p}}
 function hpop(){const top=heap[0];const last=heap.pop();if(heap.length){heap[0]=last;let k=0;for(;;){const l=2*k+1,r=l+1;let m=k;if(l<heap.length&&heap[l][0]<heap[m][0])m=l;if(r<heap.length&&heap[r][0]<heap[m][0])m=r;if(m===k)break;[heap[m],heap[k]]=[heap[k],heap[m]];k=m}}return top}
@@ -876,8 +900,8 @@ function formationSlots(units,x,y,form){
   return out;
 }
 function snapFree(u,x,y,used){
-  setMover(u);const tx=Math.floor(x),ty=Math.floor(y);
-  for(let r=0;r<5;r++)for(let yy=ty-r;yy<=ty+r;yy++)for(let xx=tx-r;xx<=tx+r;xx++){if(Math.max(Math.abs(xx-tx),Math.abs(yy-ty))!==r)continue;const i=inb(xx,yy)?idx(xx,yy):-1;if(i<0||!okTile(i))continue;
+  setMover(u);x=clamp(x,.5,W-.5);y=clamp(y,.5,H-.5);const tx=Math.floor(x),ty=Math.floor(y);
+  for(let r=0;r<12;r++)for(let yy=ty-r;yy<=ty+r;yy++)for(let xx=tx-r;xx<=tx+r;xx++){if(Math.max(Math.abs(xx-tx),Math.abs(yy-ty))!==r)continue;const i=inb(xx,yy)?idx(xx,yy):-1;if(i<0||!okTile(i))continue;
     if(used&&used.get(i)>=(r===0?2:1))continue;if(used)used.set(i,(used.get(i)||0)+1);return r===0?{x:clamp(x,xx+.1,xx+.9),y:clamp(y,yy+.1,yy+.9)}:{x:xx+.5,y:yy+.5}}
   return{x,y};
 }
@@ -1593,8 +1617,9 @@ function darkOf(cv){let d=DARK.get(cv);if(d)return d;d=mkCanvas(cv.width,cv.heig
 
 /* ---------------- terreno ---------------- */
 let decos=[],WFIELD=null;
+let TGT=GT;
 function buildTerrain(){
-  const S=GT,CW=W*S;
+  TGT=W>90?24:GT;const S=TGT,CW=W*S;
   terrCanvas=mkCanvas(CW,CW);const c=terrCanvas.getContext('2d');
   const r=mulberry32(G.seed+5);
   const n1=vnoise(G.seed+1,5),n2=vnoise(G.seed+2,14),n3=vnoise(G.seed+3,7);
@@ -1621,7 +1646,7 @@ function buildTerrain(){
   for(let y=0;y<H;y++)for(let x=0;x<W;x++){const rr=resAt[idx(x,y)];if(!rr||rr.rk!=='wood')continue;
     const cx=(x+.5)*S,cy=(y+.5)*S;const g=c.createRadialGradient(cx,cy,0,cx,cy,S*1.25);g.addColorStop(0,'rgba(34,48,18,.5)');g.addColorStop(1,'rgba(34,48,18,0)');c.fillStyle=g;c.fillRect(cx-S*1.3,cy-S*1.3,S*2.6,S*2.6)}
   // ervas
-  for(let k=0;k<26000;k++){const x=r()*CW,y=r()*CW;const t=terr[idx((x/S)|0,(y/S)|0)];if(t===1)continue;
+  for(let k=0;k<26000*W*H/6400;k++){const x=r()*CW,y=r()*CW;const t=terr[idx((x/S)|0,(y/S)|0)];if(t===1)continue;
     c.strokeStyle=r()<.5?'rgba(30,60,10,.32)':'rgba(190,210,120,.22)';c.lineWidth=1;c.beginPath();c.moveTo(x,y);c.lineTo(x+(r()-.5)*3,y-2-r()*3);c.stroke()}
   // água e areia: campo contínuo (margens orgânicas em vez de degraus)
   const FR=8,FW=W*FR,FH=H*FR,wf=new Float32Array(FW*FH),sf=new Float32Array(FW*FH);
@@ -1644,7 +1669,7 @@ function buildTerrain(){
     const o=i*4;D[o]=R;D[o+1]=Gc;D[o+2]=B;D[o+3]=A}
   wc.putImageData(wi,0,0);c.imageSmoothingEnabled=true;c.drawImage(wl,0,0,CW,CW);
   // brilhos estáticos só em água funda
-  for(let k=0;k<1600;k++){const x=r()*CW,y=r()*CW;const fx0=(x/S*FR)|0,fy0=(y/S*FR)|0;if(fx0>=FW||fy0>=FH||WFIELD.f[fy0*FW+fx0]<.58)continue;c.strokeStyle=`rgba(200,230,255,${.05+r()*.1})`;c.lineWidth=1;c.beginPath();c.moveTo(x,y);c.quadraticCurveTo(x+4,y-2,x+9,y);c.stroke()}
+  for(let k=0;k<1600*W*H/6400;k++){const x=r()*CW,y=r()*CW;const fx0=(x/S*FR)|0,fy0=(y/S*FR)|0;if(fx0>=FW||fy0>=FH||WFIELD.f[fy0*FW+fx0]<.58)continue;c.strokeStyle=`rgba(200,230,255,${.05+r()*.1})`;c.lineWidth=1;c.beginPath();c.moveTo(x,y);c.quadraticCurveTo(x+4,y-2,x+9,y);c.stroke()}
   // minimapa base
   miniBase=mkCanvas(W,H);const m=miniBase.getContext('2d');
   for(let y=0;y<H;y++)for(let x=0;x<W;x++){const t=terr[idx(x,y)];m.fillStyle=t===1?'#2c6a93':t===2?'#c2a66c':'#5d8a37';m.fillRect(x,y,1,1)}
@@ -1661,7 +1686,7 @@ function groundChunk(i,j){
   c.setTransform(cs*HW/GT,cs*HH/GT,-cs*HW/GT,cs*HH/GT,-X0*cs,-Y0*cs);c.imageSmoothingEnabled=true;
   const pts=[unproj(X0,Y0),unproj(X0+CHW,Y0),unproj(X0,Y0+CHH),unproj(X0+CHW,Y0+CHH)];
   const x0=clamp(Math.floor(Math.min(...pts.map(q=>q.x)))-1,0,W),x1=clamp(Math.ceil(Math.max(...pts.map(q=>q.x)))+1,0,W),y0=clamp(Math.floor(Math.min(...pts.map(q=>q.y)))-1,0,H),y1=clamp(Math.ceil(Math.max(...pts.map(q=>q.y)))+1,0,H);
-  if(x1>x0&&y1>y0)c.drawImage(terrCanvas,x0*GT,y0*GT,(x1-x0)*GT,(y1-y0)*GT,x0*GT,y0*GT,(x1-x0)*GT,(y1-y0)*GT);
+  if(x1>x0&&y1>y0)c.drawImage(terrCanvas,x0*TGT,y0*TGT,(x1-x0)*TGT,(y1-y0)*TGT,x0*GT,y0*GT,(x1-x0)*GT,(y1-y0)*GT);
   const cb=ents.filter(e=>e.kind==='b'&&!e.d.walk&&(e.o===ME||e.seen)&&e.tx+e.w>=x0-12&&e.tx<=x1+3&&e.ty+e.h>=y0-12&&e.ty<=y1+3);
   {const wd=wearDecal();c.globalAlpha=.5;for(const e of cb){if(e.d.wall||e.d.gate)continue;const m=e.done?.55:.3;c.drawImage(wd,(e.tx-m)*GT,(e.ty-m)*GT,(e.w+m*2)*GT,(e.h+m*2)*GT)}c.globalAlpha=1}
   // decorações fixas
@@ -4204,7 +4229,7 @@ audioLoad();$('bSound').textContent='Som: '+(AUD.on?'ligado':'desligado');$('vMu
 function startGame(seed){
   const mode=NET.on?'normal':gameMode;
   G={seed:seed??Math.floor(Math.random()*1e9),time:0,starts:null,amoveNext:false,over:false,fishRespawn:[],form:'livre',cmdMode:null,mode};
-  P=mkPlayers();
+  P=mkPlayers();setMapSize(MAP_N);
   if(mode==='build')for(const k of KINDS)P[ME].res[k]+=800;
   sel=[];projs=[];fx=[];placing=null;menuMode=null;
   genMap(G.seed);
@@ -4231,7 +4256,7 @@ function startGame(seed){
 function spawnFish(){
   const pts=[];for(let y=1;y<H-1;y++)for(let x=1;x<W-1;x++){if(terr[idx(x,y)]!==1)continue;let wn=0;for(let dy=-1;dy<=1;dy++)for(let dx=-1;dx<=1;dx++)if(terr[idx(x+dx,y+dy)]===1)wn++;if(wn>=7)pts.push([x,y])}
   for(let i=pts.length-1;i>0;i--){const j=Math.floor(rnd()*(i+1));[pts[i],pts[j]]=[pts[j],pts[i]]}
-  const chosen=[];for(const [x,y] of pts){if(chosen.length>=14)break;if(chosen.some(([a,b])=>hyp(a-x,b-y)<4))continue;chosen.push([x,y]);addFish(x,y,250)}
+  const chosen=[];for(const [x,y] of pts){if(chosen.length>=Math.round(14*W*H/6400))break;if(chosen.some(([a,b])=>hyp(a-x,b-y)<4))continue;chosen.push([x,y]);addFish(x,y,250)}
 }
 function addFish(x,y,amt){const i=idx(x,y);if(resAt[i]||terr[i]!==1)return null;const r={id:nid++,kind:'r',rk:'food',amt,max:amt,tx:x,ty:y,w:1,h:1,var:(x*7+y)%3,fish:true,walk:true};resAt[i]=r;byId.set(r.id,r);return r}
 function mkPlayers(){return[newPlayer(0,'#3f86e0','#1d4f8f'),newPlayer(1,'#d64a3a','#8a2318'),newPlayer(2,'#c9a36a','#7a5a32')]}
@@ -4239,7 +4264,7 @@ function spawnFauna(){
   const r=rnd;
   const place=(type,cx,cy,n)=>{for(let k=0;k<n;k++){for(let tries=0;tries<25;tries++){const tx=(cx+(r()-.5)*4)|0,ty=(cy+(r()-.5)*4)|0;if(inb(tx,ty)&&!blk[idx(tx,ty)]&&!bldAt[idx(tx,ty)]){mkUnit(2,type,tx+.5,ty+.5);break}}}};
   for(const st of G.starts){const a=r()*7;place('gazela',st.x+dcos(a)*11,st.y+dsin(a)*11,4);const b=a+2.4;place('javali',st.x+dcos(b)*13,st.y+dsin(b)*13,1)}
-  for(let i=0;i<12;i++){let x,y,k=0;do{x=6+r()*(W-12);y=6+r()*(H-12);k++}while(G.starts.some(st=>hyp(st.x-x,st.y-y)<16)&&k<40);place(i%3===0?'javali':'gazela',x,y,i%3===0?1:3)}
+  for(let i=0;i<Math.round(12*W*H/6400);i++){let x,y,k=0;do{x=6+r()*(W-12);y=6+r()*(H-12);k++}while(G.starts.some(st=>hyp(st.x-x,st.y-y)<16)&&k<40);place(i%3===0?'javali':'gazela',x,y,i%3===0?1:3)}
 }
 /* ---------------- guardar / continuar ---------------- */
 const SAVE_KEY='alv_save_v1';
@@ -4248,7 +4273,7 @@ function serialize(){
   const su=e=>({k:'u',id:e.id,o:e.o,t:e.type,x:+e.x.toFixed(4),y:+e.y.toFixed(4),hp:e.hp,s:e.state,c:e.carry,ct:e.ctype,gk:e.gkind,tg:ref(e.target),gr:ref(e.gres),bd:ref(e.bld),de:e.dest,am:e.amove,fa:e.faith,hm:e.home,st:e.stance||null,gu:e.guard||null,pa:e.patrol||null,cg:e.cargo?e.cargo.map(su):null});
   return JSON.stringify({v:1,difficulty,nid,G:{seed:G.seed,time:G.time,starts:G.starts,wonder:G.wonder||null,fishRespawn:G.fishRespawn||[],lake:G.lake||null,form:G.form||'livre',mode:G.mode||'normal',tut:G.tut||null},
     P:P.map(p=>({res:p.res,age:p.age,techs:p.techs,stats:p.stats})),
-    terr:Array.from(terr).join(''),vis:Array.from(vis).join(''),
+    mapN:W,terr:Array.from(terr).join(''),vis:Array.from(vis).join(''),
     res:[...byId.values()].filter(e=>e.kind==='r').map(r=>[r.id,r.rk,r.amt,r.max,r.tx,r.ty,r.var,r.carcass?1:r.fish?2:0]),
     ents:ents.map(e=>e.kind==='u'?su(e)
       :{k:'b',id:e.id,o:e.o,t:e.type,tx:e.tx,ty:e.ty,hp:e.hp,mx:e.max,dn:e.done,pg:e.prog,q:e.queue,qt:e.qt,ra:e.rally?{x:e.rally.x,y:e.rally.y,e:ref(e.rally.e)}:null,am:e.amt,sn:e.seen,lv:e.lvl||null,lk:!!e.locked}),
@@ -4264,7 +4289,7 @@ function loadGame(){
   G={seed:d.G.seed,time:d.G.time,starts:d.G.starts,wonder:d.G.wonder,amoveNext:false,over:false,fishRespawn:d.G.fishRespawn||[],lake:d.G.lake||null,form:d.G.form||'livre',cmdMode:null,mode:d.G.mode||'normal',tut:d.G.tut||null};gameMode=G.mode;
   P=mkPlayers();d.P.forEach((p,i)=>{Object.assign(P[i].res,p.res);P[i].age=p.age;P[i].techs=p.techs||{};P[i].stats=p.stats});
   rndSeed(d.G.seed+Math.floor(d.G.time));
-  terr=Uint8Array.from(d.terr,ch=>+ch);blk=new Uint8Array(W*H);bldAt=new Int32Array(W*H);resAt=new Array(W*H).fill(null);
+  setMapSize(d.mapN||Math.round(Math.sqrt(d.terr.length)));terr=Uint8Array.from(d.terr,ch=>+ch);blk=new Uint8Array(W*H);bldAt=new Int32Array(W*H);resAt=new Array(W*H).fill(null);
   for(let i=0;i<W*H;i++)if(terr[i]===1)blk[i]=1;
   ents=[];byId=new Map();
   for(const [id,rk,amt,max,tx,ty,v,cc] of d.res){const r={id,kind:'r',rk,amt,max,tx,ty,w:1,h:1,var:v};if(cc===1){r.carcass=true;r.walk=true}else if(cc===2){r.fish=true;r.walk=true}else blk[idx(tx,ty)]=2;resAt[idx(tx,ty)]=r;byId.set(id,r)}

@@ -4,11 +4,11 @@ const S=()=>window.__S();
 const T=[];
 function rec(name,pass,detail){T.push({name,res:pass===null?'NOT TESTED':pass?'PASS':'FAIL',detail:detail||''})}
 function sim(sec){for(let i=0;i<sec*30;i++)step(1/30)}
-function fresh(seed){startGame(seed||7);const s=S();s.AIs[1]=null;for(const p of s.P){p.age=2;for(const k in p.res)p.res[k]=20000}s.vis.fill(2);const h=s.G.starts[0];const ox=Math.round(h.x-Math.sign(40-h.x)*3),oy=Math.round(h.y-Math.sign(40-h.y)*3);for(let i=0;i<14;i++){const sp=freeSpot('casa',0,ox,oy,2);if(sp)mkBld(0,'casa',sp.x,sp.y,true)}recount();return s}
+function fresh(seed){startGame(seed||7);const s=S();s.AIs[1]=null;for(const p of s.P){p.age=2;for(const k in p.res)p.res[k]=20000}s.vis.fill(2);const h=s.G.starts[0];const ox=Math.round(h.x-Math.sign(W/2-h.x)*3),oy=Math.round(h.y-Math.sign(H/2-h.y)*3);for(let i=0;i<14;i++){const sp=freeSpot('casa',0,ox,oy,2);if(sp)mkBld(0,'casa',sp.x,sp.y,true)}recount();return s}
 function freeSpot(type,o,cx,cy,r0){for(let r=r0||2;r<30;r++)for(let y=cy-r;y<=cy+r;y++)for(let x=cx-r;x<=cx+r;x++){if(Math.max(Math.abs(x-cx),Math.abs(y-cy))!==r)continue;if(canPlace(type,x,y,o,1,true))return{x,y}}return null}
-function freeTile(cx,cy){const s=S();for(let r=0;r<20;r++)for(let y=cy-r;y<=cy+r;y++)for(let x=cx-r;x<=cx+r;x++){if(x<1||y<1||x>78||y>78)continue;if(s.blk[idx(x,y)]===0&&!s.resAt[idx(x,y)])return{x,y}}}
+function freeTile(cx,cy){const s=S();for(let r=0;r<20;r++)for(let y=cy-r;y<=cy+r;y++)for(let x=cx-r;x<=cx+r;x++){if(x<1||y<1||x>W-3||y>H-3)continue;if(s.blk[idx(x,y)]===0&&!s.resAt[idx(x,y)])return{x,y}}}
 function home(o){return S().G.starts[o]}
-function inward(o,d){const h=home(o);return{x:Math.round(h.x+Math.sign(40-h.x)*d),y:Math.round(h.y+Math.sign(40-h.y)*d)}}
+function inward(o,d){const h=home(o);return{x:Math.round(h.x+Math.sign(W/2-h.x)*d),y:Math.round(h.y+Math.sign(H/2-h.y)*d)}}
 function clearArea(cx,cy,r){const s=S();for(let y=cy-r;y<=cy+r;y++)for(let x=cx-r;x<=cx+r;x++){const i=idx(x,y);const rr=s.resAt[i];if(rr&&!rr.fish)removeRes(rr)}}
 // ---------- 1. produção de cada unidade ----------
 try{
@@ -57,10 +57,10 @@ try{
 }catch(e){rec('Contra-unidades',false,String(e))}
 // ---------- 5. formação ----------
 try{
-  const s=fresh(25);const h=home(0);const b=freeTile(h.x+5,h.y+5);clearArea(b.x+8,b.y+8,6);
+  const s=fresh(25);const h=home(0);const sx=Math.sign(W/2-h.x),sy=Math.sign(H/2-h.y);const b=freeTile(h.x+5*sx,h.y+5*sy);clearArea(b.x,b.y,3);clearArea(b.x+8*sx,b.y+8*sy,6);
   const us=[];for(let i=0;i<4;i++)us.push(mkUnit(0,'guerreiro',b.x+.5+i*.4,b.y+.5));for(let i=0;i<4;i++)us.push(mkUnit(0,'arqueiro',b.x+.5+i*.4,b.y+1.3));us.push(mkUnit(0,'catapulta',b.x+1,b.y+2));
-  const dst={x:b.x+9,y:b.y+9};groupMove(us,dst.x,dst.y,false,'linha');sim(40);
-  const dir={x:.707,y:.707};const along=u=>(u.x-dst.x)*dir.x+(u.y-dst.y)*dir.y;
+  const dst={x:b.x+9*sx,y:b.y+9*sy};groupMove(us,dst.x,dst.y,false,'linha');sim(40);
+  const dir={x:.707*sx,y:.707*sy};const along=u=>(u.x-dst.x)*dir.x+(u.y-dst.y)*dir.y;
   const inf=us.filter(u=>u.type==='guerreiro').map(along),arc=us.filter(u=>u.type==='arqueiro').map(along),sie=us.filter(u=>u.type==='catapulta').map(along);
   const avg=a=>a.reduce((x,y)=>x+y,0)/a.length;
   let minD=9;for(let i=0;i<us.length;i++)for(let j=i+1;j<us.length;j++)minD=Math.min(minD,Math.hypot(us[i].x-us[j].x,us[i].y-us[j].y));
@@ -223,7 +223,7 @@ try{
 // ---------- 21. minimapa ----------
 try{
   startGame(39);const s=S();s.vis.fill(2);s.AIs[1]=null;const h=home(0);const c=freeTile(h.x+8,h.y+8);for(let k=0;k<5;k++)mkBld(0,'muralhaPedra',c.x+k,c.y,true);
-  {const d2=fogImg.data;for(let i=0;i<80*80;i++)d2[i*4+3]=0;fogCtx.putImageData(fogImg,0,0)}renderMini();const m=document.getElementById('mini').getContext('2d');const d=m.getImageData(0,0,320,160).data;let blue=0,cyan=0,red=0;
+  {const d2=fogImg.data;for(let i=0;i<W*H;i++)d2[i*4+3]=0;fogCtx.putImageData(fogImg,0,0)}renderMini();const m=document.getElementById('mini').getContext('2d');const d=m.getImageData(0,0,320,160).data;let blue=0,cyan=0,red=0;
   for(let i=0;i<d.length;i+=4){if(d[i]<90&&d[i+1]>110&&d[i+2]>200)blue++;if(d[i]>110&&d[i+1]>200&&d[i+2]>230)cyan++;if(d[i]>190&&d[i+1]<110&&d[i+2]<100)red++}
   rec('Minimapa',blue>10&&cyan>3&&red>5,`píxeis: azul(jogador)=${blue} ciano(peixe)=${cyan} vermelho(rival)=${red}`);
 }catch(e){rec('Minimapa',false,String(e))}
