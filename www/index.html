@@ -2277,7 +2277,11 @@ function bldArt(type,age,o,vr){
   const RS=SS; // canvas com tamanho exato CW×CH×SS (inteiros): desenha-se sem reamostragem
   const cv=mkCanvas(CW*RS,CH*RS),c=cv.getContext('2d');c.scale(RS,RS);c.imageSmoothingEnabled=true;c.imageSmoothingQuality='high';
   const draw=f=>{c.save();if(f){c.translate(CW,0);c.scale(-1,1)}c.drawImage(A,sx,sy,iw,ih,2,2,iw*k,ih*k);c.restore()};
-  draw(flipA);if(flipB)draw(true);
+  const m3=thin&&!d.gate?(vr||0):0,xb=m3&5,yb=m3&10;
+  if(flipB&&(xb===1||xb===4)&&(yb===2||yb===8)){ // canto em L (muralha em degraus): meia peça para cada vizinho, sem pontas soltas
+    const half=(right,f)=>{c.save();c.beginPath();if(right)c.rect(ox-1,0,CW,CH);else c.rect(0,0,ox+1,CH);c.clip();draw(f);c.restore()};
+    half(xb===1,true);half(yb===8,false)}
+  else{draw(flipA);if(flipB)draw(true)}
   return {cv,ox,oy,CW,CH}}
 // mercado: praça empedrada com bancas e toldos às riscas na cor do reino
 function marketSprite(age,o){const key='mkt|'+age+'|'+o;if(BCACHE[key])return BCACHE[key];
@@ -3360,7 +3364,7 @@ function render(){UCFM=0;
   // chão
   flat();c.imageSmoothingEnabled=true;
   {const i0=Math.floor((cam.x+H*HW)/CHW),i1=Math.floor((cam.x+vw/cam.z+H*HW)/CHW),j0=Math.floor(cam.y/CHH),j1=Math.floor((cam.y+vh/cam.z)/CHH);
-    for(let j=Math.max(0,j0);j<=j1;j++)for(let i=Math.max(0,i0);i<=i1;i++){if(-H*HW+i*CHW>W*HW||j*CHH>(W+H)*HH)continue;c.drawImage(groundChunk(i,j),-H*HW+i*CHW,j*CHH,CHW,CHH)}}
+    for(let j=Math.max(0,j0);j<=j1;j++)for(let i=Math.max(0,i0);i<=i1;i++){if(-H*HW+i*CHW>W*HW||j*CHH>(W+H)*HH)continue;c.drawImage(groundChunk(i,j),-H*HW+i*CHW-.5,j*CHH-.5,CHW+1,CHH+1)}}
   for(const e of ents)if(e.kind==='b'&&e.d.walk&&seenBy0(e)){const q=proj(e.tx,e.ty);if(!onScreen(q.x,q.y+48,160))continue;
     if(BLDART.ready){const s2=bldSprite('quinta',P[e.o].age,e.o,'');c.globalAlpha=e.done?(e.amt>0?1:.55):.35+.6*e.prog;c.drawImage(e.done||!visibleTo0(e)?s2.cv:darkOf(s2.cv),q.x-s2.ox,q.y-s2.oy,s2.CW,s2.CH);c.globalAlpha=1}
     else c.drawImage(farmSprite(e),q.x-e.h*HW,q.y,(e.w+e.h)*HW,(e.w+e.h)*HH)}
@@ -4731,7 +4735,8 @@ function doCommand(o,units,e,w,mode,form){
 }
 function lineTiles(a,b){
   const out=[];let x0=a.x,y0=a.y;const x1=b.x,y1=b.y;const dx=Math.abs(x1-x0),dy=-Math.abs(y1-y0),sx=x0<x1?1:-1,sy=y0<y1?1:-1;let err=dx+dy;
-  for(let k=0;k<200;k++){out.push([x0,y0]);if(x0===x1&&y0===y1)break;const e2=2*err;if(e2>=dy){err+=dy;x0+=sx}if(e2<=dx){err+=dx;y0+=sy}}
+  // linha contínua (só passos em X ou em Y): na diagonal a muralha faz degraus em vez de ficar com buracos entre blocos
+  for(let k=0;k<400;k++){out.push([x0,y0]);if(x0===x1&&y0===y1)break;const e2=2*err,mx=e2>=dy,my=e2<=dx;if(mx&&my){err+=dy;x0+=sx;out.push([x0,y0]);err+=dx;y0+=sy}else if(mx){err+=dy;x0+=sx}else{err+=dx;y0+=sy}}
   return out;
 }
 function confirmPlace(){
