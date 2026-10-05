@@ -22,7 +22,10 @@ jobs:
           distribution: temurin
           java-version: 21
 
+      # o pacote 'tools' deixou de existir nas cmdline-tools novas: instala só o necessário
       - uses: android-actions/setup-android@v3
+        with:
+          packages: 'platform-tools'
 
       - name: Instalar dependências
         run: npm ci
