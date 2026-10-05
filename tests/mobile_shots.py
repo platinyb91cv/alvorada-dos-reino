@@ -26,7 +26,7 @@ async def main():
         await pg.wait_for_timeout(350);await pg.screenshot(path=f"{OUT}{name}_{tag}.png");rep[tag]=await pg.evaluate(AUDIT)
       await shot("login")
       await pg.click("#lgPreview");await shot("menu")
-      await pg.click("#bPlay");await pg.wait_for_timeout(600)
+      await pg.click("#bPlay"); await pg.click("#bSetupGo");await pg.wait_for_timeout(600)
       await pg.evaluate("()=>{const s=__S();for(let i=0;i<30*20;i++)step(1/30);setSel([]);uiDirty=true}");await shot("jogo")
       await pg.evaluate("()=>{const s=__S();const tc=s.ents.find(e=>e.kind==='b'&&e.o===0);setSel([tc]);uiDirty=true}");await shot("centro")
       await pg.evaluate("()=>{const s=__S();const v=s.ents.find(e=>e.kind==='u'&&e.o===0&&e.type==='aldeao');setSel([v]);menuMode='build';uiDirty=true}");await shot("construir")

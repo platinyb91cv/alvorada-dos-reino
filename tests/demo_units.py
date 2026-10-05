@@ -48,7 +48,7 @@ async def main():
         b = await p.chromium.launch()
         pg = await b.new_page(viewport={"width":900,"height":420}, device_scale_factor=2)
         errs=[]; pg.on("pageerror", lambda e: errs.append(str(e)[:300]))
-        await pg.goto("file:///home/claude/alvorada/www/index.html"); await pg.click("#lgPreview"); await pg.click("#bPlay"); await pg.wait_for_timeout(300)
+        await pg.goto("file:///home/claude/alvorada/www/index.html"); await pg.click("#lgPreview"); await pg.click("#bPlay"); await pg.click("#bSetupGo"); await pg.wait_for_timeout(300)
         shots=[("lineup",2,1.6),("lineup",0,1.6),("lineup",1,1.6),("jobs",1,1.7),("attack",2,1.2),("lineup",2,2.2),("lineup",2,.6)]
         for mode,age,z in shots:
             await pg.evaluate(SETUP,[age,z,mode]); await pg.evaluate("document.getElementById('bottom').style.display='none';document.getElementById('toast').innerHTML=''")

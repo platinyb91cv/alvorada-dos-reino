@@ -17,7 +17,7 @@ async def main():
   async with async_playwright() as p:
     b=await p.chromium.launch();pg=await b.new_page(viewport={"width":900,"height":420},device_scale_factor=2)
     errs=[];pg.on("pageerror",lambda e:errs.append(str(e)[:200]))
-    await pg.goto("file:///home/claude/alvorada/www/index.html");await pg.click("#lgPreview"); await pg.click("#bPlay");await pg.wait_for_timeout(300)
+    await pg.goto("file:///home/claude/alvorada/www/index.html");await pg.click("#lgPreview"); await pg.click("#bPlay"); await pg.click("#bSetupGo");await pg.wait_for_timeout(300)
     for N in (50,100,200):
       for z in (1.0,2.2,.6):
         r=await pg.evaluate(JS,[N,z]);print(json.dumps(r))

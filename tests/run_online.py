@@ -103,7 +103,7 @@ async def main():
     last=sorted(set(dict(hs[0]['my']))&set(dict(hs[1]['my'])))[-1];same=dict(hs[0]['my'])[last]==dict(hs[1]['my'])[last]
     rep(back and same and hs[0]['t']>0,'Queda de ligação',f"anfitrião mostrou 'à espera'={w}; amigo voltou sozinho={back}; continua sincronizado (turno {last})={same}")
     # 6 o amigo fecha a aplicação e volta a abrir → Voltar à partida
-    await B.close();B=await ctxB.new_page();B.on("pageerror",lambda e:errs.append('B2: '+str(e)[:300]))
+    await B.close();B=await ctxB.new_page();B.on("pageerror",lambda e:errs.append('B2: '+str(e.stack)[:600]))
     await asyncio.sleep(3);await B.goto(URL);await B.wait_for_timeout(400);await B.wait_for_timeout(1500);await B.click('#bOnline')
     vis=await B.evaluate("()=>!document.getElementById('olRejoin').hidden");await B.click('#olRejoin')
     ok=await wait(B,"()=>NET.game&&running&&!NET.awaitSnap",20000);await asyncio.sleep(8)
@@ -167,7 +167,7 @@ async def main():
     gotInv=await F.evaluate("()=>!document.getElementById('invite').hidden")
     rep(pres=={} and 'amigos' in errE and not gotInv,'Só amigos',f"estado dos não-amigos devolvido: {pres}; convite recusado: {errE}")
     # jogo contra o computador conta no perfil
-    await F.click('#olBack');await F.click('#bPlay');await F.wait_for_timeout(500);await F.evaluate("()=>endGame(true)");await F.wait_for_timeout(800)
+    await F.click('#olBack');await F.click("#bPlay");await F.click("#bSetupGo");await F.wait_for_timeout(500);await F.evaluate("()=>endGame(true)");await F.wait_for_timeout(800)
     stt=json.loads(urlopen(f'http://127.0.0.1:{MOCK}/__state').read());ana=[p for p in stt['P'] if p['id']=='u-ana'][0]
     rep(ana['sp_wins']==1,'Vitória contra o computador',f"sp_wins={ana['sp_wins']}")
     # apagar a conta (exigido pela Play Store): dois toques em Apagar → volta ao login e o perfil desaparece

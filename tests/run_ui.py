@@ -12,7 +12,7 @@ async def main():
         R=[]
         # pausa e regresso
         await pg.evaluate("localStorage.clear()")
-        await pg.click("#lgPreview"); await pg.click("#bPlay"); await pg.wait_for_timeout(500)
+        await pg.click("#lgPreview"); await pg.click("#bPlay"); await pg.click("#bSetupGo"); await pg.wait_for_timeout(500)
         t0=await pg.evaluate("__S().G.time")
         await pg.evaluate("Object.defineProperty(document,'hidden',{value:true,configurable:true});document.dispatchEvent(new Event('visibilitychange'))")
         paused=await pg.evaluate("({p:__S().paused,shown:!document.getElementById('sPause').hidden,title:document.querySelector('#sPause h2').textContent,save:!!localStorage.getItem('alv_save_v1')})")

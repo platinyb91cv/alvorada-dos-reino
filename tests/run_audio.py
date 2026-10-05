@@ -28,7 +28,7 @@ async def main():
       return{types:Object.keys(A.SND).length,n,ms:Math.round(ms),mb:+(bytes/1e6).toFixed(1),bad}}""")
     rep(not r['bad'] and r['types']>=60,'Síntese',f"{r['types']} tipos de som, {r['n']} variações, sem silêncio/NaN/saturação; tempo total {r['ms']} ms; memória dos efeitos {r['mb']} MB")
     # 3 entrar no jogo → música 'paz' e ambiente
-    await pg.click("#lgPreview"); await pg.click("#bPlay");await pg.wait_for_timeout(1500)
+    await pg.click("#lgPreview"); await pg.click("#bPlay"); await pg.click("#bSetupGo");await pg.wait_for_timeout(1500)
     r=await pg.evaluate("()=>{const A=__AUD();return{mood:A.MUS.mood,amb:!!A.AUD.amb,by:A.AUD.stats.by}}")
     rep(r['mood']=='paz' and r['amb'] and r['by'].get('research',0)>=1,'Início de partida',f"música '{r['mood']}', ambiente ligado={r['amb']}, som de seleção do Centro tocou={r['by'].get('research',0)>=1}")
     # 4 espacial

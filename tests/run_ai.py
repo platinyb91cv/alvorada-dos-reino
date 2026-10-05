@@ -28,7 +28,7 @@ JS=r"""
       }else{if(e.hp>e.max+.01||!(e.max>0))st.bad++;if((e.d.wall||e.d.gate)&&e.done&&e.o<2)st.wallsBuilt[e.o]=Math.max(st.wallsBuilt[e.o],s.ents.filter(w=>w.o===e.o&&(w.d.wall||w.d.gate)&&w.done).length);if((e.d.wall||e.d.gate)&&e.hp<e.max)st.dmgWall=1}
     }
     for(let o=0;o<2;o++){for(const k in s.P[o].res)if(s.P[o].res[k]<-0.001)st.neg++;
-      let n=0;for(const e of s.ents)if(e.kind==='u'&&e.o===o){n++;if(e.cargo)n+=e.cargo.length}if(n!==s.P[o].pop)st.pop++;
+      let n=0;for(const e of s.ents)if(e.o===o){if(e.kind==='u'){n++;if(e.cargo)n+=e.cargo.length}else if(e.garr)n+=e.garr.length}if(n!==s.P[o].pop)st.pop++;
       st.techs[o]=Object.keys(s.P[o].techs).length;st.ages[o]=s.P[o].age;}
     st.maxEnts=Math.max(st.maxEnts,s.ents.length);
     if(sec===900){const A=JSON.stringify({n:s.ents.length,res:s.P.map(p=>Object.values(p.res).map(Math.floor))});saveGame(true);const raw=localStorage.getItem('alv_save_v1');loadGame();
@@ -58,7 +58,7 @@ async def main():
         b = await p.chromium.launch()
         pg = await b.new_page(viewport={"width":844,"height":390})
         errs=[]; pg.on("pageerror", lambda e: errs.append(str(e)[:300]))
-        await pg.goto(GAME); await pg.click("#lgPreview"); await pg.click("#bPlay"); await pg.wait_for_timeout(300)
+        await pg.goto(GAME); await pg.click("#lgPreview"); await pg.click("#bPlay"); await pg.click("#bSetupGo"); await pg.wait_for_timeout(300)
         for sd in SEEDS:
             r=await pg.evaluate(JS, sd)
             print("SEED",sd,json.dumps(r,ensure_ascii=False))

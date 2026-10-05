@@ -136,9 +136,13 @@ wss.on('connection',(ws,req)=>{
     case 'relay':{
       if(!r)break;const o=other(r,ws.slot);r.last=Date.now();
       if(m.d&&m.d.g==='start'&&ws.slot===0&&r.p[1]){r.started=true;r.public=false;r.match={t0:Date.now(),seed:+m.d.seed||0,host:r.p[0].user,guest:r.p[1].user,reports:[null,null],done:false}}
+      // partida guardada retomada: o anfitrião envia o estado completo em vez de 'start'
+      else if(m.d&&m.d.g==='snap'&&m.d.resume&&ws.slot===0&&r.p[1]&&!r.started){r.started=true;r.public=false;r.match={t0:Date.now(),seed:0,host:r.p[0].user,guest:r.p[1].user,reports:[null,null],done:false,resumed:true}}
       if(m.d&&m.d.g==='snap'&&r.match&&!r.match.done)r.match.snaps=(r.match.snaps||0)+1;
       if(o&&o.ws){const out=JSON.stringify({type:'relay',d:m.d});if(LAG)setTimeout(()=>send(o.ws,out),LAG);else send(o.ws,out)}
       break}
+    // «Gravar e sair»: a partida fica suspensa (sem vencedor nem derrota por abandono)
+    case 'suspend':{if(r&&r.match&&!r.match.done){r.match.done=true;clearInterval(r.match.timer);log('partida suspensa (gravada)',r.code)}break}
     case 'leave':leave(ws,true);break;
     }
   });

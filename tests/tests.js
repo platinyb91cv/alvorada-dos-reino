@@ -14,12 +14,12 @@ function clearArea(cx,cy,r){const s=S();for(let y=cy-r;y<=cy+r;y++)for(let x=cx-
 try{
   const s=fresh(21);const h=home(0);
   const made={};
-  for(const bt of ['quartel','arquearia','estabulo','oficina','templo']){const sp=freeSpot(bt,0,h.x,h.y,5);const b=mkBld(0,bt,sp.x,sp.y,true);
+  for(const bt of ['quartel','arquearia','estabulo','oficina','templo','mercado']){const sp=freeSpot(bt,0,h.x,h.y,5);const b=mkBld(0,bt,sp.x,sp.y,true);
     for(const t of BLDS[bt].train){b.queue=[];s.P[0].res.food=s.P[0].res.wood=s.P[0].res.gold=s.P[0].res.stone=20000;queueUnit(b,t,true);sim(UNITS[t].time+1);made[t]=s.ents.filter(e=>e.o===0&&e.type===t).length}}
   // doca junto ao lago central
   const L=s.G.lake;let dock=null;for(let r=0;r<16&&!dock;r++)for(let y=Math.floor(L.y)-r-10;y<=L.y+r+10&&!dock;y++)for(let x=Math.floor(L.x)-r-10;x<=L.x+r+10;x++){if(canPlace('doca',x,y,0,0,true)){dock=mkBld(0,'doca',x,y,true);break}}
   for(const t of BLDS.doca.train){dock.queue=[];queueUnit(dock,t,true);sim(UNITS[t].time+1);made[t]=s.ents.filter(e=>e.o===0&&e.type===t).length}
-  const all=Object.keys(UNITS).filter(t=>!UNITS[t].gaia&&t!=='aldeao');const miss=all.filter(t=>!made[t]);
+  const all=Object.keys(UNITS).filter(t=>!UNITS[t].gaia&&t!=='aldeao'&&canTrainType(0,t));const miss=all.filter(t=>!made[t]);
   const tc=s.ents.find(e=>e.o===0&&e.type==='centro');queueUnit(tc,'aldeao',true);sim(13);
   rec('Produção de cada unidade',!miss.length&&s.ents.filter(e=>e.o===0&&e.type==='aldeao').length>=4,miss.length?'faltam: '+miss.join(','):all.length+' tipos produzidos + aldeão');
   window.__dock=dock;
