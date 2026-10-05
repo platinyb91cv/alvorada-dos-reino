@@ -4318,7 +4318,7 @@ function lobbyShow(mode){
   const row=(u,col,you)=>`<div class="pl"><b style="background:${col}"></b>${avatarHTML(u)}<span class="nm">${esc(u.name)}${you?' <small>(tu)</small>':''}</span>${u.rating?`<span class="rt">${u.rating}</span>`:''}</div>`;
   $('olPlayers').innerHTML=row(me,NET.slot===0?'#3f86e0':'#d64a3a',true)+(peer?row(NET.peerUser,NET.slot===0?'#d64a3a':'#3f86e0'):`<div class="pl empty"><b style="background:${NET.slot===0?'#d64a3a':'#3f86e0'}"></b>À espera de um adversário…</div>`);
   $('olStart').hidden=NET.slot!==0;$('olStart').disabled=!peer;
-  NET.opts=NET.opts||{vic:'classico',map:SETUP.map==='aleatorio'?'aleatorio':SETUP.map};NET.myCiv=NET.myCiv||SETUP.civ||'aleatorio';
+  NET.opts=NET.opts||{vic:'total',map:SETUP.map==='aleatorio'?'aleatorio':SETUP.map};NET.myCiv=NET.myCiv||SETUP.civ||'aleatorio';
   if(NET.slot===0&&peer)netRelay({g:'opts',o:NET.opts});if(peer)netRelay({g:'civ',c:NET.myCiv});
   lobbyOptsRender();netSavesRender();
   lobbyStatus(NET.slot===0?(peer?'Tudo pronto! Toca em Começar.':(NET.public?'Sala pública: aparece na lista de salas abertas.':'Partilha o código ou convida um amigo.')):'À espera que o anfitrião comece a partida…')}
