@@ -2265,7 +2265,7 @@ const MATS=[
   {wall:{l:'#d2b27f',r:'#a8875a',t:'#e0c594',k:'brick'},roof:{c:'#b5653c',d:'#874629',k:'tile'},found:'#a08d6c',trim:'#7c5d3b'},
   {wall:{l:'#e6e0d1',r:'#b9b1a1',t:'#f1ece0',k:'stone'},roof:{c:'#ad452c',d:'#7c2e1d',k:'tile'},found:'#ada597',trim:'#8d8676'},
 ];
-const BHEIGHT={muralhaMadeira:26,muralhaPedra:30,muralhaFort:38,portaoMadeira:36,portaoPedra:40,doca:28,ferreiro:52,templo:66,maravilha:118,centro:78,casa:50,quinta:6,armazem:46,quartel:56,arquearia:52,estabulo:48,torre:96,oficina:58};
+const BHEIGHT={muralhaMadeira:26,muralhaPedra:30,muralhaFort:38,portaoMadeira:46,portaoPedra:52,doca:28,ferreiro:52,templo:66,maravilha:118,centro:78,casa:50,quinta:6,armazem:46,quartel:56,arquearia:52,estabulo:48,torre:96,oficina:58};
 function bldVariant(e){
   if(e.type==='torre')return e.lvl||1;
   if(e.d.wall||e.d.gate){let m=0;const nb=(x,y)=>{if(!inb(x,y))return false;const n=byId.get(bldAt[idx(x,y)]);return !!n&&n.o===e.o&&(n.d.wall||n.d.gate)};
@@ -2291,7 +2291,7 @@ function bldArt(type,age,o,vr){
   const A=recolorImg(BLDART,team);const thin=d.wall||d.gate;
   let k,ox,oy,flipA=false,flipB=false;
   if(thin){ // segmento de muralha/portão: atravessa a casa na diagonal; vira conforme os vizinhos
-    k=(2*HW*(d.gate?1.35:1.02))/iw*(type==='muralhaFort'?1.08:1);
+    k=(2*HW*(d.gate?1.75:1.02))/iw*(type==='muralhaFort'?1.08:1);
     if(d.gate){flipA=vr==='x'}else{const m2=vr||0,ax=(m2&5)!==0,ay=(m2&10)!==0;if(ax&&!ay)flipA=true;else if(ax&&ay)flipB=true}}
   else k=(2*d.w*HW*1.03)/(m.xr-m.xl);
   const CW=Math.ceil(iw*k)+4,CH=Math.ceil(ih*k)+4;
