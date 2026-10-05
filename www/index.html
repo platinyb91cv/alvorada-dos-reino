@@ -184,6 +184,7 @@ body.ingame #menuBg{display:none}
 .panel .gbtn{min-width:0;width:100%;height:52px;border-radius:14px;font-size:16.5px;margin-top:4px;box-shadow:0 8px 22px rgba(0,0,0,.3)}
 #lgStatus:empty{display:none}
 #lgStatus{font-size:14px;line-height:1.4;padding:10px 12px;border-radius:12px;background:rgba(229,87,106,.13);border:1px solid rgba(229,87,106,.35)}
+.lglink{background:none;border:0;color:rgba(242,228,212,.7);font:600 13px var(--f-body);text-decoration:underline;cursor:pointer;padding:2px}.lgemail{display:flex;flex-direction:column;gap:6px;width:100%}.lgemail input{height:40px;border-radius:10px;border:1px solid rgba(255,220,170,.28);background:rgba(0,0,0,.25);color:#f5e3c8;padding:0 12px;font:500 15px var(--f-body)}
 .ghostbtn{height:44px;border-radius:12px;border:1px solid rgba(255,220,170,.28);background:rgba(255,255,255,.04);color:#f5e3c8;font:700 15px var(--f-body);cursor:pointer}
 .cta{display:flex;align-items:center;justify-content:center;gap:10px;height:56px;border-radius:14px;border:0;cursor:pointer;
   background:linear-gradient(180deg,#ffdc8f 0%,#f7a650 100%);color:#2b150a;font:800 19px var(--f-body);
@@ -372,6 +373,8 @@ input{font-family:inherit;-webkit-user-select:text;user-select:text;touch-action
         <p>A tua conta guarda a pontuação, os amigos e as partidas online.</p>
         <button class="gbtn" id="lgGoogle"><svg viewBox="0 0 48 48" aria-hidden="true"><path fill="#EA4335" d="M24 9.5c3.5 0 6.6 1.2 9.1 3.6l6.8-6.8C35.8 2.4 30.3 0 24 0 14.6 0 6.6 5.4 2.7 13.3l7.9 6.1C12.5 13.6 17.8 9.5 24 9.5z"/><path fill="#4285F4" d="M46.1 24.5c0-1.6-.1-3.1-.4-4.5H24v9h12.4c-.5 2.9-2.2 5.3-4.6 6.9l7.4 5.8c4.3-4 6.9-9.9 6.9-17.2z"/><path fill="#FBBC05" d="M10.6 28.6c-.5-1.4-.8-3-.8-4.6s.3-3.2.8-4.6l-7.9-6.1C1 16.6 0 20.2 0 24s1 7.4 2.7 10.7l7.9-6.1z"/><path fill="#34A853" d="M24 48c6.5 0 11.9-2.1 15.8-5.8l-7.4-5.8c-2.1 1.4-4.8 2.3-8.4 2.3-6.2 0-11.5-4.1-13.4-9.8l-7.9 6.1C6.6 42.6 14.6 48 24 48z"/></svg><span>Continuar com Google</span></button>
         <p id="lgStatus" role="status"></p>
+        <button type="button" class="lglink" id="lgEmailT">Entrar com email e palavra-passe</button>
+        <form id="lgEmailF" class="lgemail" hidden autocomplete="on"><input id="lgEmail" type="email" placeholder="Email" autocomplete="username" required><input id="lgPass" type="password" placeholder="Palavra-passe" autocomplete="current-password" required><button class="ghostbtn" type="submit">Entrar</button></form>
         <button class="ghostbtn" id="lgPreview" hidden>Experimentar sem conta</button>
       </div>
     </div>
@@ -4913,7 +4916,8 @@ document.querySelector('#coach .ch-skip').onclick=()=>tutEnd(!(G&&G.tut&&TUT_STE
 $('bBuild').onclick=()=>{sfx('click');mobileLandscape();netLeaveGame();gameMode='build';const sd=Math.floor(Math.random()*1e9);startGame(sd,{...setupOpts(sd),vic:'classico'})};
 $('bOnline').onclick=()=>{sfx('click');mobileLandscape();lobbyOpen()};
 $('olCreate').onclick=()=>lobbyGo('create');$('olRefresh').onclick=()=>lobbyGo('list');
-$('lgGoogle').onclick=()=>accGoogle();$('lgPreview').onclick=()=>accPreview();$('accChip').onclick=()=>profileOpen();
+$('lgGoogle').onclick=()=>accGoogle();$('lgEmailT').onclick=()=>{const f=$('lgEmailF');f.hidden=!f.hidden;if(!f.hidden)$('lgEmail').focus()};
+$('lgEmailF').onsubmit=async ev=>{ev.preventDefault();if(!ACC.sb){loginStatus('Sem ligação ao servidor de contas',true);return}loginStatus('A entrar…');try{const {error}=await ACC.sb.auth.signInWithPassword({email:$('lgEmail').value.trim(),password:$('lgPass').value});if(error)throw error;$('lgPass').value=''}catch(e){loginStatus(/invalid/i.test(e.message||'')?'Email ou palavra-passe errados':'Não foi possível entrar: '+(e.message||e),true)}};$('lgPreview').onclick=()=>accPreview();$('accChip').onclick=()=>profileOpen();
 $('bFriends').onclick=()=>friendsOpen();$('bRank').onclick=()=>rankOpen();
 for(const id of ['pfBack','rkBack','frBack'])$(id).onclick=()=>{$('sProfile').hidden=$('sRank').hidden=$('sFriends').hidden=true;showMenu()};
 $('pfLogout').onclick=()=>accLogout();$('pfDelete').onclick=()=>accDeleteAccount();$('frAdd').onclick=()=>friendsAdd();$('frCode').addEventListener('keydown',e=>{if(e.key==='Enter')friendsAdd()});
