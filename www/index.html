@@ -2068,7 +2068,8 @@ function groundChunk(i,j){
   const x0=clamp(Math.floor(Math.min(...pts.map(q=>q.x)))-1,0,W),x1=clamp(Math.ceil(Math.max(...pts.map(q=>q.x)))+1,0,W),y0=clamp(Math.floor(Math.min(...pts.map(q=>q.y)))-1,0,H),y1=clamp(Math.ceil(Math.max(...pts.map(q=>q.y)))+1,0,H);
   if(x1>x0&&y1>y0)c.drawImage(terrCanvas,x0*TGT,y0*TGT,(x1-x0)*TGT,(y1-y0)*TGT,x0*GT,y0*GT,(x1-x0)*GT,(y1-y0)*GT);
   const cb=ents.filter(e=>e.kind==='b'&&!e.d.walk&&(e.o===ME||e.seen)&&e.tx+e.w>=x0-12&&e.tx<=x1+3&&e.ty+e.h>=y0-12&&e.ty<=y1+3);
-  {const wd=wearDecal();c.globalAlpha=.5;for(const e of cb){if(e.d.wall||e.d.gate)continue;const m=e.done?.55:.3;c.drawImage(wd,(e.tx-m)*GT,(e.ty-m)*GT,(e.w+m*2)*GT,(e.h+m*2)*GT)}c.globalAlpha=1}
+  {const wd=wearDecal();c.globalAlpha=.5;for(const e of cb){if(e.d.wall||e.d.gate)continue;const m=e.done?.55:.3;c.drawImage(wd,(e.tx-m)*GT,(e.ty-m)*GT,(e.w+m*2)*GT,(e.h+m*2)*GT)}c.globalAlpha=1;
+    for(const e of cb){if(!e.done||e.d.farm)continue;const thin=e.d.wall||e.d.gate,m=thin?.3:.5,ao=aoDecal(e.w,e.h,m);c.globalAlpha=thin?.5:.85;c.drawImage(ao,(e.tx-m)*GT,(e.ty-m)*GT,(e.w+m*2)*GT,(e.h+m*2)*GT)}c.globalAlpha=1}
   // decorações fixas
   c.setTransform(cs,0,0,cs,-X0*cs,-Y0*cs);
   for(const d of decos){const q=proj(d.x,d.y);if(q.x<X0-30||q.x>X0+CHW+30||q.y<Y0-12||q.y>Y0+CHH+44)continue;const sp=SPR.deco[d.k][d.v];c.drawImage(sp.cv,q.x-sp.ax,q.y-sp.ay,sp.w,sp.h)}
@@ -2094,9 +2095,30 @@ function shadowOf(s,by){let d=SHADOW.get(s);if(d)return d;
   const cv=mkCanvas(w+ext+pad,h2),c=cv.getContext('2d');
   c.setTransform(1,0,-sx,-sy,sx*by+pad,by*(1+sy));c.drawImage(s.cv,0,0,w,h);
   c.setTransform(1,0,0,1,0,0);c.globalCompositeOperation='source-in';c.fillStyle='#141a30';c.fillRect(0,0,cv.width,h2);
+  {const bx=w/2+pad,g=c.createLinearGradient(bx,by,bx+sx*by,by*(1+sy));g.addColorStop(0,'rgba(0,0,0,1)');g.addColorStop(.55,'rgba(0,0,0,.72)');g.addColorStop(1,'rgba(0,0,0,.32)');c.globalCompositeOperation='destination-in';c.fillStyle=g;c.fillRect(0,0,cv.width,h2);c.globalCompositeOperation='source-over'}
   let out=cv;try{const b2=mkCanvas(cv.width,h2),bc=b2.getContext('2d');bc.filter='blur(1.6px)';bc.drawImage(cv,0,0);out=b2}catch(e){}
   d={cv:out,pad,w:cv.width,h:h2};SHADOW.set(s,d);return d}
 function treeSprite(e){const h=(e.tx*7+e.ty*13+e.var)>>>0;const nearW=terr[idx(e.tx,e.ty)]===2;return nearW&&h%3===0?SPR.palm[h%2]:(h%4===0?SPR.pine[h%3]:SPR.oak[h%SPR.oak.length])}
+// sombra de contacto (oclusão ambiente): escura junto às paredes, desvanece para fora
+const AOC=new Map();
+function aoDecal(w,h,m){const key=w+'x'+h+'|'+m;let cv=AOC.get(key);if(cv)return cv;const S=24,W2=Math.round((w+m*2)*S),H2=Math.round((h+m*2)*S);cv=mkCanvas(W2,H2);const c=cv.getContext('2d'),im=c.createImageData(W2,H2),M=m*S;
+  for(let y=0;y<H2;y++)for(let x=0;x<W2;x++){const dx=Math.max(M-x,0,x-(W2-M)),dy=Math.max(M-y,0,y-(H2-M)),d=Math.hypot(dx,dy)/M;const a=d<=0?.5:Math.max(0,1-d);im.data[(y*W2+x)*4+3]=255*.5*a*a}
+  for(let i=0;i<W2*H2;i++){im.data[i*4]=18;im.data[i*4+1]=22;im.data[i*4+2]=14}c.putImageData(im,0,0);AOC.set(key,cv);return cv}
+// transição base→terreno: relva, flores e pedrinhas a tapar as arestas da frente do lote
+const FRINGE=new WeakMap();
+function bldFringe(e){let f=FRINGE.get(e);if(f!==undefined)return f;f=null;
+  if(SPR.flora&&!e.d.wall&&!e.d.gate&&!e.d.farm&&!e.d.walk&&e.type!=='doca'){
+    const p0=proj(e.tx,e.ty),L=proj(e.tx,e.ty+e.h),B=proj(e.tx+e.w,e.ty+e.h),Rt=proj(e.tx+e.w,e.ty);const r=mulberry32(e.id*7919+13);const items=[];
+    const edge=(a,b,n)=>{for(let k=0;k<n;k++){const t=(k+.5+(r()-.5)*.7)/n;const x=a.x+(b.x-a.x)*t-p0.x,y=a.y+(b.y-a.y)*t-p0.y+1.5+r()*2.5;const q=r();const sp=q<.55?SPR.deco.tuft[(r()*3)|0]:q<.7?SPR.deco.flower[(r()*3)|0]:q<.9?SPR.deco.pebble[(r()*3)|0]:SPR.deco.shrub[(r()*3)|0];items.push({x,y,sp,sc:(q>=.9?.75:.85)+r()*.3})}};
+    const per=Math.round(3.2*(e.w+e.h)/2+2);edge(L,B,per);edge(B,Rt,per);
+    // cantos laterais: um tufo maior
+    items.push({x:L.x-p0.x+2,y:L.y-p0.y+1,sp:SPR.deco.tuft[0],sc:1.15},{x:Rt.x-p0.x-2,y:Rt.y-p0.y+1,sp:SPR.deco.tuft[2],sc:1.15});
+    items.sort((a,b)=>a.y-b.y);
+    let x0=1e9,y0=1e9,x1=-1e9,y1=-1e9;for(const it of items){const s2=it.sp,w2=s2.w*it.sc,h2=s2.h*it.sc;x0=Math.min(x0,it.x-s2.ax*it.sc);y0=Math.min(y0,it.y-s2.ay*it.sc);x1=Math.max(x1,it.x-s2.ax*it.sc+w2);y1=Math.max(y1,it.y-s2.ay*it.sc+h2)}
+    x0=Math.floor(x0)-1;y0=Math.floor(y0)-1;const CW=Math.ceil(x1-x0)+2,CH=Math.ceil(y1-y0)+2;const cv=mkCanvas(CW*SS,CH*SS),c=cv.getContext('2d');c.scale(SS,SS);
+    for(const it of items){const s2=it.sp;c.drawImage(s2.cv,it.x-s2.ax*it.sc-x0,it.y-s2.ay*it.sc-y0,s2.w*it.sc,s2.h*it.sc)}
+    f={cv,ox:-x0,oy:-y0,CW,CH}}
+  if(SPR.flora)FRINGE.set(e,f);return f}
 let WEAR=null;
 function wearDecal(){if(WEAR)return WEAR;const n=64,cv=mkCanvas(n,n),c=cv.getContext('2d'),r=mulberry32(77);
   const g=c.createRadialGradient(n/2,n/2,n*.18,n/2,n/2,n*.5);g.addColorStop(0,'rgba(120,94,58,.9)');g.addColorStop(.7,'rgba(120,94,58,.55)');g.addColorStop(1,'rgba(120,94,58,0)');c.fillStyle=g;c.fillRect(0,0,n,n);
@@ -3432,6 +3454,7 @@ function render(){UCFM=0;
         for(let zz=10;zz<hgt;zz+=14){c.beginPath();c.moveTo(a.x,a.y-zz);c.lineTo(b.x,b.y-zz);c.lineTo(d2.x,d2.y-zz);c.stroke()}
       }else{
         c.drawImage(lit?s.cv:darkOf(s.cv),dx,dy,s.CW,s.CH);
+        {const fr=bldFringe(e);if(fr)c.drawImage(lit?fr.cv:darkOf(fr.cv),p.x-fr.ox,p.y-fr.oy,fr.CW,fr.CH)}
         if(e.d.gate&&!BLDART.ready)drawGateDoor(c,e,p);
         if(e.hp<e.max*.6&&lit&&!(e.d.wall&&e.type!=='muralhaMadeira')){ // fogo
           if(!e.fires){const r=mulberry32(e.id);e.fires=[];for(let k=0;k<4;k++)e.fires.push([e.tx+.3+r()*(e.w-.6),e.ty+.3+r()*(e.h-.6),BHEIGHT[e.type]*(.4+r()*.5)])}
