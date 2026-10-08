@@ -81,9 +81,16 @@ jobs:
           printf '%s' "$KS_B64" | tr -d ' \r\n\t' | base64 -d > "$KS" 2>/dev/null || { echo "::error title=ALV_KEYSTORE_B64 errado::O texto colado em ALV_KEYSTORE_B64 não é válido. Cole de novo TODO o conteúdo do ficheiro ALV_KEYSTORE_B64.txt."; exit 1; }
           limpa() { printf '%s' "$1" | tr -d '\r\n' | sed 's/^[[:space:]]*//;s/[[:space:]]*$//'; }
           PASS="$(limpa "$KS_PASS")"; KPASS="$(limpa "$K_PASS")"; ALIAS="$(limpa "$K_ALIAS")"
+          # diagnóstico sem revelar segredos: só tamanhos e impressão digital do ficheiro
+          B64LEN=$(printf '%s' "$KS_B64" | tr -d ' \r\n\t' | wc -c); KSLEN=$(wc -c < "$KS"); KSSHA=$(sha256sum "$KS" | cut -c1-12)
+          echo "Diagnóstico: ALV_KEYSTORE_B64 com $B64LEN caracteres, chave com $KSLEN bytes (sha $KSSHA), ALV_KEYSTORE_PASS com ${#PASS} caracteres."
           if ! keytool -list -keystore "$KS" -storepass "$PASS" >/dev/null 2>&1; then
-            echo "::error title=ALV_KEYSTORE_PASS errado::A palavra-passe em ALV_KEYSTORE_PASS não abre a chave (ou ALV_KEYSTORE_B64 está incompleto). Copie de novo a palavra-passe do SEGREDOS-GITHUB.txt, sem espaços."
-            exit 1
+            if keytool -list -keystore "$KS" -storepass "$(limpa "$K_PASS")" >/dev/null 2>&1; then
+              PASS="$(limpa "$K_PASS")"; echo "::warning::ALV_KEYSTORE_PASS está errado, mas ALV_KEY_PASS abre a chave: a usar esse."
+            else
+              echo "::error title=Chave não abre::ALV_KEYSTORE_B64 tem $B64LEN caracteres (chave com $KSLEN bytes, sha $KSSHA) e ALV_KEYSTORE_PASS tem ${#PASS} caracteres. Se não for 3536 caracteres / 2652 bytes / sha 719e928d0813, o B64 ficou cortado; se a palavra-passe não tiver 20 caracteres, ficou errada."
+              exit 1
+            fi
           fi
           # alias: o que está mesmo dentro da chave (evita erros de maiúsculas/espaços em ALV_KEY_ALIAS)
           ALIAS="$(keytool -list -keystore "$KS" -storepass "$PASS" 2>/dev/null | awk -F, '/PrivateKeyEntry/{print $1; exit}')"
