@@ -68,22 +68,45 @@ jobs:
         id: chave
         env:
           KS_B64: ${{ secrets.ALV_KEYSTORE_B64 }}
+          KS_PASS: ${{ secrets.ALV_KEYSTORE_PASS }}
+          K_ALIAS: ${{ secrets.ALV_KEY_ALIAS }}
+          K_PASS: ${{ secrets.ALV_KEY_PASS }}
         run: |
-          if [ -n "$KS_B64" ]; then
-            echo "$KS_B64" | base64 -d > "$RUNNER_TEMP/alvorada-upload.jks"
-            echo "ok=1" >> "$GITHUB_OUTPUT"
-          else
+          if [ -z "$KS_B64" ]; then
             echo "::warning title=Sem ficheiro AAB::Faltam os segredos ALV_KEYSTORE_B64, ALV_KEYSTORE_PASS, ALV_KEY_ALIAS e ALV_KEY_PASS (Settings > Secrets and variables > Actions). Sem eles só sai o APK de teste."
+            exit 0
           fi
+          KS="$RUNNER_TEMP/alvorada-upload.jks"
+          # tira espaços e quebras de linha que vêm agarrados ao colar no telemóvel
+          printf '%s' "$KS_B64" | tr -d ' \r\n\t' | base64 -d > "$KS" 2>/dev/null || { echo "::error title=ALV_KEYSTORE_B64 errado::O texto colado em ALV_KEYSTORE_B64 não é válido. Cole de novo TODO o conteúdo do ficheiro ALV_KEYSTORE_B64.txt."; exit 1; }
+          limpa() { printf '%s' "$1" | tr -d '\r\n' | sed 's/^[[:space:]]*//;s/[[:space:]]*$//'; }
+          PASS="$(limpa "$KS_PASS")"; KPASS="$(limpa "$K_PASS")"; ALIAS="$(limpa "$K_ALIAS")"
+          if ! keytool -list -keystore "$KS" -storepass "$PASS" >/dev/null 2>&1; then
+            echo "::error title=ALV_KEYSTORE_PASS errado::A palavra-passe em ALV_KEYSTORE_PASS não abre a chave (ou ALV_KEYSTORE_B64 está incompleto). Copie de novo a palavra-passe do SEGREDOS-GITHUB.txt, sem espaços."
+            exit 1
+          fi
+          # alias: o que está mesmo dentro da chave (evita erros de maiúsculas/espaços em ALV_KEY_ALIAS)
+          ALIAS="$(keytool -list -keystore "$KS" -storepass "$PASS" 2>/dev/null | awk -F, '/PrivateKeyEntry/{print $1; exit}')"
+          # chave PKCS12 (a nossa): a palavra-passe da chave é sempre igual à do ficheiro
+          if keytool -list -keystore "$KS" -storepass "$PASS" 2>/dev/null | grep -qi 'type: PKCS12'; then
+            KPASS="$PASS"
+          else
+            [ -z "$KPASS" ] && KPASS="$PASS"
+            keytool -certreq -keystore "$KS" -storepass "$PASS" -alias "$ALIAS" -keypass "$KPASS" >/dev/null 2>&1 || {
+              echo "::warning::ALV_KEY_PASS não abre a chave; a usar a palavra-passe de ALV_KEYSTORE_PASS."; KPASS="$PASS"; }
+          fi
+          echo "::add-mask::$PASS"; echo "::add-mask::$KPASS"
+          {
+            echo "ALV_KEYSTORE=$KS"
+            echo "ALV_KEYSTORE_PASS=$PASS"
+            echo "ALV_KEY_ALIAS=$ALIAS"
+            echo "ALV_KEY_PASS=$KPASS"
+          } >> "$GITHUB_ENV"
+          echo "ok=1" >> "$GITHUB_OUTPUT"
 
       - name: Compilar AAB e APK assinados (Play Store)
         if: steps.chave.outputs.ok == '1'
         working-directory: android
-        env:
-          ALV_KEYSTORE: ${{ runner.temp }}/alvorada-upload.jks
-          ALV_KEYSTORE_PASS: ${{ secrets.ALV_KEYSTORE_PASS }}
-          ALV_KEY_ALIAS: ${{ secrets.ALV_KEY_ALIAS }}
-          ALV_KEY_PASS: ${{ secrets.ALV_KEY_PASS }}
         run: ./gradlew bundleRelease assembleRelease --no-daemon
 
       - uses: actions/upload-artifact@v4
