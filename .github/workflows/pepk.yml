@@ -52,12 +52,9 @@ jobs:
         run: |
           COMUM=(--keystore="$KS" --alias="$ALIAS" --output=chave-para-google.zip --include-cert --rsa-aes-encryption --encryption-key-path="$RUNNER_TEMP/enc.pem")
           ok=0
-          # 1) palavras-passe por variável de ambiente; 2) por argumento; 3) pelo teclado (stdin)
-          java -jar "$RUNNER_TEMP/pepk.jar" "${COMUM[@]}" --keystore-pass=env:PASS --key-pass=env:PASS > out1.txt 2>&1 && ok=1
-          [ $ok = 1 ] || { java -jar "$RUNNER_TEMP/pepk.jar" "${COMUM[@]}" --keystore-pass="pass:$PASS" --key-pass="pass:$PASS" > out2.txt 2>&1 && ok=1; }
-          [ $ok = 1 ] || { printf '%s\n%s\n' "$PASS" "$PASS" | java -jar "$RUNNER_TEMP/pepk.jar" "${COMUM[@]}" > out3.txt 2>&1 && ok=1; }
+                    java -jar "$RUNNER_TEMP/pepk.jar" "${COMUM[@]}" --keystore-pass="$PASS" --key-pass="$PASS" > out1.txt 2>&1 && ok=1
           if [ $ok != 1 ] || [ ! -s chave-para-google.zip ]; then
-            for f in out1.txt out2.txt out3.txt; do [ -f $f ] && echo "::error title=PEPK $f::$(head -c 900 $f | tr '\n' ' ' | sed "s/$PASS/***/g")"; done
+            for f in out1.txt; do [ -f $f ] && echo "::error title=PEPK $f::$(head -c 900 $f | tr '\n' ' ' | sed "s/$PASS/***/g")"; done
             java -jar "$RUNNER_TEMP/pepk.jar" --help 2>&1 | head -c 1500 | tr '\n' ' ' | sed 's/^/::warning title=PEPK help::/'; echo
             exit 1
           fi
