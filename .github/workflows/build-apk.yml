@@ -5,6 +5,9 @@ on:
     branches: [main, master]
   workflow_dispatch:
 
+permissions:
+  contents: write
+
 jobs:
   android:
     runs-on: ubuntu-latest
@@ -43,6 +46,22 @@ jobs:
         with:
           name: alvorada-apk-teste
           path: android/app/build/outputs/apk/debug/app-debug.apk
+
+      # Link direto para o telemóvel: Releases → "APK de teste" → Alvorada-dos-Reinos.apk
+      - name: Publicar APK na página Releases
+        if: github.ref_name == 'main' || github.ref_name == 'master'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          cp android/app/build/outputs/apk/debug/app-debug.apk Alvorada-dos-Reinos.apk
+          NOTAS="Versão de teste n.º ${{ github.run_number }} (commit ${GITHUB_SHA::7}). No telemóvel: toque em Alvorada-dos-Reinos.apk, abra o ficheiro e permita instalar de fontes desconhecidas."
+          git tag -f apk-teste && git push -f origin apk-teste
+          if gh release view apk-teste >/dev/null 2>&1; then
+            gh release edit apk-teste --title "APK de teste (n.º ${{ github.run_number }})" --notes "$NOTAS" --latest
+            gh release upload apk-teste Alvorada-dos-Reinos.apk --clobber
+          else
+            gh release create apk-teste Alvorada-dos-Reinos.apk --title "APK de teste (n.º ${{ github.run_number }})" --notes "$NOTAS" --latest
+          fi
 
       # Versão para a Play Store: só corre se os segredos da chave de assinatura existirem
       - name: Preparar chave de assinatura
