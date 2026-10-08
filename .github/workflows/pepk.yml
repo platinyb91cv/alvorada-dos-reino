@@ -1,0 +1,68 @@
+name: Exportar chave para a Google (PEPK)
+
+# Gera o ficheiro encriptado que a Play Console pede em
+# "Exportar e carregar uma chave de um repositório de chaves Java".
+# A chave sai encriptada com a chave pública da Google: só a Google a consegue abrir.
+on:
+  workflow_dispatch:
+    inputs:
+      chave_publica:
+        description: 'Conteúdo do encryption_public_key.pem descarregado da Play Console (todo o texto)'
+        required: true
+
+permissions:
+  contents: write
+
+jobs:
+  pepk:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 21
+
+      - name: Preparar chave e PEPK
+        env:
+          KS_B64: ${{ secrets.ALV_KEYSTORE_B64 }}
+          KS_PASS: ${{ secrets.ALV_KEYSTORE_PASS }}
+          K_PASS: ${{ secrets.ALV_KEY_PASS }}
+          PUB: ${{ inputs.chave_publica }}
+        run: |
+          set -e
+          KS="$RUNNER_TEMP/alvorada-upload.jks"
+          printf '%s' "$KS_B64" | tr -d ' \r\n\t' | base64 -d > "$KS"
+          limpa() { printf '%s' "$1" | tr -d '\r\n' | sed 's/^[[:space:]]*//;s/[[:space:]]*$//'; }
+          PASS="$(limpa "$KS_PASS")"
+          keytool -list -keystore "$KS" -storepass "$PASS" >/dev/null 2>&1 || PASS="$(limpa "$K_PASS")"
+          keytool -list -keystore "$KS" -storepass "$PASS" >/dev/null 2>&1 || { echo "::error::Nenhuma palavra-passe dos segredos abre a chave."; exit 1; }
+          ALIAS="$(keytool -list -keystore "$KS" -storepass "$PASS" 2>/dev/null | awk -F, '/PrivateKeyEntry/{print $1; exit}')"
+          echo "Chave a exportar:"; keytool -list -v -keystore "$KS" -storepass "$PASS" -alias "$ALIAS" 2>/dev/null | grep -E "SHA1:|SHA256:"
+          # a chave pública pode vir colada numa linha só: reconstrói o PEM
+          CORPO="$(printf '%s' "$PUB" | sed 's/-----[A-Z ]*-----//g' | tr -d ' \r\n\t')"
+          { echo "-----BEGIN PUBLIC KEY-----"; printf '%s\n' "$CORPO" | fold -w 64; echo "-----END PUBLIC KEY-----"; } > "$RUNNER_TEMP/enc.pem"
+          openssl pkey -pubin -in "$RUNNER_TEMP/enc.pem" -noout || { echo "::error::A chave pública colada não é válida. Cole todo o conteúdo do encryption_public_key.pem."; exit 1; }
+          curl -fsSL -o "$RUNNER_TEMP/pepk.jar" https://www.gstatic.com/play-apps-publisher-rapid/signing-tool/prod/pepk.jar
+          echo "::add-mask::$PASS"
+          echo "ALIAS=$ALIAS" >> "$GITHUB_ENV"
+          echo "PASS=$PASS" >> "$GITHUB_ENV"
+          echo "KS=$KS" >> "$GITHUB_ENV"
+
+      - name: Exportar e encriptar (PEPK)
+        run: |
+          set -e
+          java -jar "$RUNNER_TEMP/pepk.jar" --keystore="$KS" --alias="$ALIAS" --output=chave-para-google.zip \
+            --include-cert --rsa-aes-encryption --encryption-key-path="$RUNNER_TEMP/enc.pem" \
+            --keystore-pass="env:PASS" --key-pass="env:PASS" \
+          || printf '%s\n%s\n' "$PASS" "$PASS" | java -jar "$RUNNER_TEMP/pepk.jar" --keystore="$KS" --alias="$ALIAS" --output=chave-para-google.zip \
+            --include-cert --rsa-aes-encryption --encryption-key-path="$RUNNER_TEMP/enc.pem"
+          ls -la chave-para-google.zip
+
+      - name: Publicar na página Releases
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh release upload apk-teste chave-para-google.zip --clobber -R "$GITHUB_REPOSITORY"
+
+      - name: Apagar chave temporária
+        if: always()
+        run: rm -f "$RUNNER_TEMP/alvorada-upload.jks" "$RUNNER_TEMP/pepk.jar"
