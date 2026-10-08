@@ -73,7 +73,7 @@ jobs:
             echo "$KS_B64" | base64 -d > "$RUNNER_TEMP/alvorada-upload.jks"
             echo "ok=1" >> "$GITHUB_OUTPUT"
           else
-            echo "Sem chave de assinatura (segredo ALV_KEYSTORE_B64): salta a versão da Play Store."
+            echo "::warning title=Sem ficheiro AAB::Faltam os segredos ALV_KEYSTORE_B64, ALV_KEYSTORE_PASS, ALV_KEY_ALIAS e ALV_KEY_PASS (Settings > Secrets and variables > Actions). Sem eles só sai o APK de teste."
           fi
 
       - name: Compilar AAB e APK assinados (Play Store)
@@ -93,6 +93,17 @@ jobs:
           path: |
             android/app/build/outputs/bundle/release/app-release.aab
             android/app/build/outputs/apk/release/app-release.apk
+
+      # AAB (para a Play Store) e APK assinado também na página Releases, ao lado do APK de teste
+      - name: Publicar AAB na página Releases
+        if: steps.chave.outputs.ok == '1' && (github.ref_name == 'main' || github.ref_name == 'master')
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          cp android/app/build/outputs/bundle/release/app-release.aab Alvorada-dos-Reinos-PlayStore.aab
+          cp android/app/build/outputs/apk/release/app-release.apk Alvorada-dos-Reinos-assinado.apk
+          gh release upload apk-teste Alvorada-dos-Reinos-PlayStore.aab Alvorada-dos-Reinos-assinado.apk --clobber
+          gh release edit apk-teste --title "APK e AAB (versão ${{ github.run_number }})" --notes "Versão n.º ${{ github.run_number }} (commit ${GITHUB_SHA::7}). Alvorada-dos-Reinos-PlayStore.aab → enviar na Play Console. Alvorada-dos-Reinos.apk → instalar no telemóvel para testar."
 
       - name: Apagar chave temporária
         if: always()
