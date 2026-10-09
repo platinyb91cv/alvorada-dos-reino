@@ -207,6 +207,7 @@ body.ingame #menuBg{display:none}
 .panel .hint{margin:6px 2px 0;font-size:12.5px;line-height:1.35;color:rgba(242,228,212,.72);min-height:2.7em}
 .panel.setup{width:min(440px,100%)}
 .cmlist{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}.cmlist button{display:flex;flex-direction:column;align-items:flex-start;gap:2px;padding:7px 8px;border-radius:11px;border:1px solid rgba(255,220,170,.22);background:rgba(255,255,255,.04);color:#f5e3c8;font:700 13px var(--f-body);cursor:pointer;text-align:left;min-width:0}
+.rkstat{display:flex;flex-direction:column;gap:2px;padding:8px 10px;border-radius:11px;border:1px solid rgba(255,220,170,.22);background:rgba(255,255,255,.05);color:#f5e3c8;min-width:0}.rkstat b{font:800 15px var(--f-body)}.rkstat small{font-size:11.5px;opacity:.8;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}#objList li.tm{list-style:none;font-weight:800;color:#ffd77a}
 .cmlist button small{font-weight:600;font-size:11.5px;opacity:.7;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%}.cmlist button.sel{background:rgba(243,187,78,.22);border-color:#f3bb4e}.cmlist button.done{color:#9be29b}.cmlist button:disabled{opacity:.4;cursor:default}
 .cminfo{font-size:13.5px;line-height:1.45;color:rgba(242,228,212,.86)}.cminfo h3{margin:0 0 4px;font:600 17px var(--f-display);color:#ffe2ad}.cminfo ul{margin:6px 0 0;padding-left:18px}
 #rkTabs{margin-bottom:6px;grid-template-columns:repeat(2,1fr)}
@@ -392,7 +393,7 @@ input{font-family:inherit;-webkit-user-select:text;user-select:text;touch-action
         <button class="cta alt" id="bCont" hidden><i data-ic="resume"></i><span>Continuar partida</span></button>
         <button class="cta" id="bPlay"><i data-ic="play"></i><span>Novo jogo</span></button>
         <div class="tiles">
-          <button class="tile t-camp" id="bCamp"><i data-ic="flag"></i><span><b>Campanha</b><small id="campSub">6 missões</small></span></button>
+          <button class="tile t-camp" id="bCamp"><i data-ic="flag"></i><span><b>O meu Reino</b><small id="campSub">A tua cidade para sempre</small></span></button>
           <button class="tile t-daily" id="bDaily"><i data-ic="trophy"></i><span><b>Desafio diário</b><small id="dailySub">Mapa do dia</small></span></button>
           <button class="tile t-build" id="bBuild"><i data-ic="build"></i><span><b>Só construir</b><small>Sem inimigos</small></span></button>
           <button class="tile t-online" id="bOnline"><i data-ic="army"></i><span><b>Jogar online</b><small>Contra amigos</small></span></button>
@@ -434,11 +435,13 @@ input{font-family:inherit;-webkit-user-select:text;user-select:text;touch-action
   </div>
   <div class="screen scenic" id="sCamp" hidden>
     <div class="hero">
-      <div class="brand setupbrand"><h1 class="logo"><span class="l1">Campanha</span></h1><p class="tag">A história de um povo que chegou ao mar sem nada e construiu um reino.</p></div>
+      <div class="brand setupbrand"><h1 class="logo"><span class="l1">O meu Reino</span></h1><p class="tag">Uma só cidade, uma história sem fim: cada capítulo mais difícil que o anterior.</p></div>
       <div class="panel setup">
         <div id="cmList" class="cmlist"></div>
         <div id="cmInfo" class="cminfo"></div>
-        <button class="cta" id="bCampGo"><i data-ic="play"></i><span>Jogar missão</span></button>
+        <button class="cta" id="bCampGo"><i data-ic="play"></i><span>Continuar o reino</span></button>
+        <button class="cta alt" id="bReinoDaily" hidden><i data-ic="trophy"></i><span>Desafio de hoje no meu reino</span></button>
+        <button class="ghostbtn" id="bReinoNew" hidden>Fundar um reino novo</button>
         <button class="ghostbtn" id="bCampBack">Voltar</button>
       </div>
     </div>
@@ -536,7 +539,7 @@ input{font-family:inherit;-webkit-user-select:text;user-select:text;touch-action
         <b>Caça:</b> ovelhas são mansas (100 de comida); gazelas fogem (150); javalis contra-atacam (300); elefantes são muito fortes mas dão 600. Cuidado com os lobos nas florestas: atacam aldeões e não dão carne.<br>
         <b>Tecnologias:</b> no Armazém (machado, picareta), no Centro (arado, roda) e no Ferreiro (forja, pontas de ferro, cota de malha).<br>
         <b>Templo:</b> sacerdotes curam aliados por perto e convertem inimigos para o teu lado. Depois de converter, precisam de recuperar a fé.<br>
-        <b>Modos:</b> <b>Clássico</b> (destrói o Centro da Vila e o exército do rival, ou defende uma Maravilha 5 minutos), <b>Guerra total</b> (só acaba quando um reino perder todos os edifícios e aldeões — grava e continua outro dia), <b>Regicídio</b> (protege o teu Rei) e <b>Sobreviver</b> (vagas de invasores). Também há a <b>Campanha</b> (6 missões) e o <b>Desafio diário</b> (o mesmo mapa para todos, ganha quem vencer mais depressa).<br>
+        <b>O meu Reino:</b> uma só cidade que nunca recomeça. As missões seguem-se umas às outras (lobos, saqueadores, um reino rival, o Rei, a Maravilha) e depois vêm capítulos sem fim — fortes, campeões, cercos — cada vez mais difíceis. Grava sozinho; se o reino cair, recomeças do último capítulo cumprido. O desafio diário também se joga dentro do teu reino.<br><b>Modos:</b> <b>Clássico</b> (destrói o Centro da Vila e o exército do rival, ou defende uma Maravilha 5 minutos), <b>Guerra total</b> (só acaba quando um reino perder todos os edifícios e aldeões — grava e continua outro dia), <b>Regicídio</b> (protege o teu Rei) e <b>Sobreviver</b> (vagas de invasores). Também há a <b>Campanha</b> (6 missões) e o <b>Desafio diário</b> (o mesmo mapa para todos, ganha quem vencer mais depressa).<br>
         <b>Reinos:</b> Mar (barcos e pesca melhores, Corsário), Montanha (ouro, pedra e muralhas mais fortes, Besteiro Pesado), Planícies (cavalaria rápida, caça e quintas, Cavaleiro de Lança).<br>
         <b>Mapas:</b> Rios, Terra, Lagos e Ilhas. Nas Ilhas precisas de Doca e Transporte para chegar ao inimigo.<br>
         <b>Abrigo e sino:</b> aldeões e soldados podem abrigar-se no Centro, nas Torres e nas Casas (botão Abrigar); cada um lá dentro dispara mais flechas. O <b>Sino</b> no Centro manda todos os aldeões para dentro; toca outra vez para voltarem ao trabalho.<br>
@@ -1654,7 +1657,7 @@ function recount(){
 }
 
 /* ---------------- IA ---------------- */
-function aiInit(){if(NET.on||G.mode==='build'||G.vic==='sobrevivencia'||G.camp!=null&&CAMP[G.camp]&&CAMP[G.camp].noAI){AIs=[null,null];AI=null;return}AIs=[null,mkAI(1,DIFF[difficulty])];AI=AIs[1];if(DIFF[difficulty].bonus)for(const k of KINDS)P[1].res[k]+=DIFF[difficulty].bonus}
+function aiInit(){if(NET.on||G.mode==='build'||G.vic==='sobrevivencia'||G.reino||G.camp!=null&&CAMP[G.camp]&&CAMP[G.camp].noAI){AIs=[null,null];AI=null;return}AIs=[null,mkAI(1,DIFF[difficulty])];AI=AIs[1];if(DIFF[difficulty].bonus)for(const k of KINDS)P[1].res[k]+=DIFF[difficulty].bonus}
 function mkAI(me,D){return{me,di:Math.max(0,DIFF.indexOf(D)),t:0,tick:1.5,mult:D.mult,nextAttack:D.first,wave:D.wave,attacking:false,alarm:null}}
 function aiD(AI){return DIFF[AI.di??1]||DIFF[1]}
 let reachMap=new Uint8Array(W*H);
@@ -4876,7 +4879,7 @@ $('btnMenu').onclick=togglePause;
 function togglePause(){if(!running)return;if(NET.on){$('sPause').hidden=!$('sPause').hidden;netPauseUI();return}paused=!paused;$('sPause').hidden=!paused;audioPause(paused)}
 function netPauseUI(){const on=NET.on;$('bSave').hidden=on;$('bNetSave').hidden=!on;$('bRestart').textContent=on?'Desistir':'Recomeçar';$('sPause').querySelector('h2').textContent=on?'Menu (a partida continua)':'Jogo pausado'}
 $('bResume').onclick=togglePause;
-$('bRestart').onclick=()=>{$('sPause').hidden=true;if(NET.on){if(confirmResign())act('resign',{});return}if(G.camp!=null){campStart(G.camp);return}if(G.daily){$('bDaily').onclick();return}const sd=Math.floor(Math.random()*1e9);startGame(sd,{map:G.map,vic:G.vic,civ:G.civ})};
+$('bRestart').onclick=()=>{$('sPause').hidden=true;if(NET.on){if(confirmResign())act('resign',{});return}if(G.reino){if(Date.now()-resignArm<2500){resignArm=0;reinoRetry()}else{resignArm=Date.now();$('sPause').hidden=false;toast('Volta ao último capítulo cumprido. Toca outra vez para confirmar.',true)}return}if(G.camp!=null){campStart(G.camp);return}if(G.daily){$('bDaily').onclick();return}const sd=Math.floor(Math.random()*1e9);startGame(sd,{map:G.map,vic:G.vic,civ:G.civ})};
 let resignArm=0;function confirmResign(){if(Date.now()-resignArm<2500){resignArm=0;return true}resignArm=Date.now();$('sPause').hidden=false;toast('Toca outra vez em Desistir para confirmar',true);return false}
 $('bQuit').onclick=()=>{if(NET.on){if(!G.over){netReport(false,'resign');act('resign',{})}netEndMatch()}else saveGame(true);$('sPause').hidden=true;running=false;paused=false;showMenu()};
 $('bSave').onclick=()=>{saveGame(false);cloudSave(false)};
@@ -4885,7 +4888,7 @@ $('bDN').onclick=()=>{DAYNIGHT=!DAYNIGHT;$('bDN').textContent='Dia e noite: '+(D
 $('bGfx').onclick=()=>{GFX=GFX==='alto'?'leve':'alto';document.body.classList.toggle('gfx-leve',GFX==='leve');$('bGfx').textContent='Gráficos: '+GFX;try{localStorage.setItem('alv_gfx',GFX)}catch(e){}};$('bGfx').textContent='Gráficos: '+GFX;document.body.classList.toggle('gfx-leve',GFX==='leve');
 $('bVib').onclick=()=>{vibrateOn=!vibrateOn;$('bVib').textContent='Vibração: '+(vibrateOn?'ligada':'desligada');try{localStorage.setItem('alv_vib',vibrateOn?'1':'0')}catch(e){}if(vibrateOn)buzz(60)};
 try{if(localStorage.getItem('alv_vib')==='0'){vibrateOn=false;$('bVib').textContent='Vibração: desligada'}}catch(e){}
-$('bCont').onclick=async()=>{sfx('click');if($('bCont').dataset.cloud==='1'){if(!(await cloudLoad()))return;delete $('bCont').dataset.cloud;$('bCont').lastChild.textContent='Continuar partida'}loadGame()};
+$('bCont').onclick=async()=>{sfx('click');if($('bCont').dataset.cloud==='1'){const r=await cloudLoad();if(!r)return;delete $('bCont').dataset.cloud;$('bCont').lastChild.textContent='Continuar partida';$('bCont').hidden=!hasSave();if(r==='reino'){reinoLoad(false);return}}loadGame()};
 document.addEventListener('visibilitychange',()=>{if(document.hidden&&running&&!G.over&&!NET.on){saveGame(true);if(!paused){paused=true;$('sPause').hidden=false}}
   if(document.hidden)audioPause(true);else if(!running||!paused)audioPause(false)});
 window.addEventListener('pagehide',()=>{if(running)saveGame(true)});
@@ -4930,6 +4933,7 @@ $('chatBox').addEventListener('pointerdown',e=>e.stopPropagation());
 $('bHelp').onclick=()=>{$('sMenu').hidden=true;$('sHelp').hidden=false};
 $('bHelpBack').onclick=()=>{$('sHelp').hidden=true;showMenu()};
 $('bAgain').onclick=()=>{if(NET.on){netLeaveGame();NET.reported=false;$('sEnd').hidden=true;lobbyShow(NET.slot===0?'host':'guest');return}
+  if(G.reino){reinoRetry();return}
   if(G.camp!=null){const nx=G.camp+(G.won&&G.camp+1<CAMP.length?1:0);campStart(nx);return}
   if(G.daily){$('bDaily').onclick();return}
   const sd=Math.floor(Math.random()*1e9);startGame(sd,{...setupOpts(sd),vic:G.vic==='sobrevivencia'?'sobrevivencia':SETUP.vic})};
@@ -4942,7 +4946,7 @@ function startGame(seed,opts){
   const mode=NET.on?'normal':gameMode;seed=seed??Math.floor(Math.random()*1e9);
   const O=opts||(NET.on?{}:setupOpts(seed));
   G={seed,time:0,starts:null,amoveNext:false,over:false,fishRespawn:[],form:'livre',cmdMode:null,mode,
-    map:O.map||'rios',vic:mode==='build'?'classico':(O.vic||'classico'),civ:O.civ||['mar','planicies'],camp:O.camp??null,daily:O.daily||null};
+    map:O.map||'rios',vic:mode==='build'?'classico':(O.vic||'classico'),civ:O.civ||['mar','planicies'],camp:O.camp??null,daily:O.daily||null,reino:O.reino||null};
   P=mkPlayers();setMapSize(MAP_N);
   if(mode==='build')for(const k of KINDS)P[ME].res[k]+=800;
   if(!NET.on){const mc=myColor();P[ME].col=mc[0];P[ME].dark=mc[1]}
@@ -4955,6 +4959,7 @@ function startGame(seed,opts){
   for(let o=0;o<2;o++){
     if(mode==='build'&&o!==ME)continue; // sem reino rival
     if(G.vic==='sobrevivencia'&&o===1)continue; // os invasores não têm base
+    if(G.reino&&o===1)continue; // no reino os inimigos chegam com as missões
     const s=G.starts[o];const tc=mkBld(o,'centro',s.x-1,s.y-1,true);
     for(let k=0;k<3;k++){const p=freeNear(tc.tx,tc.ty,3,3);mkUnit(o,'aldeao',p.x+.5,p.y+.5)}
     if(G.vic==='regicidio'){const p=freeNear(tc.tx,tc.ty,3,3);mkUnit(o,'rei',p.x+.5,p.y+.5)}
@@ -4993,7 +4998,7 @@ function spawnFauna(){
 /* ---------------- guardar / continuar ---------------- */
 const SAVE_KEY='alv_save_v1';
 // campos extra de G que viajam no gravar/continuar e na sincronização online
-const GX=['map','vic','civ','camp','daily','surv','sdiff','bell','tradeGold','alertAt','islands','obj','relics','tod','weather','achv','track','king','mkt','regrow','sheepT','relicT'];
+const GX=['map','vic','civ','camp','daily','reino','surv','sdiff','bell','tradeGold','alertAt','islands','obj','relics','tod','weather','achv','track','king','mkt','regrow','sheepT','relicT'];
 function gExtra(){const o={};for(const k of GX)if(G[k]!==undefined)o[k]=G[k];return JSON.parse(JSON.stringify(o))}
 function serialize(){
   const ref=x=>x&&!x.dead?x.id:null;
@@ -5006,13 +5011,13 @@ function serialize(){
       :{k:'b',id:e.id,o:e.o,t:e.type,tx:e.tx,ty:e.ty,hp:e.hp,mx:e.max,dn:e.done,pg:e.prog,q:e.queue,qt:e.qt,ra:e.rally?{x:e.rally.x,y:e.rally.y,e:ref(e.rally.e)}:null,am:e.amt,sn:e.seen,lv:e.lvl||null,lk:!!e.locked,gr:e.garr&&e.garr.length?e.garr.map(su):null}),
     AIs:AIs.map(a=>a?{...a,alarm:null}:null),cam:{x:cam.x,y:cam.y,z:cam.z}});
 }
-function saveGame(silent){if(!running||!G||G.over||NET.on)return;try{localStorage.setItem(SAVE_KEY,serialize());if(!silent)toast('Jogo guardado')}catch(e){if(!silent)toast('Não foi possível guardar',true)}}
+function saveGame(silent){if(!running||!G||G.over||NET.on)return;try{localStorage.setItem(G.reino?reinoKey():SAVE_KEY,serialize());if(G.reino)reinoSaveMeta();if(!silent)toast('Jogo guardado')}catch(e){if(!silent)toast('Não foi possível guardar',true)}}
 function hasSave(){try{return !!localStorage.getItem(SAVE_KEY)}catch(e){return false}}
 function clearSave(){try{localStorage.removeItem(SAVE_KEY)}catch(e){}}
-function loadGame(){
-  let d=null;try{d=JSON.parse(localStorage.getItem(SAVE_KEY))}catch(e){}
+function loadGame(key){
+  let d=null;try{d=JSON.parse(localStorage.getItem(key||SAVE_KEY))}catch(e){}
   if(!d||d.v!==1){toast('Não há jogo guardado',true);return false}
-  G={seed:d.G.seed,time:d.G.time,starts:d.G.starts,wonder:d.G.wonder,amoveNext:false,over:false,fishRespawn:d.G.fishRespawn||[],lake:d.G.lake||null,form:d.G.form||'livre',cmdMode:null,mode:d.G.mode||'normal',tut:d.G.tut||null,map:'rios',vic:'classico',civ:['mar','planicies'],...(d.X||{})};gameMode=G.mode;
+  G={seed:d.G.seed,time:d.G.time,starts:d.G.starts,wonder:d.G.wonder,amoveNext:false,over:false,fishRespawn:d.G.fishRespawn||[],lake:d.G.lake||null,form:d.G.form||'livre',cmdMode:null,mode:d.G.mode||'normal',tut:d.G.tut||null,map:'rios',vic:'classico',civ:['mar','planicies'],reino:null,...(d.X||{})};gameMode=G.mode;
   P=mkPlayers();d.P.forEach((p,i)=>{Object.assign(P[i].res,p.res);P[i].age=p.age;P[i].techs=p.techs||{};P[i].stats=p.stats});{const mc=myColor();P[0].col=mc[0];P[0].dark=mc[1]}
   rndSeed(d.G.seed+Math.floor(d.G.time));
   setMapSize(d.mapN||Math.round(Math.sqrt(d.terr.length)));terr=Uint8Array.from(d.terr,ch=>+ch);blk=new Uint8Array(W*H);bldAt=new Int32Array(W*H);resAt=new Array(W*H).fill(null);
@@ -5167,7 +5172,7 @@ function tutArrow(c,t){const T=G&&G.tut;if(!T)return;const st=TUT_STEPS[T.i];if(
   const cp=e.kind==='b'?proj(e.tx+e.w/2,e.ty+e.h/2):proj(e.tx+.5,e.ty+.5);const hgt=e.kind==='b'?(BHEIGHT[e.type]||50)+26:46;const y=cp.y-hgt-Math.abs(Math.sin(t*4))*8;
   c.save();c.translate(cp.x,y);c.fillStyle='#ffd27a';c.strokeStyle='rgba(40,20,0,.75)';c.lineWidth=2;c.beginPath();c.moveTo(0,10);c.lineTo(-9,-2);c.lineTo(-4,-2);c.lineTo(-4,-14);c.lineTo(4,-14);c.lineTo(4,-2);c.lineTo(9,-2);c.closePath();c.fill();c.stroke();
   c.globalAlpha=.35+.25*Math.sin(t*4);c.strokeStyle='#ffd27a';c.lineWidth=2.5;c.beginPath();c.ellipse(0,hgt+Math.abs(Math.sin(t*4))*8,18,9,0,0,7);c.stroke();c.restore()}
-function showMenu(){try{dailySub();const d=campDone();$('campSub').textContent=d>=CAMP.length?'Completa ✔':d+'/'+CAMP.length+' missões'}catch(e){}$('sSetup').hidden=true;$('sCamp').hidden=true;menuBgStart();$('coach').hidden=true;document.body.classList.remove('coaching');document.body.classList.remove('ingame');if(!ACC.user&&!ACC.preview){showLogin();return}accChip();$('sMenu').hidden=false;$('bCont').hidden=!hasSave();if(hasSave()){delete $('bCont').dataset.cloud;$('bCont').lastChild.textContent='Continuar partida'}else cloudCheck();audioToMenu()}
+function showMenu(){try{dailySub();const M=reinoMeta();$('campSub').textContent=M&&reinoHas()?(M.n<6?'Missão ':'Capítulo ')+(M.n+1)+' · ⭐ '+(M.gl||0):'A tua cidade para sempre'}catch(e){}$('sSetup').hidden=true;$('sCamp').hidden=true;menuBgStart();$('coach').hidden=true;document.body.classList.remove('coaching');document.body.classList.remove('ingame');if(!ACC.user&&!ACC.preview){showLogin();return}accChip();$('sMenu').hidden=false;$('bCont').hidden=!hasSave();if(hasSave()){delete $('bCont').dataset.cloud;$('bCont').lastChild.textContent='Continuar partida'}else cloudCheck();audioToMenu()}
 // procura uma unidade de o, mesmo dentro de edifícios ou barcos
 function hasUnitWhere(o,f){for(const e of ents){if(e.o!==o)continue;if(e.kind==='u'&&f(e))return true;const inn=e.garr||e.cargo;if(inn)for(const u of inn)if(!u.dead&&f(u))return true}return false}
 function lostKingdom(o){
@@ -5176,6 +5181,7 @@ function lostKingdom(o){
   return !ents.some(e=>e.o===o&&e.kind==='b'&&e.type==='centro')&&!hasUnitWhere(o,()=>true)}
 function checkEnd(){
   if(G.over)return;
+  if(G.reino){reinoCheckFall();return}
   if(G.camp!=null&&campCheck())return;
   for(let o=0;o<2;o++){
     if(G.mode==='build'&&o!==ME)continue;
@@ -5249,7 +5255,7 @@ async function cloudSave(quiet){if(!ACC.sb||!ACC.user||ACC.preview||cloudBusy||!
   catch(e){if(!quiet)toast('Não foi possível guardar na nuvem',true);return false}finally{cloudBusy=false}}
 async function cloudCheck(){if(!ACC.sb||!ACC.user||ACC.preview||hasSave())return;try{const {data,error}=await ACC.sb.from('cloud_saves').select('updated_at').eq('user_id',ACC.user.id).maybeSingle();if(error||!data||hasSave()||running)return;
   const b=$('bCont');b.hidden=false;b.lastChild.textContent='Continuar (da nuvem)';b.dataset.cloud='1'}catch(e){}}
-async function cloudLoad(){try{const {data,error}=await ACC.sb.from('cloud_saves').select('data').eq('user_id',ACC.user.id).maybeSingle();if(error||!data)throw 0;const obj=await unpackJSON(data.data);localStorage.setItem(SAVE_KEY,JSON.stringify(obj));return true}catch(e){toast('Não foi possível ler a gravação da nuvem',true);return false}}
+async function cloudLoad(){try{const {data,error}=await ACC.sb.from('cloud_saves').select('data').eq('user_id',ACC.user.id).maybeSingle();if(error||!data)throw 0;const obj=await unpackJSON(data.data);if(obj.X&&obj.X.reino){localStorage.setItem(reinoKey(),JSON.stringify(obj));if(!localStorage.getItem(reinoCkKey()))localStorage.setItem(reinoCkKey(),JSON.stringify(obj));return 'reino'}localStorage.setItem(SAVE_KEY,JSON.stringify(obj));return true}catch(e){toast('Não foi possível ler a gravação da nuvem',true);return false}}
 // ---------- Campanha ----------
 const cntU=(o,t)=>ents.filter(e=>e.o===o&&e.kind==='u'&&e.type===t).length+ents.filter(e=>e.o===o&&e.garr).reduce((a,b)=>a+b.garr.filter(u=>u.type===t).length,0);
 const cntB=(o,t,done=true)=>ents.filter(e=>e.o===o&&e.kind==='b'&&e.type===t&&(!done||e.done)).length;
@@ -5281,7 +5287,10 @@ function campDone(){try{return +(localStorage.getItem(ukey('alv_camp'))||0)}catc
 function campObjs(){const M=CAMP[G.camp];G.obj=G.obj||{k:{}};return M.objs.map(([d,f])=>{let ok=false;try{ok=!!f()}catch(e){}return{d,ok}})}
 function campTick(dt){const M=CAMP[G.camp];if(!M)return;G.obj=G.obj||{k:{}};if(cntU(0,'transporte'))G.obj.tr=1;if(ents.some(e=>e.o===0&&e.type==='maravilha'&&e.done))G.obj.wonder=1;
   G.obj.t=(G.obj.t||0)-dt;if(G.obj.t<=0){G.obj.t=1;objRender()}}
-function objRender(){const box=$('objBox');if(G.camp==null||!CAMP[G.camp]){box.hidden=true;return}const ob=campObjs();
+function objRender(){const box=$('objBox');if(G.reino){const R=G.reino,m=R.ms;$('objTitle').textContent=m?(m.daily?'Desafio de hoje · ':m.story?'Missão '+(m.n+1)+' · ':'Capítulo '+(m.n+1)+' · ')+m.t:'O reino descansa';
+    $('objList').innerHTML=m?reinoObjs(m).map(o=>`<li class="${o.ok?'ok':''}">${esc(o.d)}</li>`).join('')+(m.daily?`<li class="tm">⏱ ${fmtT(Math.max(0,G.time-m.t0))}</li>`:''):`<li>Próximo capítulo em ${Math.max(0,Math.ceil(R.calm))} s — aproveita para reforçar a cidade.</li>`;
+    if(G.objShow==null)G.objShow=1;box.hidden=!G.objShow;return}
+  if(G.camp==null||!CAMP[G.camp]){box.hidden=true;return}const ob=campObjs();
   $('objTitle').textContent='Missão '+(G.camp+1)+' · '+CAMP[G.camp].t;$('objList').innerHTML=ob.map(o=>`<li class="${o.ok?'ok':''}">${esc(o.d)}</li>`).join('');
   if(G.objShow==null)G.objShow=1;box.hidden=!G.objShow}
 function campCheck(){const M=CAMP[G.camp];if(!M)return false;
@@ -5295,12 +5304,171 @@ function campRender(){const done=campDone();
   const M=CAMP[campSel];$('cmInfo').innerHTML=`<h3>${esc(M.t)}</h3>${esc(M.story)}<ul>${M.objs.map(o=>'<li>'+esc(o[0])+'</li>').join('')}</ul>`}
 $('cmList').addEventListener('click',ev=>{const b=ev.target.closest('button');if(!b||b.disabled)return;campSel=+b.dataset.i;sfx('click');campRender()});
 $('bCampBack').onclick=()=>{sfx('click');$('sCamp').hidden=true;showMenu()};
-$('bCampGo').onclick=()=>{sfx('click');$('sCamp').hidden=true;campStart(campSel)};
-$('bCamp').onclick=()=>{sfx('click');campOpen()};
 function campStart(i){const M=CAMP[i];mobileLandscape();netLeaveGame();gameMode='normal';const d0=difficulty;difficulty=M.diff??1;
   startGame(M.seed,{map:M.map,vic:M.vic||'classico',civ:M.civ,camp:i});difficulty=d0;G.obj={k:{}};if(M.start)M.start();recount();
   toast('Missão '+(i+1)+': '+M.t);objRender()}
-$('modeT').onclick=()=>{if(G.camp!=null){G.objShow=G.objShow?0:1;objRender()}else if(G.vic==='sobrevivencia')toast('Vaga '+(G.surv?G.surv.wave:0)+' de '+SURV_WIN+'. Recorde: '+(+(localStorage.getItem(ukey('alv_surv_best'))||0))+' vagas.');else if(G.vic==='regicidio')toast('Protege o teu Rei: se cair, perdes. Podes escondê-lo no Centro da Vila.');else if(G.vic==='total')toast('Guerra total: só acaba quando um reino perder todos os edifícios e aldeões.');else if(G.daily){const b=dailyBest(G.daily);toast('Desafio de hoje: vence o mais depressa possível. Melhor tempo: '+(b?fmtT(b):'—'))}};
+$('modeT').onclick=()=>{if(G.camp!=null||G.reino){G.objShow=G.objShow?0:1;objRender()}else if(G.vic==='sobrevivencia')toast('Vaga '+(G.surv?G.surv.wave:0)+' de '+SURV_WIN+'. Recorde: '+(+(localStorage.getItem(ukey('alv_surv_best'))||0))+' vagas.');else if(G.vic==='regicidio')toast('Protege o teu Rei: se cair, perdes. Podes escondê-lo no Centro da Vila.');else if(G.vic==='total')toast('Guerra total: só acaba quando um reino perder todos os edifícios e aldeões.');else if(G.daily){const b=dailyBest(G.daily);toast('Desafio de hoje: vence o mais depressa possível. Melhor tempo: '+(b?fmtT(b):'—'))}};
+// ---------- O meu Reino: campanha contínua (a cidade nunca recomeça) ----------
+// Um só mapa e uma só cidade. As missões vão-se seguindo: 6 de história e depois capítulos sem fim,
+// cada vez mais difíceis. O desafio diário também acontece dentro do reino. Grava sozinho.
+const REINO_CALM=30;
+const reinoKey=()=>ukey('alv_reino_v1'),reinoCkKey=()=>ukey('alv_reino_ck'),reinoMetaKey=()=>ukey('alv_reino_meta');
+function reinoMeta(){try{return JSON.parse(localStorage.getItem(reinoMetaKey())||'null')}catch(e){return null}}
+function reinoHas(){try{return !!localStorage.getItem(reinoKey())}catch(e){return false}}
+const R_TIT={raids:['Saqueadores do norte','A horda das colinas','Velas no horizonte','Os cavaleiros da estepe','A fúria dos clãs'],
+  fort:['O forte dos bandidos','A fortaleza negra','O acampamento do rio','O bastião das pedras','A cidadela rebelde'],
+  boss:['O Senhor da Guerra','O Gigante de Ferro','O Carrasco das Ilhas','O Lobo Cinzento','O Tirano do Leste'],
+  econ:['Anos de abundância','O celeiro do reino','A grande colheita','O tesouro real','Mercadores e caravanas'],
+  cerco:['O grande cerco','Muralhas a arder','A noite mais longa','O cerco do inverno','A última defesa']};
+const R_KINDS=['raids','fort','econ','boss','cerco'];
+const milCount=o=>ents.filter(e=>e.o===o&&e.kind==='u'&&e.d.mil&&!e.d.king).length;
+const aliveIds=ids=>(ids||[]).filter(id=>{const e=byId.get(id);return e&&!e.dead}).length;
+// definição de cada missão (só dados: tem de caber na gravação)
+function reinoDef(n){
+  const S=[
+    {k:'fund',t:'A fundação',d:'O teu povo chegou a terras novas. Antes de pensar em guerras, é preciso uma aldeia que se aguente de pé.'},
+    {k:'lobos',t:'Lobos na floresta',d:'Uma alcateia ronda a aldeia e já atacou dois lenhadores. Treina soldados e limpa a floresta.'},
+    {k:'raids',t:'Defender a costa',d:'Velas de saqueadores no horizonte. Ergue torres, prepara arqueiros e toca o sino quando chegarem.',waves:4,L:0,first:90,gap:70},
+    {k:'rival',t:'O reino vizinho',d:'Do outro lado do vale nasceu um reino rival que cobiça as nossas terras. Destrói o Centro da Vila deles.'},
+    {k:'rei',t:'O Rei em perigo',d:'O teu Rei chegou à vila, mas um Senhor da Guerra jurou capturá-lo. Protege o Rei e derrota o Senhor da Guerra no forte dele.'},
+    {k:'maravilha',t:'A Grande Maravilha',d:'Chegou a hora de deixar a tua marca na história: chega à Idade do Ferro, ergue uma Maravilha e defende-a durante 5 minutos.'}];
+  if(n<S.length)return{...S[n],n,story:true};
+  const L=n-S.length+1,k=R_KINDS[(n-S.length)%R_KINDS.length],t=R_TIT[k][Math.floor((n-S.length)/R_KINDS.length)%5];
+  const m={k,t,n,L};
+  if(k==='raids'){m.waves=Math.min(8,3+Math.floor(L/2));m.first=60;m.gap=Math.max(45,70-L*2);m.d='Bandos inimigos vêm em vagas. Aguenta-as todas e não deixes cair a cidade.'}
+  if(k==='fort'){m.towers=Math.min(6,1+Math.floor(L/2));m.guards=Math.min(30,5+L*2);m.d='Os inimigos ergueram um forte nas nossas terras. Encontra-o e arrasa todos os edifícios.'}
+  if(k==='boss'){m.esc=Math.min(28,4+L*2);m.d='Um campeão inimigo marcha contra o reino com a sua escolta. Derrota-o antes que chegue às casas.'}
+  if(k==='econ'){m.gather=1500+L*600;m.pop=Math.min(90,30+L*6);m.d='Um tempo de paz: faz crescer o reino. O próximo inimigo será mais forte.'}
+  if(k==='cerco'){m.secs=Math.min(480,180+L*30);m.gap=Math.max(35,55-L*2);m.d='Um exército enorme cercou o reino. Resiste até ao fim com o Centro da Vila de pé.'}
+  return m}
+// recompensa ao cumprir
+const reinoPrize=m=>m.daily?250:m.story?150+m.n*40:150+(m.L||0)*45;
+// objetivos (calculados a cada segundo)
+function reinoObjs(m){const k=m.k,O=[];const g=G.reino;
+  if(k==='fund')O.push(['Ter 12 aldeões',cntU(0,'aldeao')>=12],['Construir 4 casas',cntB(0,'casa')>=4],['Construir um Quartel',cntB(0,'quartel')>=1],['Juntar 300 de madeira',P[0].res.wood>=300]);
+  if(k==='lobos')O.push(['Ter 6 soldados',milCount(0)>=6],['Matar 8 lobos ('+Math.min(8,kills('lobo'))+'/8)',kills('lobo')>=8],['Avançar para a Idade do Bronze',P[0].age>=1]);
+  if(k==='raids'){const w=m.wv||0,left=aliveIds(m.ids);O.push(['Aguentar '+m.waves+' vagas ('+Math.min(w,m.waves)+'/'+m.waves+')',w>=m.waves&&!left])}
+  if(k==='rival')O.push(['Destruir o Centro da Vila do reino vizinho',m.ids&&m.ids.length&&!aliveIds(m.ids)]);
+  if(k==='rei')O.push(['Manter o teu Rei vivo',hasUnitWhere(0,u=>u.d.king)],['Derrotar o Senhor da Guerra',m.ids&&m.ids.length&&!aliveIds(m.ids)]);
+  if(k==='maravilha')O.push(['Chegar à Idade do Ferro',P[0].age>=2],['Construir uma Maravilha',!!(g.wb||ents.some(e=>e.o===0&&e.type==='maravilha'&&e.done))],['Defender a Maravilha 5 minutos'+(G.wonder&&G.wonder.o===0&&!g.wok?' ('+fmtT(Math.max(0,G.wonder.t))+')':''),!!g.wok]);
+  if(k==='fort'){const a=aliveIds(m.ids);O.push(['Arrasar o forte inimigo ('+(m.ids?m.ids.length-a:0)+'/'+(m.ids?m.ids.length:0)+')',m.ids&&m.ids.length&&!a])}
+  if(k==='boss')O.push(['Derrotar '+(m.boss||'o campeão inimigo'),m.ids&&m.ids.length&&!aliveIds(m.ids)]);
+  if(k==='econ'){const got=Math.max(0,P[0].stats.gathered-(m.g0||0));O.push(['Recolher '+m.gather+' recursos ('+Math.min(got,m.gather)+')',got>=m.gather],['Chegar a '+m.pop+' de população',P[0].pop>=m.pop])}
+  if(k==='cerco'){const el=Math.max(0,G.time-m.t0);O.push(['Resistir '+fmtT(m.secs)+(el<m.secs?' (faltam '+fmtT(m.secs-el)+')':''),el>=m.secs],['Manter o Centro da Vila de pé',cntB(0,'centro')>=1])}
+  return O.map(([d,ok])=>({d,ok:!!ok}))}
+// --- inimigos ---
+function reinoHome(){const tc=ents.find(e=>e.o===0&&e.kind==='b'&&e.type==='centro')||ents.find(e=>e.o===0&&e.kind==='b');return tc?centerOf(tc):G.starts[0]}
+function reinoSpot(minD,maxD){const home=reinoHome(),L0=landOf(home.x,home.y),lab=landLab();let best=null,bs=-1;
+  for(let k=0;k<600;k++){const x=1+Math.floor(rnd()*(W-2)),y=1+Math.floor(rnd()*(H-2)),i=idx(x,y);if(lab[i]!==L0||blk[i]||resAt[i])continue;const d=hyp(x-home.x,y-home.y);if(d<minD)continue;
+    // longe também dos nossos edifícios
+    let near=99;for(const e of ents)if(e.o===0&&e.kind==='b'){const c=centerOf(e);near=Math.min(near,hyp(c.x-x,c.y-y))}
+    const sc=(d<=maxD?100:0)+Math.min(near,20);if(sc>bs){bs=sc;best={x:x+.5,y:y+.5}}}
+  return best||{x:clamp(home.x+24,2,W-3),y:clamp(home.y+24,2,H-3)}}
+function reinoPool(age,siege){const pools=[['guerreiro','lanceiro','arqueiro','guerreiro'],['espadachim','arqueiro','cavaleiro','lanceiro','espadachim'],['espadachim','besteiro','cavPesada','cavArqueira','espadachim','besteiro']];
+  const p=pools[age].slice();if(siege>=1)p.push('ariete');if(siege>=2)p.push('catapulta');if(siege>=3)p.push('trebuchet');return p}
+function reinoEnemyAge(L){return Math.min(2,Math.max(P[0].age,L>=6?2:L>=2?1:0))}
+function reinoSpawnGroup(types,at,spread){const us=[];for(const t of types){const u=mkUnit(1,t,at.x,at.y);setMover(u);const q=snapFree(u,at.x+(rnd()-.5)*(spread||3),at.y+(rnd()-.5)*(spread||3));u.x=q.x;u.y=q.y;us.push(u)}return us}
+function reinoRaid(m){const L=m.daily?Math.max(1,m.L):(m.L||0),w=m.wv||1,age=reinoEnemyAge(L);P[1].age=age;
+  const cnt=Math.min(45,Math.round(3+L*1.6+w*1.2));const pool=reinoPool(age,L>=8?3:L>=5?2:L>=2?1:0);
+  const sp=reinoSpot(30,60);const us=reinoSpawnGroup(Array.from({length:cnt},()=>pool[Math.floor(rnd()*pool.length)]),sp);
+  const home=reinoHome();groupMove(us,home.x,home.y,true,'livre');m.ids=(m.ids||[]).filter(id=>byId.has(id)).concat(us.map(u=>u.id));
+  toast('⚔️ '+(m.k==='cerco'?'Cerco':'Vaga '+w)+': '+cnt+' inimigos a caminho!',true);snd('alarm',null,null,{force:1});fx.push({t:0,life:4,type:'ping',x:sp.x,y:sp.y,col:'#ff6b5a'});G.lastAttack={x:sp.x,y:sp.y};buzz([90,60,90])}
+function reinoPlace(type,cx,cy,r){for(let k=0;k<60;k++){const tx=Math.round(cx+(rnd()-.5)*2*r),ty=Math.round(cy+(rnd()-.5)*2*r);if(canPlace(type,tx,ty,1,0,true))return mkBld(1,type,tx,ty,true)}return null}
+function reinoFort(m,boss){const sp=reinoSpot(32,70),L=m.daily?Math.max(1,m.L):(m.L||1),age=reinoEnemyAge(L);P[1].age=age;
+  const ids=[],guards=[];const add=b=>{if(b)ids.push(b.id)};
+  add(reinoPlace('quartel',sp.x-1,sp.y-1,3));for(let i=0;i<(m.towers||1);i++)add(reinoPlace('torre',sp.x,sp.y,5));add(reinoPlace('casa',sp.x,sp.y,6));if(L>=3)add(reinoPlace(age>=1?'arquearia':'casa',sp.x,sp.y,6));
+  const pool=reinoPool(age,0);const gs=reinoSpawnGroup(Array.from({length:m.guards||5},()=>pool[Math.floor(rnd()*pool.length)]),sp,5);for(const u of gs)guards.push(u.id);
+  let bossU=null;if(boss){bossU=reinoSpawnGroup(['rei'],sp,2)[0];guards.push(bossU.id)}
+  m.ids=boss?[bossU.id]:ids;m.guard=guards;m.at={x:sp.x,y:sp.y};
+  fx.push({t:0,life:6,type:'ping',x:sp.x,y:sp.y,col:'#ff6b5a'});G.lastAttack={x:sp.x,y:sp.y};
+  toast(boss?'O Senhor da Guerra está no forte assinalado no mapa.':'Forte inimigo avistado! Está assinalado no minimapa.',true);snd('alarm',null,null,{force:1})}
+function reinoBoss(m){const L=m.daily?Math.max(1,m.L):(m.L||1),age=reinoEnemyAge(L);P[1].age=age;const sp=reinoSpot(34,70);
+  const t=age>=2?'cavPesada':age>=1?'cavaleiro':'guerreiro';const b=reinoSpawnGroup([t],sp)[0];const mul=4+L;b.max=Math.round(b.max*mul);b.hp=b.max;m.bmax=b.max;m.boss=R_TIT.boss[(m.n||0)%5].replace(/^O /,'o ');
+  const pool=reinoPool(age,L>=4?1:0);const es=reinoSpawnGroup(Array.from({length:m.esc||4},()=>pool[Math.floor(rnd()*pool.length)]),sp);
+  m.ids=[b.id];const home=reinoHome();groupMove([b,...es],home.x,home.y,true,'livre');
+  toast('💀 '+m.boss.replace(/^o /,'O ')+' marcha contra o reino!',true);snd('alarm',null,null,{force:1});fx.push({t:0,life:5,type:'ping',x:sp.x,y:sp.y,col:'#ff6b5a'});G.lastAttack={x:sp.x,y:sp.y};buzz([150,80,150])}
+function reinoRival(m){const s=G.starts[1];let at={x:s.x-1,y:s.y-1};if(!canPlace('centro',at.x,at.y,1,0,true)){const sp=reinoSpot(40,90);at={x:Math.floor(sp.x)-1,y:Math.floor(sp.y)-1};for(let k=0;k<40&&!canPlace('centro',at.x,at.y,1,0,true);k++){at.x+=Math.round((rnd()-.5)*6);at.y+=Math.round((rnd()-.5)*6)}}
+  P[1].age=0;P[1].techs={};for(const k of KINDS)P[1].res[k]=Math.max(P[1].res[k]||0,250);
+  const tc=mkBld(1,'centro',at.x,at.y,true);for(let k=0;k<5;k++){const p=freeNear(tc.tx,tc.ty,3,3);if(p)mkUnit(1,'aldeao',p.x+.5,p.y+.5)}
+  const A=mkAI(1,DIFF[1]);A.nextAttack=Math.min(A.nextAttack,480);AIs[1]=A;AI=A;m.ids=[tc.id];
+  toast('Um reino rival ergueu-se a '+(at.x<W/2?'oeste':'leste')+'. Destrói o Centro da Vila deles!',true)}
+// --- ciclo da missão ---
+function reinoStart(n){const R=G.reino;const m=reinoDef(n);m.t0=G.time;R.ms=m;R.calm=0;G.obj={k:{}};
+  if(m.k==='lobos'){const h=reinoHome();for(let k=0;k<4;k++){const a=k*1.6+.4;const x=h.x+dcos(a)*18,y=h.y+dsin(a)*18;for(let i=0;i<3;i++){const tx=clamp(Math.floor(x+(rnd()-.5)*3),1,W-2),ty=clamp(Math.floor(y+(rnd()-.5)*3),1,H-2);if(!blk[idx(tx,ty)])mkUnit(2,'lobo',tx+.5,ty+.5)}}}
+  if(m.k==='raids'){m.wv=0;m.nx=m.first;for(const k of KINDS)P[0].res[k]+=m.story?150:0}
+  if(m.k==='rival')reinoRival(m);
+  if(m.k==='rei'){if(!hasUnitWhere(0,u=>u.d.king)){const tc=ents.find(e=>e.o===0&&e.type==='centro');const p=tc?freeNear(tc.tx,tc.ty,3,3):null;const h=reinoHome();mkUnit(0,'rei',p?p.x+.5:h.x,p?p.y+.5:h.y)}m.towers=1;m.guards=6;reinoFort(m,true)}
+  if(m.k==='maravilha'){R.wb=0;R.wok=0;P[0].res.wood+=600;P[0].res.gold+=400;P[0].res.stone+=400}
+  if(m.k==='fort')reinoFort(m,false);
+  if(m.k==='boss')reinoBoss(m);
+  if(m.k==='econ')m.g0=P[0].stats.gathered;
+  if(m.k==='cerco'){m.nx=20;m.wv=0}
+  recount();G.objShow=1;objRender();
+  toast((m.story?'Missão '+(n+1):'Capítulo '+(n+1))+': '+m.t);snd('wonder',null,null,{force:1})}
+function reinoTick(dt){const R=G.reino;if(!R)return;
+  if(!R.ms){R.calm-=dt;if(R.calm<=0)reinoStart(R.n)}
+  const m=R.ms;
+  if(m){
+    if((m.k==='raids'&&m.wv<m.waves)||m.k==='cerco'&&G.time-m.t0<m.secs){m.nx-=dt;if(m.nx<=0){m.wv=(m.wv||0)+1;m.nx=m.gap;reinoRaid(m)}}
+    if(m.k==='maravilha'){if(ents.some(e=>e.o===0&&e.type==='maravilha'&&e.done))R.wb=1;
+      if(G.wonder&&G.wonder.o===0&&!R.wok){m.nx=(m.nx??60)-dt;if(m.nx<=0){m.nx=80;m.wv=(m.wv||0)+1;m.L=Math.max(m.L||0,2+m.wv);reinoRaid(m)}}}
+    if(m.k==='rei'&&!hasUnitWhere(0,u=>u.d.king)&&!G.over){reinoFail('O teu Rei caiu nas mãos do Senhor da Guerra.');return}
+    if(m.bmax&&m.ids)for(const id of m.ids){const b=byId.get(id);if(b&&b.max<m.bmax){b.max=m.bmax;b.hp=Math.min(b.hp,b.max)}}
+  }
+  // inimigos parados vão atacar (menos os guardas dos fortes e o reino rival, que tem IA própria)
+  R.ctl=(R.ctl||0)-dt;if(R.ctl<=0){R.ctl=2;const gd=new Set(m&&m.guard||[]);const foes=AIs[1]?[]:ents.filter(e=>e.o===1&&e.kind==='u'&&e.d.mil&&e.state==='idle'&&!gd.has(e.id)&&!e.d.king);
+    if(foes.length){const t=aiTarget(0,{x:foes[0].x,y:foes[0].y});if(t){const c=centerOf(t);groupMove(foes,c.x,c.y,true,'livre')}}}
+  R.ot=(R.ot||0)-dt;if(R.ot<=0){R.ot=1;objRender();if(m&&reinoObjs(m).every(o=>o.ok))reinoDone()}}
+function reinoDone(){const R=G.reino,m=R.ms;const prize=reinoPrize(m);for(const k of KINDS)P[0].res[k]+=prize;R.gl=(R.gl||0)+(m.daily?15:m.story?10:10+(m.L||0)*3);resDirty=true;
+  if(m.k==='rival'){AIs[1]=null;AI=null}
+  if(m.daily){const secs=Math.round(G.time-m.t0);reinoDailySubmit(m.daily,secs);toast('🏆 Desafio de hoje cumprido em '+fmtT(secs)+'! +'+prize+' de cada recurso');achv('diario');
+    R.ms=R.susp||null;R.susp=null;if(R.ms){R.ms.t0+=G.time-(R.ms.ts||G.time);delete R.ms.ts}else R.calm=Math.max(R.calm||0,10)}
+  else{R.hist=(R.hist||[]).concat([[m.n,m.t]]).slice(-40);R.n=m.n+1;R.ms=null;R.calm=REINO_CALM;
+    toast('✔ '+(m.story?'Missão':'Capítulo')+' cumprido: '+m.t+'! +'+prize+' de cada recurso. Próximo em '+REINO_CALM+' s.');if(m.story&&m.n===5)achv('camp')}
+  snd('victory',null,null,{force:1});objRender();
+  // ponto de controlo: se o reino cair, recomeça daqui
+  try{saveGame(true);const s=localStorage.getItem(reinoKey());if(s&&!R.ms)localStorage.setItem(reinoCkKey(),s)}catch(e){}cloudSave(true)}
+function reinoFail(txt){if(G.over)return;G.over=true;const g0=G;G.reino.why=txt;setTimeout(()=>{if(G===g0&&running)endGame(false,false,'reino')},900)}
+function reinoCheckFall(){if(G.over)return;const lost=!ents.some(e=>e.o===0&&e.kind==='b'&&e.done&&!e.d.wall&&!e.d.gate&&!e.d.farm)&&!hasUnitWhere(0,u=>u.type==='aldeao');
+  if(lost)reinoFail('A tua última casa caiu e o povo fugiu.')}
+// --- abrir, fundar, continuar ---
+function reinoFound(){mobileLandscape();netLeaveGame();gameMode='normal';const d0=difficulty;difficulty=1;const sd=Math.floor(Math.random()*1e9);
+  const civ=CIV_KEYS.includes(SETUP.civ)?SETUP.civ:'planicies';
+  startGame(sd,{map:'continental',vic:'classico',civ:[civ,civ==='montanha'?'planicies':'montanha'],reino:{n:0,gl:0,ms:null,calm:4,hist:[],born:new Date().toISOString().slice(0,10)}});difficulty=d0;
+  try{localStorage.setItem(reinoKey(),serialize());localStorage.setItem(reinoCkKey(),serialize())}catch(e){}reinoSaveMeta();
+  toast('O teu reino nasceu! Daqui para a frente a cidade é sempre a mesma.')}
+function reinoLoad(fromCk){mobileLandscape();netLeaveGame();if(fromCk){try{const s=localStorage.getItem(reinoCkKey());if(s)localStorage.setItem(reinoKey(),s)}catch(e){}}
+  if(!loadGame(reinoKey()))return false;if(!G.reino){toast('Gravação do reino inválida',true);return false}
+  G.over=false;objRender();const m=G.reino.ms;toast(m?(m.daily?'Desafio de hoje: ':m.story?'Missão '+(m.n+1)+': ':'Capítulo '+(m.n+1)+': ')+m.t:'O reino continua.');return true}
+function reinoRetry(){$('sEnd').hidden=true;$('sPause').hidden=true;if(!reinoLoad(true))reinoFound()}
+function reinoSaveMeta(){const R=G&&G.reino;if(!R)return;const m=R.ms&&R.ms.daily?R.susp:R.ms;try{localStorage.setItem(reinoMetaKey(),JSON.stringify({n:R.n,t:(m||reinoDef(R.n)).t,gl:R.gl||0,age:P[0].age,pop:P[0].pop,time:Math.round(G.time),done:(R.hist||[]).slice(-8)}))}catch(e){}}
+// --- desafio diário dentro do reino ---
+function reinoDailyStart(){const R=G.reino;if(!R)return;const D=dailyInfo();const b=dailyBest(D.day);
+  if(b||R.ms&&R.ms.daily){toast(b?'Já cumpriste o desafio de hoje em '+fmtT(b)+'. Volta amanhã!':'O desafio de hoje já está a decorrer.');return}
+  const dn=Math.floor(Date.UTC(+D.day.slice(0,4),+D.day.slice(5,7)-1,+D.day.slice(8,10))/864e5);
+  const k=R.n<3?'econ':['raids','fort','boss'][dn%3];const L=Math.max(1,R.n-4);
+  const m={k,t:R.n<3?'Um dia de trabalho':['Ataque do dia','O forte do dia','O campeão do dia'][dn%3],n:dn,L,daily:D.day,t0:G.time,d:'O desafio é igual para todos no mesmo dia: cumpre-o o mais depressa possível para subir no ranking.'};
+  if(k==='econ'){m.gather=800;m.pop=Math.max(15,P[0].pop+5)}
+  if(k==='raids'){m.waves=3;m.first=20;m.gap=50;m.wv=0;m.nx=m.first}
+  if(k==='fort'){m.towers=Math.min(4,1+Math.floor(L/2));m.guards=Math.min(20,5+L*2);reinoFort(m,false)}
+  if(k==='boss'){m.esc=Math.min(20,4+L*2);reinoBoss(m)}
+  if(k==='econ')m.g0=P[0].stats.gathered;
+  if(R.ms){R.ms.ts=G.time;R.susp=R.ms}R.ms=m;G.objShow=1;objRender();
+  toast('🏆 Desafio de hoje: '+m.t+'. O relógio já está a contar!')}
+async function reinoDailySubmit(day,secs){const b=dailyBest(day);if(!b||secs<b){try{localStorage.setItem(ukey('alv_daily'),JSON.stringify({day,secs}))}catch(e){}}
+  if(!ACC.sb||ACC.preview||!ACC.user)return;try{const {error}=await ACC.sb.rpc('submit_daily',{p_day:day,p_secs:secs});if(error)throw error;const top=await dailyTop(day);if(top){const i=top.findIndex(r=>r.user_id===ACC.user.id);if(i>=0)toast('🏆 Estás em '+(i+1)+'.º lugar no desafio de hoje')}}catch(e){}}
+// --- ecrã do reino ---
+function reinoOpen(){$('sMenu').hidden=true;$('sCamp').hidden=false;reinoRender()}
+function reinoRender(){const M=reinoMeta(),has=reinoHas();const D=dailyInfo(),b=dailyBest(D.day);
+  $('cmList').innerHTML=has&&M?`<div class="rkstat"><b>${M.n<6?'Missão '+(M.n+1):'Capítulo '+(M.n+1)}</b><small>${esc(M.t||'')}</small></div><div class="rkstat"><b>⭐ ${M.gl||0}</b><small>glória</small></div><div class="rkstat"><b>${['Pedra','Bronze','Ferro'][M.age||0]}</b><small>${M.pop||0} habitantes · ${fmtT(M.time||0)}</small></div>`:'';
+  $('cmInfo').innerHTML=has&&M?`<h3>A crónica do reino</h3>${M.done&&M.done.length?'<ul>'+M.done.slice().reverse().map(([n,t])=>'<li>✔ '+(n<6?'Missão ':'Capítulo ')+(n+1)+': '+esc(t)+'</li>').join('')+'</ul>':'<p>A história do teu reino ainda está a começar.</p>'}<p class="muted small">Desafio de hoje: ${b?'cumprido em '+fmtT(b)+' ✔':'por fazer — joga-o dentro do teu reino.'}</p>`
+    :'<h3>Funda o teu reino</h3><p>Começas com três aldeões e um Centro da Vila. A cidade que construíres fica tua para sempre: as missões vão-se seguindo sem recomeçar, cada uma mais difícil que a anterior — lobos, saqueadores, um reino rival, fortes, campeões e cercos. O jogo grava sozinho.</p><p class="muted small">O desafio diário também se joga dentro do teu reino.</p>';
+  $('bCampGo').lastChild.textContent=has?'Continuar o reino':'Fundar o reino';$('bReinoDaily').hidden=!has||!!b;$('bReinoNew').hidden=!has}
+$('bCampGo').onclick=()=>{sfx('click');$('sCamp').hidden=true;if(reinoHas()){if(!reinoLoad(false))reinoFound()}else reinoFound()};
+$('bReinoDaily').onclick=()=>{sfx('click');$('sCamp').hidden=true;if(reinoLoad(false))reinoDailyStart();else{reinoFound();reinoDailyStart()}};
+let reinoNewArm=0;$('bReinoNew').onclick=()=>{if(Date.now()-reinoNewArm>3000){reinoNewArm=Date.now();toast('Vais apagar o teu reino atual. Toca outra vez para confirmar.',true);return}reinoNewArm=0;sfx('click');
+  try{localStorage.removeItem(reinoKey());localStorage.removeItem(reinoCkKey());localStorage.removeItem(reinoMetaKey())}catch(e){}$('sCamp').hidden=true;reinoFound()};
+$('bCamp').onclick=()=>{sfx('click');reinoOpen()};
 // ---------- Desafio diário ----------
 function dailyInfo(){const d=new Date();const day=d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
   const n=Math.floor(Date.UTC(d.getFullYear(),d.getMonth(),d.getDate())/864e5);const maps=['rios','continental','lagos','arquipelago'];
@@ -5308,7 +5476,7 @@ function dailyInfo(){const d=new Date();const day=d.getFullYear()+'-'+String(d.g
 function dailyBest(day){try{const o=JSON.parse(localStorage.getItem(ukey('alv_daily'))||'{}');return o.day===day?o.secs:null}catch(e){return null}}
 const fmtT=s=>Math.floor(s/60)+':'+String(Math.floor(s%60)).padStart(2,'0');
 function dailySub(){const D=dailyInfo(),b=dailyBest(D.day);$('dailySub').textContent=MAPS[D.map].name+(b?' · '+fmtT(b):'')}
-$('bDaily').onclick=()=>{sfx('click');const D=dailyInfo();mobileLandscape();netLeaveGame();gameMode='normal';const d0=difficulty;difficulty=1;startGame(D.seed,{map:D.map,vic:'classico',civ:D.civ,daily:D.day});difficulty=d0;
+$('bDaily').onclick=()=>{sfx('click');if(!dailyBest(dailyInfo().day)){if(reinoHas()&&reinoLoad(false)){reinoDailyStart();return}if(!reinoHas()){reinoFound();reinoDailyStart();return}}else{toast('Já cumpriste o desafio de hoje em '+fmtT(dailyBest(dailyInfo().day))+'. Volta amanhã!');return}const D=dailyInfo();mobileLandscape();netLeaveGame();gameMode='normal';const d0=difficulty;difficulty=1;startGame(D.seed,{map:D.map,vic:'classico',civ:D.civ,daily:D.day});difficulty=d0;
   toast('Desafio de hoje: '+MAPS[D.map].name+' · '+CIVS[D.civ[0]].name+'. Vence o mais depressa possível!')};
 async function dailySubmit(){const D=G.daily,secs=Math.round(G.time);const b=dailyBest(D);if(!b||secs<b){try{localStorage.setItem(ukey('alv_daily'),JSON.stringify({day:D,secs}))}catch(e){}}
   const el=$('endRate');el.hidden=false;el.textContent='Tempo: '+fmtT(secs)+(b&&b<secs?' (o teu melhor hoje: '+fmtT(b)+')':' — melhor tempo de hoje!');
@@ -5337,16 +5505,17 @@ function survSpawn(n){const di=G.sdiff??1,mult=[.7,1,1.35][di];P[1].age=n<=3?0:n
   toast('⚔️ Vaga '+n+': '+cnt+' invasores!',true);snd('alarm',null,null,{force:1});fx.push({t:0,life:4,type:'ping',x:sp.x,y:sp.y,col:'#ff6b5a'});G.lastAttack={x:sp.x,y:sp.y};buzz([90,60,90])}
 // ---------- etiqueta do modo (topo do ecrã) ----------
 function modeHud(){const el=$('modeT');let ic='',tx='',warn=false;
-  if(G.camp!=null){const M=CAMP[G.camp];if(M){const ob=campObjs();ic='🚩';tx='Missão '+(G.camp+1)+': '+ob.filter(o=>o.ok).length+'/'+ob.length}}
+  if(G.reino){const R=G.reino,m=R.ms;if(m){const ob=reinoObjs(m);ic=m.daily?'🏆':'🏰';tx=(m.daily?'Desafio':m.story?'Missão '+(m.n+1):'Cap. '+(m.n+1))+': '+ob.filter(o=>o.ok).length+'/'+ob.length}else{ic='🏰';tx='Próximo capítulo em '+Math.max(0,Math.ceil(R.calm))+' s'}}
+  else   if(G.camp!=null){const M=CAMP[G.camp];if(M){const ob=campObjs();ic='🚩';tx='Missão '+(G.camp+1)+': '+ob.filter(o=>o.ok).length+'/'+ob.length}}
   else if(G.vic==='sobrevivencia'&&G.surv){const s2=Math.max(0,Math.ceil(G.surv.next));ic='⚔️';tx='Vaga '+G.surv.wave+' · próxima '+Math.floor(s2/60)+':'+String(s2%60).padStart(2,'0');warn=s2<20}
   else if(G.vic==='regicidio'){let k=null;for(const e of ents)if(e.o===ME&&e.d&&e.d.king){k=e;break}ic='👑';tx=k?Math.ceil(k.hp)+'/'+k.max:'abrigado';warn=k&&k.hp<k.max*.5}
   else if(G.vic==='total'){ic='🔥';tx='Guerra total'}
   else if(G.daily){ic='🏆';tx='Desafio de hoje'}
   el.hidden=!ic;if(ic){el.firstChild.textContent=ic;el.lastChild.textContent=tx;el.classList.toggle('warn',warn)}}
 function endGame(win,wonder,why){
-  G.won=!!win;running=false;$('coach').hidden=true;document.body.classList.remove('coaching');document.body.classList.remove('ingame');if(!NET.on){clearSave();if(ACC.sb&&ACC.user&&!ACC.preview)ACC.sb.from('cloud_saves').delete().eq('user_id',ACC.user.id).then(()=>{},()=>{})}$('endRate').hidden=true;
+  G.won=!!win;running=false;$('coach').hidden=true;document.body.classList.remove('coaching');document.body.classList.remove('ingame');if(!NET.on&&!G.reino){clearSave();if(ACC.sb&&ACC.user&&!ACC.preview)ACC.sb.from('cloud_saves').delete().eq('user_id',ACC.user.id).then(()=>{},()=>{})}$('endRate').hidden=true;
   if(NET.on)netReport(win,why||(wonder?'wonder':'normal'));else if(G.mode!=='build')accRecordSP(win);ambStop();MUS.want='menu';audioPause(false);snd(win?'victory':'defeat',null,null,{force:1});
-  $('endTitle').textContent=why==='surv_win'?'Vitória lendária':win?'Vitória':'Derrota';
+  $('endTitle').textContent=why==='reino'?'O reino caiu':why==='surv_win'?'Vitória lendária':win?'Vitória':'Derrota';
   let extraTxt='';
   if(why==='surv'||why==='surv_win'){const n=G.surv?G.surv.wave-(why==='surv'?1:0):0;let best=0;try{best=+(localStorage.getItem(ukey('alv_surv_best'))||0)}catch(e){}if(n>best){try{localStorage.setItem(ukey('alv_surv_best'),n)}catch(e){}extraTxt=' Novo recorde!'}else extraTxt=' Recorde: '+best+' vagas.'}
   $('endText').textContent=why==='surv'?'Os invasores tomaram a tua vila. Aguentaste '+Math.max(0,(G.surv?G.surv.wave-1:0))+' vagas.'+extraTxt:why==='surv_win'?'Aguentaste '+SURV_WIN+' vagas de invasores. A tua vila é lendária!'+extraTxt:why==='king'?(win?'O Rei rival caiu. O reino deles rende-se!':'O teu Rei caiu. O reino rende-se.'):why==='total'?(win?'Não sobrou pedra sobre pedra: o reino rival foi apagado do mapa.':'A tua última casa caiu. O reino rival venceu a guerra total.'):why==='forfeit'?'O adversário não voltou à partida. Vitória por desistência.':why==='peer_quit'?'O adversário saiu da partida.':why==='resign_me'?'Desististe da partida.':why==='resign_peer'?'O adversário desistiu. Vitória!':wonder?(win?'A tua Maravilha resistiu. O teu reino entra para a história.':'A Maravilha do rival resistiu. O reino deles entra para a história.'):win?'O reino rival caiu. A tua aldeia governa estas terras.':'A tua aldeia foi conquistada. Tenta outra estratégia.';
@@ -5360,8 +5529,9 @@ function endGame(win,wonder,why){
   <span>Idade final</span><span>${['Pedra','Bronze','Ferro'][P[ME].age]}</span><span>${['Pedra','Bronze','Ferro'][P[1].age]}</span>`;
   if(G.camp!=null&&win){const n=G.camp+1;if(n>campDone())try{localStorage.setItem(ukey('alv_camp'),n)}catch(e){}$('endText').textContent=n<CAMP.length?'Missão cumprida! A próxima missão foi desbloqueada.':'Campanha completa! O teu povo tem agora um reino lendário.'}
   if(G.daily&&win)dailySubmit();
+  if(why==='reino')$('endText').textContent=(G.reino.why||'O reino caiu.')+' Podes recomeçar a partir do último capítulo cumprido — a cidade volta como estava.';
   try{achvEnd(win,why)}catch(e){}
-  $('bAgain').textContent=NET.on?'Revanche':G.camp!=null&&win&&G.camp+1<CAMP.length?'Próxima missão':'Jogar outra vez';
+  $('bAgain').textContent=why==='reino'?'Recomeçar o capítulo':NET.on?'Revanche':G.camp!=null&&win&&G.camp+1<CAMP.length?'Próxima missão':'Jogar outra vez';
   $('sEnd').hidden=false;
   trackTick();const ev=(G.track&&G.track.ev)||[];$('endEv').innerHTML=ev.map(e=>`<li>${fmtT(e[0])} — ${esc(e[2])}</li>`).join('');$('endEv').hidden=!ev.length;$('endTabs').hidden=!(G.track&&G.track.t.length>1);
   for(const b of $('endTabs').children)b.classList.toggle('on',b.dataset.k==='0');requestAnimationFrame(()=>endChart(0));
@@ -5382,12 +5552,13 @@ function step(dt){
   for(let i=G.fishRespawn.length-1;i>=0;i--){const f=G.fishRespawn[i];f.t-=dt;if(f.t<=0){G.fishRespawn.splice(i,1);addFish(f.x,f.y,150)}}
   if(G.wonder){const w=byId.get(G.wonder.id);
     if(!w){toast(G.wonder.o===ME?'A nossa Maravilha foi destruída!':'Destruímos a Maravilha do rival!',G.wonder.o===ME);const nw=ents.find(e=>e.kind==='b'&&e.type==='maravilha'&&e.done&&!e.dead);G.wonder=nw?{o:nw.o,id:nw.id,t:300}:null}
-    else{G.wonder.t-=dt;if(G.wonder.t<=0&&!G.over){G.over=true;const win=G.wonder.o===ME,g0=G;setTimeout(()=>{if(G===g0&&running)endGame(win,true)},600)}}}
+    else{G.wonder.t-=dt;if(G.wonder.t<=0&&G.reino){if(G.wonder.o===ME){G.reino.wok=1;toast('A Maravilha resistiu! O teu reino entra para a história.')}G.wonder=null}else if(G.wonder.t<=0&&!G.over){G.over=true;const win=G.wonder.o===ME,g0=G;setTimeout(()=>{if(G===g0&&running)endGame(win,true)},600)}}}
   if(G.tut)tutTick(dt);
   trackTick();if((G.time|0)!==((G.time-dt)|0))achvTick(1);
   if(G.vic==='sobrevivencia'&&!G.over)survTick(dt);
   relicTick(dt);natureTick(dt);
   if(G.camp!=null&&!G.over)campTick(dt);
+  if(G.reino&&!G.over)reinoTick(dt);
   checkEnd();
 }
 let last=performance.now(),uiT=0;

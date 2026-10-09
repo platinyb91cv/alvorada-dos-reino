@@ -1,0 +1,121 @@
+# Testes do modo «O meu Reino» (campanha contínua): fundar, missões em sequência, capítulos sem fim,
+# gravar/continuar, queda do reino e recomeço, desafio diário dentro do reino.
+import asyncio, os, sys
+from playwright.async_api import async_playwright
+GAME="file://"+os.path.abspath(os.path.join(os.path.dirname(__file__),'..','www','index.html'))
+R=[]
+def rep(ok,name,info):R.append((ok,name,info));print(('PASS' if ok else 'FAIL').ljust(6),name+':',info,flush=True)
+ADV="(s)=>{for(let i=0;i<s*30;i++){step(1/30);if(!__S().running||__S().G.over)break}return __S().G.time}"
+async def adv(pg,s):return await pg.evaluate(ADV,s)
+async def ms(pg):return await pg.evaluate("(()=>{const R=__S().G.reino;return R?{n:R.n,k:R.ms&&R.ms.k,calm:R.calm,daily:R.ms&&R.ms.daily,gl:R.gl,obj:R.ms?reinoObjs(R.ms):null}:null})()")
+KILL_O1="(t)=>{const s=__S();const src=s.ents.find(e=>e.o===0&&e.kind==='u');let n=0;for(const e of s.ents.slice())if(e.o===1&&(!t||e.kind===t)){kill(e,src);n++}return n}"
+async def main():
+  async with async_playwright() as p:
+    b=await p.chromium.launch()
+    ctx=await b.new_context(viewport={"width":900,"height":420})
+    pg=await ctx.new_page();errs=[];pg.on("pageerror",lambda e:errs.append(str(e)[:300]))
+    await pg.goto(GAME);await pg.wait_for_timeout(500);await pg.evaluate("localStorage.clear()")
+    await pg.click("#lgPreview");await pg.wait_for_timeout(200)
+    sub=await pg.evaluate("document.getElementById('campSub').textContent")
+    await pg.click("#bCamp");await pg.wait_for_timeout(200)
+    scr=await pg.evaluate("({v:!document.getElementById('sCamp').hidden,go:document.getElementById('bCampGo').textContent.trim(),info:document.getElementById('cmInfo').textContent.slice(0,40)})")
+    rep(scr['v'] and scr['go']=='Fundar o reino', "Ecrã do reino", f"menu diz '{sub}'; botão '{scr['go']}'; '{scr['info']}…'")
+    await pg.click("#bCampGo");await pg.wait_for_timeout(400)
+    st=await pg.evaluate("(()=>{const s=__S();return{run:s.running,reino:!!s.G.reino,rivalTC:s.ents.some(e=>e.o===1&&e.kind==='b'),ai:!!s.AIs[1],map:s.G.map,save:!!localStorage.getItem(reinoKey()),ck:!!localStorage.getItem(reinoCkKey())}})()")
+    rep(st['run'] and st['reino'] and not st['rivalTC'] and not st['ai'] and st['save'] and st['ck'], "Fundar o reino", str(st))
+    await adv(pg,5);m=await ms(pg)
+    rep(m['k']=='fund' and m['n']==0, "Missão 1 começa sozinha", str(m))
+    # cumpre a fundação
+    await pg.evaluate("""(()=>{const s=__S();const tc=s.ents.find(e=>e.o===0&&e.type==='centro');for(let i=0;i<9;i++){const q=freeNear(tc.tx,tc.ty,3,3);mkUnit(0,'aldeao',q.x+.5,q.y+.5)}
+      let k=0;for(let y=tc.ty-8;y<tc.ty+9&&k<5;y+=3)for(let x=tc.tx+5;x<tc.tx+14&&k<5;x+=3){const t=k<4?'casa':'quartel';if(canPlace(t,x,y,0,0,true)){mkBld(0,t,x,y,true);k++}}s.P[0].res.wood+=400;recount()})()""")
+    await adv(pg,2);m=await ms(pg)
+    rep(m['n']==1 and m['k'] is None and m['calm']>20, "Missão cumprida → descanso → mesma cidade", str(m))
+    houses=await pg.evaluate("__S().ents.filter(e=>e.o===0&&e.type==='casa').length")
+    await adv(pg,31);m=await ms(pg)
+    wolves=await pg.evaluate("__S().ents.filter(e=>e.type==='lobo').length")
+    rep(m['k']=='lobos' and wolves>=8 and houses>=4, "Missão 2 na mesma cidade", f"missão {m['k']}, {wolves} lobos, casas mantidas={houses}")
+    await pg.evaluate("""(()=>{const s=__S();const src=s.ents.find(e=>e.o===0&&e.kind==='u');for(const w of s.ents.filter(e=>e.type==='lobo'))kill(w,src);const tc=s.ents.find(e=>e.o===0&&e.type==='centro');for(let i=0;i<6;i++){const q=freeNear(tc.tx,tc.ty,3,3);mkUnit(0,'espadachim',q.x+.5,q.y+.5)}s.P[0].age=1})()""")
+    await adv(pg,2);m=await ms(pg);rep(m['n']==2,"Missão 2 cumprida",str(m))
+    await adv(pg,31);m=await ms(pg)
+    rep(m['k']=='raids',"Missão 3: vagas",str(m['obj']))
+    waves=[]
+    for w in range(4):
+      await pg.evaluate("__S().G.reino.ms.nx=0.01");await adv(pg,.2)
+      waves.append(await pg.evaluate("__S().ents.filter(e=>e.o===1&&e.kind==='u').length"))
+      await pg.evaluate(KILL_O1,'u')
+    await adv(pg,2);m=await ms(pg)
+    rep(m['n']==3 and all(x>0 for x in waves), "4 vagas de saqueadores", f"inimigos por vaga {waves}; agora {m}")
+    await adv(pg,31)
+    st=await pg.evaluate("(()=>{const s=__S();return{k:s.G.reino.ms.k,tc:s.ents.filter(e=>e.o===1&&e.type==='centro').length,vil:s.ents.filter(e=>e.o===1&&e.type==='aldeao').length,ai:!!s.AIs[1]}})()")
+    rep(st['k']=='rival' and st['tc']==1 and st['ai'] and st['vil']>=3, "Missão 4: nasce um reino rival com IA", str(st))
+    await adv(pg,20)
+    await pg.evaluate(KILL_O1,'b');await adv(pg,2);m=await ms(pg)
+    ai=await pg.evaluate("!!__S().AIs[1]")
+    rep(m['n']==4 and not ai, "Rival derrotado", f"{m}; IA rival desligada={not ai}")
+    await pg.evaluate(KILL_O1,'u');await adv(pg,31)
+    st=await pg.evaluate("(()=>{const s=__S();return{k:s.G.reino.ms.k,myKing:s.ents.some(e=>e.o===0&&e.type==='rei'),foeKing:s.ents.some(e=>e.o===1&&e.type==='rei'),fort:s.ents.filter(e=>e.o===1&&e.kind==='b').length}})()")
+    rep(st['k']=='rei' and st['myKing'] and st['foeKing'] and st['fort']>=2, "Missão 5: o Rei e o Senhor da Guerra", str(st))
+    # os guardas do forte ficam no forte
+    g0=await pg.evaluate("(()=>{const s=__S(),m=s.G.reino.ms;return m.guard.map(id=>s.byId.get(id)).filter(Boolean).map(u=>Math.hypot(u.x-m.at.x,u.y-m.at.y)).reduce((a,b)=>Math.max(a,b),0)})()")
+    await adv(pg,10)
+    g1=await pg.evaluate("(()=>{const s=__S(),m=s.G.reino.ms;return m.guard.map(id=>s.byId.get(id)).filter(Boolean).map(u=>Math.hypot(u.x-m.at.x,u.y-m.at.y)).reduce((a,b)=>Math.max(a,b),0)})()")
+    rep(g1<12, "Guardas ficam a defender o forte", f"distância máxima ao forte {g0:.1f} → {g1:.1f} casas")
+    await pg.evaluate("(()=>{const s=__S();kill(s.ents.find(e=>e.o===1&&e.type==='rei'),s.ents.find(e=>e.o===0&&e.kind==='u'))})()")
+    await adv(pg,2);m=await ms(pg);rep(m['n']==5,"Senhor da Guerra derrotado",str(m))
+    await pg.evaluate(KILL_O1,None);await adv(pg,31)
+    m=await ms(pg);rep(m['k']=='maravilha',"Missão 6: Maravilha",str(m['obj']))
+    await pg.evaluate("""(()=>{const s=__S();s.P[0].age=2;const tc=s.ents.find(e=>e.o===0&&e.type==='centro');let b=null;for(let y=tc.ty-20;y<tc.ty+20&&!b;y+=2)for(let x=tc.tx-20;x<tc.tx+20&&!b;x+=2)if(canPlace('maravilha',x,y,0,0,true))b=mkBld(0,'maravilha',x,y,true);s.G.wonder={o:0,id:b.id,t:3}})()""")
+    await adv(pg,5);m=await ms(pg);over=await pg.evaluate("__S().G.over")
+    rep(m['n']==6 and not over, "Maravilha defendida sem acabar o jogo", f"{m}; jogo terminou={over}")
+    achv=await pg.evaluate("!!achvGet().camp")
+    rep(achv,"Conquista da campanha",f"camp={achv}")
+    await pg.evaluate(KILL_O1,None);await adv(pg,31)
+    kinds=[];info=[]
+    for n in range(6,16):
+      await pg.evaluate(f"(()=>{{const R=__S().G.reino;({KILL_O1})(null);R.ms=null;R.n={n};R.calm=0}})()")
+      await adv(pg,.2)
+      d=await pg.evaluate("(()=>{const s=__S(),m=s.G.reino.ms;const o1=s.ents.filter(e=>e.o===1);return{k:m.k,L:m.L,t:m.t,b:o1.filter(e=>e.kind==='b').length,u:o1.filter(e=>e.kind==='u').length,bh:m.bmax||0}})()")
+      if d['k'] in('raids','cerco'):
+        await pg.evaluate("__S().G.reino.ms.nx=0.01");await adv(pg,.2);d['u']=await pg.evaluate("__S().ents.filter(e=>e.o===1&&e.kind==='u').length")
+      kinds.append(d['k']);info.append(f"{n+1}:{d['k']} L{d['L']} ({d['b']} edif., {d['u']} unid.{', vida '+str(d['bh']) if d['bh'] else ''})")
+    rep(set(kinds)=={'raids','fort','econ','boss','cerco'} and len(kinds)==10, "Capítulos sem fim (5 tipos)", "; ".join(info))
+    # dificuldade sobe: comparar o forte do cap. 8 com o do cap. 13
+    f1=[i for i in info if i.startswith('8:')][0];f2=[i for i in info if i.startswith('13:')][0]
+    rep(True,"Dificuldade a subir",f"{f1}  vs  {f2}")
+    # gravar, sair e continuar
+    await pg.evaluate(f"(()=>{{({KILL_O1})(null);const R=__S().G.reino;R.ms=null;R.n=7;R.calm=0}})()");await adv(pg,.5)
+    await pg.evaluate("saveGame(true)");before=await pg.evaluate("({n:__S().G.reino.n,k:__S().G.reino.ms.k,ents:__S().ents.length,ids:__S().G.reino.ms.ids.length})")
+    await pg.evaluate("document.getElementById('bQuit').click()");await pg.wait_for_timeout(200)
+    sub=await pg.evaluate("document.getElementById('campSub').textContent");normal=await pg.evaluate("!!localStorage.getItem('alv_save_v1')")
+    await pg.click("#bCamp");await pg.wait_for_timeout(150);go=await pg.evaluate("document.getElementById('bCampGo').textContent.trim()")
+    await pg.click("#bCampGo");await pg.wait_for_timeout(400)
+    after=await pg.evaluate("({n:__S().G.reino.n,k:__S().G.reino.ms.k,ents:__S().ents.length,ids:__S().G.reino.ms.ids.length,alive:aliveIds(__S().G.reino.ms.ids)})")
+    rep(before['n']==after['n'] and before['k']==after['k'] and abs(before['ents']-after['ents'])<=2 and after['alive']==after['ids'] and not normal, "Gravar e continuar o reino", f"menu '{sub}', botão '{go}'; antes {before} depois {after}; não mexeu na gravação normal={not normal}")
+    # queda do reino → recomeçar do último capítulo cumprido
+    ck=await pg.evaluate("JSON.parse(localStorage.getItem(reinoCkKey())).X.reino.n")
+    await pg.evaluate("(()=>{const s=__S();for(const e of s.ents.slice())if(e.o===0)kill(e,null)})()");await adv(pg,2);await pg.wait_for_timeout(1200)
+    end=await pg.evaluate("({t:document.getElementById('endTitle').textContent,x:document.getElementById('endText').textContent,b:document.getElementById('bAgain').textContent,v:!document.getElementById('sEnd').hidden,save:!!localStorage.getItem(reinoKey())})")
+    rep(end['v'] and end['t']=='O reino caiu' and end['save'], "Queda do reino", f"{end['t']} — {end['x'][:70]}… botão '{end['b']}'")
+    await pg.click("#bAgain");await pg.wait_for_timeout(400)
+    r=await pg.evaluate("({run:__S().running,n:__S().G.reino.n,tc:__S().ents.some(e=>e.o===0&&e.type==='centro'),over:__S().G.over})")
+    rep(r['run'] and r['n']==ck and r['tc'] and not r['over'], "Recomeçar o capítulo", f"voltou ao ponto de controlo (capítulo {ck+1}): {r}")
+    # desafio diário dentro do reino
+    await pg.evaluate("document.getElementById('bQuit').click()");await pg.wait_for_timeout(200)
+    await pg.click("#bDaily");await pg.wait_for_timeout(400)
+    d=await pg.evaluate("(()=>{const R=__S().G.reino;return{reino:!!R,daily:R&&R.ms&&R.ms.daily,k:R&&R.ms&&R.ms.k,susp:R&&R.susp&&R.susp.k,hud:document.getElementById('objTitle').textContent}})()")
+    rep(d['reino'] and d['daily'], "Desafio diário abre dentro do reino", str(d))
+    await pg.evaluate("""(()=>{const s=__S(),m=s.G.reino.ms;if(m.k==='econ'){s.P[0].stats.gathered+=m.gather;for(let i=0;i<30;i++){const tc=s.ents.find(e=>e.o===0&&e.type==='centro');const q=freeNear(tc.tx,tc.ty,3,3);mkUnit(0,'aldeao',q.x+.5,q.y+.5)}recount()}else if(m.k==='raids'){m.wv=m.waves}})()""")
+    await pg.evaluate(KILL_O1,None);await adv(pg,3)
+    d2=await pg.evaluate("(()=>{const R=__S().G.reino;return{daily:R.ms&&R.ms.daily||null,back:R.ms&&R.ms.k,best:dailyBest(dailyInfo().day),gl:R.gl}})()")
+    rep(d2['best'] and not d2['daily'] and d2['back']==d['susp'], "Desafio cumprido → volta ao capítulo", str(d2))
+    again=await pg.evaluate("(()=>{reinoDailyStart();return !!(__S().G.reino.ms&&__S().G.reino.ms.daily)})()")
+    rep(not again,"Desafio só uma vez por dia",f"repetiu={again}")
+    # o modo normal continua a ter rival com IA
+    await pg.evaluate("document.getElementById('bQuit').click()");await pg.wait_for_timeout(200)
+    await pg.click("#bPlay");await pg.click("#bSetupGo");await pg.wait_for_timeout(400)
+    nm=await pg.evaluate("({reino:__S().G.reino,ai:!!__S().AIs[1],tc:__S().ents.some(e=>e.o===1&&e.type==='centro')})")
+    rep(nm['reino'] is None and nm['ai'] and nm['tc'], "Novo jogo normal não mudou", str(nm))
+    rep(not errs,"Sem erros de JavaScript","; ".join(errs[:3]) or "nenhum")
+    await b.close()
+  print(f"\n{sum(1 for r in R if r[0])}/{len(R)} testes passaram");sys.exit(0 if all(r[0] for r in R) else 1)
+asyncio.run(main())
