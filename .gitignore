@@ -14,3 +14,4 @@ tools/
 *.jks
 *.jks.b64
 *.keystore
+arte/rei/rei.b64
