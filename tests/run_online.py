@@ -10,7 +10,9 @@ def jwt(uid):
 def init(uid):
   sess={'access_token':jwt(uid or 'x'),'token_type':'bearer','expires_in':7200,'expires_at':int(time.time())+7200,'refresh_token':'r-'+str(uid),'user':{'id':uid,'aud':'authenticated','email':str(uid)+'@teste','app_metadata':{},'user_metadata':{}}}
   cfg={'supabaseUrl':f'http://127.0.0.1:{MOCK}','supabaseKey':'sb_publishable_teste'}
-  return f"window.ALV_CFG_OVERRIDE={json.dumps(cfg)};"+(f"localStorage.setItem('sb-127-auth-token',{json.dumps(json.dumps(sess))});" if uid else '')+f"if(!localStorage.getItem('alv_net'))localStorage.setItem('alv_net',JSON.stringify({{url:'ws://127.0.0.1:{PORT}/ws'}}));"
+  rei={'u-ana':'Ana I','u-rui':'Rui II'}.get(uid)
+  extra=f"localStorage.setItem('alv_rei_{uid}',JSON.stringify({{name:'{rei}',crown:1,cape:'#1f4fa8'}}));" if rei else ''
+  return extra+f"window.ALV_CFG_OVERRIDE={json.dumps(cfg)};"+(f"localStorage.setItem('sb-127-auth-token',{json.dumps(json.dumps(sess))});" if uid else '')+f"if(!localStorage.getItem('alv_net'))localStorage.setItem('alv_net',JSON.stringify({{url:'ws://127.0.0.1:{PORT}/ws'}}));"
 R=[]
 def rep(ok,name,info):R.append((ok,name,info));print(('PASS' if ok else 'FAIL').ljust(10),name+':',info,flush=True)
 URL=f"http://127.0.0.1:{PORT}/"
@@ -26,6 +28,7 @@ RANDOM_ORDERS=r"""(n)=>{const s=__S();const mine=s.ents.filter(e=>e.kind==='u'&&
     else if(r<.6&&en.length){const t=en[Math.floor(Math.random()*en.length)];issueCmd(us,t,{x:t.x??t.tx,y:t.y??t.ty})}
     else if(r<.75){const tc=s.ents.find(e=>e.kind==='b'&&e.o===ME&&e.type==='centro');if(tc)act('train',{b:tc.id,t:'aldeao'})}
     else if(r<.85){act('stop',{u:ids(us)})}
+    else if(r<.9){act('power',{p:Math.random()<.7?'grito':'bencao'})}
     else{const v=us.find(u=>u.type==='aldeao');if(v){const tx=Math.floor(v.x)+2,ty=Math.floor(v.y)+2;if(canPlace('casa',tx,ty,ME))act('place',{t:'casa',tx,ty,u:[v.id]})}}}
   return mine.length}"""
 async def main():
@@ -71,6 +74,8 @@ async def main():
     ok=await wait(B,"()=>NET.game&&running")
     st=await asyncio.gather(A.evaluate("()=>({me:ME,seed:__S().G.seed,d:NET.delay,cam:centerOf(__S().ents.find(e=>e.kind==='b'&&e.o===ME))})"),B.evaluate("()=>({me:ME,seed:__S().G.seed,d:NET.delay})"))
     rep(ok and st[0]['me']==0 and st[1]['me']==1 and st[0]['seed']==st[1]['seed'],'Início',f"anfitrião joga com {st[0]['me']} (azul), amigo com {st[1]['me']} (vermelho); mesmo mapa (semente {st[0]['seed']}); atraso {st[0]['d']} turnos")
+    kk=await asyncio.gather(*[pg.evaluate("()=>({kings:__S().ents.filter(e=>e.type==='rei').map(e=>e.o),hero:!!__S().G.hero,looks:__S().G.kingLook.map(l=>l.name)})") for pg in (A,B)])
+    rep(sorted(kk[0]['kings'])==[0,1] and kk[0]['hero'] and kk[1]['hero'] and kk[0]['looks']==kk[1]['looks']==['Ana I','Rui II'],'Rei herói no online',f"Reis em jogo {kk[0]['kings']}; nomes vistos pela Ana {kk[0]['looks']} e pelo Rui {kk[1]['looks']}")
     # 2 jogar 60 s com ordens aleatórias dos dois lados
     t0=time.time();turns0=await A.evaluate("()=>NET.turn")
     for k in range(30):

@@ -207,6 +207,7 @@ body.ingame #menuBg{display:none}
 .panel .hint{margin:6px 2px 0;font-size:12.5px;line-height:1.35;color:rgba(242,228,212,.72);min-height:2.7em}
 .panel.setup{width:min(440px,100%)}
 .cmlist{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}.cmlist button{display:flex;flex-direction:column;align-items:flex-start;gap:2px;padding:7px 8px;border-radius:11px;border:1px solid rgba(255,220,170,.22);background:rgba(255,255,255,.04);color:#f5e3c8;font:700 13px var(--f-body);cursor:pointer;text-align:left;min-width:0}
+.krpanel{display:grid;grid-template-columns:auto 1fr;gap:10px;align-items:start}.krpanel .cta,.krpanel .ghostbtn{grid-column:1/-1}#krPrev{width:150px;height:150px;border-radius:14px;background:radial-gradient(circle at 50% 70%,rgba(255,214,120,.25),rgba(0,0,0,.15) 70%);border:1px solid rgba(255,220,170,.22)}.krform{display:flex;flex-direction:column;gap:6px;min-width:0}.krlab{font:700 12px var(--f-body);color:#f5e3c8;display:flex;flex-direction:column;gap:3px}.krlab input{font:700 15px var(--f-body);padding:7px 9px;border-radius:9px;border:1px solid rgba(255,220,170,.3);background:rgba(0,0,0,.25);color:#fff}.krcrown{display:flex;gap:5px;flex-wrap:wrap}.krcrown button{display:flex;flex-direction:column;align-items:center;padding:3px 4px;border-radius:9px;border:1px solid rgba(255,220,170,.22);background:rgba(255,255,255,.04);color:#f5e3c8;cursor:pointer}.krcrown button small{font-size:10.5px}.krcrown canvas{width:44px;height:36px}.krcrown .sel,.krcape .sel{outline:2px solid #ffd447;outline-offset:1px}.krcape{display:flex;gap:6px;flex-wrap:wrap}.krcape button{width:28px;height:28px;border-radius:50%;border:2px solid rgba(255,255,255,.35);cursor:pointer}.herobox{margin-top:4px;padding:5px 7px;border-radius:9px;background:rgba(255,212,71,.1);border:1px solid rgba(255,212,71,.35)}.herobox b{color:#ffe7a0}.xpbar{height:6px;border-radius:4px;background:rgba(0,0,0,.35);margin:3px 0;overflow:hidden}.xpbar b{display:block;height:100%;background:linear-gradient(90deg,#d79a1c,#fff0a0)}#bKing{background:linear-gradient(160deg,#7a5a10,#3a2806)!important;border-color:#ffd447!important}@media (max-width:560px){.krpanel{grid-template-columns:1fr}#krPrev{justify-self:center}}
 .rkstat{display:flex;flex-direction:column;gap:2px;padding:8px 10px;border-radius:11px;border:1px solid rgba(255,220,170,.22);background:rgba(255,255,255,.05);color:#f5e3c8;min-width:0}.rkstat b{font:800 15px var(--f-body)}.rkstat small{font-size:11.5px;opacity:.8;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}#objList li.tm{list-style:none;font-weight:800;color:#ffd77a}
 .cmlist button small{font-weight:600;font-size:11.5px;opacity:.7;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%}.cmlist button.sel{background:rgba(243,187,78,.22);border-color:#f3bb4e}.cmlist button.done{color:#9be29b}.cmlist button:disabled{opacity:.4;cursor:default}
 .cminfo{font-size:13.5px;line-height:1.45;color:rgba(242,228,212,.86)}.cminfo h3{margin:0 0 4px;font:600 17px var(--f-display);color:#ffe2ad}.cminfo ul{margin:6px 0 0;padding-left:18px}
@@ -348,7 +349,7 @@ input{font-family:inherit;-webkit-user-select:text;user-select:text;touch-action
   <div id="rotate" aria-live="polite"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><rect x="7" y="2.5" width="10" height="19" rx="2"/><path d="M11 18.5h2"/></svg><b>Roda o telemóvel</b><span>O jogo joga-se com o ecrã deitado.</span></div>
   <div id="toast"></div>
   <div id="coach" hidden role="status" aria-live="polite"><div class="ch-top"><span class="ch-step"></span><button class="ch-skip" type="button">Saltar tutorial</button></div><p class="ch-txt"></p><div class="ch-bar"><i></i></div></div>
-  <div id="grp"><button data-g="0">1<small></small></button><button data-g="1">2<small></small></button><button data-g="2">3<small></small></button><button id="bAlert" hidden title="Ir para o ataque">⚠️</button></div>
+  <div id="grp"><button data-g="0">1<small></small></button><button data-g="1">2<small></small></button><button data-g="2">3<small></small></button><button id="bAlert" hidden title="Ir para o ataque">⚠️</button><button id="bKing" hidden title="O teu Rei">👑</button></div>
   <div id="objBox" hidden><h4 id="objTitle"></h4><ul id="objList"></ul></div>
   <div id="netWait" hidden><i></i><span>À espera…</span></div>
   <div id="chatBox" hidden>
@@ -441,8 +442,25 @@ input{font-family:inherit;-webkit-user-select:text;user-select:text;touch-action
         <div id="cmInfo" class="cminfo"></div>
         <button class="cta" id="bCampGo"><i data-ic="play"></i><span>Continuar o reino</span></button>
         <button class="cta alt" id="bReinoDaily" hidden><i data-ic="trophy"></i><span>Desafio de hoje no meu reino</span></button>
+        <button class="ghostbtn" id="bReinoKing">👑 O teu Rei</button>
         <button class="ghostbtn" id="bReinoNew" hidden>Fundar um reino novo</button>
         <button class="ghostbtn" id="bCampBack">Voltar</button>
+      </div>
+    </div>
+  </div>
+  <div class="screen scenic" id="sRei" hidden>
+    <div class="hero">
+      <div class="brand setupbrand"><h1 class="logo"><span class="l1">O teu Rei</span></h1><p class="tag">Ele lidera o teu povo em todas as batalhas.</p></div>
+      <div class="panel setup krpanel">
+        <canvas id="krPrev" width="200" height="200"></canvas>
+        <div class="krform">
+          <label class="krlab">Nome<input id="krName" maxlength="16" placeholder="Ex.: Afonso" autocomplete="off"></label>
+          <div class="krlab">Coroa</div><div id="krCrown" class="krcrown"></div>
+          <div class="krlab">Capa</div><div id="krCape" class="krcape"></div>
+          <p id="krInfo" class="muted small"></p>
+        </div>
+        <button class="cta" id="krSave"><i data-ic="play"></i><span>Guardar o Rei</span></button>
+        <button class="ghostbtn" id="krBack">Voltar</button>
       </div>
     </div>
   </div>
@@ -539,7 +557,7 @@ input{font-family:inherit;-webkit-user-select:text;user-select:text;touch-action
         <b>Caça:</b> ovelhas são mansas (100 de comida); gazelas fogem (150); javalis contra-atacam (300); elefantes são muito fortes mas dão 600. Cuidado com os lobos nas florestas: atacam aldeões e não dão carne.<br>
         <b>Tecnologias:</b> no Armazém (machado, picareta), no Centro (arado, roda) e no Ferreiro (forja, pontas de ferro, cota de malha).<br>
         <b>Templo:</b> sacerdotes curam aliados por perto e convertem inimigos para o teu lado. Depois de converter, precisam de recuperar a fé.<br>
-        <b>O meu Reino:</b> uma só cidade que nunca recomeça. As missões seguem-se umas às outras (lobos, saqueadores, um reino rival, o Rei, a Maravilha) e depois vêm capítulos sem fim — fortes, campeões, cercos — cada vez mais difíceis. Grava sozinho; se o reino cair, recomeças do último capítulo cumprido. O desafio diário também se joga dentro do teu reino.<br><b>Modos:</b> <b>Clássico</b> (destrói o Centro da Vila e o exército do rival, ou defende uma Maravilha 5 minutos), <b>Guerra total</b> (só acaba quando um reino perder todos os edifícios e aldeões — grava e continua outro dia), <b>Regicídio</b> (protege o teu Rei) e <b>Sobreviver</b> (vagas de invasores). Também há a <b>Campanha</b> (6 missões) e o <b>Desafio diário</b> (o mesmo mapa para todos, ganha quem vencer mais depressa).<br>
+        <b>O teu Rei:</b> no Reino e no online tens um Rei herói. Sobe de nível nas batalhas perto dele (até 10), fortalece os soldados à volta e ganha poderes — 📯 Grito de guerra, ✨ Bênção real e 🛡️ Guarda real. Se cair, renasce no Centro da Vila (no Regicídio não). Escolhe o nome, a coroa e a capa em O meu Reino → 👑 O teu Rei. O botão 👑 no ecrã de jogo mostra-te onde ele está.<br><b>O meu Reino:</b> uma só cidade que nunca recomeça. As missões seguem-se umas às outras (lobos, saqueadores, um reino rival, o Rei, a Maravilha) e depois vêm capítulos sem fim — fortes, campeões, cercos — cada vez mais difíceis. Grava sozinho; se o reino cair, recomeças do último capítulo cumprido. O desafio diário também se joga dentro do teu reino.<br><b>Modos:</b> <b>Clássico</b> (destrói o Centro da Vila e o exército do rival, ou defende uma Maravilha 5 minutos), <b>Guerra total</b> (só acaba quando um reino perder todos os edifícios e aldeões — grava e continua outro dia), <b>Regicídio</b> (protege o teu Rei) e <b>Sobreviver</b> (vagas de invasores). Também há a <b>Campanha</b> (6 missões) e o <b>Desafio diário</b> (o mesmo mapa para todos, ganha quem vencer mais depressa).<br>
         <b>Reinos:</b> Mar (barcos e pesca melhores, Corsário), Montanha (ouro, pedra e muralhas mais fortes, Besteiro Pesado), Planícies (cavalaria rápida, caça e quintas, Cavaleiro de Lança).<br>
         <b>Mapas:</b> Rios, Terra, Lagos e Ilhas. Nas Ilhas precisas de Doca e Transporte para chegar ao inimigo.<br>
         <b>Abrigo e sino:</b> aldeões e soldados podem abrigar-se no Centro, nas Torres e nas Casas (botão Abrigar); cada um lá dentro dispara mais flechas. O <b>Sino</b> no Centro manda todos os aldeões para dentro; toca outra vez para voltarem ao trabalho.<br>
@@ -929,7 +947,7 @@ function projHit(p){const Rr=.16,T=p.target;
   if(best)return best;
   const tx=Math.floor(p.tx),ty=Math.floor(p.ty);if(inb(tx,ty)){const b=byId.get(bldAt[idx(tx,ty)]);if(b&&b.kind==='b'&&b.o!==p.o&&b.o!==2&&!b.d.walk)return b}
   return null}
-function spd(u){let s=u.d.speed;if(!u.d.naval&&terr[idx(clamp(u.x|0,0,W-1),clamp(u.y|0,0,H-1))]===2)s*=.88;if(u.relic!=null)s*=.8;if(u.walk)s*=.4;if(u.spdCap&&u.state==='move')s=Math.min(s,u.spdCap);if(u.type==='aldeao'&&P[u.o].techs.roda)s*=1.25;const cv=civOf(u.o);if(cv==='mar'&&u.d.naval)s*=1.2;else if(cv==='planicies'&&u.d.cls==='cav')s*=1.15;return s}
+function spd(u){let s=u.d.speed;if(!u.d.naval&&terr[idx(clamp(u.x|0,0,W-1),clamp(u.y|0,0,H-1))]===2)s*=.88;if(u.relic!=null)s*=.8;if(u.walk)s*=.4;if(u.spdCap&&u.state==='move')s=Math.min(s,u.spdCap);if(u.type==='aldeao'&&P[u.o].techs.roda)s*=1.25;const cv=civOf(u.o);if(cv==='mar'&&u.d.naval)s*=1.2;else if(cv==='planicies'&&u.d.cls==='cav')s*=1.15;return heroSpd(u,s)}
 function rangeOf(u){return u.d.range+(u.d.proj==='arrow'&&P[u.o].techs.flechas?1:0)}
 function convertUnit(t,o){if(t.d.king)return;
   const old=t.o;t.o=o;stopUnit(t);t.stance=null;t.guard=null;t.gres=null;t.gkind=null;t.carry=0;t.healT=null;
@@ -954,6 +972,7 @@ function kill(e,src){
     if(e.cargo&&e.cargo.length){for(const cu of e.cargo)cu.dead=true;P[e.o].stats.lost+=e.cargo.length;if(e.o===ME)toast(e.cargo.length+' unidades afundaram com o transporte',true);e.cargo=[]}
     if(e.o===2&&e.d.meat)spawnCarcass(e);
   }
+  if(G.hero)heroXP(e,src);
   P[e.o].stats.lost++; if(src&&src.o!=null&&src.o!==e.o&&e.o!==2&&P[src.o])P[src.o].stats.killed++;
   if(G.obj&&src&&src.o===0&&e.kind==='u'){G.obj.k=G.obj.k||{};G.obj.k[e.type]=(G.obj.k[e.type]||0)+1}
   if(sel.includes(e)){sel=sel.filter(s=>s!==e);uiDirty=true}
@@ -1174,8 +1193,8 @@ function stopUnit(u){u.unloadAt=false;u.state='idle';u.path=null;u.target=null;u
 /* ---------------- dano ---------------- */
 function atkOf(u){const p=P[u.o];let a=u.kind==='b'&&u.type==='torre'?TOWER[u.lvl||1].atk:(u.d.atk||0);
   if(u.kind==='u'&&u.d.mil&&!u.d.convert){if(p.age>=1)a+=1;if(p.age>=2)a+=2;if(p.techs.forja&&u.d.cls!=='siege'&&u.d.cls!=='ship')a+=1}
-  if(p.techs.flechas&&u.d.proj==='arrow')a+=1;return a}
-function armOf(e){if(e.kind!=='u')return 0;let a=e.d.arm;if(e.d.mil&&P[e.o].age>=2)a+=1;if(P[e.o].techs.cota&&(e.d.cls==='inf'||e.d.cls==='cav'))a+=1;return a}
+  if(p.techs.flechas&&u.d.proj==='arrow')a+=1;return heroAtk(u,a)}
+function armOf(e){if(e.kind!=='u')return 0;let a=e.d.arm;if(e.d.mil&&P[e.o].age>=2)a+=1;if(P[e.o].techs.cota&&(e.d.cls==='inf'||e.d.cls==='cav'))a+=1;return heroArm(e,a)}
 function applyDmg(t,dmg,src,ranged){
   if(!alive(t))return;
   let m=1;if(t.kind==='b'&&src)m=src.kind==='u'?(src.d.bld||1):.35;
@@ -3471,7 +3490,7 @@ function render(){UCFM=0;
             c.fillStyle='#ffe07a';c.beginPath();c.moveTo(q.x-2.5,q.y-fz);c.quadraticCurveTo(q.x-1+fl*.5,q.y-fz-7,q.x,q.y-fz-10);c.quadraticCurveTo(q.x+2.5,q.y-fz-4,q.x+2.5,q.y-fz);c.fill()}
         }
       }
-    }else{const v=e.d.art?Object.assign(Object.create(e),{type:e.d.art}):e;if(e.d.trade)drawCart(c,e,p.x,p.y);else if(e.d.naval)drawShip(c,v,p.x,p.y);else drawUnit(c,v,p.x,p.y);if(e.d.king)drawCrown(c,p.x,p.y);if(e.relic!=null)drawRelic(c,p.x+6,p.y-30,t,true,.6)}
+    }else{const v=e.d.art?Object.assign(Object.create(e),{type:e.d.art}):e;if(e.d.trade)drawCart(c,e,p.x,p.y);else if(e.d.naval)drawShip(c,v,p.x,p.y);else if(e.d.king)drawKing(c,e,v,p.x,p.y);else drawUnit(c,v,p.x,p.y);if(e.relic!=null)drawRelic(c,p.x+6,p.y-30,t,true,.6)}
   }
   // partículas de conversão (sacerdote → alvo)
   for(const [,k,e,p] of draw){if(k!==2||e.type!=='sacerdote'||e.state!=='attack'||!(e.conv>0)||!alive(e.target)||!visibleTo0(e.target))continue;const q=proj(e.target.x,e.target.y);
@@ -4063,6 +4082,7 @@ const ids=a=>a.filter(Boolean).map(e=>e.id);
 const own=(o,l)=>(l||[]).map(i=>byId.get(i)).filter(e=>e&&!e.dead&&e.o===o);
 const ownB=(o,i)=>{const b=byId.get(i);return b&&!b.dead&&b.kind==='b'&&b.o===o?b:null};
 const EXEC={
+  power(o,d){if(HERO_POW[d.p])heroPower(o,d.p)},
   garrison(o,d){const b=ownB(o,d.b);if(!b||!b.done||!b.d.garr)return;let sp=garrSpace(b);for(const u of own(o,d.u)){if(sp<=0)break;if(u.kind!=='u'||u.d.naval||u.d.siege)continue;orderEnter(u,b);sp--}if(o===ME)toast('A entrar: '+b.d.name)},
   ungarrison(o,d){const b=ownB(o,d.b);if(b)ungarrison(b,o!==ME)},
   bell(o,d){ringBell(o,!!d.on)},
@@ -4109,7 +4129,7 @@ function command(units,e,w){issueCmd(units,e,w)}
    Turno = 3 passos de 1/30 s (100 ms). As ordens de um turno T são executadas em T+atraso nos dois lados.
    A cada 5 s comparam um resumo (hash) do estado; se divergir, o anfitrião envia o estado completo.
    Se alguém cair, quem fica envia o estado completo quando o outro voltar. */
-const GAME_VER='alvorada-8';
+const GAME_VER='alvorada-9';
 const TURN_STEPS=3,TURN_DT=TURN_STEPS/30,HASH_EVERY=50;
 Object.assign(NET,{ws:null,url:'',slot:0,room:'',token:'',name:'',peer:'',peerOnline:false,game:false,turn:0,delay:2,sent:-1,cmds:[new Map(),new Map()],out:[],
   acc:0,waitT:0,rtt:0,myHash:new Map(),peerHash:new Map(),desync:0,resync:0,epoch:0,lastSnapT:-1,wantSnap:false,awaitSnap:false,lostT:0,pingT:0,closing:false,stats:{turns:0,sent:0,recv:0,bytes:0}});
@@ -4215,7 +4235,7 @@ function netOnSnap(d){
   const fresh=!NET.game||!running;
   if(d.s.v!==GAME_VER){netFail('Versões diferentes do jogo. Atualizem os dois para a mesma versão.');return}
   if(fresh){netEnterGame(true)}
-  applySnap(d.s,fresh);
+  applySnap(d.s,fresh);kingLooksInit();
   if(fresh){running=true;paused=false;speed=1;netModeUI();document.body.classList.add('ingame');for(const id of ['sMenu','sEnd','sHelp','sPause','sOnline','sSetup','sCamp'])$(id).hidden=true;$('bAlert').hidden=true;$('objBox').hidden=true;GROUPS=[[],[],[]];audioGameStart()}
   NET.turn=d.t;NET.delay=d.delay||NET.delay;NET.acc=0;NET.waitT=0;NET.epoch=d.ep||NET.epoch;NET.lastSnapT=d.t;
   for(const H of [NET.myHash,NET.peerHash])for(const k of [...H.keys()])if(k>=d.t)H.delete(k);
@@ -4257,6 +4277,7 @@ function netRelayMsg(d){
   case 'snapok':break;
   case 'opts':if(NET.slot!==0){NET.opts=d.o;lobbyOptsRender()}break;
   case 'civ':NET.peerCiv=d.c;lobbyOptsRender();break;
+  case 'rei':NET.peerRei=kingLookClean(d.r);break;
   case 'bye':if(NET.game&&!G.over){G.over=true;endGame(true,false,'peer_quit')}break;
   }}
 // ---------- ligação ao servidor (fica ligada enquanto tens sessão, para convites e amigos online) ----------
@@ -4348,7 +4369,7 @@ function lobbyShow(mode){
   $('olPlayers').innerHTML=row(me,NET.slot===0?'#3f86e0':'#d64a3a',true)+(peer?row(NET.peerUser,NET.slot===0?'#d64a3a':'#3f86e0'):`<div class="pl empty"><b style="background:${NET.slot===0?'#d64a3a':'#3f86e0'}"></b>À espera de um adversário…</div>`);
   $('olStart').hidden=NET.slot!==0;$('olStart').disabled=!peer;
   NET.opts=NET.opts||{vic:'total',map:SETUP.map==='aleatorio'?'aleatorio':SETUP.map};NET.myCiv=NET.myCiv||SETUP.civ||'aleatorio';
-  if(NET.slot===0&&peer)netRelay({g:'opts',o:NET.opts});if(peer)netRelay({g:'civ',c:NET.myCiv});
+  if(NET.slot===0&&peer)netRelay({g:'opts',o:NET.opts});if(peer){netRelay({g:'civ',c:NET.myCiv});netRelay({g:'rei',r:kingLookClean(kingLookMine())})}
   lobbyOptsRender();netSavesRender();
   lobbyStatus(NET.slot===0?(peer?'Tudo pronto! Toca em Começar.':(NET.public?'Sala pública: aparece na lista de salas abertas.':'Partilha o código ou convida um amigo.')):'À espera que o anfitrião comece a partida…')}
 async function lobbyGo(kind,code){
@@ -4558,6 +4579,7 @@ function buildCmds0(){
       for(const [k,n] of Object.entries(FORMS))box.appendChild(mkCmd(FORM_ICON[k],n,()=>{G.form=k;menuMode=null;uiDirty=true;toast('Formação: '+n+'. Toca no destino.')},G.form===k?'on':''));
       box.appendChild(mkCmd('↩️','Voltar',()=>{menuMode=null;uiDirty=true}));return;
     }
+    {const kg=units.find(u=>u.d.king);const h=G.hero&&G.hero[ME];if(kg&&h)for(const [k,pw] of Object.entries(HERO_POW)){const lock=h.lv<pw.lv,cd=h.cd[k];box.appendChild(mkCmd(pw.ic,lock?'Nv '+pw.lv:cd>0?Math.ceil(cd)+' s':pw.n.split(' ')[0],()=>{if(lock){toast(pw.n+' abre no nível '+pw.lv,true);return}act('power',{p:k})},lock?'lock':cd>0||pw.cost&&!canAfford(ME,pw.cost)?'no':'',pw.n+' — '+pw.desc+(pw.cost?' Custa '+costText(pw.cost)+'.':'')))}}
     if(vills.length){box.appendChild(mkCmd('🔨','Construir',()=>{menuMode='build';uiDirty=true}));
       if(vills.some(v=>v.carry>0))box.appendChild(mkCmd('📥','Entregar',()=>act('ret',{u:ids(vills)})))}
     const boats=units.filter(u=>u.d.cap);
@@ -4637,7 +4659,7 @@ function infoHTML(){
   const fr=clamp(e.hp/e.max,0,1);const hp=`<div class="hpbar ${fr<.3?'low':fr<.6?'mid':''}"><b style="width:${fr*100}%"></b><span>${Math.ceil(e.hp)} / ${e.max}</span></div>`;
   const pimg=e.o===2?faunaPortrait(e.type):portrait(e.kind,e.type,e.o);const port=pimg?`<img class="port ${own?'':e.o===2?'g':'e'}" src="${pimg}" alt="">`:'';
   if(e.kind==='u'){
-    let extra='';
+    let extra='';if(e.d.king&&G.hero&&G.hero[e.o])extra+=heroInfo(e.o);
     if(e.d.mil||e.d.naval||e.type==='aldeao')extra+=`<div class="stats2"><span title="Ataque">${IC.sword} ${atkOf(e)}</span><span title="Armadura">${IC.armor} ${armOf(e)}${e.d.parm?'<small>+'+e.d.parm+'</small>':''}</span>${e.d.range?`<span title="Alcance">${IC.range} ${rangeOf(e)}</span>`:''}<span title="Velocidade">${IC.speed} ${spd(e).toFixed(1)}</span></div>`;
     if(e.d.desc&&e.o!==2)extra+=`<div class="muted">${e.d.desc}${e.stance==='hold'?' · a manter posição':e.stance==='defend'?' · a defender área':e.patrol?' · a patrulhar':''}</div>`;
     if(e.d.cap)extra+=`<div class="muted">Carga: ${e.cargo.length}/${e.d.cap}</div>`;
@@ -4671,7 +4693,8 @@ $('info').addEventListener('click',ev=>{const b=ev.target.closest('[data-q]');if
 $('info').addEventListener('pointerdown',e=>e.stopPropagation());
 function updateUI(){
   if(sel.some(e=>e.kind==='u'&&e.o!==ME&&!visibleTo0(e))){sel=sel.filter(e=>e.kind!=='u'||e.o===ME||visibleTo0(e));uiDirty=true}
-  const sig=(placing?'P'+placing.type+(placing.tx!=null):'')+menuMode+'|'+sel.map(e=>e.id+(e.done?'d':'')).join(',')+'|'+P[ME].age+'|'+KINDS.map(k=>Math.floor(P[ME].res[k]/25)).join('.')+AFFSIG()+(sel[0]&&sel[0].queue?sel[0].queue.length:'')+(sel.some(e=>e.carry>0)?'c':'')+Object.keys(P[ME].techs).length+(G.cmdMode||'')+(G.form||'')+sel.map(u=>(u.stance||'')+(u.cargo?u.cargo.length:'')+(u.locked?'L':'')+(u.lvl||'')).join('')+ents.reduce((n,e)=>n+(e.o===ME&&e.kind==='b'?e.queue.length:0),0)+'g'+sel.map(e=>e.garr?e.garr.length:'').join('')+(G.bell&&G.bell[ME]?'B':'');
+  const sig=(placing?'P'+placing.type+(placing.tx!=null):'')+menuMode+'|'+sel.map(e=>e.id+(e.done?'d':'')).join(',')+'|'+P[ME].age+'|'+KINDS.map(k=>Math.floor(P[ME].res[k]/25)).join('.')+AFFSIG()+(sel[0]&&sel[0].queue?sel[0].queue.length:'')+(sel.some(e=>e.carry>0)?'c':'')+Object.keys(P[ME].techs).length+(G.cmdMode||'')+(G.form||'')+sel.map(u=>(u.stance||'')+(u.cargo?u.cargo.length:'')+(u.locked?'L':'')+(u.lvl||'')).join('')+ents.reduce((n,e)=>n+(e.o===ME&&e.kind==='b'?e.queue.length:0),0)+'g'+sel.map(e=>e.garr?e.garr.length:'').join('')+(G.bell&&G.bell[ME]?'B':'')+(G.hero&&G.hero[ME]&&sel.some(e=>e.d&&e.d.king)?'H'+G.hero[ME].lv+Object.values(G.hero[ME].cd).map(Math.ceil).join(','):'');
+  {const kb=$('bKing');const hk=!!(G.hero&&G.hero[ME]);if(kb.hidden===hk)kb.hidden=!hk}
   if(sig!==uiSig||uiDirty){uiSig=sig;uiDirty=false;buildCmds()}
   const ih=infoHTML();if(ih!==updateUI.last){updateUI.last=ih;$('info').innerHTML=ih}
 }
@@ -4962,8 +4985,9 @@ function startGame(seed,opts){
     if(G.reino&&o===1)continue; // no reino os inimigos chegam com as missões
     const s=G.starts[o];const tc=mkBld(o,'centro',s.x-1,s.y-1,true);
     for(let k=0;k<3;k++){const p=freeNear(tc.tx,tc.ty,3,3);mkUnit(o,'aldeao',p.x+.5,p.y+.5)}
-    if(G.vic==='regicidio'){const p=freeNear(tc.tx,tc.ty,3,3);mkUnit(o,'rei',p.x+.5,p.y+.5)}
+    if(G.vic==='regicidio'||NET.on||G.reino){const p=freeNear(tc.tx,tc.ty,3,3);mkUnit(o,'rei',p.x+.5,p.y+.5)}
   }
+  if(G.vic==='regicidio'||NET.on||G.reino)G.hero=[heroNew(),heroNew()];kingLooksInit();
   spawnFauna();spawnFish();if(G.vic!=='sobrevivencia'&&mode!=='build')placeRelics();
   aiInit();recount();
   if(!SPR.oak)makeSprites();buildTerrain();resetChunks();FCACHE.clear();CLOUDS=null;setTimeout(bldWarm,0);
@@ -4998,7 +5022,7 @@ function spawnFauna(){
 /* ---------------- guardar / continuar ---------------- */
 const SAVE_KEY='alv_save_v1';
 // campos extra de G que viajam no gravar/continuar e na sincronização online
-const GX=['map','vic','civ','camp','daily','reino','surv','sdiff','bell','tradeGold','alertAt','islands','obj','relics','tod','weather','achv','track','king','mkt','regrow','sheepT','relicT'];
+const GX=['map','vic','civ','camp','daily','reino','hero','surv','sdiff','bell','tradeGold','alertAt','islands','obj','relics','tod','weather','achv','track','king','mkt','regrow','sheepT','relicT'];
 function gExtra(){const o={};for(const k of GX)if(G[k]!==undefined)o[k]=G[k];return JSON.parse(JSON.stringify(o))}
 function serialize(){
   const ref=x=>x&&!x.dead?x.id:null;
@@ -5050,7 +5074,7 @@ function loadGame(key){
   recount();updVis();
   audioGameStart();running=true;paused=false;speed=1;$('bSpeed').textContent='1×';netModeUI();document.body.classList.add('ingame');$('bAlert').hidden=true;try{objRender()}catch(e){$('objBox').hidden=true}
   for(const id of ['sMenu','sEnd','sHelp','sPause','sOnline'])$(id).hidden=true;
-  uiDirty=true;resDirty=true;toast('Jogo carregado');tutShow();
+  kingLooksInit();uiDirty=true;resDirty=true;toast('Jogo carregado');tutShow();
   return true;
 }
 function mobileLandscape(){if(isNative())return;try{if(!matchMedia('(pointer:coarse)').matches)return;const d=document.documentElement;const go=()=>{try{screen.orientation&&screen.orientation.lock&&screen.orientation.lock('landscape').catch(()=>{})}catch(e){}};if(!document.fullscreenElement&&d.requestFullscreen)d.requestFullscreen({navigationUI:'hide'}).then(go).catch(()=>{});else go()}catch(e){}}
@@ -5308,6 +5332,141 @@ function campStart(i){const M=CAMP[i];mobileLandscape();netLeaveGame();gameMode=
   startGame(M.seed,{map:M.map,vic:M.vic||'classico',civ:M.civ,camp:i});difficulty=d0;G.obj={k:{}};if(M.start)M.start();recount();
   toast('Missão '+(i+1)+': '+M.t);objRender()}
 $('modeT').onclick=()=>{if(G.camp!=null||G.reino){G.objShow=G.objShow?0:1;objRender()}else if(G.vic==='sobrevivencia')toast('Vaga '+(G.surv?G.surv.wave:0)+' de '+SURV_WIN+'. Recorde: '+(+(localStorage.getItem(ukey('alv_surv_best'))||0))+' vagas.');else if(G.vic==='regicidio')toast('Protege o teu Rei: se cair, perdes. Podes escondê-lo no Centro da Vila.');else if(G.vic==='total')toast('Guerra total: só acaba quando um reino perder todos os edifícios e aldeões.');else if(G.daily){const b=dailyBest(G.daily);toast('Desafio de hoje: vence o mais depressa possível. Melhor tempo: '+(b?fmtT(b):'—'))}};
+// ---------- O Rei herói ----------
+// Ganha experiência com as batalhas perto dele, sobe de nível (até 10), dá força aos soldados à volta (aura)
+// e tem 3 poderes. Se cair, renasce no Centro da Vila (menos no Regicídio). Tudo determinístico (online em lockstep).
+const HERO_MAX=10,HERO_AURA=6;
+const HERO_POW={
+  grito:{n:'Grito de guerra',ic:'📯',lv:1,cd:60,desc:'Durante 10 s os soldados perto do Rei atacam +30% e correm +25%.'},
+  bencao:{n:'Bênção real',ic:'✨',lv:3,cd:90,desc:'Cura 40% da vida das tuas unidades perto do Rei.'},
+  guarda:{n:'Guarda real',ic:'🛡️',lv:6,cd:150,cost:{food:100,gold:75},desc:'Chama 3 guardas de elite para junto do Rei.'}};
+const heroNeed=lv=>60+lv*50;
+function heroOn(){return !!(G&&G.hero)}
+function heroNew(){return{lv:1,xp:0,cd:{grito:0,bencao:0,guarda:0},wc:null,resp:null,kills:0}}
+function heroKing(o){for(const e of ents)if(e.o===o&&e.kind==='u'&&e.d.king)return e;return null}
+function heroMaxHp(lv){return Math.round(UNITS.rei.hp*(1+.12*(lv-1)))}
+function heroSpawnKing(o,near){const tc=near||ents.find(e=>e.o===o&&e.kind==='b'&&e.type==='centro'&&e.done);if(!tc)return null;const p=freeNear(tc.tx,tc.ty,tc.w,tc.h);if(!p)return null;
+  const k=mkUnit(o,'rei',p.x+.5,p.y+.5);setMover(k);const h=G.hero&&G.hero[o];if(h){k.max=heroMaxHp(h.lv);k.hp=k.max}return k}
+// experiência: inimigos que caem perto do Rei (ou pela mão dele)
+function heroXP(e,src){if(!G.hero||!src||src.o==null||src.o===e.o||e.o===2||!G.hero[src.o])return;const o=src.o,h=G.hero[o];if(h.lv>=HERO_MAX&&!src.d.king)return;
+  const k=src.d&&src.d.king?src:heroKing(o);if(!k)return;const c=e.kind==='u'?e:{x:e.tx+e.w/2,y:e.ty+e.h/2};if(src!==k&&hyp(c.x-k.x,c.y-k.y)>HERO_AURA+2)return;
+  let xp=e.kind==='b'?20:8+Math.round((e.d.hp||40)/12);if(src===k){xp*=2;h.kills++}if(e.d&&e.d.king)xp+=80;heroGain(o,xp)}
+function heroGain(o,xp){const h=G.hero&&G.hero[o];if(!h||h.lv>=HERO_MAX)return;h.xp+=xp;
+  while(h.lv<HERO_MAX&&h.xp>=heroNeed(h.lv)){h.xp-=heroNeed(h.lv);h.lv++;const k=heroKing(o);if(k){const old=k.max;k.max=heroMaxHp(h.lv);k.hp=Math.min(k.max,k.hp+(k.max-old)+k.max*.25)}
+    if(o===ME){const pw=Object.entries(HERO_POW).find(([,p])=>p.lv===h.lv);toast('👑 '+kingTitle(o)+' subiu ao nível '+h.lv+'!'+(pw?' Novo poder: '+pw[1].n+'.':''));snd('wonder',null,null,{force:1});uiDirty=true}
+    if(k)fx.push({t:0,life:1.6,type:'ping',x:k.x,y:k.y,col:'#ffd447'})}
+  if(h.lv>=HERO_MAX)h.xp=0}
+// bónus usados no combate (chamados por atkOf/armOf/spd)
+function heroWC(u){const h=G.hero&&G.hero[u.o];return !!(h&&h.wc&&G.time<h.wc.until&&h.wc.ids.includes(u.id))}
+function heroAura(u){const h=G.hero&&G.hero[u.o];if(!h||!h.kx)return false;return hyp(u.x-h.kx,u.y-h.ky)<=HERO_AURA}
+function heroAtk(u,a){if(!G||!G.hero||u.kind!=='u'||!G.hero[u.o])return a;const h=G.hero[u.o];
+  if(u.d.king)a+=h.lv-1;else if(u.d.mil&&heroAura(u))a+=(h.lv>=3?1:0)+(h.lv>=7?1:0);
+  if(heroWC(u))a=Math.round(a*1.3);return a}
+function heroArm(e,a){if(!G||!G.hero||!G.hero[e.o])return a;const h=G.hero[e.o];if(e.d.king)a+=Math.floor(h.lv/3);else if(h.lv>=5&&e.d.mil&&heroAura(e))a+=1;return a}
+function heroSpd(u,s){return G&&G.hero&&heroWC(u)?s*1.25:s}
+// ciclo (simulação)
+function heroTick(dt){if(!G.hero)return;
+  for(let o=0;o<2;o++){const h=G.hero[o];if(!h)continue;const k=heroKing(o);
+    for(const p in h.cd)if(h.cd[p]>0)h.cd[p]=Math.max(0,h.cd[p]-dt);
+    if(h.wc&&G.time>=h.wc.until)h.wc=null;
+    if(k){h.kx=k.x;h.ky=k.y;const mx=heroMaxHp(h.lv);if(k.max!==mx){k.max=mx;k.hp=Math.min(k.hp,mx)}h.resp=null;
+      // aura de cura lenta a partir do nível 5 (1 vez por segundo)
+      if(h.lv>=5&&(G.time%1)<dt)for(const u of ents)if(u.o===o&&u.kind==='u'&&u.d.mil&&u.hp<u.max&&hyp(u.x-k.x,u.y-k.y)<=HERO_AURA)u.hp=Math.min(u.max,u.hp+.6+h.lv*.1)}
+    else{h.kx=null;h.ky=null;
+      if(hasUnitWhere(o,u=>u.d.king))continue; // abrigado num edifício
+      if(G.vic==='regicidio')continue;          // no Regicídio não renasce
+      if(h.resp==null){h.resp=G.time+40+h.lv*5;if(o===ME)toast('👑 O teu Rei caiu! Renasce no Centro da Vila em '+Math.round(h.resp-G.time)+' s.',true)}
+      else if(G.time>=h.resp){const nk=heroSpawnKing(o);if(nk){h.resp=null;if(o===ME){toast('👑 O teu Rei voltou ao Centro da Vila.');fx.push({t:0,life:2,type:'ping',x:nk.x,y:nk.y,col:'#ffd447'})}}}}}}
+function heroPower(o,p){const h=G.hero&&G.hero[o],P0=HERO_POW[p];if(!h||!P0)return;const k=heroKing(o);
+  const no=t=>{if(o===ME)toast(t,true)};
+  if(!k)return no('O Rei não está no campo de batalha');if(h.lv<P0.lv)return no(P0.n+' abre no nível '+P0.lv);if(h.cd[p]>0)return no(P0.n+' pronto em '+Math.ceil(h.cd[p])+' s');
+  if(P0.cost){if(!canAfford(o,P0.cost))return no('Recursos insuficientes');pay(o,P0.cost)}
+  h.cd[p]=P0.cd;
+  if(p==='grito'){const ids=[];for(const u of ents)if(u.o===o&&u.kind==='u'&&u.d.mil&&hyp(u.x-k.x,u.y-k.y)<=HERO_AURA+1)ids.push(u.id);h.wc={until:G.time+10,ids};
+    fx.push({t:0,life:1.2,type:'ping',x:k.x,y:k.y,col:'#ff8a3a'});if(o===ME){toast('📯 Grito de guerra! '+ids.length+' soldados inspirados.');snd('alarm',k.x,k.y,{force:1})}}
+  if(p==='bencao'){let n=0;for(const u of ents)if(u.o===o&&u.kind==='u'&&!u.d.naval&&u.hp<u.max&&hyp(u.x-k.x,u.y-k.y)<=HERO_AURA){u.hp=Math.min(u.max,u.hp+u.max*.4);n++}
+    fx.push({t:0,life:1.4,type:'ping',x:k.x,y:k.y,col:'#9ff59a'});if(o===ME)toast('✨ Bênção real: '+n+' unidades curadas.')}
+  if(p==='guarda'){const t=P[o].age>=1?'espadachim':'guerreiro';for(let i=0;i<3;i++){const g=mkUnit(o,t,k.x,k.y);setMover(g);const q=snapFree(g,k.x+(i-1)*.8,k.y+.8);g.x=q.x;g.y=q.y}recount();
+    fx.push({t:0,life:1.4,type:'ping',x:k.x,y:k.y,col:'#9dd0ff'});if(o===ME)toast('🛡️ A Guarda real chegou.')}
+  uiDirty=true}
+// ---------- aparência e nome do Rei ----------
+const KING_CROWNS=['Clássica','Imperial','Louros','Guerreira'];
+const KING_CAPES=['#b0202a','#6a2a9a','#1f4fa8','#1e7a4a','#c9a227','#2b2b33','#e8e2d6','#d0602a'];
+const KING_DEF={name:'',crown:0,cape:'#b0202a'};
+function kingLookMine(){try{return {...KING_DEF,...JSON.parse(localStorage.getItem(ukey('alv_rei'))||'{}')}}catch(e){return {...KING_DEF}}}
+function kingLookSave(L){try{localStorage.setItem(ukey('alv_rei'),JSON.stringify(L))}catch(e){}}
+function kingLookClean(L){L=L&&typeof L==='object'?L:{};return{name:String(L.name||'').replace(/[<>&"]/g,'').trim().slice(0,16),crown:clamp(+L.crown|0,0,KING_CROWNS.length-1),cape:KING_CAPES.includes(L.cape)?L.cape:KING_DEF.cape}}
+const RIVAL_LOOK={name:'',crown:3,cape:'#2b2b33'};
+function kingLook(o){if(G&&G.kingLook&&G.kingLook[o])return G.kingLook[o];return o===ME?kingLookMine():RIVAL_LOOK}
+function kingTitle(o){const L=kingLook(o);return L.name?'Rei '+L.name:(o===ME?'O teu Rei':'O Rei rival')}
+// desenho: capa atrás, corpo real maior, coroa à escolha, aura no chão e nome por cima
+function drawCrownStyle(c,x,y,st,t,sc){c.save();c.translate(x,y);if(sc)c.scale(sc,sc);c.lineWidth=1.1;c.strokeStyle='#5a3c06';
+  const gold=c.createLinearGradient(0,-7,0,3);gold.addColorStop(0,'#fff0a0');gold.addColorStop(1,'#d79a1c');c.fillStyle=gold;
+  if(st===1){c.beginPath();c.moveTo(-6.5,3);c.lineTo(-6.5,-1);c.quadraticCurveTo(-6,-7,0,-7.5);c.quadraticCurveTo(6,-7,6.5,-1);c.lineTo(6.5,3);c.closePath();c.fill();c.stroke();
+    c.fillStyle='#7a1018';c.beginPath();c.moveTo(-5,1);c.quadraticCurveTo(0,-5.5,5,1);c.fill();c.fillStyle=gold;c.fillRect(-.8,-11,1.6,4);c.fillRect(-2.2,-9.8,4.4,1.5);
+    c.fillStyle='#4fb3ff';c.beginPath();c.arc(0,1.6,1.2,0,7);c.fill()}
+  else if(st===2){c.strokeStyle='#2f6a1c';c.lineWidth=2.2;c.beginPath();c.arc(0,0,6.5,Math.PI*1.05,Math.PI*1.95,false);c.stroke();
+    for(let i=0;i<7;i++){const a=Math.PI*(1.05+i*.15);c.fillStyle=i%2?'#5aa83a':'#e0c050';c.beginPath();c.ellipse(Math.cos(a)*6.5,Math.sin(a)*6.5+.5,2.6,1.2,a+1.2,0,7);c.fill()}}
+  else if(st===3){c.fillStyle='#8a929c';c.beginPath();c.moveTo(-7,4);c.quadraticCurveTo(-7.5,-6,0,-7.5);c.quadraticCurveTo(7.5,-6,7,4);c.closePath();c.fill();c.strokeStyle='#3a3f46';c.stroke();
+    c.fillStyle=gold;c.beginPath();c.moveTo(-7,0);c.lineTo(-5,-5);c.lineTo(-2.5,-1.5);c.lineTo(0,-6.5);c.lineTo(2.5,-1.5);c.lineTo(5,-5);c.lineTo(7,0);c.lineTo(7,2.5);c.lineTo(-7,2.5);c.closePath();c.fill();c.strokeStyle='#5a3c06';c.stroke();
+    c.strokeStyle='#c21f2a';c.lineWidth=2.4;c.lineCap='round';c.beginPath();c.moveTo(0,-7);c.quadraticCurveTo(-4+Math.sin(t*2)*1.5,-14,-9,-12);c.stroke()}
+  else{c.beginPath();c.moveTo(-7,3);c.lineTo(-7,-3.5);c.lineTo(-3.5,0);c.lineTo(0,-6);c.lineTo(3.5,0);c.lineTo(7,-3.5);c.lineTo(7,3);c.closePath();c.fill();c.stroke();
+    c.fillStyle='#e8433a';c.beginPath();c.arc(0,1,1.4,0,7);c.fill();for(const sx of [-7,0,7]){c.fillStyle='#fff6c8';c.beginPath();c.arc(sx,sx?-3.6:-6.2,1,0,7);c.fill()}}
+  c.restore()}
+function drawCape(c,x,y,f,col,t,moving,top){c.save();c.translate(x,y);c.scale(f,1);const k=(-(top||-40))/40;c.scale(k,k);
+  const sw=Math.sin(t*(moving?7:2))*(moving?2.4:.9),back=moving?-6:-3;
+  const g=c.createLinearGradient(0,-31,0,-3);g.addColorStop(0,col);g.addColorStop(1,shade(col,.6));
+  c.fillStyle=g;c.strokeStyle='rgba(20,10,5,.55)';c.lineWidth=.9;
+  c.beginPath();c.moveTo(-6.5,-31);c.quadraticCurveTo(0,-33,6.5,-31);c.quadraticCurveTo(9+back*.3,-17,8+back+sw,-3.5);c.quadraticCurveTo(back*.5+sw*.5,-.5,-10+back*.5+sw,-3.5);c.quadraticCurveTo(-10,-18,-6.5,-31);c.closePath();c.fill();c.stroke();
+  c.strokeStyle='#e6b93c';c.lineWidth=1.2;c.beginPath();c.moveTo(8+back+sw,-3.5);c.quadraticCurveTo(back*.5+sw*.5,-.5,-10+back*.5+sw,-3.5);c.stroke();
+  c.fillStyle='#e6b93c';c.beginPath();c.arc(-5.5,-30.5,1.3,0,7);c.arc(5.5,-30.5,1.3,0,7);c.fill();
+  c.restore()}
+const KING_SC=1.14,HEADTOP=new WeakMap();
+// topo e centro da cabeça medidos na imagem do boneco (em unidades do mundo, relativos aos pés)
+function headTop(s){return headPos(s).y}
+function headPos(s){let v=HEADTOP.get(s.cv);if(v)return v;const W2=s.cv.width,H2=s.cv.height,kx=s.w/W2,ky=s.h/H2;let top=Math.round(H2*.12),hx=W2/2;
+  try{const d=s.cv.getContext('2d').getImageData(0,0,W2,H2).data;const op=(x,y)=>d[(y*W2+x)*4+3]>140;
+    outer:for(let y=0;y<H2;y++){let n=0;for(let x=0;x<W2;x++)if(op(x,y)&&++n>=3){top=y;break outer}}
+    // centro da cabeça: média das colunas opacas numa faixa logo abaixo do topo (ignora a ponta da espada/lança)
+    const band=Math.max(2,Math.round(5/ky));let sx=0,n=0;for(let y=top;y<Math.min(H2,top+band);y++)for(let x=0;x<W2;x++)if(op(x,y)){sx+=x;n++}if(n)hx=sx/n}catch(e){}
+  v={y:-(s.ay-top*ky),x:hx*kx-s.ax};HEADTOP.set(s.cv,v);return v}
+function drawKing(c,e,v,px,py){const L=kingLook(e.o),t=performance.now()/1000,f=e.face||1,moving=!!(e.path&&e.pi<e.path.length);const h=G&&G.hero&&G.hero[e.o];
+  // aura no chão
+  if(h&&(h.lv>=2||heroWC(e))){const wc=h.wc&&G.time<h.wc.until;c.save();c.globalAlpha=wc?.55:.28+.08*Math.sin(t*3);c.strokeStyle=wc?'#ff7a2a':'#ffd447';c.lineWidth=wc?2:1.3;c.beginPath();c.ellipse(px,py,16+(wc?3*Math.sin(t*8):0),8,0,0,7);c.stroke();c.restore()}
+  let top=-38,hx=0;try{const hp=headPos(infFrame(v,P[e.o].age,P[e.o].col,uTier()));top=hp.y*KING_SC;hx=hp.x*KING_SC*f}catch(err){}
+  drawCape(c,px+hx,py,f,L.cape,t+e.id,moving,top);
+  c.save();c.translate(px,py);c.scale(KING_SC,KING_SC);drawUnit(c,v,0,0);c.restore();
+  drawCrownStyle(c,px+hx,py+top+1.2,L.crown,t,clamp(-top/58,.5,.8));
+  if(cam.z>=.75){const nm=(L.name||(e.o===ME?'O teu Rei':'Rei rival'))+(h?' · '+h.lv:'');const ny=py+top-13;c.save();c.font='700 7px system-ui,sans-serif';c.textAlign='center';c.lineWidth=2.5;c.strokeStyle='rgba(15,8,4,.75)';c.strokeText(nm,px,ny);c.fillStyle=e.o===ME?'#ffe7a0':'#ffb3a8';c.fillText(nm,px,ny);c.restore()}}
+// imagem do Rei para o editor (fora do jogo)
+function kingPreview(cv,L){const g=cv.getContext('2d');g.setTransform(1,0,0,1,0,0);g.clearRect(0,0,cv.width,cv.height);const s=cv.height/80;g.scale(s,s);
+  const team=(typeof myColor==='function'?myColor()[0]:'#3f86e0');const x=cv.width/s/2,y=70,t=performance.now()/1000;
+  let s2=null,top=-36,hx=0;try{const fake={id:7,type:'espadachim',d:UNITS.espadachim,o:0,face:1,state:'idle',path:null,pi:0,hitT:0,anim:0,x:0,y:0};s2=infFrame(fake,1,team,2);const hp=headPos(s2);top=hp.y*KING_SC;hx=hp.x*KING_SC}catch(err){}
+  g.save();g.translate(x,y-top/2-34);const z=Math.min(1.6,40/(-top));g.scale(z,z);g.translate(-x,-y);
+  g.fillStyle='rgba(0,0,0,.28)';g.beginPath();g.ellipse(x,y,11,4,0,0,7);g.fill();
+  drawCape(g,x+hx,y,1,L.cape,t,false,top);
+  if(s2){g.save();g.translate(x,y);g.scale(KING_SC,KING_SC);g.drawImage(s2.cv,-s2.ax,-s2.ay,s2.w,s2.h);g.restore()}
+  else{g.fillStyle=team;g.fillRect(x-5,y-30,10,26);g.fillStyle='#e8c39a';g.beginPath();g.arc(x,y-33,5,0,7);g.fill()}
+  drawCrownStyle(g,x+hx,y+top+1.2,L.crown,t,clamp(-top/58,.5,.8));g.restore()}
+// ---------- editor «O teu Rei» ----------
+let KED=null;
+function kingEdOpen(after){KED={L:kingLookMine(),after};for(const id of ['sMenu','sCamp'])$(id).hidden=true;$('sRei').hidden=false;$('krName').value=KED.L.name;kingEdRender();
+  const loop=()=>{if($('sRei').hidden)return;kingPreview($('krPrev'),KED.L);requestAnimationFrame(loop)};requestAnimationFrame(loop)}
+function kingEdRender(){const L=KED.L;
+  $('krCrown').innerHTML=KING_CROWNS.map((n,i)=>`<button data-i="${i}" class="${L.crown===i?'sel':''}"><canvas width="44" height="36"></canvas><small>${n}</small></button>`).join('');
+  for(const b of $('krCrown').querySelectorAll('button')){const g=b.firstChild.getContext('2d');g.scale(2,2);drawCrownStyle(g,11,12,+b.dataset.i,0)}
+  $('krCape').innerHTML=KING_CAPES.map(c=>`<button data-c="${c}" class="${L.cape===c?'sel':''}" style="background:${c}" title="Capa"></button>`).join('');
+  const lv=reinoHas()?((()=>{try{const s=JSON.parse(localStorage.getItem(reinoKey()));return s.X&&s.X.hero&&s.X.hero[0]?s.X.hero[0].lv:1}catch(e){return 1}})()):1;
+  $('krInfo').textContent=(L.name?'Rei '+L.name:'O teu Rei')+' · nível '+lv+' no teu reino. Sobe de nível nas batalhas, inspira os soldados à volta e ganha poderes: '+Object.values(HERO_POW).map(p=>p.ic+' '+p.n+' (nível '+p.lv+')').join(', ')+'.'}
+$('krCrown').addEventListener('click',ev=>{const b=ev.target.closest('button');if(!b)return;KED.L.crown=+b.dataset.i;sfx('click');kingEdRender()});
+$('krCape').addEventListener('click',ev=>{const b=ev.target.closest('button');if(!b)return;KED.L.cape=b.dataset.c;sfx('click');kingEdRender()});
+$('krName').addEventListener('input',()=>{KED.L.name=$('krName').value});
+$('krSave').onclick=()=>{sfx('click');const L=kingLookClean({...KED.L,name:$('krName').value});kingLookSave(L);if(NET.room&&NET.peerOnline)netRelay({g:'rei',r:L});$('sRei').hidden=true;toast(L.name?'Viva o Rei '+L.name+'! 👑':'O teu Rei está pronto 👑');const a=KED.after;KED=null;if(a)a();else{reinoOpen()}};
+$('krBack').onclick=()=>{sfx('click');$('sRei').hidden=true;KED=null;reinoOpen()};
+$('bKing').onclick=()=>{const k=heroKing(ME);if(k){setSel([k]);centerCam(k.x,k.y);sfx('click')}else{const h=G.hero&&G.hero[ME];toast(hasUnitWhere(ME,u=>u.d.king)?'O Rei está abrigado num edifício.':h&&h.resp!=null?'O Rei renasce em '+Math.max(0,Math.ceil(h.resp-G.time))+' s.':'Não tens Rei nesta partida.',true)}};
+function heroInfo(o){const h=G.hero[o];const need=heroNeed(h.lv);const w=h.lv>=HERO_MAX?100:Math.round(h.xp/need*100);
+  return `<div class="herobox"><b>👑 ${esc(kingTitle(o))} · nível ${h.lv}</b><div class="xpbar"><b style="width:${w}%"></b></div><small>${h.lv>=HERO_MAX?'Nível máximo':Math.floor(h.xp)+' / '+need+' XP'} · ${h.kills} abates${h.resp!=null?' · renasce em '+Math.max(0,Math.ceil(h.resp-G.time))+' s':''}</small></div>`}
+function kingLooksInit(){if(!G)return;const mine=kingLookClean(kingLookMine());G.kingLook=NET.on?(ME===0?[mine,NET.peerRei||RIVAL_LOOK]:[NET.peerRei||RIVAL_LOOK,mine]):[mine,RIVAL_LOOK]}
 // ---------- O meu Reino: campanha contínua (a cidade nunca recomeça) ----------
 // Um só mapa e uma só cidade. As missões vão-se seguindo: 6 de história e depois capítulos sem fim,
 // cada vez mais difíceis. O desafio diário também acontece dentro do reino. Grava sozinho.
@@ -5419,7 +5578,7 @@ function reinoTick(dt){const R=G.reino;if(!R)return;
   R.ctl=(R.ctl||0)-dt;if(R.ctl<=0){R.ctl=2;const gd=new Set(m&&m.guard||[]);const foes=AIs[1]?[]:ents.filter(e=>e.o===1&&e.kind==='u'&&e.d.mil&&e.state==='idle'&&!gd.has(e.id)&&!e.d.king);
     if(foes.length){const t=aiTarget(0,{x:foes[0].x,y:foes[0].y});if(t){const c=centerOf(t);groupMove(foes,c.x,c.y,true,'livre')}}}
   R.ot=(R.ot||0)-dt;if(R.ot<=0){R.ot=1;objRender();if(m&&reinoObjs(m).every(o=>o.ok))reinoDone()}}
-function reinoDone(){const R=G.reino,m=R.ms;const prize=reinoPrize(m);for(const k of KINDS)P[0].res[k]+=prize;R.gl=(R.gl||0)+(m.daily?15:m.story?10:10+(m.L||0)*3);resDirty=true;
+function reinoDone(){const R=G.reino,m=R.ms;const prize=reinoPrize(m);heroGain(0,m.daily?60:40+(m.n||0)*6);for(const k of KINDS)P[0].res[k]+=prize;R.gl=(R.gl||0)+(m.daily?15:m.story?10:10+(m.L||0)*3);resDirty=true;
   if(m.k==='rival'){AIs[1]=null;AI=null}
   if(m.daily){const secs=Math.round(G.time-m.t0);reinoDailySubmit(m.daily,secs);toast('🏆 Desafio de hoje cumprido em '+fmtT(secs)+'! +'+prize+' de cada recurso');achv('diario');
     R.ms=R.susp||null;R.susp=null;if(R.ms){R.ms.t0+=G.time-(R.ms.ts||G.time);delete R.ms.ts}else R.calm=Math.max(R.calm||0,10)}
@@ -5439,9 +5598,10 @@ function reinoFound(){mobileLandscape();netLeaveGame();gameMode='normal';const d
   toast('O teu reino nasceu! Daqui para a frente a cidade é sempre a mesma.')}
 function reinoLoad(fromCk){mobileLandscape();netLeaveGame();if(fromCk){try{const s=localStorage.getItem(reinoCkKey());if(s)localStorage.setItem(reinoKey(),s)}catch(e){}}
   if(!loadGame(reinoKey()))return false;if(!G.reino){toast('Gravação do reino inválida',true);return false}
+  if(!G.hero){G.hero=[heroNew(),heroNew()];if(!hasUnitWhere(0,u=>u.d.king))heroSpawnKing(0)}
   G.over=false;objRender();const m=G.reino.ms;toast(m?(m.daily?'Desafio de hoje: ':m.story?'Missão '+(m.n+1)+': ':'Capítulo '+(m.n+1)+': ')+m.t:'O reino continua.');return true}
 function reinoRetry(){$('sEnd').hidden=true;$('sPause').hidden=true;if(!reinoLoad(true))reinoFound()}
-function reinoSaveMeta(){const R=G&&G.reino;if(!R)return;const m=R.ms&&R.ms.daily?R.susp:R.ms;try{localStorage.setItem(reinoMetaKey(),JSON.stringify({n:R.n,t:(m||reinoDef(R.n)).t,gl:R.gl||0,age:P[0].age,pop:P[0].pop,time:Math.round(G.time),done:(R.hist||[]).slice(-8)}))}catch(e){}}
+function reinoSaveMeta(){const R=G&&G.reino;if(!R)return;const m=R.ms&&R.ms.daily?R.susp:R.ms;try{localStorage.setItem(reinoMetaKey(),JSON.stringify({n:R.n,t:(m||reinoDef(R.n)).t,gl:R.gl||0,age:P[0].age,pop:P[0].pop,klv:G.hero&&G.hero[0]?G.hero[0].lv:1,time:Math.round(G.time),done:(R.hist||[]).slice(-8)}))}catch(e){}}
 // --- desafio diário dentro do reino ---
 function reinoDailyStart(){const R=G.reino;if(!R)return;const D=dailyInfo();const b=dailyBest(D.day);
   if(b||R.ms&&R.ms.daily){toast(b?'Já cumpriste o desafio de hoje em '+fmtT(b)+'. Volta amanhã!':'O desafio de hoje já está a decorrer.');return}
@@ -5461,10 +5621,11 @@ async function reinoDailySubmit(day,secs){const b=dailyBest(day);if(!b||secs<b){
 function reinoOpen(){$('sMenu').hidden=true;$('sCamp').hidden=false;reinoRender()}
 function reinoRender(){const M=reinoMeta(),has=reinoHas();const D=dailyInfo(),b=dailyBest(D.day);
   $('cmList').innerHTML=has&&M?`<div class="rkstat"><b>${M.n<6?'Missão '+(M.n+1):'Capítulo '+(M.n+1)}</b><small>${esc(M.t||'')}</small></div><div class="rkstat"><b>⭐ ${M.gl||0}</b><small>glória</small></div><div class="rkstat"><b>${['Pedra','Bronze','Ferro'][M.age||0]}</b><small>${M.pop||0} habitantes · ${fmtT(M.time||0)}</small></div>`:'';
-  $('cmInfo').innerHTML=has&&M?`<h3>A crónica do reino</h3>${M.done&&M.done.length?'<ul>'+M.done.slice().reverse().map(([n,t])=>'<li>✔ '+(n<6?'Missão ':'Capítulo ')+(n+1)+': '+esc(t)+'</li>').join('')+'</ul>':'<p>A história do teu reino ainda está a começar.</p>'}<p class="muted small">Desafio de hoje: ${b?'cumprido em '+fmtT(b)+' ✔':'por fazer — joga-o dentro do teu reino.'}</p>`
-    :'<h3>Funda o teu reino</h3><p>Começas com três aldeões e um Centro da Vila. A cidade que construíres fica tua para sempre: as missões vão-se seguindo sem recomeçar, cada uma mais difícil que a anterior — lobos, saqueadores, um reino rival, fortes, campeões e cercos. O jogo grava sozinho.</p><p class="muted small">O desafio diário também se joga dentro do teu reino.</p>';
+  $('cmInfo').innerHTML=(()=>{const L=kingLookMine();return `<p class="krline">👑 <b>${L.name?'Rei '+esc(L.name):'O teu Rei'}</b>${M&&M.klv?' · nível '+M.klv:''}</p>`})()+(has&&M?`<h3>A crónica do reino</h3>${M.done&&M.done.length?'<ul>'+M.done.slice().reverse().map(([n,t])=>'<li>✔ '+(n<6?'Missão ':'Capítulo ')+(n+1)+': '+esc(t)+'</li>').join('')+'</ul>':'<p>A história do teu reino ainda está a começar.</p>'}<p class="muted small">Desafio de hoje: ${b?'cumprido em '+fmtT(b)+' ✔':'por fazer — joga-o dentro do teu reino.'}</p>`
+    :'<h3>Funda o teu reino</h3><p>Começas com três aldeões e um Centro da Vila. A cidade que construíres fica tua para sempre: as missões vão-se seguindo sem recomeçar, cada uma mais difícil que a anterior — lobos, saqueadores, um reino rival, fortes, campeões e cercos. O jogo grava sozinho.</p><p class="muted small">O desafio diário também se joga dentro do teu reino.</p>');
   $('bCampGo').lastChild.textContent=has?'Continuar o reino':'Fundar o reino';$('bReinoDaily').hidden=!has||!!b;$('bReinoNew').hidden=!has}
-$('bCampGo').onclick=()=>{sfx('click');$('sCamp').hidden=true;if(reinoHas()){if(!reinoLoad(false))reinoFound()}else reinoFound()};
+$('bCampGo').onclick=()=>{sfx('click');$('sCamp').hidden=true;if(reinoHas()){if(!reinoLoad(false))reinoFound()}else{let has=false;try{has=!!localStorage.getItem(ukey('alv_rei'))}catch(e){}if(has)reinoFound();else kingEdOpen(()=>reinoFound())}};
+$('bReinoKing').onclick=()=>{sfx('click');kingEdOpen(null)};
 $('bReinoDaily').onclick=()=>{sfx('click');$('sCamp').hidden=true;if(reinoLoad(false))reinoDailyStart();else{reinoFound();reinoDailyStart()}};
 let reinoNewArm=0;$('bReinoNew').onclick=()=>{if(Date.now()-reinoNewArm>3000){reinoNewArm=Date.now();toast('Vais apagar o teu reino atual. Toca outra vez para confirmar.',true);return}reinoNewArm=0;sfx('click');
   try{localStorage.removeItem(reinoKey());localStorage.removeItem(reinoCkKey());localStorage.removeItem(reinoMetaKey())}catch(e){}$('sCamp').hidden=true;reinoFound()};
@@ -5558,6 +5719,7 @@ function step(dt){
   if(G.vic==='sobrevivencia'&&!G.over)survTick(dt);
   relicTick(dt);natureTick(dt);
   if(G.camp!=null&&!G.over)campTick(dt);
+  if(G.hero)heroTick(dt);
   if(G.reino&&!G.over)reinoTick(dt);
   checkEnd();
 }
