@@ -18,7 +18,7 @@ async def main():
     # editor
     await pg.click("#bCamp");await pg.wait_for_timeout(150);await pg.click("#bReinoKing");await pg.wait_for_timeout(300)
     vis=await pg.evaluate("!document.getElementById('sRei').hidden")
-    await pg.fill("#krName","Afonso");await pg.click("#krCrown button[data-i='1']");await pg.click("#krCape button:nth-child(2)");await pg.wait_for_timeout(400)
+    await pg.fill("#krName","Afonso");await pg.evaluate("document.querySelector(\"#krCrown button[data-i='1']\").click()");await pg.click("#krCape button:nth-child(2)");await pg.wait_for_timeout(400)
     await pg.screenshot(path=SHOTS+"/editor.png")
     await pg.click("#krSave");await pg.wait_for_timeout(200)
     look=await pg.evaluate("JSON.parse(localStorage.getItem('alv_rei'))")
