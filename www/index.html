@@ -2017,11 +2017,11 @@ const DARK=new WeakMap();
 function darkOf(cv){let d=DARK.get(cv);if(d)return d;d=mkCanvas(cv.width,cv.height);const c=d.getContext('2d');c.drawImage(cv,0,0);c.globalCompositeOperation='source-atop';c.fillStyle='rgba(8,10,20,.5)';c.fillRect(0,0,d.width,d.height);DARK.set(cv,d);return d}
 
 /* ---------------- terreno ---------------- */
-let decos=[],WFIELD=null;
+let decos=[],WFIELD=null,TL=null; // TL: camadas do chão para compor com textura nítida (no ecrã)
 let TGT=GT;
 function buildTerrain(){
   TGT=W>90?24:GT;const S=TGT,CW=W*S;
-  terrCanvas=mkCanvas(CW,CW);const c=terrCanvas.getContext('2d');
+  terrCanvas=mkCanvas(CW,CW);const c=terrCanvas.getContext('2d');TL=null;
   const r=mulberry32(G.seed+5);
   const n1=vnoise(G.seed+1,5),n2=vnoise(G.seed+2,14),n3=vnoise(G.seed+3,7);
   // campo de cor de baixa frequência
@@ -2040,26 +2040,27 @@ function buildTerrain(){
     const i=(y*LW+x)*4;im.data[i]=R;im.data[i+1]=Gc;im.data[i+2]=B;im.data[i+3]=255;
   }
   lc.putImageData(im,0,0);c.imageSmoothingEnabled=true;
-  if(TX){c.fillStyle=tpat(c,FLORA.tex.grass,0,0);c.fillRect(0,0,CW,CW);c.globalCompositeOperation='soft-light';c.drawImage(lf,0,0,CW,CW);c.globalCompositeOperation='source-over'}
+  if(TX){TL={lf};c.fillStyle=tpat(c,FLORA.tex.grass,0,0);c.fillRect(0,0,CW,CW);c.globalCompositeOperation='soft-light';c.drawImage(lf,0,0,CW,CW);c.globalCompositeOperation='source-over'}
   else c.drawImage(lf,0,0,CW,CW);
   // manchas de relva (frescas e secas) para quebrar a cor lisa
   {const nm=vnoise(G.seed+4,26);const mm=mkCanvas(W*2,W*2),mc=mm.getContext('2d'),mi=mc.createImageData(W*2,W*2);
     for(let y=0;y<W*2;y++)for(let x=0;x<W*2;x++){const v=nm(x/(W*2),y/(W*2)),o=(y*W*2+x)*4;if(v>.5){mi.data[o]=150;mi.data[o+1]=170;mi.data[o+2]=70;mi.data[o+3]=(v-.5)*150}else{mi.data[o]=20;mi.data[o+1]=55;mi.data[o+2]=20;mi.data[o+3]=(.5-v)*120}}
-    mc.putImageData(mi,0,0);c.globalAlpha=TX?.45:1;c.drawImage(mm,0,0,CW,CW);c.globalAlpha=1}
+    mc.putImageData(mi,0,0);c.globalAlpha=TX?.45:1;c.drawImage(mm,0,0,CW,CW);c.globalAlpha=1;if(TL)TL.mm=mm}
   // grão fino
   const gn=mkCanvas(128,128),gc=gn.getContext('2d'),gi=gc.createImageData(128,128);
   for(let i=0;i<128*128;i++){const v=r();const L=v>.5;gi.data[i*4]=L?255:0;gi.data[i*4+1]=L?255:20;gi.data[i*4+2]=L?200:0;gi.data[i*4+3]=Math.abs(v-.5)*46}
   gc.putImageData(gi,0,0);if(!TX){c.fillStyle=c.createPattern(gn,'repeat');c.fillRect(0,0,CW,CW)}
   // manchas de terra
-  const MR=4,dm=TX?mkCanvas(W*MR,H*MR):null,dc=dm&&dm.getContext('2d');
+  const MR=4,dm=TX?mkCanvas(W*MR,H*MR):null,dc=dm&&dm.getContext('2d'),fo=TX?mkCanvas(W*MR,H*MR):null,foc=fo&&fo.getContext('2d');
   for(let k=0;k<55;k++){const x=r()*W,y=r()*H;const i=idx(x|0,y|0);if(terr[i]===1)continue;const rad=(1+r()*2.6)*S;const rot=r()*3;
     if(TX){const R2=rad/S*MR,g=dc.createRadialGradient(x*MR,y*MR,0,x*MR,y*MR,R2);g.addColorStop(0,'rgba(255,255,255,.9)');g.addColorStop(.55,'rgba(255,255,255,.5)');g.addColorStop(1,'rgba(255,255,255,0)');dc.fillStyle=g;dc.beginPath();dc.ellipse(x*MR,y*MR,R2*1.3,R2,rot,0,7);dc.fill();continue}
     const g=c.createRadialGradient(x*S,y*S,0,x*S,y*S,rad);g.addColorStop(0,'rgba(128,100,60,.55)');g.addColorStop(.6,'rgba(120,96,58,.25)');g.addColorStop(1,'rgba(120,96,58,0)');c.fillStyle=g;c.beginPath();c.ellipse(x*S,y*S,rad*1.3,rad,rot,0,7);c.fill()}
   // chão de floresta
   for(let y=0;y<H;y++)for(let x=0;x<W;x++){const rr=resAt[idx(x,y)];if(!rr||rr.rk!=='wood')continue;
     if(TX){const cx=(x+.5)*MR,cy=(y+.5)*MR,g=dc.createRadialGradient(cx,cy,0,cx,cy,MR*1.3);g.addColorStop(0,'rgba(255,255,255,.55)');g.addColorStop(1,'rgba(255,255,255,0)');dc.fillStyle=g;dc.fillRect(cx-MR*1.4,cy-MR*1.4,MR*2.8,MR*2.8)}
-    const cx=(x+.5)*S,cy=(y+.5)*S;const g=c.createRadialGradient(cx,cy,0,cx,cy,S*1.25);g.addColorStop(0,`rgba(34,48,18,${TX?.32:.5})`);g.addColorStop(1,'rgba(34,48,18,0)');c.fillStyle=g;c.fillRect(cx-S*1.3,cy-S*1.3,S*2.6,S*2.6)}
-  if(TX)texLayer(dm,FLORA.tex.dirt,.92);
+    const cx=(x+.5)*S,cy=(y+.5)*S;const g=c.createRadialGradient(cx,cy,0,cx,cy,S*1.25);g.addColorStop(0,`rgba(34,48,18,${TX?.32:.5})`);g.addColorStop(1,'rgba(34,48,18,0)');c.fillStyle=g;c.fillRect(cx-S*1.3,cy-S*1.3,S*2.6,S*2.6)
+    if(foc){const fx=(x+.5)*MR,fy=(y+.5)*MR,g2=foc.createRadialGradient(fx,fy,0,fx,fy,MR*1.25);g2.addColorStop(0,'rgba(34,48,18,.32)');g2.addColorStop(1,'rgba(34,48,18,0)');foc.fillStyle=g2;foc.fillRect(fx-MR*1.3,fy-MR*1.3,MR*2.6,MR*2.6)}}
+  if(TX){texLayer(dm,FLORA.tex.dirt,.92);TL.fo=fo;TL.dm=dm}
   // ervas
   for(let k=0;k<(TX?5000:26000)*W*H/6400;k++){const x=r()*CW,y=r()*CW;const t=terr[idx((x/S)|0,(y/S)|0)];if(t===1)continue;
     c.strokeStyle=r()<.5?'rgba(30,60,10,.32)':'rgba(190,210,120,.22)';c.lineWidth=1;c.beginPath();c.moveTo(x,y);c.lineTo(x+(r()-.5)*3,y-2-r()*3);c.stroke()}
@@ -2082,8 +2083,8 @@ function buildTerrain(){
     else if(F>.43){R=136;Gc=116;B=78;A=255} // areia molhada
     else{const sand=Math.max(ss(.14,.3,F),ss(.38,.55,Sd));if(sand>0){const wet=ss(.3,.43,F);R=mix(214,158,wet);Gc=mix(190,134,wet);B=mix(132,90,wet);const g2=(nd(u*2%1,v*2%1)-.5)*16;R+=g2;Gc+=g2;B+=g2*.6;A=255*sand*.96;if(smi)smi.data[i*4+3]=255*sand*(1-wet)*.9}}
     const o=i*4;D[o]=R;D[o+1]=Gc;D[o+2]=B;D[o+3]=A}
-  wc.putImageData(wi,0,0);c.imageSmoothingEnabled=true;c.drawImage(wl,0,0,CW,CW);
-  if(sm){smc.putImageData(smi,0,0);texLayer(sm,FLORA.tex.sand,.88)}
+  wc.putImageData(wi,0,0);c.imageSmoothingEnabled=true;c.drawImage(wl,0,0,CW,CW);if(TL)TL.wl=wl;
+  if(sm){smc.putImageData(smi,0,0);texLayer(sm,FLORA.tex.sand,.88);TL.sm=sm}
   // brilhos estáticos só em água funda
   for(let k=0;k<1600*W*H/6400;k++){const x=r()*CW,y=r()*CW;const fx0=(x/S*FR)|0,fy0=(y/S*FR)|0;if(fx0>=FW||fy0>=FH||WFIELD.f[fy0*FW+fx0]<.58)continue;c.strokeStyle=`rgba(200,230,255,${.05+r()*.1})`;c.lineWidth=1;c.beginPath();c.moveTo(x,y);c.quadraticCurveTo(x+4,y-2,x+9,y);c.stroke()}
   // minimapa base
@@ -2097,17 +2098,48 @@ function buildTerrain(){
     if(tN&&r()<.025){decos.push({x:x+.3+r()*.4,y:y+.3+r()*.4,k:'logs',v:(r()*3)|0});continue}
     if(r()<.11){const k=r();decos.push({x:x+.15+r()*.7,y:y+.15+r()*.7,k:terr[i]===2?(k<.5?'shell':'pebble'):k<.4?'tuft':k<.6?'flower':k<.74?'pebble':k<.86?'moss':'shrub',v:(r()*3)|0})}}
 }
-const CHW=512,CHH=256;let CHUNKS=new Map(),CH_CS=1;
+const CHW=512,CHH=256;let CHUNKS=new Map(),CH_CS=1,CH_BUD=99;
 function resetChunks(){CHUNKS=new Map();CH_CS=DPR>1?1.5:1}
+// resolução dos pedaços do chão: acompanha o zoom (relva nítida de perto, leve de longe)
+function chunkCS(){const t=cam.z*DPR;return t<=1.05?1:t<=1.6?1.5:t<=2.2?2:t<=2.9?2.5:3}
+const GTEX={K:.62,VS:.72}; // escala da textura do chão no ecrã (VS achata na vertical: perspetiva isométrica)
+let GTMP=null;
+function groundTex(c,img,X0,Y0,cs){const p=c.createPattern(img,'repeat');p.setTransform(new DOMMatrix().translate(-X0*cs,-Y0*cs).scale(cs*GTEX.K,cs*GTEX.K*GTEX.VS));return p}
 function groundChunk(i,j){
-  const key=i+','+j;let ch=CHUNKS.get(key);if(ch){ch.t=performance.now();return ch.cv}
+  const key=i+','+j;let ch=CHUNKS.get(key);if(ch&&(ch.cs===CH_CS||CH_BUD<=0)){ch.t=performance.now();return ch.cv}
+  CH_BUD--;if(ch)CHUNKS.delete(key);
   const X0=-H*HW+i*CHW,Y0=j*CHH,cs=CH_CS;const cv=mkCanvas(CHW*cs,CHH*cs),c=cv.getContext('2d');
   c.setTransform(cs*HW/GT,cs*HH/GT,-cs*HW/GT,cs*HH/GT,-X0*cs,-Y0*cs);c.imageSmoothingEnabled=true;
   const pts=[unproj(X0,Y0),unproj(X0+CHW,Y0),unproj(X0,Y0+CHH),unproj(X0+CHW,Y0+CHH)];
   const x0=clamp(Math.floor(Math.min(...pts.map(q=>q.x)))-1,0,W),x1=clamp(Math.ceil(Math.max(...pts.map(q=>q.x)))+1,0,W),y0=clamp(Math.floor(Math.min(...pts.map(q=>q.y)))-1,0,H),y1=clamp(Math.ceil(Math.max(...pts.map(q=>q.y)))+1,0,H);
-  if(x1>x0&&y1>y0)c.drawImage(terrCanvas,x0*TGT,y0*TGT,(x1-x0)*TGT,(y1-y0)*TGT,x0*GT,y0*GT,(x1-x0)*GT,(y1-y0)*GT);
+  if(x1>x0&&y1>y0){
+    if(TL&&FLORA.tex.grass){
+      // chão nítido: a textura é pintada à resolução do ecrã; as cores, manchas e máscaras vêm das camadas suaves
+      const lay=(cv2,a)=>{const R=cv2.width/W;c.globalAlpha=a==null?1:a;c.drawImage(cv2,x0*R,y0*R,(x1-x0)*R,(y1-y0)*R,x0*GT,y0*GT,(x1-x0)*GT,(y1-y0)*GT);c.globalAlpha=1};
+      const iso=c.getTransform();
+      c.save();c.beginPath();c.rect(0,0,W*GT,H*GT);c.clip();
+      c.setTransform(1,0,0,1,0,0);c.fillStyle=groundTex(c,FLORA.tex.grass,X0,Y0,cs);c.fillRect(0,0,cv.width,cv.height);c.setTransform(iso);
+      c.globalCompositeOperation='soft-light';lay(TL.lf);c.globalCompositeOperation='source-over';
+      lay(TL.mm,.45);lay(TL.fo);
+      if(!GTMP||GTMP.width!==cv.width||GTMP.height!==cv.height)GTMP=mkCanvas(cv.width,cv.height);const tc=GTMP.getContext('2d');
+      const masked=(mask,img,a)=>{tc.setTransform(1,0,0,1,0,0);tc.globalCompositeOperation='copy';tc.clearRect(0,0,GTMP.width,GTMP.height);tc.setTransform(iso);tc.imageSmoothingEnabled=true;
+        const R=mask.width/W;tc.globalCompositeOperation='source-over';tc.drawImage(mask,x0*R,y0*R,(x1-x0)*R,(y1-y0)*R,x0*GT,y0*GT,(x1-x0)*GT,(y1-y0)*GT);
+        tc.setTransform(1,0,0,1,0,0);tc.globalCompositeOperation='source-in';tc.fillStyle=groundTex(tc,img,X0,Y0,cs);tc.fillRect(0,0,GTMP.width,GTMP.height);tc.globalCompositeOperation='source-over';
+        c.setTransform(1,0,0,1,0,0);c.globalAlpha=a;c.drawImage(GTMP,0,0);c.globalAlpha=1;c.setTransform(iso)};
+      if(TL.dm)masked(TL.dm,FLORA.tex.dirt,.92);
+      if(TL.wl)lay(TL.wl);
+      if(TL.sm&&FLORA.tex.sand)masked(TL.sm,FLORA.tex.sand,.88);
+      c.restore();c.setTransform(iso);
+    }else c.drawImage(terrCanvas,x0*TGT,y0*TGT,(x1-x0)*TGT,(y1-y0)*TGT,x0*GT,y0*GT,(x1-x0)*GT,(y1-y0)*GT);}
   const cb=ents.filter(e=>e.kind==='b'&&!e.d.walk&&(e.o===ME||e.seen)&&e.tx+e.w>=x0-12&&e.tx<=x1+3&&e.ty+e.h>=y0-12&&e.ty<=y1+3);
-  {const wd=wearDecal();c.globalAlpha=.5;for(const e of cb){if(e.d.wall||e.d.gate)continue;const m=e.done?.55:.3;c.drawImage(wd,(e.tx-m)*GT,(e.ty-m)*GT,(e.w+m*2)*GT,(e.h+m*2)*GT)}c.globalAlpha=1;
+  // terra batida à volta dos edifícios (com a textura de terra nítida, borda irregular)
+  if(TL&&FLORA.tex.dirt&&cb.some(e=>!e.d.wall&&!e.d.gate&&!e.d.farm)){const iso=c.getTransform(),wm=wearMask();
+    if(!GTMP||GTMP.width!==cv.width||GTMP.height!==cv.height)GTMP=mkCanvas(cv.width,cv.height);const tc=GTMP.getContext('2d');
+    tc.setTransform(1,0,0,1,0,0);tc.clearRect(0,0,GTMP.width,GTMP.height);tc.setTransform(iso);tc.globalCompositeOperation='source-over';
+    for(const e of cb){if(e.d.wall||e.d.gate||e.d.farm)continue;const m=e.done?(e.type==='centro'?2.8:e.w>=3?1.4:1):.4;tc.globalAlpha=e.done?1:.6;tc.drawImage(wm,(e.tx-m)*GT,(e.ty-m)*GT,(e.w+m*2)*GT,(e.h+m*2)*GT)}
+    tc.globalAlpha=1;tc.setTransform(1,0,0,1,0,0);tc.globalCompositeOperation='source-in';tc.fillStyle=groundTex(tc,FLORA.tex.dirt,X0,Y0,cs);tc.fillRect(0,0,GTMP.width,GTMP.height);tc.globalCompositeOperation='source-over';
+    c.setTransform(1,0,0,1,0,0);c.globalAlpha=.9;c.drawImage(GTMP,0,0);c.globalAlpha=1;c.setTransform(iso)}
+  {const wd=wearDecal();c.globalAlpha=TL?.18:.5;for(const e of cb){if(e.d.wall||e.d.gate)continue;const m=e.done?.55:.3;c.drawImage(wd,(e.tx-m)*GT,(e.ty-m)*GT,(e.w+m*2)*GT,(e.h+m*2)*GT)}c.globalAlpha=1;
     for(const e of cb){if(!e.done||e.d.farm)continue;const thin=e.d.wall||e.d.gate,m=thin?.3:.5,ao=aoDecal(e.w,e.h,m);c.globalAlpha=thin?.5:.85;c.drawImage(ao,(e.tx-m)*GT,(e.ty-m)*GT,(e.w+m*2)*GT,(e.h+m*2)*GT)}c.globalAlpha=1}
   // decorações fixas
   c.setTransform(cs,0,0,cs,-X0*cs,-Y0*cs);
@@ -2120,8 +2152,9 @@ function groundChunk(i,j){
   c.globalAlpha=.36;for(const e of cb){if(!e.done)continue;const p=proj(e.tx,e.ty);const sp=bldSprite(e.type,P[e.o].age,e.o,bldVariant(e)),sh=shadowOf(sp,sp.oy+(e.w+e.h)*HH*.86);
     const dx=p.x-sp.ox-sh.pad,dy=p.y-sp.oy;if(dx>X0+CHW||dx+sh.w<X0||dy>Y0+CHH||dy+sh.h<Y0)continue;c.drawImage(sh.cv,dx,dy,sh.w,sh.h)}
   c.globalAlpha=1;
-  CHUNKS.set(key,{cv,t:performance.now()});
-  if(CHUNKS.size>34){let old=null,ot=1e18;for(const [k,v] of CHUNKS)if(v.t<ot){ot=v.t;old=k}CHUNKS.delete(old)}
+  CHUNKS.set(key,{cv,t:performance.now(),cs,b:cv.width*cv.height*4});
+  // limite de memória: no máximo 34 pedaços e ~90 MB
+  for(;;){let tot=0;for(const v of CHUNKS.values())tot+=v.b;if(CHUNKS.size<=34&&(tot<=90e6||CHUNKS.size<=12))break;let old=null,ot=1e18;for(const [k,v] of CHUNKS)if(v.t<ot){ot=v.t;old=k}CHUNKS.delete(old)}
   return cv;
 }
 
@@ -2163,6 +2196,11 @@ function wearDecal(){if(WEAR)return WEAR;const n=64,cv=mkCanvas(n,n),c=cv.getCon
   const g=c.createRadialGradient(n/2,n/2,n*.18,n/2,n/2,n*.5);g.addColorStop(0,'rgba(120,94,58,.9)');g.addColorStop(.7,'rgba(120,94,58,.55)');g.addColorStop(1,'rgba(120,94,58,0)');c.fillStyle=g;c.fillRect(0,0,n,n);
   for(let i=0;i<260;i++){const x=r()*n,y=r()*n,dd=Math.hypot(x-n/2,y-n/2)/(n/2);if(dd>.95)continue;c.fillStyle=r()<.5?`rgba(70,52,30,${.35*(1-dd)})`:`rgba(190,165,115,${.3*(1-dd)})`;c.fillRect(x,y,1.5,1.5)}
   return WEAR=cv}
+// máscara de terra batida: centro cheio, borda gasta e irregular
+let WMASK=null;function wearMask(){if(WMASK)return WMASK;const n=128,cv=mkCanvas(n,n),c=cv.getContext('2d'),im=c.createImageData(n,n),nz=vnoise(4242,9),nz2=vnoise(4243,26);
+  for(let y=0;y<n;y++)for(let x=0;x<n;x++){const dx=(x+.5)/n-.5,dy=(y+.5)/n-.5,d=Math.hypot(dx,dy)*2,u=x/n,v=y/n;
+    const edge=.62+(nz(u,v)-.5)*.42+(nz2(u,v)-.5)*.18;let a=Math.min(1,Math.max(0,(edge-d)/.34));a=a*a*(3-2*a)*(.7+.3*nz2(u,v));im.data[(y*n+x)*4+3]=a*255}
+  c.putImageData(im,0,0);return WMASK=cv}
 let CLOUDS=null;
 function cloudSprite(){const cv=mkCanvas(256,256),c=cv.getContext('2d'),r=mulberry32(5);
   for(let i=0;i<9;i++){const x=60+r()*136,y=60+r()*136,rad=40+r()*46;const g=c.createRadialGradient(x,y,0,x,y,rad);g.addColorStop(0,'rgba(14,22,42,.5)');g.addColorStop(1,'rgba(14,22,42,0)');c.fillStyle=g;c.fillRect(0,0,256,256)}
@@ -3424,7 +3462,7 @@ function render(){UCFM=0;
   const flat=()=>c.setTransform(z,0,0,z,-cam.x*z,-cam.y*z);
   const V=viewTiles();
   // chão
-  flat();c.imageSmoothingEnabled=true;
+  flat();c.imageSmoothingEnabled=true;CH_CS=chunkCS();CH_BUD=CHUNKS.size?1:99; // ao mudar o zoom, refaz 1 pedaço por frame (os outros esticam até lá)
   {const i0=Math.floor((cam.x+H*HW)/CHW),i1=Math.floor((cam.x+vw/cam.z+H*HW)/CHW),j0=Math.floor(cam.y/CHH),j1=Math.floor((cam.y+vh/cam.z)/CHH);
     for(let j=Math.max(0,j0);j<=j1;j++)for(let i=Math.max(0,i0);i<=i1;i++){if(-H*HW+i*CHW>W*HW||j*CHH>(W+H)*HH)continue;c.drawImage(groundChunk(i,j),-H*HW+i*CHW-.5,j*CHH-.5,CHW+1,CHH+1)}}
   for(const e of ents)if(e.kind==='b'&&e.d.walk&&seenBy0(e)){const q=proj(e.tx,e.ty);if(!onScreen(q.x,q.y+48,160))continue;
