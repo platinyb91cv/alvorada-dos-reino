@@ -164,7 +164,7 @@ passo "6/6 Scripts para ligar e desligar"
 cat > "$BASE/iniciar-ia.sh" <<EOF
 #!/usr/bin/env bash
 # Liga o ComfyUI (8188) e o Hunyuan3D (7860) em segundo plano. Só aceitam ligações locais: usa o túnel SSH.
-cd "$BASE/ComfyUI" && nohup .venv/bin/python main.py --listen 127.0.0.1 --port 8188 > "$BASE/comfyui.log" 2>&1 &
+cd "$BASE/ComfyUI" && nohup .venv/bin/python main.py --listen 127.0.0.1 --port 8188 --enable-cors-header "*" > "$BASE/comfyui.log" 2>&1 &
 echo "ComfyUI a arrancar…  (registo: $BASE/comfyui.log)"
 if [ -d "$BASE/Hunyuan3D-2.1/.venv" ]; then
   cd "$BASE/Hunyuan3D-2.1" && HF_HOME="$BASE/hf-cache" nohup .venv/bin/python gradio_app.py --model_path tencent/Hunyuan3D-2.1 --subfolder hunyuan3d-dit-v2-1 --texgen_model_path tencent/Hunyuan3D-2.1 --low_vram_mode --host 127.0.0.1 --port 7860 > "$BASE/hunyuan3d.log" 2>&1 &
