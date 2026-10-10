@@ -101,6 +101,14 @@ async def main():
     # ronda do Rei: anda à volta do posto sem se afastar
     pr=await pg.evaluate("""(()=>{const k=heroKing(0);stopUnit(k);k.kpost=null;const x0=k.x,y0=k.y;let mx=0,mv=0,last=k.state;for(let i=0;i<30*60;i++){step(1/30);mx=Math.max(mx,Math.hypot(k.x-x0,k.y-y0));if(k.state!==last){if(k.state==='move')mv++;last=k.state}}return{mx:+mx.toFixed(2),mv}})()""")
     rep(pr['mv']>=3 and pr['mx']<5,"Rei faz ronda perto do posto",f"{pr['mv']} voltas em 60 s; afastou-se no máximo {pr['mx']} casas")
+    # o Rei ferido abriga-se sozinho, cura-se e volta a sair; botão Esconder
+    sh=await pg.evaluate("""(()=>{gameMode='normal';startGame(77,{map:'rios',vic:'classico',civ:['planicies','montanha']});const s=__S();s.AIs[1]=null;
+      const k=heroKing(0);const foes=[];for(let i=0;i<3;i++){const e=mkUnit(1,'guerreiro',k.x+1.5,k.y+i*.4);setMover(e);e.target=k;e.state='attack';foes.push(e)}
+      let hid=false;for(let i=0;i<20*40;i++){step(1/20);if(!heroKing(0)&&hasUnitWhere(0,u=>u.d.king))hid=true}
+      const alive=hasUnitWhere(0,u=>u.d.king);for(const f of foes)if(!f.dead)kill(f,null);let out=false;for(let i=0;i<20*120&&!out;i++){step(1/20);out=!!heroKing(0)}
+      const k2=heroKing(0);act('khide',{});for(let i=0;i<20*20;i++)step(1/20);
+      return {hid,alive,over:s.G.over,out,hp:k2&&Math.round(k2.hp),manual:!heroKing(0)&&hasUnitWhere(0,u=>u.d.king)}})()""")
+    rep(sh['hid'] and sh['alive'] and not sh['over'] and sh['out'] and sh['manual'],"Rei abriga-se sozinho e com o botão Esconder",str(sh))
     rep(not errs,"Sem erros de JavaScript","; ".join(errs[:3]) or "nenhum")
     await b.close()
   print(f"\n{sum(1 for r in R if r[0])}/{len(R)} testes passaram");sys.exit(0 if all(r[0] for r in R) else 1)

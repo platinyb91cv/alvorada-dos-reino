@@ -563,6 +563,7 @@ input{font-family:inherit;-webkit-user-select:text;user-select:text;touch-action
         <b>O teu Rei:</b> no Reino e no online tens um Rei herói. Sobe de nível nas batalhas perto dele (até 10), fortalece os soldados à volta e ganha poderes — 📯 Grito de guerra, ✨ Bênção real e 🛡️ Guarda real. Se cair, renasce no Centro da Vila (no Regicídio não). Escolhe o nome, a coroa e a capa em O meu Reino → 👑 O teu Rei. O botão 👑 no ecrã de jogo mostra-te onde ele está.<br><b>O meu Reino:</b> uma só cidade que nunca recomeça. As missões seguem-se umas às outras (lobos, saqueadores, um reino rival, o Rei, a Maravilha) e depois vêm capítulos sem fim — fortes, campeões, cercos — cada vez mais difíceis. Grava sozinho; se o reino cair, recomeças do último capítulo cumprido. O desafio diário também se joga dentro do teu reino.<br><b>Modos:</b> <b>Clássico</b> (destrói o Centro da Vila e o exército do rival, ou defende uma Maravilha 5 minutos), <b>Guerra total</b> (só acaba quando um reino perder todos os edifícios e aldeões — grava e continua outro dia), <b>Regicídio</b> (protege o teu Rei) e <b>Sobreviver</b> (vagas de invasores). Também há a <b>Campanha</b> (6 missões) e o <b>Desafio diário</b> (o mesmo mapa para todos, ganha quem vencer mais depressa).<br>
         <b>Reinos:</b> Mar (barcos e pesca melhores, Corsário), Montanha (ouro, pedra e muralhas mais fortes, Besteiro Pesado), Planícies (cavalaria rápida, caça e quintas, Cavaleiro de Lança).<br>
         <b>Mapas:</b> Rios, Terra, Lagos e Ilhas. Nas Ilhas precisas de Doca e Transporte para chegar ao inimigo.<br>
+        <b>O Rei:</b> se o teu Rei cair, perdes a partida. Ferido e com inimigos perto, ele abriga-se sozinho no edifício mais próximo e volta a sair curado; o botão <b>Esconder</b> mete-o lá dentro quando quiseres (sai com <b>Sair</b> no edifício).<br>
         <b>Abrigo e sino:</b> aldeões e soldados podem abrigar-se no Centro, nas Torres e nas Casas (botão Abrigar); cada um lá dentro dispara mais flechas. O <b>Sino</b> no Centro manda todos os aldeões para dentro; toca outra vez para voltarem ao trabalho.<br>
         <b>Mercado:</b> compra e vende recursos (os preços mudam com o uso). A Carroça de Comércio leva ouro entre dois mercados: quanto mais longe, mais ganha.<br>
         <b>Relíquias:</b> estão espalhadas pelo mapa. Um sacerdote apanha-a e leva-a a um Templo: cada relíquia dá ouro sem parar.<br>
@@ -1565,7 +1566,7 @@ function updBld(b,dt){
       if(b.garr&&b.garr.length){const n=Math.min(6,Math.ceil(b.garr.reduce((a,u)=>a+(u.d.proj==='arrow'?2:1),0)/2));for(let k=0;k<n;k++){const t2=k===0?b.target:scanEnemy(b,rg,false)||b.target;if(tv(t2))fire(b,t2)}}
       snd('bow',b.tx+b.w/2,b.ty+b.h/2)}
   }
-  if(b.garr&&b.garr.length)for(const u of b.garr)if(u.hp<u.max)u.hp=Math.min(u.max,u.hp+dt*.8);
+  if(b.garr&&b.garr.length)for(const u of b.garr)if(u.hp<u.max)u.hp=Math.min(u.max,u.hp+dt*(u.d.king?3:.8));
   // produção
   if(b.queue.length){
     const q=b.queue[0];
@@ -4170,6 +4171,7 @@ const own=(o,l)=>(l||[]).map(i=>byId.get(i)).filter(e=>e&&!e.dead&&e.o===o);
 const ownB=(o,i)=>{const b=byId.get(i);return b&&!b.dead&&b.kind==='b'&&b.o===o?b:null};
 const EXEC={
   power(o,d){if(HERO_POW[d.p])heroPower(o,d.p)},
+  khide(o,d){kingShelter(o,true)},
   garrison(o,d){const b=ownB(o,d.b);if(!b||!b.done||!b.d.garr)return;let sp=garrSpace(b);for(const u of own(o,d.u)){if(sp<=0)break;if(u.kind!=='u'||u.d.naval||u.d.siege)continue;orderEnter(u,b);sp--}if(o===ME)toast('A entrar: '+b.d.name)},
   ungarrison(o,d){const b=ownB(o,d.b);if(b)ungarrison(b,o!==ME)},
   bell(o,d){ringBell(o,!!d.on)},
@@ -4216,7 +4218,7 @@ function command(units,e,w){issueCmd(units,e,w)}
    Turno = 3 passos de 1/30 s (100 ms). As ordens de um turno T são executadas em T+atraso nos dois lados.
    A cada 5 s comparam um resumo (hash) do estado; se divergir, o anfitrião envia o estado completo.
    Se alguém cair, quem fica envia o estado completo quando o outro voltar. */
-const GAME_VER='alvorada-13';
+const GAME_VER='alvorada-14';
 const TURN_STEPS=3,TURN_DT=TURN_STEPS/30,HASH_EVERY=50;
 Object.assign(NET,{ws:null,url:'',slot:0,room:'',token:'',name:'',peer:'',peerOnline:false,game:false,turn:0,delay:2,sent:-1,cmds:[new Map(),new Map()],out:[],
   acc:0,waitT:0,rtt:0,myHash:new Map(),peerHash:new Map(),desync:0,resync:0,epoch:0,lastSnapT:-1,wantSnap:false,awaitSnap:false,lostT:0,pingT:0,closing:false,stats:{turns:0,sent:0,recv:0,bytes:0}});
@@ -4666,7 +4668,8 @@ function buildCmds0(){
       for(const [k,n] of Object.entries(FORMS))box.appendChild(mkCmd(FORM_ICON[k],n,()=>{G.form=k;menuMode=null;uiDirty=true;toast('Formação: '+n+'. Toca no destino.')},G.form===k?'on':''));
       box.appendChild(mkCmd('↩️','Voltar',()=>{menuMode=null;uiDirty=true}));return;
     }
-    {const kg=units.find(u=>u.d.king);const h=G.hero&&G.hero[ME];if(kg&&h)for(const [k,pw] of Object.entries(HERO_POW)){const lock=h.lv<pw.lv,cd=h.cd[k];box.appendChild(mkCmd(pw.ic,lock?'Nv '+pw.lv:cd>0?Math.ceil(cd)+' s':pw.n.split(' ')[0],()=>{if(lock){toast(pw.n+' abre no nível '+pw.lv,true);return}act('power',{p:k})},lock?'lock':cd>0||pw.cost&&!canAfford(ME,pw.cost)?'no':'',pw.n+' — '+pw.desc+(pw.cost?' Custa '+costText(pw.cost)+'.':'')))}}
+    {const kg=units.find(u=>u.d.king);const h=G.hero&&G.hero[ME];if(kg&&h)for(const [k,pw] of Object.entries(HERO_POW)){const lock=h.lv<pw.lv,cd=h.cd[k];box.appendChild(mkCmd(pw.ic,lock?'Nv '+pw.lv:cd>0?Math.ceil(cd)+' s':pw.n.split(' ')[0],()=>{if(lock){toast(pw.n+' abre no nível '+pw.lv,true);return}act('power',{p:k})},lock?'lock':cd>0||pw.cost&&!canAfford(ME,pw.cost)?'no':'',pw.n+' — '+pw.desc+(pw.cost?' Custa '+costText(pw.cost)+'.':'')))
+      if(kg)box.appendChild(mkCmd('🏰','Esconder',()=>act('khide',{}),'','Esconder o Rei no edifício mais próximo. Sai sozinho quando o perigo passar e estiver curado.'))}}
     if(vills.length){box.appendChild(mkCmd('🔨','Construir',()=>{menuMode='build';uiDirty=true}));
       if(vills.some(v=>v.carry>0))box.appendChild(mkCmd('📥','Entregar',()=>act('ret',{u:ids(vills)})))}
     const boats=units.filter(u=>u.d.cap);
@@ -5115,7 +5118,7 @@ const GX=['map','vic','civ','camp','daily','reino','hero','surv','sdiff','bell',
 function gExtra(){const o={};for(const k of GX)if(G[k]!==undefined)o[k]=G[k];return JSON.parse(JSON.stringify(o))}
 function serialize(){
   const ref=x=>x&&!x.dead?x.id:null;
-  const su=e=>({k:'u',id:e.id,o:e.o,t:e.type,x:+e.x.toFixed(4),y:+e.y.toFixed(4),hp:e.hp,s:e.state,c:e.carry,ct:e.ctype,gk:e.gkind,tg:ref(e.target),gr:ref(e.gres),bd:ref(e.bld),de:e.dest,am:e.amove,fa:e.faith,hm:e.home,st:e.stance||null,gu:e.guard||null,pa:e.patrol||null,kp:e.kpost||null,pg:e.prevG||null,bq:e.bq&&e.bq.length?e.bq:null,tr:e.d.trade?[e.tradeA,e.tradeB,e.target?e.target.id:null,e.tripFrom||null]:null,rl:e.relic??null,rg:e.relicGo??null,cg:e.cargo?e.cargo.map(su):null});
+  const su=e=>({k:'u',id:e.id,o:e.o,t:e.type,x:+e.x.toFixed(4),y:+e.y.toFixed(4),hp:e.hp,s:e.state,c:e.carry,ct:e.ctype,gk:e.gkind,tg:ref(e.target),gr:ref(e.gres),bd:ref(e.bld),de:e.dest,am:e.amove,fa:e.faith,hm:e.home,st:e.stance||null,gu:e.guard||null,pa:e.patrol||null,kp:e.kpost||null,ka:e.kauto||0,pg:e.prevG||null,bq:e.bq&&e.bq.length?e.bq:null,tr:e.d.trade?[e.tradeA,e.tradeB,e.target?e.target.id:null,e.tripFrom||null]:null,rl:e.relic??null,rg:e.relicGo??null,cg:e.cargo?e.cargo.map(su):null});
   return JSON.stringify({v:1,difficulty,nid,G:{seed:G.seed,time:G.time,starts:G.starts,wonder:G.wonder||null,fishRespawn:G.fishRespawn||[],lake:G.lake||null,form:G.form||'livre',mode:G.mode||'normal',tut:G.tut||null},X:gExtra(),
     P:P.map(p=>({res:p.res,age:p.age,techs:p.techs,stats:p.stats})),
     mapN:W,terr:Array.from(terr).join(''),vis:Array.from(vis).join(''),
@@ -5139,7 +5142,7 @@ function loadGame(key){
   for(const [id,rk,amt,max,tx,ty,v,cc] of d.res){const r={id,kind:'r',rk,amt,max,tx,ty,w:1,h:1,var:v};if(cc===1){r.carcass=true;r.walk=true}else if(cc===2){r.fish=true;r.walk=true}else blk[idx(tx,ty)]=2;resAt[idx(tx,ty)]=r;byId.set(id,r)}
   const pend=[];
   for(const q of d.ents.filter(x=>x.k==='b')){nid=q.id;const b=mkBld(q.o,q.t,q.tx,q.ty,q.dn);Object.assign(b,{hp:q.hp,max:q.mx,prog:q.pg,queue:q.q||[],qt:q.qt||0,amt:q.am,seen:q.sn});if(q.lv)b.lvl=q.lv;b.locked=!!q.lk;pend.push([b,q])}
-  const mkU=(q,push)=>{nid=q.id;const u=mkUnit(q.o,q.t,q.x,q.y);Object.assign(u,{hp:q.hp,carry:q.c||0,ctype:q.ct||null,gkind:q.gk||null,dest:q.de||null,amove:!!q.am,faith:q.fa??1,home:q.hm||null,stance:q.st||null,guard:q.gu||null,patrol:q.pa||null,kpost:q.kp||null,prevG:q.pg||null});if(q.tr){u.tradeA=q.tr[0];u.tradeB=q.tr[1];u.tripFrom=q.tr[3]}if(q.rl!=null)u.relic=q.rl;if(q.bq)u.bq=q.bq;if(q.rg!=null)u.relicGo=q.rg;
+  const mkU=(q,push)=>{nid=q.id;const u=mkUnit(q.o,q.t,q.x,q.y);Object.assign(u,{hp:q.hp,carry:q.c||0,ctype:q.ct||null,gkind:q.gk||null,dest:q.de||null,amove:!!q.am,faith:q.fa??1,home:q.hm||null,stance:q.st||null,guard:q.gu||null,patrol:q.pa||null,kpost:q.kp||null,kauto:q.ka||0,prevG:q.pg||null});if(q.tr){u.tradeA=q.tr[0];u.tradeB=q.tr[1];u.tripFrom=q.tr[3]}if(q.rl!=null)u.relic=q.rl;if(q.bq)u.bq=q.bq;if(q.rg!=null)u.relicGo=q.rg;
     if(!push){const i=ents.indexOf(u);if(i>=0)ents.splice(i,1);byId.delete(u.id);u.state='idle';u.inBoat=true}else pend.push([u,q]);
     if(q.cg&&u.cargo)u.cargo=q.cg.map(c=>mkU(c,false));return u};
   for(const q of d.ents.filter(x=>x.k==='u'))mkU(q,true);
@@ -5507,7 +5510,24 @@ function kingPatrol(k,dt){
     const dx=Math.round((h1*2-1)*KING_ROUND*2)/2,dy=Math.round((h2*2-1)*KING_ROUND*2)/2;if(Math.abs(dx)+Math.abs(dy)<1.5)continue;
     const x=k.kpost.x+dx,y=k.kpost.y+dy;if(!okXY(Math.floor(x),Math.floor(y)))continue;
     moveTo(k,x,y);k.amove=true;k.spdCap=UNITS.rei.speed*.7;return}} // passo calmo de ronda
-function heroTick(dt){vozWatch(dt);if(!G.hero)return;kingWarnTick();
+// o Rei abriga-se sozinho quando está ferido e com inimigos perto; sai quando está curado e o perigo passou (determinístico: corre na simulação)
+function foesNear(o,x,y,r){let n=0;for(const e of ents){if(e.kind!=='u'||e.o===o||e.o===2||!e.d.mil||e.dead)continue;if(hyp(e.x-x,e.y-y)<=r)n++}return n}
+function kingShelter(o,manual){const k=heroKing(o);if(!k||k.state==='enter')return false;
+  let best=null,bd=1e9;for(const b of ents){if(b.kind!=='b'||b.o!==o||!b.done||garrSpace(b)<=0)continue;const c=centerOf(b);let d=hyp(c.x-k.x,c.y-k.y);if(b.type==='centro')d-=4;if(d<bd&&d<30){bd=d;best=b}}
+  if(!best){const tc=homeOf(o);if(tc&&manual){const c=centerOf(tc);moveTo(k,c.x+1,c.y+2.5)}if(o===ME&&manual)toast('Não há edifício com espaço para o Rei',true);return false}
+  orderEnter(k,best);k.kauto=manual?2:1;k.kpost=null; // 2: escondido à mão, só sai quando mandares (Sair)
+  if(o===ME){toast('👑 O Rei '+(manual?'vai esconder-se':'recuou para se abrigar')+' — '+(best.type==='centro'?'Centro da Vila':BLDS[best.type]?BLDS[best.type].name:'edifício')+'.');fx.push({t:0,life:1.6,type:'ping',x:k.x,y:k.y,col:'#ffd447'})}
+  return true}
+function kingShelterTick(dt){
+  for(let o=0;o<2;o++){if(AIs[o])continue; // o computador já gere o Rei dele
+    const k=heroKing(o);
+    if(k){if(k.state==='enter'||k.stance==='hold')continue;if(k.hp<k.max*.5&&foesNear(o,k.x,k.y,5)>0)kingShelter(o,false);continue}
+    // lá dentro: sai quando curado e sem inimigos perto durante 8 s
+    for(const b of ents){if(b.kind!=='b'||b.o!==o||!b.garr||!b.garr.length)continue;const kg=b.garr.find(u=>u.d.king&&u.kauto===1);if(!kg)continue;
+      const c=centerOf(b);if(kg.hp>=kg.max*.9&&foesNear(o,c.x,c.y,10)===0){b.kcalm=(b.kcalm||0)+dt;if(b.kcalm>=8){b.kcalm=0;kingLeave(b,kg)}}else b.kcalm=0}}}
+function kingLeave(b,u){const p=freeFront(b.tx,b.ty,b.w,b.h);if(!p)return;b.garr=b.garr.filter(x=>x!==u);u.x=p.x+.5;u.y=p.y+.5;u.inBoat=null;u.inBld=0;u.state='idle';u.path=null;u.kauto=0;u.kpost=null;ents.push(u);byId.set(u.id,u);
+  if(b.o===ME){uiDirty=true;toast('👑 O Rei está curado e voltou a sair.')}}
+function heroTick(dt){vozWatch(dt);if(!G.hero)return;kingWarnTick();kingShelterTick(dt);
   for(const e of ents)if(e.kind==='u'&&e.d.king&&!e.dead)kingPatrol(e,dt);
   for(let o=0;o<2;o++){const h=G.hero[o];if(!h)continue;const k=heroKing(o);
     for(const p in h.cd)if(h.cd[p]>0)h.cd[p]=Math.max(0,h.cd[p]-dt);
