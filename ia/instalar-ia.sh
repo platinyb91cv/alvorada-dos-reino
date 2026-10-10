@@ -41,7 +41,12 @@ T3D_IDX=$([ $CNUM -ge 124 ] && echo cu124 || echo cu121)
 ok "Driver suporta CUDA $CUDAV → PyTorch $TORCH_IDX"
 LIVRE=$(df -BG --output=avail "$BASE" | tail -1 | tr -dc 0-9)
 PRECISO=$(( 100 + ${WAN14B:-0}*30 ))
-if [ "${LIVRE:-0}" -lt "$PRECISO" ]; then aviso "Só há ${LIVRE} GB livres em $BASE; recomendo pelo menos ${PRECISO} GB. Vou continuar, mas os downloads podem falhar."; else ok "Disco livre: ${LIVRE} GB"; fi
+if [ "${LIVRE:-0}" -lt "$PRECISO" ]; then
+  erro "Só há ${LIVRE} GB livres em $BASE e são precisos pelo menos ${PRECISO} GB."
+  echo "   Na Vast.ai o disco escolhe-se ao alugar (barra 'Disk Space') e não se pode aumentar depois:"
+  echo "   aluga uma máquina nova com 150 GB de disco e apaga esta. (Para continuar mesmo assim: FORCAR=1 bash instalar-ia.sh)"
+  [ "${FORCAR:-0}" = "1" ] || exit 1
+else ok "Disco livre: ${LIVRE} GB"; fi
 
 # ---------------------------------------------------------------------
 passo "2/6 Pacotes do sistema"
@@ -94,13 +99,20 @@ def get(repos, padrao, pasta, preferir=None, nome=None):
         f=c[0]; dest=os.path.join(M,pasta,nome or os.path.basename(f))
         if os.path.exists(dest) and os.path.getsize(dest)>1_000_000: print(f"  ✔ já existe {pasta}/{os.path.basename(dest)}"); return
         os.makedirs(os.path.dirname(dest),exist_ok=True)
-        print(f"  ↓ {repo} :: {f}",flush=True)
+        try: tam=api.get_paths_info(repo,[f])[0].size or 0
+        except Exception: tam=0
+        livre=shutil.disk_usage(os.path.dirname(dest)).free
+        if tam and livre<tam+1_000_000_000:
+            print(f"  ✖ {os.path.basename(f)}: precisa de {tam/1e9:.1f} GB e só há {livre/1e9:.1f} GB livres no disco"); falhas.append(os.path.basename(f)); return
+        print(f"  ↓ {repo} :: {f}  ({tam/1e9:.1f} GB)",flush=True)
+        tmp=os.path.join(M,".baixar");os.makedirs(tmp,exist_ok=True)
         try:
-            p=hf_hub_download(repo,f,token=os.environ.get("HF_TOKEN") or None)
-            try: os.link(p,dest)
-            except Exception: shutil.copy2(p,dest)
+            # descarrega direto para o disco do ComfyUI (sem cópia extra na cache)
+            p=hf_hub_download(repo,f,local_dir=tmp,token=os.environ.get("HF_TOKEN") or None)
+            shutil.move(p,dest);shutil.rmtree(tmp,ignore_errors=True)
             print(f"  ✔ {pasta}/{os.path.basename(dest)}  ({os.path.getsize(dest)/1e9:.1f} GB)"); return
-        except Exception as e: print(f"  ✖ {f}: {e}")
+        except Exception as e:
+            shutil.rmtree(tmp,ignore_errors=True);print(f"  ✖ {os.path.basename(f)}: {str(e)[:160]}")
     falhas.append(f"{pasta} ← {padrao}")
 print("FLUX.1 Kontext [dev]")
 get(["Comfy-Org/flux1-kontext-dev_ComfyUI"], r"diffusion_models/.*kontext.*fp8.*", "diffusion_models", preferir=r"scaled")
