@@ -91,6 +91,16 @@ async def main():
     await pg.evaluate("(()=>{kill(heroKing(0),null)})()");await adv(pg,3);await pg.wait_for_timeout(1200)
     rg2=await pg.evaluate("({over:__S().G.over,title:document.getElementById('endTitle').textContent,resp:__S().G.hero[0].resp})")
     rep(rg['kings']==2 and rg['hero'] and rg2['over'] and rg2['resp'] is None,"Regicídio: Reis heróis, sem renascer",f"{rg}; depois de cair: {rg2}")
+    # voz do conselheiro: todas as falas descodificam e os avisos disparam
+    await pg.evaluate("document.getElementById('bQuit').click()");await pg.wait_for_timeout(150)
+    await pg.evaluate("(()=>{gameMode='normal';startGame(31,{map:'rios',vic:'classico',civ:['mar','planicies']});__S().AIs[1]=null;audioInit();window.__V=[];const o=voz;voz=(id,f)=>{__V.push(id);return o(id,f)}})()")
+    dec=await pg.evaluate("Promise.all(Object.keys(VOZ.data).map(k=>vozBuf(k))).then(a=>a.filter(b=>b&&b.duration>1).length+'/'+a.length)")
+    vv=await pg.evaluate("""(()=>{const s=__S();const tc=s.ents.find(e=>e.o===0&&e.type==='centro');const en=mkUnit(1,'guerreiro',tc.tx+4,tc.ty+1);applyDmg(tc,10,en,false);for(let i=0;i<40;i++)step(1/30);
+      const k=heroKing(0);k.hp-=30;for(let i=0;i<10;i++)step(1/30);return [...new Set(__V)]})()""")
+    rep(dec.split('/')[0]==dec.split('/')[1] and all(x in vv for x in ['centro','ataque','rei']),"Voz do conselheiro",f"falas descodificadas {dec}; avisos: {vv}")
+    # ronda do Rei: anda à volta do posto sem se afastar
+    pr=await pg.evaluate("""(()=>{const k=heroKing(0);stopUnit(k);k.kpost=null;const x0=k.x,y0=k.y;let mx=0,mv=0,last=k.state;for(let i=0;i<30*60;i++){step(1/30);mx=Math.max(mx,Math.hypot(k.x-x0,k.y-y0));if(k.state!==last){if(k.state==='move')mv++;last=k.state}}return{mx:+mx.toFixed(2),mv}})()""")
+    rep(pr['mv']>=3 and pr['mx']<5,"Rei faz ronda perto do posto",f"{pr['mv']} voltas em 60 s; afastou-se no máximo {pr['mx']} casas")
     rep(not errs,"Sem erros de JavaScript","; ".join(errs[:3]) or "nenhum")
     await b.close()
   print(f"\n{sum(1 for r in R if r[0])}/{len(R)} testes passaram");sys.exit(0 if all(r[0] for r in R) else 1)
