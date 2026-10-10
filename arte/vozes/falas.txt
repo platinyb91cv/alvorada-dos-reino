@@ -1,0 +1,16 @@
+# id|frase   (voz do conselheiro, em português de Portugal)
+ataque|Meu senhor, a cidade está a ser atacada!
+centro|O Centro da Vila está sob ataque! Defendei-o!
+rei|Protegei o Rei! O Rei está a ser atacado!
+rei_ferido|Majestade, estais gravemente ferido. Recuai!
+edificio|Perdemos um edifício, meu senhor.
+inimigo|Tropas inimigas à vista!
+exercito|Aproxima-se um exército inimigo. Preparai as defesas!
+casas|Precisamos de mais casas, meu senhor.
+comida|Os celeiros estão quase vazios.
+sino|Toquem o sino! Todos para dentro!
+paz|Podem voltar ao trabalho. O perigo passou.
+idade|Entrámos numa nova idade. O reino prospera!
+missao|Uma nova missão aguarda-vos, meu senhor.
+vitoria|Vitória! O inimigo rendeu-se!
+derrota|O Rei caiu. O reino está perdido.
