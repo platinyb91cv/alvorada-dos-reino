@@ -1,4 +1,4 @@
-# Testes do Rei herói: editor, níveis/XP, aura, poderes, morte e renascer, gravação, Regicídio, painel e desenho.
+# Testes do Rei herói: editor, níveis/XP, aura, poderes, morte = fim do jogo em todos os modos, gravação, Regicídio, painel e desenho.
 import asyncio, os, sys
 from playwright.async_api import async_playwright
 GAME="file://"+os.path.abspath(os.path.join(os.path.dirname(__file__),'..','www','index.html'))
@@ -52,28 +52,39 @@ async def main():
     rep(be['hp']>10,"✨ Bênção real cura",str(be))
     gu=await pg.evaluate("""(()=>{const s=__S();s.P[0].res.food+=500;s.P[0].res.gold+=500;const n0=s.ents.filter(e=>e.o===0&&e.kind==='u').length,f0=s.P[0].res.food;act('power',{p:'guarda'});return{novos:s.ents.filter(e=>e.o===0&&e.kind==='u').length-n0,custo:f0-s.P[0].res.food}})()""")
     rep(gu['novos']==3 and gu['custo']==100,"🛡️ Guarda real",str(gu))
-    # morte e renascer (mantém o nível)
-    lv0=(await pg.evaluate(H))['lv']
-    await pg.evaluate("(()=>{const k=heroKing(0);kill(k,null)})()");await adv(pg,1);d=await pg.evaluate(H)
-    wait=d['resp']-await pg.evaluate("__S().G.time")
-    await adv(pg,wait+1);d2=await pg.evaluate(H)
-    near=await pg.evaluate("(()=>{const k=heroKing(0),tc=__S().ents.find(e=>e.o===0&&e.type==='centro');return k&&Math.hypot(k.x-tc.tx-1.5,k.y-tc.ty-1.5)})()")
-    rep(not d['king'] and d['resp'] and d2['king'] and d2['lv']==lv0 and d2['hp']==d2['max'] and near<6,"Rei cai e renasce no Centro da Vila",f"renasce em {wait:.0f} s; volta com nível {d2['lv']} e vida cheia, a {near:.1f} casas do Centro")
     # gravar e voltar
+    lv0=(await pg.evaluate(H))['lv'];d2=await pg.evaluate(H)
     await pg.evaluate("saveGame(true)");await pg.evaluate("document.getElementById('bQuit').click()");await pg.wait_for_timeout(200)
     line=await pg.evaluate("(()=>{document.getElementById('bCamp').click();return document.querySelector('#cmInfo .krline').textContent})()")
     await pg.click("#bCampGo");await pg.wait_for_timeout(400);d3=await pg.evaluate(H)
     rep(d3['lv']==lv0 and d3['king'] and d3['max']==d2['max'],"Rei gravado com o reino",f"ecrã do reino: '{line}'; depois de carregar: nível {d3['lv']}")
     # gravação antiga do Reino (sem Rei) recebe o Rei
     await pg.evaluate("document.getElementById('bQuit').click()");await pg.wait_for_timeout(150)
-    await pg.evaluate("(()=>{const s=JSON.parse(localStorage.getItem(reinoKey()));delete s.X.hero;s.ents=s.ents.filter(e=>e.t!=='rei');localStorage.setItem(reinoKey(),JSON.stringify(s))})()")
+    await pg.evaluate("(()=>{const s=JSON.parse(localStorage.getItem(reinoKey()));delete s.X.hero;delete s.X.king;s.ents=s.ents.filter(e=>e.t!=='rei');localStorage.setItem(reinoKey(),JSON.stringify(s))})()")
     await pg.evaluate("reinoLoad(false)");await pg.wait_for_timeout(300)
-    d4=await pg.evaluate(H);rep(d4 and d4['king'] and d4['lv']==1,"Reino antigo ganha o Rei",str(d4))
-    # partida normal: sem Rei; Regicídio: sem renascer e perde
-    await pg.evaluate("document.getElementById('bQuit').click()");await pg.wait_for_timeout(150)
-    await pg.click("#bPlay");await pg.click("#bSetupGo");await pg.wait_for_timeout(400)
-    nm=await pg.evaluate("({hero:__S().G.hero||null,king:__S().ents.some(e=>e.type==='rei'),btn:!document.getElementById('bKing').hidden})")
-    rep(nm['hero'] is None and not nm['king'],"Partida normal sem Rei",str(nm))
+    d4=await pg.evaluate(H);rep(d4 and d4['king'] and not (await pg.evaluate("__S().G.over")),"Reino antigo ganha o Rei",str(d4))
+    # o Rei cai no Reino → missão perdida (sem renascer)
+    await pg.evaluate("(()=>{kill(heroKing(0),null)})()");await adv(pg,3);await pg.wait_for_timeout(1200)
+    rd=await pg.evaluate("({over:__S().G.over,title:document.getElementById('endTitle').textContent,txt:document.getElementById('endText').textContent,king:!!heroKing(0)})")
+    rep(rd['over'] and not rd['king'] and 'Rei caiu' in rd['txt'],"Reino: o Rei cai e o jogo acaba",str(rd))
+    # partida normal: os dois têm Rei; matar o Rei rival dá a vitória
+    await pg.evaluate("(()=>{document.getElementById('sEnd').hidden=true;document.getElementById('bQuit').click()})()");await pg.wait_for_timeout(150)
+    await pg.evaluate("(()=>{gameMode='normal';startGame(321,{map:'rios',vic:'classico',civ:['mar','planicies']})})()");await pg.wait_for_timeout(300)
+    nm=await pg.evaluate("({kings:__S().ents.filter(e=>e.type==='rei').length,hero:!!__S().G.hero,btn:!document.getElementById('bKing').hidden})")
+    await pg.evaluate("(()=>{kill(heroKing(1),heroKing(0))})()");await adv(pg,3);await pg.wait_for_timeout(1200)
+    nw=await pg.evaluate("({over:__S().G.over,title:document.getElementById('endTitle').textContent,txt:document.getElementById('endText').textContent})")
+    rep(nm['kings']==2 and nm['hero'] and nw['over'] and 'Rei rival caiu' in nw['txt'],"Partida normal: matar o Rei rival ganha",f"{nm}; {nw}")
+    # partida normal: perder o teu Rei = derrota
+    await pg.evaluate("(()=>{document.getElementById('sEnd').hidden=true;gameMode='normal';startGame(322,{map:'rios',vic:'total',civ:['mar','planicies']})})()");await pg.wait_for_timeout(300)
+    await pg.evaluate("(()=>{kill(heroKing(0),null)})()");await adv(pg,3);await pg.wait_for_timeout(1200)
+    nl=await pg.evaluate("({over:__S().G.over,title:document.getElementById('endTitle').textContent,txt:document.getElementById('endText').textContent,resp:__S().G.hero[0].resp})")
+    rep(nl['over'] and 'teu Rei caiu' in nl['txt'] and nl['resp'] is None,"Guerra total: perder o Rei = derrota, sem renascer",str(nl))
+    # gravação antiga de partida normal (sem Rei) recebe Reis ao carregar
+    await pg.evaluate("(()=>{document.getElementById('sEnd').hidden=true;gameMode='normal';startGame(323,{map:'rios',vic:'classico',civ:['mar','planicies']});saveGame(true)})()")
+    old=await pg.evaluate("(()=>{const K=SAVE_KEY;const s=JSON.parse(localStorage.getItem(K));delete s.X.hero;delete s.X.king;s.ents=s.ents.filter(e=>e.t!=='rei');localStorage.setItem(K,JSON.stringify(s));loadGame(K);return {kings:__S().ents.filter(e=>e.type==='rei').length,over:__S().G.over}})()")
+    await adv(pg,2)
+    rep(old['kings']==2 and not (await pg.evaluate("__S().G.over")),"Partida antiga ganha os Reis",str(old))
+    # Regicídio: Reis heróis, sem renascer e perde
     await pg.evaluate("document.getElementById('bQuit').click()");await pg.wait_for_timeout(150)
     await pg.evaluate("(()=>{gameMode='normal';startGame(123,{map:'rios',vic:'regicidio',civ:['mar','planicies']})})()");await pg.wait_for_timeout(300)
     rg=await pg.evaluate("({kings:__S().ents.filter(e=>e.type==='rei').length,hero:!!__S().G.hero})")

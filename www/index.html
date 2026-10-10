@@ -733,7 +733,7 @@ const DIFF=[
 let gameMode='normal'; // 'normal' ou 'build' (só construir, sem rival)
 // opções da próxima partida (ecrã «Nova partida»)
 const MAPS={rios:{name:'Rios e Mar',desc:'Mar num canto, rio navegável até ao lago central. Equilibrado.'},continental:{name:'Terra firme',desc:'Pouca água e muitos recursos: guerra em terra, sem barcos.'},lagos:{name:'Lagos',desc:'Um grande lago no centro e muitos lagos pequenos. Peixe e docas contam.'},arquipelago:{name:'Arquipélago',desc:'Cada reino na sua ilha. Precisas de barcos de transporte para atacar.'},aleatorio:{name:'Aleatório',desc:'Um dos quatro mapas, à sorte.'}};
-const VICS={classico:{name:'Clássico',desc:'Ganha quem destruir o Centro da Vila e o exército do rival, ou defender uma Maravilha 5 minutos.'},total:{name:'Guerra total',desc:'Só acaba quando a base inimiga cair por completo: todos os edifícios e aldeões. Podes gravar e continuar outro dia.'},regicidio:{name:'Regicídio',desc:'Cada reino tem um Rei. Protege o teu e caça o do rival: quem perde o Rei, perde a partida.'},sobrevivencia:{name:'Sobrevivência',desc:'Sem rival: vagas de invasores cada vez mais fortes. Quantas aguentas?'}};
+const VICS={classico:{name:'Clássico',desc:'Ganha quem destruir o Centro da Vila e o exército do rival, ou defender uma Maravilha 5 minutos. Se o teu Rei cair, perdes.'},total:{name:'Guerra total',desc:'Só acaba quando a base inimiga cair por completo: todos os edifícios e aldeões, ou quando cair o Rei. Podes gravar e continuar outro dia.'},regicidio:{name:'Regicídio',desc:'Só o Rei conta: mesmo sem Centro da Vila continuas a lutar, mas quem perde o Rei perde a partida.'},sobrevivencia:{name:'Sobrevivência',desc:'Sem rival: vagas de invasores cada vez mais fortes. Protege o teu Rei: quantas aguentas?'}};
 let SETUP={vic:'classico',map:'rios',civ:'aleatorio'};try{Object.assign(SETUP,JSON.parse(localStorage.getItem('alv_setup')||'{}'))}catch(e){}
 function setupOpts(seed){const r=mulberry32((seed|0)+99);const pick=a=>a[Math.floor(r()*a.length)];
   const map=SETUP.map==='aleatorio'?pick(['rios','continental','lagos','arquipelago']):SETUP.map;
@@ -4144,7 +4144,7 @@ function command(units,e,w){issueCmd(units,e,w)}
    Turno = 3 passos de 1/30 s (100 ms). As ordens de um turno T são executadas em T+atraso nos dois lados.
    A cada 5 s comparam um resumo (hash) do estado; se divergir, o anfitrião envia o estado completo.
    Se alguém cair, quem fica envia o estado completo quando o outro voltar. */
-const GAME_VER='alvorada-10';
+const GAME_VER='alvorada-11';
 const TURN_STEPS=3,TURN_DT=TURN_STEPS/30,HASH_EVERY=50;
 Object.assign(NET,{ws:null,url:'',slot:0,room:'',token:'',name:'',peer:'',peerOnline:false,game:false,turn:0,delay:2,sent:-1,cmds:[new Map(),new Map()],out:[],
   acc:0,waitT:0,rtt:0,myHash:new Map(),peerHash:new Map(),desync:0,resync:0,epoch:0,lastSnapT:-1,wantSnap:false,awaitSnap:false,lostT:0,pingT:0,closing:false,stats:{turns:0,sent:0,recv:0,bytes:0}});
@@ -4993,16 +4993,16 @@ function startGame(seed,opts){
   vis=new Uint8Array(W*H);
   fogCanvas=document.createElement('canvas');fogCanvas.width=W;fogCanvas.height=H;fogCtx=fogCanvas.getContext('2d');fogImg=fogCtx.createImageData(W,H);
   if(G.vic==='sobrevivencia'){G.sdiff=difficulty;G.surv={wave:0,next:240}}
-  if(G.vic==='regicidio')G.king=1;
+  G.king=2;G.hero=[heroNew(),heroNew()]; // em todos os modos há Rei; se cair, a partida acaba
   for(let o=0;o<2;o++){
     if(mode==='build'&&o!==ME)continue; // sem reino rival
     if(G.vic==='sobrevivencia'&&o===1)continue; // os invasores não têm base
     if(G.reino&&o===1)continue; // no reino os inimigos chegam com as missões
     const s=G.starts[o];const tc=mkBld(o,'centro',s.x-1,s.y-1,true);
     for(let k=0;k<3;k++){const p=freeNear(tc.tx,tc.ty,3,3);mkUnit(o,'aldeao',p.x+.5,p.y+.5)}
-    if(G.vic==='regicidio'||NET.on||G.reino){const p=freeFront(tc.tx,tc.ty,3,3);mkUnit(o,'rei',p.x+.5,p.y+.5)}
+    {const p=freeFront(tc.tx,tc.ty,3,3);mkUnit(o,'rei',p.x+.5,p.y+.5);G.hero[o].k=1}
   }
-  if(G.vic==='regicidio'||NET.on||G.reino)G.hero=[heroNew(),heroNew()];kingLooksInit();
+  kingLooksInit();
   spawnFauna();spawnFish();if(G.vic!=='sobrevivencia'&&mode!=='build')placeRelics();
   aiInit();recount();
   if(!SPR.oak)makeSprites();buildTerrain();resetChunks();FCACHE.clear();CLOUDS=null;setTimeout(bldWarm,0);
@@ -5089,7 +5089,7 @@ function loadGame(key){
   recount();updVis();
   audioGameStart();running=true;paused=false;speed=1;$('bSpeed').textContent='1×';netModeUI();document.body.classList.add('ingame');$('bAlert').hidden=true;try{objRender()}catch(e){$('objBox').hidden=true}
   for(const id of ['sMenu','sEnd','sHelp','sPause','sOnline'])$(id).hidden=true;
-  kingLooksInit();uiDirty=true;resDirty=true;toast('Jogo carregado');tutShow();
+  kingRulesUp();kingLooksInit();uiDirty=true;resDirty=true;toast('Jogo carregado');tutShow();
   return true;
 }
 function mobileLandscape(){if(isNative())return;try{if(!matchMedia('(pointer:coarse)').matches)return;const d=document.documentElement;const go=()=>{try{screen.orientation&&screen.orientation.lock&&screen.orientation.lock('landscape').catch(()=>{})}catch(e){}};if(!document.fullscreenElement&&d.requestFullscreen)d.requestFullscreen({navigationUI:'hide'}).then(go).catch(()=>{});else go()}catch(e){}}
@@ -5214,7 +5214,14 @@ function tutArrow(c,t){const T=G&&G.tut;if(!T)return;const st=TUT_STEPS[T.i];if(
 function showMenu(){try{dailySub();const M=reinoMeta();$('campSub').textContent=M&&reinoHas()?(M.n<6?'Missão ':'Capítulo ')+(M.n+1)+' · ⭐ '+(M.gl||0):'A tua cidade para sempre'}catch(e){}$('sSetup').hidden=true;$('sCamp').hidden=true;menuBgStart();$('coach').hidden=true;document.body.classList.remove('coaching');document.body.classList.remove('ingame');if(!ACC.user&&!ACC.preview){showLogin();return}accChip();$('sMenu').hidden=false;$('bCont').hidden=!hasSave();if(hasSave()){delete $('bCont').dataset.cloud;$('bCont').lastChild.textContent='Continuar partida'}else cloudCheck();audioToMenu()}
 // procura uma unidade de o, mesmo dentro de edifícios ou barcos
 function hasUnitWhere(o,f){for(const e of ents){if(e.o!==o)continue;if(e.kind==='u'&&f(e))return true;const inn=e.garr||e.cargo;if(inn)for(const u of inn)if(!u.dead&&f(u))return true}return false}
+// o Rei de o caiu (só conta para quem começou com Rei)
+function kingLost(o){const h=G.king>=2&&G.hero&&G.hero[o];return !!(h&&h.k&&!hasUnitWhere(o,u=>u.d.king))}
+// jogos gravados antes desta regra: todos recebem Rei e ele deixa de renascer
+function kingRulesUp(){if(G.king>=2)return;G.king=2;if(!G.hero)G.hero=[heroNew(),heroNew()];
+  for(let o=0;o<2;o++){const h=G.hero[o]||(G.hero[o]=heroNew());h.resp=null;if(hasUnitWhere(o,u=>u.d.king)){h.k=1;continue}
+    if(G.mode==='build'&&o!==ME)continue;const tc=ents.find(e=>e.o===o&&e.kind==='b'&&e.type==='centro'&&e.done);if(tc&&heroSpawnKing(o,tc))h.k=1}}
 function lostKingdom(o){
+  if(kingLost(o))return true;
   if(G.vic==='total')return !ents.some(e=>e.o===o&&e.kind==='b'&&e.done&&!e.d.wall&&!e.d.gate&&!e.d.farm)&&!hasUnitWhere(o,u=>u.type==='aldeao');
   if(G.vic==='regicidio'&&G.king)return !hasUnitWhere(o,u=>u.d.king);
   return !ents.some(e=>e.o===o&&e.kind==='b'&&e.type==='centro')&&!hasUnitWhere(o,()=>true)}
@@ -5226,7 +5233,7 @@ function checkEnd(){
     if(G.mode==='build'&&o!==ME)continue;
     if(G.vic==='sobrevivencia'&&o===1)continue;
     if(G.camp!=null&&o!==0)continue;
-    if(lostKingdom(o)){G.over=true;const g0=G,why=G.vic==='regicidio'?'king':G.vic==='sobrevivencia'?'surv':G.vic==='total'?'total':null;setTimeout(()=>{if(G===g0&&running)endGame(o!==ME,false,why)},900);return}
+    if(lostKingdom(o)){G.over=true;const g0=G,why=kingLost(o)||G.vic==='regicidio'?'king':G.vic==='sobrevivencia'?'surv':G.vic==='total'?'total':null;setTimeout(()=>{if(G===g0&&running)endGame(o!==ME,false,why)},900);return}
   }
   if(G.vic==='sobrevivencia'&&G.surv&&G.surv.wave>=SURV_WIN&&G.surv.next>0&&!ents.some(e=>e.o===1&&e.kind==='u')){G.over=true;const g0=G;setTimeout(()=>{if(G===g0&&running)endGame(true,false,'surv_win')},900)}
 }
@@ -5333,7 +5340,8 @@ function objRender(){const box=$('objBox');if(G.reino){const R=G.reino,m=R.ms;$(
   $('objTitle').textContent='Missão '+(G.camp+1)+' · '+CAMP[G.camp].t;$('objList').innerHTML=ob.map(o=>`<li class="${o.ok?'ok':''}">${esc(o.d)}</li>`).join('');
   if(G.objShow==null)G.objShow=1;box.hidden=!G.objShow}
 function campCheck(){const M=CAMP[G.camp];if(!M)return false;
-  if(lostKingdom(0)){G.over=true;const g0=G;setTimeout(()=>{if(G===g0&&running)endGame(false,false,M.vic==='regicidio'?'king':null)},900);return true}
+  if(lostKingdom(0)){G.over=true;const g0=G;setTimeout(()=>{if(G===g0&&running)endGame(false,false,kingLost(0)||M.vic==='regicidio'?'king':null)},900);return true}
+  if(kingLost(1)){G.over=true;const g0=G;setTimeout(()=>{if(G===g0&&running)endGame(true,false,'king')},900);return true}
   const ob=campObjs();if(ob.length&&ob.every(o=>o.ok)){G.over=true;const g0=G;setTimeout(()=>{if(G===g0&&running)endGame(true,false,'camp')},900);return true}
   return false}
 let campSel=0;
@@ -5389,7 +5397,7 @@ function heroNew(){return{lv:1,xp:0,cd:{grito:0,bencao:0,guarda:0},wc:null,resp:
 function heroKing(o){for(const e of ents)if(e.o===o&&e.kind==='u'&&e.d.king)return e;return null}
 function heroMaxHp(lv){return Math.round(UNITS.rei.hp*(1+.12*(lv-1)))}
 function heroSpawnKing(o,near){const tc=near||ents.find(e=>e.o===o&&e.kind==='b'&&e.type==='centro'&&e.done);if(!tc)return null;const p=freeFront(tc.tx,tc.ty,tc.w,tc.h);if(!p)return null;
-  const k=mkUnit(o,'rei',p.x+.5,p.y+.5);setMover(k);const h=G.hero&&G.hero[o];if(h){k.max=heroMaxHp(h.lv);k.hp=k.max}return k}
+  const k=mkUnit(o,'rei',p.x+.5,p.y+.5);setMover(k);const h=G.hero&&G.hero[o];if(h){k.max=heroMaxHp(h.lv);k.hp=k.max;h.k=1}return k}
 // experiência: inimigos que caem perto do Rei (ou pela mão dele)
 function heroXP(e,src){if(!G.hero||!src||src.o==null||src.o===e.o||e.o===2||!G.hero[src.o])return;const o=src.o,h=G.hero[o];if(h.lv>=HERO_MAX&&!src.d.king)return;
   const k=src.d&&src.d.king?src:heroKing(o);if(!k)return;const c=e.kind==='u'?e:{x:e.tx+e.w/2,y:e.ty+e.h/2};if(src!==k&&hyp(c.x-k.x,c.y-k.y)>HERO_AURA+2)return;
@@ -5408,7 +5416,12 @@ function heroAtk(u,a){if(!G||!G.hero||u.kind!=='u'||!G.hero[u.o])return a;const 
 function heroArm(e,a){if(!G||!G.hero||!G.hero[e.o])return a;const h=G.hero[e.o];if(e.d.king)a+=Math.floor(h.lv/3);else if(h.lv>=5&&e.d.mil&&heroAura(e))a+=1;return a}
 function heroSpd(u,s){return G&&G.hero&&heroWC(u)?s*1.25:s}
 // ciclo (simulação)
-function heroTick(dt){if(!G.hero)return;
+let kingWarn={t:-99,hp:null,id:null}; // aviso (só interface) quando o teu Rei está a ser ferido
+function kingWarnTick(){if(G.time<kingWarn.t)kingWarn.t=-99;const k=heroKing(ME);if(!k){kingWarn.hp=null;return}
+  if(kingWarn.id!==k.id){kingWarn.id=k.id;kingWarn.hp=k.hp}
+  if(k.hp<kingWarn.hp-.5&&G.time-kingWarn.t>15){kingWarn.t=G.time;toast('👑 O teu Rei está a ser atacado! Se ele cair, perdes a partida.',true);try{snd('alarm',k.x,k.y,{force:1})}catch(e){}fx.push({t:0,life:2,type:'ping',x:k.x,y:k.y,col:'#ff5a3a'})}
+  kingWarn.hp=k.hp}
+function heroTick(dt){if(!G.hero)return;kingWarnTick();
   for(let o=0;o<2;o++){const h=G.hero[o];if(!h)continue;const k=heroKing(o);
     for(const p in h.cd)if(h.cd[p]>0)h.cd[p]=Math.max(0,h.cd[p]-dt);
     if(h.wc&&G.time>=h.wc.until)h.wc=null;
@@ -5417,9 +5430,8 @@ function heroTick(dt){if(!G.hero)return;
       if(h.lv>=5&&(G.time%1)<dt)for(const u of ents)if(u.o===o&&u.kind==='u'&&u.d.mil&&u.hp<u.max&&hyp(u.x-k.x,u.y-k.y)<=HERO_AURA)u.hp=Math.min(u.max,u.hp+.6+h.lv*.1)}
     else{h.kx=null;h.ky=null;
       if(hasUnitWhere(o,u=>u.d.king))continue; // abrigado num edifício
-      if(G.vic==='regicidio')continue;          // no Regicídio não renasce
-      if(h.resp==null){h.resp=G.time+40+h.lv*5;if(o===ME)toast('👑 O teu Rei caiu! Renasce no Centro da Vila em '+Math.round(h.resp-G.time)+' s.',true)}
-      else if(G.time>=h.resp){const nk=heroSpawnKing(o);if(nk){h.resp=null;if(o===ME){toast('👑 O teu Rei voltou ao Centro da Vila.');fx.push({t:0,life:2,type:'ping',x:nk.x,y:nk.y,col:'#ffd447'})}}}}}}
+      // o Rei já não renasce: a partida acaba (ver kingLost)
+      }}}
 function heroPower(o,p){const h=G.hero&&G.hero[o],P0=HERO_POW[p];if(!h||!P0)return;const k=heroKing(o);
   const no=t=>{if(o===ME)toast(t,true)};
   if(!k)return no('O Rei não está no campo de batalha');if(h.lv<P0.lv)return no(P0.n+' abre no nível '+P0.lv);if(h.cd[p]>0)return no(P0.n+' pronto em '+Math.ceil(h.cd[p])+' s');
@@ -5639,7 +5651,7 @@ function reinoDone(){const R=G.reino,m=R.ms;const prize=reinoPrize(m);heroGain(0
   // ponto de controlo: se o reino cair, recomeça daqui
   try{saveGame(true);const s=localStorage.getItem(reinoKey());if(s&&!R.ms)localStorage.setItem(reinoCkKey(),s)}catch(e){}cloudSave(true)}
 function reinoFail(txt){if(G.over)return;G.over=true;const g0=G;G.reino.why=txt;setTimeout(()=>{if(G===g0&&running)endGame(false,false,'reino')},900)}
-function reinoCheckFall(){if(G.over)return;const lost=!ents.some(e=>e.o===0&&e.kind==='b'&&e.done&&!e.d.wall&&!e.d.gate&&!e.d.farm)&&!hasUnitWhere(0,u=>u.type==='aldeao');
+function reinoCheckFall(){if(G.over)return;if(kingLost(0)){reinoFail('O teu Rei caiu. Sem Rei, o reino não pode continuar.');return}const lost=!ents.some(e=>e.o===0&&e.kind==='b'&&e.done&&!e.d.wall&&!e.d.gate&&!e.d.farm)&&!hasUnitWhere(0,u=>u.type==='aldeao');
   if(lost)reinoFail('A tua última casa caiu e o povo fugiu.')}
 // --- abrir, fundar, continuar ---
 function reinoFound(){mobileLandscape();netLeaveGame();gameMode='normal';const d0=difficulty;difficulty=1;const sd=Math.floor(Math.random()*1e9);
