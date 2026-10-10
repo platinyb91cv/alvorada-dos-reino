@@ -174,7 +174,7 @@ echo "Nota: os dois juntos não cabem na memória da GPU ao mesmo tempo a trabal
 EOF
 cat > "$BASE/parar-ia.sh" <<'EOF'
 #!/usr/bin/env bash
-pkill -f "ComfyUI/main.py" && echo "ComfyUI parado"; pkill -f "gradio_app.py" && echo "Hunyuan3D parado"; true
+pkill -f "main.py --listen 127.0.0.1 --port 8188" && echo "ComfyUI parado"; pkill -f "gradio_app.py" && echo "Hunyuan3D parado"; true
 EOF
 chmod +x "$BASE/iniciar-ia.sh" "$BASE/parar-ia.sh"
 ok "Pronto!"
