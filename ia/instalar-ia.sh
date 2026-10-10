@@ -52,7 +52,7 @@ else ok "Disco livre: ${LIVRE} GB"; fi
 passo "2/6 Pacotes do sistema"
 if command -v apt-get >/dev/null; then
   $SUDO apt-get update -y
-  $SUDO DEBIAN_FRONTEND=noninteractive apt-get install -y git git-lfs wget curl build-essential ffmpeg libgl1 libglib2.0-0 ninja-build unzip
+  $SUDO env DEBIAN_FRONTEND=noninteractive apt-get install -y git git-lfs wget curl build-essential ffmpeg libgl1 libglib2.0-0 ninja-build unzip
 else aviso "Sistema sem apt: instala à mão git, ffmpeg, build-essential e ninja."; fi
 if ! command -v uv >/dev/null; then curl -LsSf https://astral.sh/uv/install.sh | sh; fi
 export PATH="$HOME/.local/bin:$HOME/.cargo/bin:$PATH"
@@ -61,7 +61,7 @@ command -v uv >/dev/null && ok "uv $(uv --version | cut -d' ' -f2)" || { erro "F
 # ---------------------------------------------------------------------
 passo "3/6 ComfyUI"
 cd "$BASE"
-[ -d ComfyUI ] || git clone --depth 1 https://github.com/comfyanonymous/ComfyUI.git
+[ -f ComfyUI/main.py ] || { rm -rf ComfyUI; git clone --depth 1 https://github.com/comfyanonymous/ComfyUI.git; }
 cd ComfyUI && git pull --ff-only || true
 [ -d .venv ] || uv venv -p 3.12 .venv
 source .venv/bin/activate
@@ -69,8 +69,8 @@ uv pip install --index-url "https://download.pytorch.org/whl/$TORCH_IDX" torch t
 uv pip install -r requirements.txt
 uv pip install "huggingface_hub[hf_transfer]" hf_transfer opencv-python-headless imageio-ffmpeg
 cd custom_nodes
-[ -d ComfyUI-Manager ] || git clone --depth 1 https://github.com/ltdrdata/ComfyUI-Manager.git
-[ -d ComfyUI-VideoHelperSuite ] || git clone --depth 1 https://github.com/Kosinkadink/ComfyUI-VideoHelperSuite.git
+[ -f ComfyUI-Manager/__init__.py ] || rm -rf ComfyUI-Manager; [ -d ComfyUI-Manager ] || git clone --depth 1 https://github.com/ltdrdata/ComfyUI-Manager.git
+[ -f ComfyUI-VideoHelperSuite/__init__.py ] || rm -rf ComfyUI-VideoHelperSuite; [ -d ComfyUI-VideoHelperSuite ] || git clone --depth 1 https://github.com/Kosinkadink/ComfyUI-VideoHelperSuite.git
 for d in ComfyUI-Manager ComfyUI-VideoHelperSuite; do [ -f "$d/requirements.txt" ] && uv pip install -r "$d/requirements.txt"; done
 cd ..
 python -c "import torch;print('GPU:',torch.cuda.get_device_name(0),'| CUDA ok' if torch.cuda.is_available() else 'SEM CUDA')"
@@ -143,7 +143,7 @@ deactivate
 if [ "${SEM3D:-0}" != "1" ]; then
 passo "5/6 Hunyuan3D 2.1 (imagem → 3D)"
 cd "$BASE"
-[ -d Hunyuan3D-2.1 ] || git clone --depth 1 https://github.com/Tencent-Hunyuan/Hunyuan3D-2.1.git
+[ -f Hunyuan3D-2.1/requirements.txt ] || { rm -rf Hunyuan3D-2.1; git clone --depth 1 https://github.com/Tencent-Hunyuan/Hunyuan3D-2.1.git; }
 cd Hunyuan3D-2.1
 [ -d .venv ] || uv venv -p 3.10 .venv
 source .venv/bin/activate
