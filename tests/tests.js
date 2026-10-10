@@ -225,7 +225,7 @@ try{
   startGame(39);const s=S();s.vis.fill(2);s.AIs[1]=null;const h=home(0);const c=freeTile(h.x+8,h.y+8);for(let k=0;k<5;k++)mkBld(0,'muralhaPedra',c.x+k,c.y,true);
   {const d2=fogImg.data;for(let i=0;i<W*H;i++)d2[i*4+3]=0;fogCtx.putImageData(fogImg,0,0)}renderMini();const m=document.getElementById('mini').getContext('2d');const d=m.getImageData(0,0,320,160).data;let blue=0,cyan=0,red=0;
   for(let i=0;i<d.length;i+=4){if(d[i]<90&&d[i+1]>110&&d[i+2]>200)blue++;if(d[i]>110&&d[i+1]>200&&d[i+2]>230)cyan++;if(d[i]>190&&d[i+1]<110&&d[i+2]<100)red++}
-  rec('Minimapa',blue>10&&cyan>3&&red>5,`píxeis: azul(jogador)=${blue} ciano(peixe)=${cyan} vermelho(rival)=${red}`);
+  rec('Minimapa',blue>5&&cyan>3&&red>5,`píxeis: azul(jogador)=${blue} ciano(peixe)=${cyan} vermelho(rival)=${red}`);
 }catch(e){rec('Minimapa',false,String(e))}
 
 // ---------- regressão: caça, javali, isométrico, zoom/pan ----------

@@ -1684,7 +1684,8 @@ function placeBuilding(o,type,tx,ty,builders){
 /* ---------------- população ---------------- */
 function recount(){
   for(const p of P){p.pop=0;p.popCap=0}
-  for(const e of ents){if(e.kind==='u'){P[e.o].pop++;if(e.cargo)P[e.o].pop+=e.cargo.length}else if(e.kind==='b'){if(e.garr)P[e.o].pop+=e.garr.length;if(e.done&&e.d.pop)P[e.o].popCap+=e.d.pop}}
+  const nk=a=>a.reduce((n,u)=>n+(u.d&&u.d.king?0:1),0); // o Rei não ocupa população
+  for(const e of ents){if(e.kind==='u'){if(!e.d.king)P[e.o].pop++;if(e.cargo)P[e.o].pop+=nk(e.cargo)}else if(e.kind==='b'){if(e.garr)P[e.o].pop+=nk(e.garr);if(e.done&&e.d.pop)P[e.o].popCap+=e.d.pop}}
   for(const p of P)p.popCap=Math.min(100,p.popCap);
 }
 
@@ -4144,7 +4145,7 @@ function command(units,e,w){issueCmd(units,e,w)}
    Turno = 3 passos de 1/30 s (100 ms). As ordens de um turno T são executadas em T+atraso nos dois lados.
    A cada 5 s comparam um resumo (hash) do estado; se divergir, o anfitrião envia o estado completo.
    Se alguém cair, quem fica envia o estado completo quando o outro voltar. */
-const GAME_VER='alvorada-11';
+const GAME_VER='alvorada-12';
 const TURN_STEPS=3,TURN_DT=TURN_STEPS/30,HASH_EVERY=50;
 Object.assign(NET,{ws:null,url:'',slot:0,room:'',token:'',name:'',peer:'',peerOnline:false,game:false,turn:0,delay:2,sent:-1,cmds:[new Map(),new Map()],out:[],
   acc:0,waitT:0,rtt:0,myHash:new Map(),peerHash:new Map(),desync:0,resync:0,epoch:0,lastSnapT:-1,wantSnap:false,awaitSnap:false,lostT:0,pingT:0,closing:false,stats:{turns:0,sent:0,recv:0,bytes:0}});
@@ -4999,7 +5000,7 @@ function startGame(seed,opts){
     if(G.vic==='sobrevivencia'&&o===1)continue; // os invasores não têm base
     if(G.reino&&o===1)continue; // no reino os inimigos chegam com as missões
     const s=G.starts[o];const tc=mkBld(o,'centro',s.x-1,s.y-1,true);
-    for(let k=0;k<3;k++){const p=freeNear(tc.tx,tc.ty,3,3);mkUnit(o,'aldeao',p.x+.5,p.y+.5)}
+    for(let k=0;k<4;k++){const p=freeNear(tc.tx,tc.ty,3,3);mkUnit(o,'aldeao',p.x+.5,p.y+.5)} // começa com 4 aldeões + o Rei
     {const p=freeFront(tc.tx,tc.ty,3,3);mkUnit(o,'rei',p.x+.5,p.y+.5);G.hero[o].k=1}
   }
   kingLooksInit();
