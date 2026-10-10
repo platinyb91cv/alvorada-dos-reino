@@ -124,6 +124,9 @@ body:not(.ingame) #grp{display:none}
 #toast{position:absolute;left:50%;top:calc(env(safe-area-inset-top,0px) + 46px);transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:4px;z-index:6;pointer-events:none}
 #toast div{background:rgba(26,19,13,.9);border:1px solid var(--rim);padding:4px 12px;border-radius:4px;font-size:14px;animation:fade 3s forwards;white-space:nowrap}
 #toast div.bad{border-color:var(--bad);color:#ffd2cc}
+/* com os objetivos à esquerda, as mensagens passam para o espaço livre entre eles e os botões da direita */
+body:has(#objBox:not([hidden])):not(.coaching) #toast{left:calc(env(safe-area-inset-left,0px) + min(320px,46vw) + 22px);right:calc(env(safe-area-inset-right,0px) + 120px);transform:none}
+body:has(#objBox:not([hidden])):not(.coaching) #toast div{white-space:normal;text-align:center}
 @keyframes fade{0%{opacity:0;transform:translateY(-4px)}8%{opacity:1;transform:none}80%{opacity:1}100%{opacity:0}}
 
 /* ecrãs */
@@ -888,6 +891,16 @@ function evictUnits(b){
   for(const u of ents){if(u.kind!=='u')continue;const tx=Math.floor(u.x),ty=Math.floor(u.y);
     if(tx>=b.tx&&tx<b.tx+b.w&&ty>=b.ty&&ty<b.ty+b.h){const p=freeNear(b.tx,b.ty,b.w,b.h);if(p){u.x=p.x+.5;u.y=p.y+.5;u.path=null}}}
 }
+// casa livre à frente do edifício (lado da câmara), para o Rei não aparecer “em cima” do telhado
+function freeFront(tx,ty,w,h){const cx=tx+w/2-.5,cy=ty+h/2-.5;
+  for(let r=1;r<12;r++){let best=null,bs=-1e9;
+    for(let y=ty-r;y<ty+h+r;y++)for(let x=tx-r;x<tx+w+r;x++){
+      if(x>tx-r&&x<tx+w+r-1&&y>ty-r&&y<ty+h+r-1)continue;
+      if(!(inb(x,y)&&blk[idx(x,y)]===0&&!resAt[idx(x,y)]))continue;
+      const sc=(x+y)-(cx+cy)-Math.abs((x-y)-(cx-cy))*.6-(ents.some(e=>e.kind==='u'&&Math.floor(e.x)===x&&Math.floor(e.y)===y)?3:0);
+      if(sc>bs){bs=sc;best={x,y}}}
+    if(best)return best}
+  return freeNear(tx,ty,w,h)}
 function freeNear(tx,ty,w,h){
   for(let r=1;r<12;r++){
     const cand=[];
@@ -4131,7 +4144,7 @@ function command(units,e,w){issueCmd(units,e,w)}
    Turno = 3 passos de 1/30 s (100 ms). As ordens de um turno T são executadas em T+atraso nos dois lados.
    A cada 5 s comparam um resumo (hash) do estado; se divergir, o anfitrião envia o estado completo.
    Se alguém cair, quem fica envia o estado completo quando o outro voltar. */
-const GAME_VER='alvorada-9';
+const GAME_VER='alvorada-10';
 const TURN_STEPS=3,TURN_DT=TURN_STEPS/30,HASH_EVERY=50;
 Object.assign(NET,{ws:null,url:'',slot:0,room:'',token:'',name:'',peer:'',peerOnline:false,game:false,turn:0,delay:2,sent:-1,cmds:[new Map(),new Map()],out:[],
   acc:0,waitT:0,rtt:0,myHash:new Map(),peerHash:new Map(),desync:0,resync:0,epoch:0,lastSnapT:-1,wantSnap:false,awaitSnap:false,lostT:0,pingT:0,closing:false,stats:{turns:0,sent:0,recv:0,bytes:0}});
@@ -4987,7 +5000,7 @@ function startGame(seed,opts){
     if(G.reino&&o===1)continue; // no reino os inimigos chegam com as missões
     const s=G.starts[o];const tc=mkBld(o,'centro',s.x-1,s.y-1,true);
     for(let k=0;k<3;k++){const p=freeNear(tc.tx,tc.ty,3,3);mkUnit(o,'aldeao',p.x+.5,p.y+.5)}
-    if(G.vic==='regicidio'||NET.on||G.reino){const p=freeNear(tc.tx,tc.ty,3,3);mkUnit(o,'rei',p.x+.5,p.y+.5)}
+    if(G.vic==='regicidio'||NET.on||G.reino){const p=freeFront(tc.tx,tc.ty,3,3);mkUnit(o,'rei',p.x+.5,p.y+.5)}
   }
   if(G.vic==='regicidio'||NET.on||G.reino)G.hero=[heroNew(),heroNew()];kingLooksInit();
   spawnFauna();spawnFish();if(G.vic!=='sobrevivencia'&&mode!=='build')placeRelics();
@@ -5375,7 +5388,7 @@ function heroOn(){return !!(G&&G.hero)}
 function heroNew(){return{lv:1,xp:0,cd:{grito:0,bencao:0,guarda:0},wc:null,resp:null,kills:0}}
 function heroKing(o){for(const e of ents)if(e.o===o&&e.kind==='u'&&e.d.king)return e;return null}
 function heroMaxHp(lv){return Math.round(UNITS.rei.hp*(1+.12*(lv-1)))}
-function heroSpawnKing(o,near){const tc=near||ents.find(e=>e.o===o&&e.kind==='b'&&e.type==='centro'&&e.done);if(!tc)return null;const p=freeNear(tc.tx,tc.ty,tc.w,tc.h);if(!p)return null;
+function heroSpawnKing(o,near){const tc=near||ents.find(e=>e.o===o&&e.kind==='b'&&e.type==='centro'&&e.done);if(!tc)return null;const p=freeFront(tc.tx,tc.ty,tc.w,tc.h);if(!p)return null;
   const k=mkUnit(o,'rei',p.x+.5,p.y+.5);setMover(k);const h=G.hero&&G.hero[o];if(h){k.max=heroMaxHp(h.lv);k.hp=k.max}return k}
 // experiência: inimigos que caem perto do Rei (ou pela mão dele)
 function heroXP(e,src){if(!G.hero||!src||src.o==null||src.o===e.o||e.o===2||!G.hero[src.o])return;const o=src.o,h=G.hero[o];if(h.lv>=HERO_MAX&&!src.d.king)return;
