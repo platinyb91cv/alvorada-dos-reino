@@ -838,11 +838,16 @@ function genMap(seed){
       if(!inb(x,y))continue;const i=idx(x,y);if(resAt[i]){byId.delete(resAt[i].id);resAt[i]=null;blk[i]=0}if(terr[i]===1){terr[i]=0;blk[i]=0}
     }
     // conectividade por terra e por água (lago ↔ mar)
-    if(MT==='arquipelago'){let ok=true;for(const st of G.starts){let n=0;for(let y=st.y-12;y<=st.y+12;y++)for(let x=st.x-12;x<=st.x+12;x++)if(inb(x,y)&&terr[idx(x,y)]!==1)n++;if(n<330)ok=false}if(ok)return true;continue}
+    if(MT==='arquipelago'){let ok=true;for(const st of G.starts){let n=0;for(let y=st.y-12;y<=st.y+12;y++)for(let x=st.x-12;x<=st.x+12;x++)if(inb(x,y)&&terr[idx(x,y)]!==1)n++;if(n<330)ok=false;if(ok&&!coastReach(st))ok=false}if(ok)return true;continue}
     if(connected(G.starts[0],G.starts[1])&&(!G.sea||waterLinked(G.lake,G.sea)))return true;
   }
   return true;
 }
+// a partir do início chega-se a pé ao mar (sem atravessar floresta, pedra ou ouro): para a doca e para o inimigo poder desembarcar
+function coastReach(st){const seen=new Uint8Array(W*H),q=[];const s0=idx(st.x,st.y);seen[s0]=1;q.push(s0);let coast=0;
+  for(let h=0;h<q.length;h++){const i=q[h],x=i%W,y=(i/W)|0;let wet=false;for(const [dx,dy] of [[1,0],[-1,0],[0,1],[0,-1]]){const nx=x+dx,ny=y+dy;if(!inb(nx,ny))continue;const j=idx(nx,ny);
+    if(terr[j]===1){wet=true;continue}if(!seen[j]&&blk[j]===0){seen[j]=1;q.push(j)}}if(wet&&++coast>=12)return true}
+  return false}
 function waterLinked(a,b){const st=[];for(let y=Math.floor(a.y-2);y<=a.y+2;y++)for(let x=Math.floor(a.x-2);x<=a.x+2;x++)if(inb(x,y)&&terr[idx(x,y)]===1)st.push(idx(x,y));
   if(!st.length)return false;const seen=new Uint8Array(W*H);for(const i of st)seen[i]=1;const q=st.slice();
   while(q.length){const i=q.pop();const x=i%W,y=(i/W)|0;if(hyp(x-b.x,y-b.y)<b.r*.8)return true;for(const [dx,dy] of [[1,0],[-1,0],[0,1],[0,-1]]){const nx=x+dx,ny=y+dy;if(!inb(nx,ny))continue;const j=idx(nx,ny);if(!seen[j]&&terr[j]===1){seen[j]=1;q.push(j)}}}
@@ -1019,7 +1024,7 @@ function findPath(sx,sy,g,inside,u){
   const goal=(x,y)=>{const {dx,dy}=rdist(x,y,g);return inside?(dx===0&&dy===0):(dx<=1&&dy<=1&&!(dx===0&&dy===0))};
   PF_REACHED=true;
   if(goal(sx,sy))return[];
-  const EXPMAX=MV.nav?40000:7000;
+  const EXPMAX=MV.nav?40000:u&&u.state==='board'?24000:7000; // embarcar pode exigir contornar muralhas
   while(heap.length&&exp<EXPMAX){
     const [,c]=hpop();if(closedS[c]===gen)continue;closedS[c]=gen;exp++;
     const cx=c%W,cy=(c/W)|0;
@@ -1858,7 +1863,11 @@ function aiRun(AI,dt){
   else if(!ew&&AI.t>=AI.nextAttack&&((army.length>=AI.wave&&(!enemyWalled||siegeN>0||army.length>=AI.wave*1.6))||(AI.t>AI.nextAttack+240&&army.length>=Math.max(5,AI.wave*.5))||(AI.t>2700&&army.length>=Math.min(4,AI.wave)))){
     const w0=AI.wave;AI.attacking=true;AI.nextAttack=AI.t+D.gap[0]+rnd()*(D.gap[1]-D.gap[0]);AI.wave=Math.min(D.waveMax,AI.wave+D.grow);
     if(AI.landLink){const tgt=aiTarget(en,home);if(tgt){const c=centerOf(tgt);groupMove(army,c.x,c.y,true,'linha')}}
-    else if(!AI.inv&&!aiInvade(AI,me,army)){AI.attacking=false;AI.nextAttack=AI.t+30;AI.wave=w0}
+    else if(!AI.inv&&!aiInvade(AI,me,army)){
+      // já há tropas desembarcadas na ilha inimiga: continuam o ataque em vez de ficarem paradas
+      const away=army.filter(a=>!a.d.naval&&landOf(a.x,a.y)!==landOf(home.x,home.y));
+      if(away.length){const tgt=aiTarget(en,{x:away[0].x,y:away[0].y});if(tgt){const c=centerOf(tgt);groupMove(away,c.x,c.y,true,away.length>3?'linha':'livre')}}
+      else{AI.attacking=false;AI.nextAttack=AI.t+30;AI.wave=w0}}
   }else if(AI.attacking){
     const idle=army.filter(a=>a.state==='idle'&&(AI.landLink||landOf(a.x,a.y)!==landOf(home.x,home.y)));
     if(idle.length){const tgt=aiTarget(en,{x:idle[0].x,y:idle[0].y});if(tgt){const c=centerOf(tgt);groupMove(idle,c.x,c.y,true,idle.length>3?'linha':'livre')}}
@@ -1896,7 +1905,7 @@ function bigLakeTile(home){
 }
 function aiNaval(AI,me,en,p,vills,navy,blds,count){
   const home=G.starts[me];
-  if(!AI.lakeTile){AI.lakeTile=bigLakeTile(home);if(!AI.lakeTile||hyp(AI.lakeTile.x-home.x,AI.lakeTile.y-home.y)>26)AI.lakeTile=coastWater(home,30,G.starts[en])||AI.lakeTile}
+  if(!AI.lakeTile){AI.lakeTile=bigLakeTile(home);if(!AI.lakeTile||hyp(AI.lakeTile.x-home.x,AI.lakeTile.y-home.y)>26)AI.lakeTile=coastWater(home,30,G.starts[en],reachFrom(home.x,home.y))||coastWater(home,30,G.starts[en])||AI.lakeTile}
   const docks=blds.filter(b=>b.type==='doca');
   if(AI.lakeTile&&!docks.length&&vills.length>=(G.map==='arquipelago'?8:12)&&p.res.wood>=160&&!AI.dockFail){if(!aiBuild(me,'doca',vills,AI.lakeTile.x,AI.lakeTile.y)){AI.dockTries=(AI.dockTries||0)+1;if(AI.dockTries>5)AI.dockFail=true}}
   const dock=docks.find(b=>b.done);if(!dock)return;
@@ -1931,15 +1940,26 @@ function waterLab(){if(WM.t===terr&&WM.lab)return WM.lab;const lab=new Int32Arra
   for(let i=0;i<W*H;i++){if(lab[i]||terr[i]!==1)continue;n++;const q=[i];lab[i]=n;while(q.length){const j=q.pop();const x=j%W,y=(j/W)|0;for(const [dx,dy] of [[1,0],[-1,0],[0,1],[0,-1]]){const nx=x+dx,ny=y+dy;if(!inb(nx,ny))continue;const k=idx(nx,ny);if(!lab[k]&&terr[k]===1){lab[k]=n;q.push(k)}}}}
   WM={t:terr,lab};return lab}
 function mainWater(){const lab=waterLab();if(G.lake){const v=lab[idx(clamp(Math.floor(G.lake.x),0,W-1),clamp(Math.floor(G.lake.y),0,H-1))];if(v)return v}const cnt=new Map();for(let i=0;i<W*H;i++)if(lab[i])cnt.set(lab[i],(cnt.get(lab[i])||0)+1);let b=0,bn=0;for(const [k,v] of cnt)if(v>bn){bn=v;b=k}return b}
-function coastWater(from,maxR,toward){let best=null,bd=1e9;const R0=maxR||30;const wl=waterLab(),MW=mainWater();
+// casas de terra a que se chega a pé a partir de um ponto (para o barco esperar numa margem acessível, não no meio da floresta)
+// devolve a distância a pé + 1 (0 = não se chega)
+function reachFrom(x0,y0){const R=new Uint16Array(W*H),q=[];const sx=Math.floor(x0),sy=Math.floor(y0);
+  // começa nas casas livres à volta do ponto (o centro pode estar ocupado por um edifício)
+  // começa na própria casa; se estiver ocupada (edifício), na casa livre mais próxima
+  for(let r=0;r<=4&&!q.length;r++)for(let dy=-r;dy<=r;dy++)for(let dx=-r;dx<=r;dx++){if(Math.max(Math.abs(dx),Math.abs(dy))!==r)continue;const x=sx+dx,y=sy+dy;if(okXY(x,y)&&!R[idx(x,y)]){R[idx(x,y)]=1+r;q.push(idx(x,y))}}
+  for(let h=0;h<q.length;h++){const i=q[h],x=i%W,y=(i/W)|0,d=R[i];for(const [dx,dy] of [[1,0],[-1,0],[0,1],[0,-1]]){const xx=x+dx,yy=y+dy;if(!okXY(xx,yy))continue;const j=idx(xx,yy);if(!R[j]){R[j]=Math.min(65535,d+1);q.push(j)}}}
+  return R}
+function coastWater(from,maxR,toward,reach){let best=null,bd=1e9;const R0=maxR||30;const wl=waterLab(),MW=mainWater();
   for(let y=Math.floor(from.y-R0);y<=from.y+R0;y++)for(let x=Math.floor(from.x-R0);x<=from.x+R0;x++){if(!inb(x,y)||terr[idx(x,y)]!==1)continue;
     let land=0,wat=0;for(let dy=-1;dy<=1;dy++)for(let dx=-1;dx<=1;dx++){if(!inb(x+dx,y+dy))continue;const t=terr[idx(x+dx,y+dy)];if(t===1)wat++;else land++}
-    if(!land||wat<5||wl[idx(x,y)]!==MW)continue;const d=hyp(x-from.x,y-from.y)+(toward?hyp(x-toward.x,y-toward.y)*.45:0);if(d<bd){bd=d;best={x,y}}}
+    if(!land||wat<5||wl[idx(x,y)]!==MW)continue;
+    let wd=0;if(reach){let ok=0;wd=1e9;for(let dy=-2;dy<=2;dy++)for(let dx=-2;dx<=2;dx++){const xx=x+dx,yy=y+dy;if(inb(xx,yy)&&reach[idx(xx,yy)]&&hyp(xx+.5-x-.5,yy+.5-y-.5)<2.1){ok++;wd=Math.min(wd,reach[idx(xx,yy)])}}if(ok<2)continue} // margem a que os soldados chegam (e o caminho a pé até lá)
+    const d=(reach?wd:hyp(x-from.x,y-from.y))+(toward?hyp(x-toward.x,y-toward.y)*(reach?.25:.45):0);if(d<bd){bd=d;best={x,y}}}
   return best}
 // ponto de desembarque na ilha inimiga: costa perto do centro rival, do lado mais próximo de nós
-function landingWater(me,en){const s=G.starts[en],h=G.starts[me];const WL=waterLab(),MW=mainWater();const lab=landLab(),L=landOf(s.x,s.y);let best=null,bd=1e9;
+function landingWater(me,en){return landingWater0(me,en,true)||landingWater0(me,en,false)}
+function landingWater0(me,en,needReach){const s=G.starts[en],h=G.starts[me];const WL=waterLab(),MW=mainWater();const lab=landLab(),L=landOf(s.x,s.y);let best=null,bd=1e9;const RE=needReach?reachFrom(s.x,s.y):null; // praia de onde se chega a pé à vila inimiga
   for(let y=s.y-32;y<=s.y+32;y++)for(let x=s.x-32;x<=s.x+32;x++){if(!inb(x,y)||terr[idx(x,y)]!==1||WL[idx(x,y)]!==MW)continue;const d0=hyp(x-s.x,y-s.y);if(d0<7||d0>32)continue;
-    let ok=false;for(const [dx,dy] of [[1,0],[-1,0],[0,1],[0,-1]])if(inb(x+dx,y+dy)&&lab[idx(x+dx,y+dy)]===L&&blk[idx(x+dx,y+dy)]===0)ok=true;if(!ok)continue;
+    let ok=false;for(const [dx,dy] of [[1,0],[-1,0],[0,1],[0,-1]])if(inb(x+dx,y+dy)&&lab[idx(x+dx,y+dy)]===L&&blk[idx(x+dx,y+dy)]===0&&(!RE||RE[idx(x+dx,y+dy)]))ok=true;if(!ok)continue;
     const d=hyp(x-h.x,y-h.y)*.5+Math.abs(d0-12)*2;if(d<bd){bd=d;best={x:x+.5,y:y+.5}}}
   return best}
 function shipGo(s,x,y){setMover(s);const sp=snapFree(s,x,y);moveTo(s,sp.x,sp.y)}
@@ -1948,17 +1968,21 @@ function aiSea(AI,me,en,army,blds,p,home){
   const docks=blds.filter(b=>b.type==='doca'&&b.done);
   const want=Math.min(3,Math.max(1,Math.ceil(Math.max(AI.wave,army.length)/8)));
   if(p.age>=1&&docks.length&&tr.length<want&&!docks.some(d=>d.queue.some(q=>q.t==='transporte'))&&p.res.wood>=165)queueUnit(docks[0],'transporte',true);
-  if(!AI.embark)AI.embark=coastWater(home,30,G.starts[en]);
+  if(!AI.embark||AI.embarkV!==2){AI.embark=coastWater(home,30,G.starts[en],reachFrom(home.x,home.y))||coastWater(home,30,G.starts[en]);AI.embarkV=2}
   if(!AI.inv)for(const s of ents)if(s.o===me&&s.type==='transporte'&&s.cargo.length&&s.state==='idle')unloadBoat(s);
   const inv=AI.inv;if(!inv)return;
   inv.t+=1;const ships=inv.ships.map(id=>byId.get(id)).filter(s=>alive(s));
   if(!ships.length){AI.inv=null;return}
   if(inv.ph==='load'){
     const left=inv.units.map(id=>byId.get(id)).filter(u=>alive(u));
-    for(const s of ships)if(s.state==='idle'&&AI.embark&&hyp(s.x-AI.embark.x-.5,s.y-AI.embark.y-.5)>2.5)shipGo(s,AI.embark.x+.5,AI.embark.y+.5);
+    // ponto de embarque perto das tropas, numa margem a que elas chegam a pé (refeito se ninguém conseguir embarcar)
+    if(left.length&&(!inv.emb||(inv.t===35&&!ships.some(s=>s.cargo.length)))){let cx=0,cy=0;for(const u of left){cx+=u.x;cy+=u.y}cx/=left.length;cy/=left.length;
+      inv.emb=coastWater({x:cx,y:cy},26,G.starts[en],reachFrom(cx,cy))||AI.embark;if(inv.t===35)for(const u of left)if(u.state==='board'){u.bspot=null;u.bfail=0}}
+    const EMB=inv.emb||AI.embark;
+    for(const s of ships)if(s.state==='idle'&&EMB&&hyp(s.x-EMB.x-.5,s.y-EMB.y-.5)>1.5)shipGo(s,EMB.x+.5,EMB.y+.5);
     const pend=new Map();for(const u of left)if(u.state==='board'&&alive(u.target))pend.set(u.target.id,(pend.get(u.target.id)||0)+1);
     for(const u of left){if(u.state==='board'&&alive(u.target))continue;const s=ships.find(b=>b.cargo.length+(pend.get(b.id)||0)<b.d.cap);if(!s)break;pend.set(s.id,(pend.get(s.id)||0)+1);stopUnit(u);u.state='board';u.target=s;u.fails=0;u.rp=0;u.bspot=null}
-    if(!left.length||inv.t>70){if(!ships.some(s=>s.cargo.length)){AI.inv=null;return}
+    if(!left.length||inv.t>70){if(!ships.some(s=>s.cargo.length)){AI.inv=null;AI.embark=null;return} // ninguém embarcou: procura outra margem
       const L=landingWater(me,en);if(!L){AI.inv=null;return}inv.ph='sail';inv.t=0;for(const u of left)if(u.state==='board')stopUnit(u);
       for(const s of ships)if(s.cargo.length){shipGo(s,L.x+(rnd()-.5)*2,L.y+(rnd()-.5)*2);s.unloadAt=true}}
   }else if(inv.ph==='sail'){
@@ -1967,8 +1991,11 @@ function aiSea(AI,me,en,army,blds,p,home){
   }
 }
 function aiInvade(AI,me,army){const tr=ents.filter(e=>e.o===me&&e.kind==='u'&&e.type==='transporte'&&!e.cargo.length);if(!tr.length)return false;
-  const home=G.starts[me];const units=army.filter(a=>!a.d.naval&&landOf(a.x,a.y)===landOf(home.x,home.y)).slice(0,tr.length*8);if(units.length<3)return false;
-  AI.inv={ph:'load',t:0,ships:tr.map(s=>s.id),units:units.map(u=>u.id)};return true}
+  const home=G.starts[me];const tc=homeOf(me);const c0=tc?centerOf(tc):home;
+  // só as tropas que conseguem sair a pé (as que ficaram presas entre edifícios ficam em casa)
+  if(army.length){setMover(army.find(a=>!a.d.naval)||army[0])}const R=reachFrom(c0.x,c0.y+2);
+  const units=army.filter(a=>{if(a.d.naval||landOf(a.x,a.y)!==landOf(home.x,home.y))return false;const t=curTile(a);return t&&R[idx(t.x,t.y)]}).slice(0,tr.length*8);if(units.length<3)return false;
+  AI.inv={ph:'load',t:0,ships:tr.map(s=>s.id),units:units.map(u=>u.id),emb:null};return true}
 function aiTarget(en,from){
   let best=null,bd=1e9;
   const iso=G.map==='arquipelago',L0=iso?landOf(from.x,from.y):0;
@@ -4218,7 +4245,7 @@ function command(units,e,w){issueCmd(units,e,w)}
    Turno = 3 passos de 1/30 s (100 ms). As ordens de um turno T são executadas em T+atraso nos dois lados.
    A cada 5 s comparam um resumo (hash) do estado; se divergir, o anfitrião envia o estado completo.
    Se alguém cair, quem fica envia o estado completo quando o outro voltar. */
-const GAME_VER='alvorada-14';
+const GAME_VER='alvorada-15';
 const TURN_STEPS=3,TURN_DT=TURN_STEPS/30,HASH_EVERY=50;
 Object.assign(NET,{ws:null,url:'',slot:0,room:'',token:'',name:'',peer:'',peerOnline:false,game:false,turn:0,delay:2,sent:-1,cmds:[new Map(),new Map()],out:[],
   acc:0,waitT:0,rtt:0,myHash:new Map(),peerHash:new Map(),desync:0,resync:0,epoch:0,lastSnapT:-1,wantSnap:false,awaitSnap:false,lostT:0,pingT:0,closing:false,stats:{turns:0,sent:0,recv:0,bytes:0}});
