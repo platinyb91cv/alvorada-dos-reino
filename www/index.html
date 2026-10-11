@@ -130,6 +130,7 @@ body:has(#objBox:not([hidden])):not(.coaching) #toast div{white-space:normal;tex
 @keyframes fade{0%{opacity:0;transform:translateY(-4px)}8%{opacity:1;transform:none}80%{opacity:1}100%{opacity:0}}
 
 /* ecrãs */
+#sLoad{position:fixed;inset:0;z-index:90;display:flex;flex-direction:column;gap:12px;align-items:center;justify-content:center;background:rgba(18,12,8,.9);color:#f0d9a0;font:600 20px Georgia,serif;letter-spacing:.5px}#sLoad[hidden]{display:none}#sLoad i{width:34px;height:34px;border:3px solid rgba(240,217,160,.25);border-top-color:#d9a845;border-radius:50%;animation:spin .9s linear infinite}@keyframes spin{to{transform:rotate(360deg)}}
 .screen{position:absolute;inset:0;z-index:20;display:flex;align-items:center;justify-content:center;padding:16px;background:radial-gradient(ellipse at 50% 30%,rgba(217,168,69,.18),transparent 60%),linear-gradient(160deg,#2b1d12,#120c08)}
 .screen[hidden]{display:none}
 .card{max-width:560px;width:100%;text-align:center;display:flex;flex-direction:column;gap:12px;align-items:center;max-height:100%;overflow:auto;touch-action:pan-y}
@@ -366,6 +367,7 @@ input{font-family:inherit;-webkit-user-select:text;user-select:text;touch-action
   </div>
 
   <canvas id="menuBg" aria-hidden="true"></canvas>
+  <div id="sLoad" hidden><i></i><div>A preparar o mapa…</div></div>
   <div class="screen scenic" id="sLogin">
     <div class="hero">
       <div class="brand">
@@ -2057,18 +2059,12 @@ let decos=[],WFIELD=null,TL=null; // TL: camadas do chão para compor com textur
 let TGT=GT;
 function buildTerrain(){
   TGT=W>90?24:GT;const S=TGT,CW=W*S;
-  terrCanvas=mkCanvas(CW,CW);const c=terrCanvas.getContext('2d');TL=null;
+  const TX=FLORA.ready&&FLORA.tex.grass,tsc=S/24;
+  // com textura nítida o chão é composto por pedaços a partir das camadas (TL); a tela grande não é usada, por isso não se pinta
+  terrCanvas=mkCanvas(TX?1:CW,TX?1:CW);const c=terrCanvas.getContext('2d');TL=null;
   const r=mulberry32(G.seed+5);
   const n1=vnoise(G.seed+1,5),n2=vnoise(G.seed+2,14),n3=vnoise(G.seed+3,7);
   // campo de cor de baixa frequência
-  const TX=FLORA.ready&&FLORA.tex.grass,tsc=S/24;
-  const tpat=(cx,img,dx,dy)=>{const p=cx.createPattern(img,'repeat');p.setTransform(new DOMMatrix().translate(-dx,-dy).scale(tsc));return p};
-  // textura por máscara, em blocos (sem tela gigante temporária)
-  const texLayer=(mask,img,alpha)=>{const BK=512,tmp=mkCanvas(BK,BK),tc=tmp.getContext('2d'),mw=mask.width/CW;
-    for(let by=0;by<CW;by+=BK)for(let bx=0;bx<CW;bx+=BK){const bw=Math.min(BK,CW-bx),bh=Math.min(BK,CW-by);
-      tc.globalCompositeOperation='copy';tc.imageSmoothingEnabled=true;tc.drawImage(mask,bx*mw,by*mw,bw*mw,bh*mw,0,0,bw,bh);
-      tc.globalCompositeOperation='source-in';tc.fillStyle=tpat(tc,img,bx,by);tc.fillRect(0,0,bw,bh);
-      c.globalAlpha=alpha;c.drawImage(tmp,0,0,bw,bh,bx,by,bw,bh);c.globalAlpha=1}};
   const LW=W*2,lf=mkCanvas(LW,LW),lc=lf.getContext('2d'),im=lc.createImageData(LW,LW);
   for(let y=0;y<LW;y++)for(let x=0;x<LW;x++){
     const u=x/LW,v=y/LW;const g=n1(u,v)*.65+n2(u,v)*.35;const dry=Math.max(0,n3(u,v)-.55)*2.2;
@@ -2076,12 +2072,12 @@ function buildTerrain(){
     const i=(y*LW+x)*4;im.data[i]=R;im.data[i+1]=Gc;im.data[i+2]=B;im.data[i+3]=255;
   }
   lc.putImageData(im,0,0);c.imageSmoothingEnabled=true;
-  if(TX){TL={lf};c.fillStyle=tpat(c,FLORA.tex.grass,0,0);c.fillRect(0,0,CW,CW);c.globalCompositeOperation='soft-light';c.drawImage(lf,0,0,CW,CW);c.globalCompositeOperation='source-over'}
+  if(TX)TL={lf};
   else c.drawImage(lf,0,0,CW,CW);
   // manchas de relva (frescas e secas) para quebrar a cor lisa
   {const nm=vnoise(G.seed+4,26);const mm=mkCanvas(W*2,W*2),mc=mm.getContext('2d'),mi=mc.createImageData(W*2,W*2);
     for(let y=0;y<W*2;y++)for(let x=0;x<W*2;x++){const v=nm(x/(W*2),y/(W*2)),o=(y*W*2+x)*4;if(v>.5){mi.data[o]=150;mi.data[o+1]=170;mi.data[o+2]=70;mi.data[o+3]=(v-.5)*150}else{mi.data[o]=20;mi.data[o+1]=55;mi.data[o+2]=20;mi.data[o+3]=(.5-v)*120}}
-    mc.putImageData(mi,0,0);c.globalAlpha=TX?.45:1;c.drawImage(mm,0,0,CW,CW);c.globalAlpha=1;if(TL)TL.mm=mm}
+    mc.putImageData(mi,0,0);if(TL)TL.mm=mm;else c.drawImage(mm,0,0,CW,CW)}
   // grão fino
   const gn=mkCanvas(128,128),gc=gn.getContext('2d'),gi=gc.createImageData(128,128);
   for(let i=0;i<128*128;i++){const v=r();const L=v>.5;gi.data[i*4]=L?255:0;gi.data[i*4+1]=L?255:20;gi.data[i*4+2]=L?200:0;gi.data[i*4+3]=Math.abs(v-.5)*46}
@@ -2094,11 +2090,11 @@ function buildTerrain(){
   // chão de floresta
   for(let y=0;y<H;y++)for(let x=0;x<W;x++){const rr=resAt[idx(x,y)];if(!rr||rr.rk!=='wood')continue;
     if(TX){const cx=(x+.5)*MR,cy=(y+.5)*MR,g=dc.createRadialGradient(cx,cy,0,cx,cy,MR*1.3);g.addColorStop(0,'rgba(255,255,255,.55)');g.addColorStop(1,'rgba(255,255,255,0)');dc.fillStyle=g;dc.fillRect(cx-MR*1.4,cy-MR*1.4,MR*2.8,MR*2.8)}
-    const cx=(x+.5)*S,cy=(y+.5)*S;const g=c.createRadialGradient(cx,cy,0,cx,cy,S*1.25);g.addColorStop(0,`rgba(34,48,18,${TX?.32:.5})`);g.addColorStop(1,'rgba(34,48,18,0)');c.fillStyle=g;c.fillRect(cx-S*1.3,cy-S*1.3,S*2.6,S*2.6)
+    if(!TX){const cx=(x+.5)*S,cy=(y+.5)*S;const g=c.createRadialGradient(cx,cy,0,cx,cy,S*1.25);g.addColorStop(0,'rgba(34,48,18,.5)');g.addColorStop(1,'rgba(34,48,18,0)');c.fillStyle=g;c.fillRect(cx-S*1.3,cy-S*1.3,S*2.6,S*2.6)}
     if(foc){const fx=(x+.5)*MR,fy=(y+.5)*MR,g2=foc.createRadialGradient(fx,fy,0,fx,fy,MR*1.25);g2.addColorStop(0,'rgba(34,48,18,.32)');g2.addColorStop(1,'rgba(34,48,18,0)');foc.fillStyle=g2;foc.fillRect(fx-MR*1.3,fy-MR*1.3,MR*2.6,MR*2.6)}}
-  if(TX){texLayer(dm,FLORA.tex.dirt,.92);TL.fo=fo;TL.dm=dm}
-  // ervas
-  for(let k=0;k<(TX?5000:26000)*W*H/6400;k++){const x=r()*CW,y=r()*CW;const t=terr[idx((x/S)|0,(y/S)|0)];if(t===1)continue;
+  if(TX){TL.fo=fo;TL.dm=dm}
+  // ervas (só na tela grande; com textura nítida a relva já tem detalhe)
+  if(!TX)for(let k=0;k<26000*W*H/6400;k++){const x=r()*CW,y=r()*CW;const t=terr[idx((x/S)|0,(y/S)|0)];if(t===1)continue;
     c.strokeStyle=r()<.5?'rgba(30,60,10,.32)':'rgba(190,210,120,.22)';c.lineWidth=1;c.beginPath();c.moveTo(x,y);c.lineTo(x+(r()-.5)*3,y-2-r()*3);c.stroke()}
   // água e areia: campo contínuo (margens orgânicas em vez de degraus)
   const FR=8,FW=W*FR,FH=H*FR,wf=new Float32Array(FW*FH),sf=new Float32Array(FW*FH);
@@ -2119,10 +2115,10 @@ function buildTerrain(){
     else if(F>.43){R=136;Gc=116;B=78;A=255} // areia molhada
     else{const sand=Math.max(ss(.14,.3,F),ss(.38,.55,Sd));if(sand>0){const wet=ss(.3,.43,F);R=mix(214,158,wet);Gc=mix(190,134,wet);B=mix(132,90,wet);const g2=(nd(u*2%1,v*2%1)-.5)*16;R+=g2;Gc+=g2;B+=g2*.6;A=255*sand*.96;if(smi)smi.data[i*4+3]=255*sand*(1-wet)*.9}}
     const o=i*4;D[o]=R;D[o+1]=Gc;D[o+2]=B;D[o+3]=A}
-  wc.putImageData(wi,0,0);c.imageSmoothingEnabled=true;c.drawImage(wl,0,0,CW,CW);if(TL)TL.wl=wl;
-  if(sm){smc.putImageData(smi,0,0);texLayer(sm,FLORA.tex.sand,.88);TL.sm=sm}
+  wc.putImageData(wi,0,0);c.imageSmoothingEnabled=true;if(TL)TL.wl=wl;else c.drawImage(wl,0,0,CW,CW);
+  if(sm){smc.putImageData(smi,0,0);TL.sm=sm}
   // brilhos estáticos só em água funda
-  for(let k=0;k<1600*W*H/6400;k++){const x=r()*CW,y=r()*CW;const fx0=(x/S*FR)|0,fy0=(y/S*FR)|0;if(fx0>=FW||fy0>=FH||WFIELD.f[fy0*FW+fx0]<.58)continue;c.strokeStyle=`rgba(200,230,255,${.05+r()*.1})`;c.lineWidth=1;c.beginPath();c.moveTo(x,y);c.quadraticCurveTo(x+4,y-2,x+9,y);c.stroke()}
+  if(!TX)for(let k=0;k<1600*W*H/6400;k++){const x=r()*CW,y=r()*CW;const fx0=(x/S*FR)|0,fy0=(y/S*FR)|0;if(fx0>=FW||fy0>=FH||WFIELD.f[fy0*FW+fx0]<.58)continue;c.strokeStyle=`rgba(200,230,255,${.05+r()*.1})`;c.lineWidth=1;c.beginPath();c.moveTo(x,y);c.quadraticCurveTo(x+4,y-2,x+9,y);c.stroke()}
   // minimapa base
   miniBase=mkCanvas(W,H);const m=miniBase.getContext('2d');
   for(let y=0;y<H;y++)for(let x=0;x<W;x++){const t=terr[idx(x,y)];m.fillStyle=t===1?'#2c6a93':t===2?'#c2a66c':'#5d8a37';m.fillRect(x,y,1,1)}
@@ -4056,7 +4052,8 @@ function audioFrame(raw){
     const now=AUD.ctx.currentTime;if(AUD.intensity>.35)MUS.fightT=now;if(!G.over)MUS.want=now-(MUS.fightT??-99)<12?'batalha':'paz'}
 }
 function audioPause(p){if(!AUD.ctx)return;if(p)AUD.ctx.suspend().catch(()=>{});else AUD.ctx.resume().catch(()=>{})}
-function audioGameStart(){if(!audioInit())return;ambStop();ambStart();MUS.want='paz';AUD.combat=0;if(MUS.mood==null||MUS.mood==='menu'){MUS.mood='paz';musNewPiece(true)}audioPause(false)}
+function audioGameStart(){if(!audioInit())return;ambStop();setTimeout(()=>{if(running&&!AUD.amb)ambStart()},1500); // o som ambiente é sintetizado depois do arranque (não atrasa o 1.º frame)
+  MUS.want='paz';AUD.combat=0;if(MUS.mood==null||MUS.mood==='menu'){MUS.mood='paz';musNewPiece(true)}audioPause(false)}
 function audioToMenu(){ambStop();MUS.want='menu';audioPause(false)}
 function audioSave(){try{localStorage.setItem('alv_audio',JSON.stringify({on:AUD.on,...AUD.vol}))}catch(e){}}
 function audioLoad(){try{const s=JSON.parse(localStorage.getItem('alv_audio')||'null');if(s){AUD.on=s.on!==false;for(const k of ['master','music','sfx','amb'])if(typeof s[k]==='number')AUD.vol[k]=clamp(s[k],0,1)}else if(localStorage.getItem('alv_sound')==='0')AUD.on=false}catch(e){}soundOn=AUD.on}
@@ -5087,6 +5084,12 @@ $('bAgain').onclick=()=>{if(NET.on){netLeaveGame();NET.reported=false;$('sEnd').
   if(G.camp!=null){const nx=G.camp+(G.won&&G.camp+1<CAMP.length?1:0);campStart(nx);return}
   if(G.daily){$('bDaily').onclick();return}
   const sd=Math.floor(Math.random()*1e9);startGame(sd,{...setupOpts(sd),vic:G.vic==='sobrevivencia'?'sobrevivencia':SETUP.vic})};
+// ecrã "A preparar o mapa…": aparece antes do trabalho pesado de criar a partida (o navegador pinta-o primeiro)
+const LOAD_BTNS=new Set(['bSetupGo','bTut','bBuild','bAgain','bCont','bCampGo','bReinoDaily','bDaily']);let loadBusy=false;
+document.addEventListener('click',ev=>{if(!ev.isTrusted||loadBusy)return;const b=ev.target.closest&&ev.target.closest('button');if(!b||!LOAD_BTNS.has(b.id)||b.disabled)return;
+  ev.stopImmediatePropagation();ev.preventDefault();loadBusy=true;$('sLoad').hidden=false;
+  const done=()=>requestAnimationFrame(()=>requestAnimationFrame(()=>{$('sLoad').hidden=true;loadBusy=false}));
+  requestAnimationFrame(()=>requestAnimationFrame(()=>setTimeout(()=>{try{b.click()}catch(e){console.warn(e)}done()},0)))},true);
 $('bEndMenu').onclick=()=>{if(NET.on||NET.room)netEndMatch();netLeaveGame();$('sEnd').hidden=true;showMenu()};
 try{const d=localStorage.getItem('alv_diff');if(d!=null){difficulty=+d;document.querySelectorAll('#diffRow button').forEach(x=>x.classList.toggle('sel',+x.dataset.d===difficulty))}}catch(e){}
 audioLoad();$('bSound').textContent='Som: '+(AUD.on?'ligado':'desligado');$('vMusic').value=Math.round(AUD.vol.music*100);$('vSfx').value=Math.round(AUD.vol.sfx*100);$('vAmb').value=Math.round(AUD.vol.amb*100);
