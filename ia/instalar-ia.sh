@@ -13,6 +13,7 @@
 #    HF_TOKEN=hf_xxx   token do Hugging Face (só se algum modelo pedir login)
 #    WAN14B=1          também o Wan 2.2 14B (melhor, +30 GB de disco)
 #    SEM3D=1           não instalar o Hunyuan3D
+#    SO_WAN=1          só o ComfyUI + Wan 2.2 (animações), ~25 GB e ~10 min — bom quando há pouco crédito
 #    BASE=/caminho     pasta de instalação (padrão: /opt/ia ou ~/ia)
 # =====================================================================
 set -uo pipefail
@@ -41,6 +42,7 @@ T3D_IDX=$([ $CNUM -ge 124 ] && echo cu124 || echo cu121)
 ok "Driver suporta CUDA $CUDAV → PyTorch $TORCH_IDX"
 LIVRE=$(df -BG --output=avail "$BASE" | tail -1 | tr -dc 0-9)
 PRECISO=$(( 100 + ${WAN14B:-0}*30 ))
+if [ "${SO_WAN:-0}" = "1" ]; then PRECISO=30; SEM3D=1; fi
 if [ "${LIVRE:-0}" -lt "$PRECISO" ]; then
   erro "Só há ${LIVRE} GB livres em $BASE e são precisos pelo menos ${PRECISO} GB."
   echo "   Na Vast.ai o disco escolhe-se ao alugar (barra 'Disk Space') e não se pode aumentar depois:"
@@ -114,16 +116,17 @@ def get(repos, padrao, pasta, preferir=None, nome=None):
         except Exception as e:
             shutil.rmtree(tmp,ignore_errors=True);print(f"  ✖ {os.path.basename(f)}: {str(e)[:160]}")
     falhas.append(f"{pasta} ← {padrao}")
-print("FLUX.1 Kontext [dev]")
-get(["Comfy-Org/flux1-kontext-dev_ComfyUI"], r"diffusion_models/.*kontext.*fp8.*", "diffusion_models", preferir=r"scaled")
-get(["comfyanonymous/flux_text_encoders"], r"^clip_l\.safetensors$", "text_encoders")
-get(["comfyanonymous/flux_text_encoders"], r"t5xxl_fp8.*\.safetensors$", "text_encoders", preferir=r"scaled")
-get(["Comfy-Org/Lumina_Image_2.0_Repackaged","Comfy-Org/flux1-kontext-dev_ComfyUI","black-forest-labs/FLUX.1-schnell"], r"(^|/)ae\.safetensors$", "vae")
-print("Qwen-Image + Qwen-Image-Edit")
-get(["Comfy-Org/Qwen-Image_ComfyUI"], r"diffusion_models/qwen_image_fp8", "diffusion_models", preferir=r"e4m3fn")
-get(["Comfy-Org/Qwen-Image_ComfyUI"], r"text_encoders/qwen_2\.5_vl_7b_fp8", "text_encoders", preferir=r"scaled")
-get(["Comfy-Org/Qwen-Image_ComfyUI"], r"vae/qwen_image_vae", "vae")
-get(["Comfy-Org/Qwen-Image-Edit_ComfyUI"], r"diffusion_models/qwen_image_edit.*fp8", "diffusion_models", preferir=r"25\d\d")  # versão mais recente primeiro
+if os.environ.get("SO_WAN")!="1":
+    print("FLUX.1 Kontext [dev]")
+    get(["Comfy-Org/flux1-kontext-dev_ComfyUI"], r"diffusion_models/.*kontext.*fp8.*", "diffusion_models", preferir=r"scaled")
+    get(["comfyanonymous/flux_text_encoders"], r"^clip_l\.safetensors$", "text_encoders")
+    get(["comfyanonymous/flux_text_encoders"], r"t5xxl_fp8.*\.safetensors$", "text_encoders", preferir=r"scaled")
+    get(["Comfy-Org/Lumina_Image_2.0_Repackaged","Comfy-Org/flux1-kontext-dev_ComfyUI","black-forest-labs/FLUX.1-schnell"], r"(^|/)ae\.safetensors$", "vae")
+    print("Qwen-Image + Qwen-Image-Edit")
+    get(["Comfy-Org/Qwen-Image_ComfyUI"], r"diffusion_models/qwen_image_fp8", "diffusion_models", preferir=r"e4m3fn")
+    get(["Comfy-Org/Qwen-Image_ComfyUI"], r"text_encoders/qwen_2\.5_vl_7b_fp8", "text_encoders", preferir=r"scaled")
+    get(["Comfy-Org/Qwen-Image_ComfyUI"], r"vae/qwen_image_vae", "vae")
+    get(["Comfy-Org/Qwen-Image-Edit_ComfyUI"], r"diffusion_models/qwen_image_edit.*fp8", "diffusion_models", preferir=r"25\d\d")  # versão mais recente primeiro
 print("Wan 2.2 (imagem → vídeo)")
 get(["Comfy-Org/Wan_2.2_ComfyUI_Repackaged"], r"diffusion_models/wan2\.2_ti2v_5B", "diffusion_models", preferir=r"fp16")
 get(["Comfy-Org/Wan_2.2_ComfyUI_Repackaged"], r"vae/wan2\.2_vae", "vae")
@@ -136,7 +139,7 @@ print("\nResumo:", "tudo descarregado ✔" if not falhas else "faltam: "+"; ".jo
 if falhas: print("Se algum pede login: cria um token em https://huggingface.co/settings/tokens, aceita a licença do modelo na página dele e corre de novo com HF_TOKEN=...")
 PY
 cd "$BASE/ComfyUI" && source .venv/bin/activate
-HF_HOME="$BASE/hf-cache" WAN14B="${WAN14B:-0}" HF_TOKEN="${HF_TOKEN:-}" python "$BASE/baixar_modelos.py" "$BASE/ComfyUI/models"
+HF_HOME="$BASE/hf-cache" SO_WAN="${SO_WAN:-0}" WAN14B="${WAN14B:-0}" HF_TOKEN="${HF_TOKEN:-}" python "$BASE/baixar_modelos.py" "$BASE/ComfyUI/models"
 deactivate
 
 # ---------------------------------------------------------------------
