@@ -1,11 +1,11 @@
-# Centro da Vila (3 idades) pintado no Gemini: recorta o magenta, mede a base e junta ao atlas dos edifícios do jogo.
+# Edifícios pintados no Gemini (gemini/<tipo><idade>.png): recorta o magenta, mede a base e junta ao atlas dos edifícios do jogo.
 # uso: python3 centro_gemini.py ../../www/index.html   (lê o atlas atual do index.html e escreve-o de volta)
 import re,io,sys,json,base64,colorsys
 import numpy as np
 from PIL import Image
 from scipy import ndimage as nd
-TW=500 # largura final de cada centro no atlas (px)
-def cut(path):
+TW=420 # largura final de um edifício 3x3 no atlas (px) — chega para o ecrã (3 casas = ~400 px a SS 2); 2x2 -> 2/3
+def cut(path,TW=TW):
   cl=np.array(Image.open(path).convert('RGB')).astype(float)
   bg=np.array([255.,0.,255.])
   samp=np.concatenate([cl[2:12,2:12].reshape(-1,3),cl[2:12,-12:-2].reshape(-1,3)]);bg=np.median(samp,0)
@@ -39,15 +39,34 @@ i=s.index('const BLDART=');j=s.index("im.src='data:image/webp;base64,",i)+len("i
 mm=re.search(r'(const BLDART=\{wide:true,ready:false,img:null,meta:)(\{.*?\}\})(,)',s);meta=json.loads(mm.group(2))
 at=Image.open(io.BytesIO(base64.b64decode(s[j:k2]))).convert('RGBA')
 # o atlas pode já ter os centros do Gemini (linha de baixo): volta a cortar a partir da altura original
-y0=max(v['f'][1]+v['f'][3] for kk,v in meta.items() if not kk.startswith('centro'))+2
-imgs=[cut('gemini/centro%d.png'%a) for a in range(3)]
-H=y0+max(im.height for im,_ in imgs);W=max(at.width,sum(im.width+2 for im,_ in imgs))
-na=Image.new('RGBA',(W,H),(0,0,0,0));na.paste(at.crop((0,0,at.width,min(at.height,y0))),(0,0))
-x=0
-for a,(im,m) in enumerate(imgs):
-  na.paste(im,(x,y0));m['f']=[x,y0,im.width,im.height];meta['centro|%d'%a]=m;x+=im.width+2
+import glob,os
+# todos os edifícios pintados no Gemini: gemini/<tipo><idade>.png (ex.: quartel1.png, torre3.png)
+SIZE={'casa':2,'armazem':2,'ferreiro':2,'torre':2,'doca':2,'maravilha':4}
+items=[]
+for f in sorted(glob.glob('gemini/*.png')):
+  n=os.path.basename(f)[:-4];m2=re.match(r'([a-z]+)(\d)$',n)
+  if not m2:continue
+  t,a=m2.group(1),m2.group(2);sz=SIZE.get(t,3)
+  im,mt=cut(f,TW=round(TW*sz/3));items.append((t+'|'+a,im,mt))
+new={k for k,_,_ in items}
+# células antigas que continuam em uso (muralhas, portões, doca, quinta, ruínas...)
+for k,v in list(meta.items()):
+  if k in new:continue
+  x,y,w,h=v['f'];items.append((k,at.crop((x,y,x+w,y+h)),{kk:vv for kk,vv in v.items() if kk!='f'}))
+meta={}
+# empacotar em prateleiras (mais altos primeiro)
+items.sort(key=lambda it:-it[1].height)
+RW=2048;x=0;y=0;rowh=0;pos=[]
+for k,im,mt in items:
+  if x+im.width>RW:x=0;y+=rowh+2;rowh=0
+  pos.append((x,y));x+=im.width+2;rowh=max(rowh,im.height)
+W=RW;H=y+rowh
+na=Image.new('RGBA',(W,H),(0,0,0,0))
+for (k,im,mt),(px,py) in zip(items,pos):
+  na.paste(im,(px,py));mt['f']=[px,py,im.width,im.height];meta[k]=mt
+print('Gemini:',sorted(new))
 buf=io.BytesIO();na.save(buf,'WEBP',quality=84,method=6);b64=base64.b64encode(buf.getvalue()).decode()
 s=s[:j]+b64+s[k2:]
 s=re.sub(r'(const BLDART=\{wide:true,ready:false,img:null,meta:)(\{.*?\}\})(,)',lambda q:q.group(1)+json.dumps(meta)+q.group(3),s,count=1)
 open(html,'w',encoding='utf-8').write(s);na.save('bld_atlas_gemini.png')
-print('atlas',na.size,len(buf.getvalue())//1024,'KB',{kk:meta[kk] for kk in meta if kk.startswith('centro')})
+print('atlas',na.size,len(buf.getvalue())//1024,'KB')
