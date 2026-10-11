@@ -726,11 +726,11 @@ function bldHp(o,type,lvl){const d=BLDS[type];let h=type==='torre'?TOWER[lvl||1]
 const GATHER={wood:.55,food:.7,farm:.5,gold:.5,stone:.45,hunt:.9,fish:.7};
 const CARRY=10;
 // Dificuldade da IA: mult = ritmo de recolha/obra; first = 1.º ataque (s); wave/grow/waveMax = tamanho das vagas;
-// armyMax = exército máximo; gap = pausa entre ataques; vills = aldeões por idade; maxAge = idade máxima
+// raid = primeiro assalto pequeno (aos 'at' s com 'n' soldados) para o início não ficar parado; armyMax = exército máximo; gap = pausa entre ataques; vills = aldeões por idade; maxAge = idade máxima
 const DIFF=[
-  {name:'Fácil',mult:.5,first:1200,wave:3,grow:1,waveMax:6,armyMax:8,gap:[420,540],vills:[9,12,14],maxAge:1,wall:false,siege:false,towers:false,techs:false,bonus:0},
-  {name:'Normal',mult:.75,first:780,wave:5,grow:2,waveMax:14,armyMax:22,gap:[260,380],vills:[12,17,22],maxAge:2,wall:true,siege:true,towers:true,techs:true,bonus:0},
-  {name:'Difícil',mult:1.15,first:420,wave:7,grow:3,waveMax:28,armyMax:60,gap:[140,220],vills:[14,22,28],maxAge:2,wall:true,siege:true,towers:true,techs:true,bonus:150}];
+  {name:'Fácil',mult:.5,first:1200,raid:{at:660,n:2},wave:3,grow:1,waveMax:6,armyMax:8,gap:[420,540],vills:[9,12,14],maxAge:1,wall:false,siege:false,towers:false,techs:false,bonus:0},
+  {name:'Normal',mult:.75,first:780,raid:{at:510,n:3},wave:5,grow:2,waveMax:14,armyMax:22,gap:[260,380],vills:[12,17,22],maxAge:2,wall:true,siege:true,towers:true,techs:true,bonus:0},
+  {name:'Difícil',mult:1.15,first:420,raid:{at:330,n:4},wave:7,grow:3,waveMax:28,armyMax:60,gap:[140,220],vills:[14,22,28],maxAge:2,wall:true,siege:true,towers:true,techs:true,bonus:150}];
 let gameMode='normal'; // 'normal' ou 'build' (só construir, sem rival)
 // opções da próxima partida (ecrã «Nova partida»)
 const MAPS={rios:{name:'Rios e Mar',desc:'Mar num canto, rio navegável até ao lago central. Equilibrado.'},continental:{name:'Terra firme',desc:'Pouca água e muitos recursos: guerra em terra, sem barcos.'},lagos:{name:'Lagos',desc:'Um grande lago no centro e muitos lagos pequenos. Peixe e docas contam.'},arquipelago:{name:'Arquipélago',desc:'Cada reino na sua ilha. Precisas de barcos de transporte para atacar.'},aleatorio:{name:'Aleatório',desc:'Um dos quatro mapas, à sorte.'}};
@@ -1838,7 +1838,8 @@ function aiRun(AI,dt){
     if(army.length>=D.armyMax||(!D.siege&&UNITS[t].siege))continue;
     if(t==='sacerdote'&&priests>=3)continue;if(UNITS[t].siege&&siegeN>=5)continue;
     const c=UNITS[t].cost;
-    if(ewOn?canAfford(me,c):(p.res.food-(c.food||0)>=reserve.food&&p.res.gold-(c.gold||0)>=reserve.gold&&p.res.wood-(c.wood||0)>=(wallSave?300:30)))queueUnit(b,t,true);
+    const rushing=D.raid&&!AI.raided&&AI.t>=D.raid.at-150&&army.length<D.raid.n; // treina já os soldados do primeiro assalto
+    if(ewOn||rushing?canAfford(me,c):(p.res.food-(c.food||0)>=reserve.food&&p.res.gold-(c.gold||0)>=reserve.gold&&p.res.wood-(c.wood||0)>=(wallSave?300:30)))queueUnit(b,t,true);
   }
   aiNaval(AI,me,en,p,vills,navy,blds,count);
   if(!AI.landLink)aiSea(AI,me,en,army,blds,p,home);
@@ -1859,6 +1860,13 @@ function aiRun(AI,dt){
   if(ew&&army.length){AI.attacking=true;AI.ewT=(AI.ewT||0)-1;const c=centerOf(ew);
     if(AI.ewT<=0){AI.ewT=8;for(const a of army){if(a.state==='attack'&&a.target===ew)continue;if(a.d.convert){if(a.state==='idle'){moveTo(a,c.x,c.y);a.amove=true}continue}
       if(a.state==='attack'&&a.target&&a.target.kind==='u'&&distTo(a,a.target)<2.5)continue;orderAttack(a,ew);a.forced=true}}}
+  // primeiro assalto: um grupo pequeno vai incomodar os aldeões do rival (só por terra)
+  else if(!ew&&D.raid&&!AI.raided&&AI.landLink&&AI.t>=D.raid.at&&army.length>=Math.max(2,D.raid.n-1)&&!threat){
+    AI.raided=true;const grp=army.filter(a=>!a.d.naval&&!a.d.convert&&!a.d.king).slice(0,D.raid.n);
+    const etc=ents.find(e=>e.o===en&&e.type==='centro');let tgt=null,bd=1e9;
+    if(etc){const c0=centerOf(etc);for(const e of ents){if(e.o!==en||e.type!=='aldeao')continue;const d=hyp(e.x-c0.x,e.y-c0.y);if(d>5&&d<bd){bd=d;tgt=e}}} // aldeões a trabalhar fora do alcance do Centro
+    if(!tgt)tgt=aiTarget(en,home);
+    if(tgt&&grp.length){const c=tgt.kind==='u'?{x:tgt.x,y:tgt.y}:centerOf(tgt);groupMove(grp,c.x,c.y,true,'livre');for(const a of grp)a.raid=1;if(en===ME)setTimeout(()=>{try{voz('inimigo')}catch(e){}},0)}}
   // ataque
   else if(!ew&&AI.t>=AI.nextAttack&&((army.length>=AI.wave&&(!enemyWalled||siegeN>0||army.length>=AI.wave*1.6))||(AI.t>AI.nextAttack+240&&army.length>=Math.max(5,AI.wave*.5))||(AI.t>2700&&army.length>=Math.min(4,AI.wave)))){
     const w0=AI.wave;AI.attacking=true;AI.nextAttack=AI.t+D.gap[0]+rnd()*(D.gap[1]-D.gap[0]);AI.wave=Math.min(D.waveMax,AI.wave+D.grow);
@@ -4245,7 +4253,7 @@ function command(units,e,w){issueCmd(units,e,w)}
    Turno = 3 passos de 1/30 s (100 ms). As ordens de um turno T são executadas em T+atraso nos dois lados.
    A cada 5 s comparam um resumo (hash) do estado; se divergir, o anfitrião envia o estado completo.
    Se alguém cair, quem fica envia o estado completo quando o outro voltar. */
-const GAME_VER='alvorada-15';
+const GAME_VER='alvorada-16';
 const TURN_STEPS=3,TURN_DT=TURN_STEPS/30,HASH_EVERY=50;
 Object.assign(NET,{ws:null,url:'',slot:0,room:'',token:'',name:'',peer:'',peerOnline:false,game:false,turn:0,delay:2,sent:-1,cmds:[new Map(),new Map()],out:[],
   acc:0,waitT:0,rtt:0,myHash:new Map(),peerHash:new Map(),desync:0,resync:0,epoch:0,lastSnapT:-1,wantSnap:false,awaitSnap:false,lostT:0,pingT:0,closing:false,stats:{turns:0,sent:0,recv:0,bytes:0}});
