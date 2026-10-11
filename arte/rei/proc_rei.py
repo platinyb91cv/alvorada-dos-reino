@@ -1,5 +1,5 @@
 # Recorta as 16 poses do Rei (2 folhas 4x2 com fundo magenta) e monta um atlas WebP com âncora nos pés.
-# Quadros: 0-3 andar (antigo), 4-7 ataque, 8-9 parado, 10 grito, 11 bênção, 12 golpe sofrido, 13-15 queda, 16-23 andar (vídeo Wan 2.2, pasta andar/).
+# Quadros: 0-3 andar (antigo), 4-7 ataque (Gemini), 8-9 parado, 10 grito, 11 bênção, 12 golpe sofrido, 13-15 queda (Gemini), 16-23 andar (vídeo Wan 2.2, pasta andar/).
 from PIL import Image
 import numpy as np, json, io, base64, os
 from scipy import ndimage as nd
@@ -29,6 +29,13 @@ def key(cell):
   lum=(rgb[:,:,0]*.3+rgb[:,:,1]*.59+rgb[:,:,2]*.11)[...,None]
   rgb=np.where(pink[...,None],np.clip(lum*1.1+25,0,255).repeat(3,2),rgb)
   return np.dstack([rgb,a*255]).astype(np.uint8)
+def despill(fr,band=3):
+  # tira o reflexo magenta da orla (o vídeo deixa a borda rosada)
+  f=fr.astype(float);al=f[:,:,3]>0
+  edge=al&~nd.binary_erosion(al,iterations=band)
+  s=np.clip(np.minimum(f[:,:,0],f[:,:,2])-f[:,:,1],0,None)*edge
+  f[:,:,0]-=s*.85;f[:,:,2]-=s*.85
+  return np.clip(f,0,255).astype(np.uint8)
 def cells(path):
   im=np.array(Image.open(path).convert('RGB')).astype(float);H,W,_=im.shape
   cw=W/4;ch=H/2;out={}
@@ -38,25 +45,25 @@ def cells(path):
       out[(r,c)]=key(im[y0:y1,x0:x1])
   return out
 A=cells(D+'/folha1.png');B=cells(D+'/folha2.png')
-SEQ=[A[(0,0)],A[(0,1)],A[(0,2)],A[(0,3)],A[(1,0)],A[(1,1)],A[(1,2)],A[(1,3)],
-     B[(0,0)],B[(0,1)],B[(0,2)],B[(0,3)],B[(1,0)],B[(1,1)],B[(1,2)],B[(1,3)]]
-def despill(fr,band=3):
-  # tira o reflexo magenta da orla (o vídeo deixa a borda rosada)
-  f=fr.astype(float);al=f[:,:,3]>0
-  edge=al&~nd.binary_erosion(al,iterations=band)
-  s=np.clip(np.minimum(f[:,:,0],f[:,:,2])-f[:,:,1],0,None)*edge
-  f[:,:,0]-=s*.85;f[:,:,2]-=s*.85
-  return np.clip(f,0,255).astype(np.uint8)
+def unpink(fr):
+  # metal claro com reflexo magenta (espada): volta a cinzento; a capa (escura) não é tocada
+  f=fr.astype(float);r,g,b=f[:,:,0],f[:,:,1],f[:,:,2];m=np.minimum(r,b)-g;sel=(g>95)&(m>8)&(f[:,:,3]>0)
+  k=np.clip(m,0,None)*sel;f[:,:,0]-=k*.9;f[:,:,2]-=k*.9;return np.clip(f,0,255).astype(np.uint8)
+GA={k:unpink(despill(v)) for k,v in cells(D+'/gemini/ataque_pro.webp').items()} # ataque novo (Gemini Pro): 4x2, usamos 2,3,6,4
+GQ={k:unpink(despill(v)) for k,v in cells(D+'/gemini/queda_pro.webp').items()} # queda (Gemini Pro): golpe 1, joelhos 4, chão 6, deitado 8
+GG={k:unpink(despill(v)) for k,v in cells(D+'/gemini/grito_bencao_pro.webp').items()} # grito (0,2) e bênção (1,2)
+SEQ=[A[(0,0)],A[(0,1)],A[(0,2)],A[(0,3)],GA[(0,1)],GA[(0,2)],GA[(1,1)],GA[(0,3)],
+     B[(0,0)],B[(0,1)],GG[(0,2)],GG[(1,2)],GQ[(0,0)],GQ[(0,3)],GQ[(1,1)],GQ[(1,3)]]
 WALK=[despill(key(np.array(Image.open(D+f'/andar/f{n}.webp').convert('RGB')).astype(float))) for n in range(16,31,2)]
 SEQ+=WALK
-SHEET=[0]*8+[1]*8+[2]*8
+SHEET=[0]*4+[3]*4+[1]*2+[3]*2+[3]*4+[2]*8
 def anchor(fr,lying=False):
   al=fr[:,:,3]>100;ys,xs=np.nonzero(al);top,bot=ys.min(),ys.max();h=bot-top
   if lying:return (xs.min()+xs.max())/2,bot,h
   band=(ys>top+h*.30)&(ys<top+h*.62)  # tronco: ignora espada e capa nas pontas
   return float(np.median(xs[band])),bot,h
 # escala por folha a partir da pose parada / primeiro passo
-sc=[TH/anchor(A[(0,0)])[2],TH/anchor(B[(0,0)])[2],TH/float(np.median([anchor(f)[2] for f in WALK]))]
+sc=[TH/anchor(A[(0,0)])[2],TH/anchor(B[(0,0)])[2],TH/float(np.median([anchor(f)[2] for f in WALK])),TH/anchor(GA[(0,0)])[2]*1.0]
 frames=[];meta=[]
 for i,fr in enumerate(SEQ):
   s=sc[SHEET[i]];cx,fy,_=anchor(fr,lying=14<=i<16)
