@@ -5826,7 +5826,7 @@ function reinoStart(n){setTimeout(()=>voz('missao'),1800);const R=G.reino;const 
   recount();G.objShow=1;objRender();
   toast((m.story?'Missão '+(n+1):'Capítulo '+(n+1))+': '+m.t);snd('wonder',null,null,{force:1})}
 function reinoTick(dt){const R=G.reino;if(!R||R.demo)return;
-  if(!R.ms){R.calm-=dt;if(R.calm<=0)reinoStart(R.n)}
+  if(!R.ms){if(!(R.calm>=0&&R.calm<=3600))R.calm=REINO_CALM;R.calm-=dt;if(R.calm<=0)reinoStart(R.n)}
   const m=R.ms;
   if(m){
     if((m.k==='raids'&&m.wv<m.waves)||m.k==='cerco'&&G.time-m.t0<m.secs){m.nx-=dt;if(m.nx<=0){m.wv=(m.wv||0)+1;m.nx=m.gap;reinoRaid(m)}}
@@ -5981,6 +5981,7 @@ function reinoDemo(){
 function reinoLoad(fromCk){mobileLandscape();netLeaveGame();if(fromCk){try{const s=localStorage.getItem(reinoCkKey());if(s)localStorage.setItem(reinoKey(),s)}catch(e){}}
   if(!loadGame(reinoKey()))return false;if(!G.reino){toast('Gravação do reino inválida',true);return false}
   if(!G.hero){G.hero=[heroNew(),heroNew()];if(!hasUnitWhere(0,u=>u.d.king))heroSpawnKing(0)}
+  {const R=G.reino;if(R.demo)delete R.demo;if(!R.ms&&!(R.calm>=0&&R.calm<=3600))R.calm=REINO_CALM} // repara saves antigos com contador preso (demo gravada por versões antigas)
   G.over=false;objRender();const m=G.reino.ms;toast(m?(m.daily?'Desafio de hoje: ':m.story?'Missão '+(m.n+1)+': ':'Capítulo '+(m.n+1)+': ')+m.t:'O reino continua.');return true}
 function reinoRetry(){$('sEnd').hidden=true;$('sPause').hidden=true;if(!reinoLoad(true))reinoFound()}
 function reinoSaveMeta(){const R=G&&G.reino;if(!R)return;const m=R.ms&&R.ms.daily?R.susp:R.ms;try{localStorage.setItem(reinoMetaKey(),JSON.stringify({n:R.n,t:(m||reinoDef(R.n)).t,gl:R.gl||0,age:P[0].age,pop:P[0].pop,klv:G.hero&&G.hero[0]?G.hero[0].lv:1,time:Math.round(G.time),done:(R.hist||[]).slice(-8),big:(W>=REINO_N?1:0)}))}catch(e){}}
