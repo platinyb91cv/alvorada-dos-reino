@@ -4889,6 +4889,13 @@ function tap(sx,sy,touch,right){
   if(placing){setPlaceAt(w);uiDirty=true;if(!touch)confirmPlace();return}
   const e=pickAt(sx,sy,touch);
   const units=ownUnitsSel();
+  // baú/relíquia: tocar no baú (com nada ou só não-sacerdotes selecionados) manda o Sacerdote livre mais próximo; se não houver, avisa
+  if(!right&&!e&&!units.length&&G.relics){const rr=relicNear(w.x,w.y,touch?2.4:1.6);
+    if(rr>=0){const q=G.relics[rr];
+      const prs=ents.filter(u=>u.kind==='u'&&u.o===ME&&u.d.convert&&!u.dead&&u.relic==null&&!G.relics.some(z=>z.c===u.id));
+      if(prs.length){let best=prs[0],bd=1e9;for(const u of prs){const d=hyp(u.x-q.x,u.y-q.y);if(d<bd){bd=d;best=u}}setSel([best]);issueCmd([best],null,{x:q.x,y:q.y})}
+      else toast('Para apanhar o baú precisas de um Sacerdote — treina-o no Templo.',true);
+      return}}
   const selB=sel.length===1&&sel[0].kind==='b'&&sel[0].o===ME&&sel[0].done&&sel[0].d.train?sel[0]:null;
   if(right&&!units.length&&selB){setRally(selB,w,e);return}
   if(!right&&e&&e.kind==='u'&&e.o===ME&&!(e.d.cap&&units.length&&units.some(u=>!u.d.naval)&&!units.includes(e))){
@@ -4915,7 +4922,9 @@ function doCommand(o,units,e,w,mode,form){
   form=form||'livre';const amove=mode==='amove';
   units=units.filter(alive);for(const u of units)if(u.d.king){u.kpost=null;u.kIdle=0} // nova ordem: o Rei passa a rondar à volta do novo sítio
   const ping=()=>{};if(o===ME)uiDirty=true;
-  {const ri=relicNear(w.x,w.y,1.1);const pr=units.filter(u=>u.d.convert);if(ri>=0&&pr.length){orderRelic(pr[0],ri);units=units.filter(u=>u!==pr[0]);if(o===ME)toast('O sacerdote vai buscar a relíquia');if(!units.length)return}}
+  {const pr=units.filter(u=>u.d.convert);const ri=relicNear(w.x,w.y,pr.length?2.8:1.6);
+    if(ri>=0){if(pr.length){orderRelic(pr[0],ri);units=units.filter(u=>u!==pr[0]);if(o===ME)toast('O sacerdote vai buscar a relíquia');if(!units.length)return}
+      else if(o===ME)toast('Precisas de um Sacerdote para apanhar o baú/relíquia (treina-o no Templo).',true)}}
   if(e&&e.kind==='b'&&e.o===o&&e.d.market&&e.done&&units.some(u=>u.d.trade)){for(const u of units.filter(u=>u.d.trade))orderTrade(u,e);units=units.filter(u=>!u.d.trade);if(!units.length)return}
   if(mode==='patrol'){const mil=units.filter(u=>u.d.mil);groupMove(mil,w.x,w.y,true,form);for(const u of mil)u.patrol={a:{x:u.x,y:u.y},b:{x:u.dest?u.dest.x:w.x,y:u.dest?u.dest.y:w.y}};ping();return}
   if(mode==='defend'){groupMove(units,w.x,w.y,false,form);for(const u of units){u.stance='defend';u.guard=u.dest?{x:u.dest.x,y:u.dest.y}:{x:w.x,y:w.y}}ping();return}
