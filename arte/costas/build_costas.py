@@ -3,7 +3,7 @@
 import numpy as np,io,base64,json,re,sys,os
 from PIL import Image
 from scipy import ndimage as nd
-HMAP={'guerreiro':36,'espadachim':36,'lanceiro':36,'arqueiro':36,'sacerdote':38}
+HMAP={'guerreiro':36,'espadachim':36,'lanceiro':36,'arqueiro':36,'sacerdote':38,'cavaleiro':50,'cavArqueira':50}
 def cut(path):
   im=np.array(Image.open(path).convert('RGB')).astype(float);bg=np.array([255,0,255.])
   d=np.sqrt(((im-bg)**2).sum(2));a=np.clip((d-70)/(150-70),0,1)
