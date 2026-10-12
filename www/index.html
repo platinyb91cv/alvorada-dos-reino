@@ -728,6 +728,7 @@ function canTrainType(o,t){const d=UNITS[t];return !!d&&!d.king&&(!d.civ||d.civ=
 function bldHp(o,type,lvl){const d=BLDS[type];let h=type==='torre'?TOWER[lvl||1].hp:d.hp;if(civOf(o)==='montanha'&&(d.wall||d.gate||type==='torre'))h*=1.3;if(P[o]&&P[o].age>=2)h*=1.2;return Math.round(h)}
 const GATHER={wood:.55,food:.7,farm:.5,gold:.5,stone:.45,hunt:.9,fish:.7};
 const CARRY=10;
+const POP_MAX=1000; // limite de população (antes era 100): sobe conforme constróis casas/centros
 // Dificuldade da IA: mult = ritmo de recolha/obra; first = 1.º ataque (s); wave/grow/waveMax = tamanho das vagas;
 // raid = primeiro assalto pequeno (aos 'at' s com 'n' soldados) para o início não ficar parado; armyMax = exército máximo; gap = pausa entre ataques; vills = aldeões por idade; maxAge = idade máxima
 const DIFF=[
@@ -1702,7 +1703,7 @@ function recount(){
   for(const p of P){p.pop=0;p.popCap=0}
   const nk=a=>a.reduce((n,u)=>n+(u.d&&u.d.king?0:1),0); // o Rei não ocupa população
   for(const e of ents){if(e.kind==='u'){if(!e.d.king)P[e.o].pop++;if(e.cargo)P[e.o].pop+=nk(e.cargo)}else if(e.kind==='b'){if(e.garr)P[e.o].pop+=nk(e.garr);if(e.done&&e.d.pop)P[e.o].popCap+=e.d.pop}}
-  for(const p of P)p.popCap=Math.min(100,p.popCap);
+  for(const p of P)p.popCap=Math.min(POP_MAX,p.popCap);
 }
 
 /* ---------------- IA ---------------- */
