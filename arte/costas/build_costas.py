@@ -3,7 +3,7 @@
 import numpy as np,io,base64,json,re,sys,os
 from PIL import Image
 from scipy import ndimage as nd
-HMAP={'guerreiro':36,'espadachim':36,'lanceiro':36,'arqueiro':36,'sacerdote':38,'cavaleiro':50,'cavArqueira':50}
+HMAP={'guerreiro':36,'espadachim':36,'lanceiro':36,'arqueiro':36,'sacerdote':38,'cavaleiro':50,'cavArqueira':50,'aldeao':34}
 def cut(path):
   im=np.array(Image.open(path).convert('RGB')).astype(float);bg=np.array([255,0,255.])
   d=np.sqrt(((im-bg)**2).sum(2));a=np.clip((d-70)/(150-70),0,1)
@@ -25,11 +25,26 @@ units=[u for u in HMAP if os.path.exists('arte/costas/%s.png'%u)]
 imgs={};meta={};H={}
 for u in units:
   img,fx=cut('arte/costas/%s.png'%u);imgs[u]=img;meta[u]={'fx':fx,'fy':img.height,'h':img.height};H[u]=HMAP[u]
+# o aldeao serve de costas para todas as tarefas (v_*): mesma imagem, várias chaves
+VIL=['v_madeira','v_pedra','v_construcao','v_agricultura','v_caca','v_colher']
+if 'aldeao' in units:
+  for vk in VIL:
+    meta[vk]=dict(meta['aldeao']);H[vk]=34
+  imgs2={k:v for k,v in imgs.items() if k!='aldeao'};
+  # manter a imagem do aldeao no atlas, referida pelas chaves v_*
+  imgs2['aldeao']=imgs['aldeao']
+  del meta['aldeao'];del H['aldeao']
+  units=[u for u in units if u!='aldeao']+['aldeao']
 # atlas em prateleira única
 pad=2;W=sum(im.width+pad for im in imgs.values());HH=max(im.height for im in imgs.values())
 at=Image.new('RGBA',(W,HH),(0,0,0,0));x=0
+VILK=['v_madeira','v_pedra','v_construcao','v_agricultura','v_caca','v_colher']
 for u in units:
-  im=imgs[u];at.paste(im,(x,0));fr=[x,0,im.width,im.height];meta[u]['f']=[fr]*9;x+=im.width+pad
+  im=imgs[u];at.paste(im,(x,0));fr=[x,0,im.width,im.height]
+  if u=='aldeao':
+    for vk in VILK:meta[vk]['f']=[fr]*9
+  else:meta[u]['f']=[fr]*9
+  x+=im.width+pad
 buf=io.BytesIO();at.save(buf,'WEBP',quality=88,method=6);b64=base64.b64encode(buf.getvalue()).decode()
 at.save('arte/costas/costas_atlas.png')
 print('atlas',at.size,len(buf.getvalue())//1024,'KB',units)
