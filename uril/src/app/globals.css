@@ -1,0 +1,14 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer components {
+  /* Madeira: cor base, veio horizontal e um brilho suave no topo. */
+  .wood-board {
+    background-color: #a86b35;
+    background-image:
+      repeating-linear-gradient(92deg, rgba(60, 30, 10, 0.12) 0 2px, transparent 2px 11px),
+      repeating-linear-gradient(88deg, rgba(255, 220, 170, 0.06) 0 1px, transparent 1px 23px),
+      linear-gradient(180deg, #c98a4f 0%, #a86b35 45%, #8a5526 100%);
+  }
+}
