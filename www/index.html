@@ -4314,15 +4314,19 @@ function netTick(raw){
   if(NET.awaitSnap){if(NET.wantSnap&&NET.peerOnline&&NET.slot===0){NET.awaitSnap=false;NET.wantSnap=false;netSendSnap()}else{netWaitUI(true,'A sincronizar…');return}}
   if(NET.wantSnap&&NET.peerOnline){NET.wantSnap=false;netSendSnap()}
   NET.acc=Math.min(NET.acc+raw,1.2);let n=0;
+  if(!NET.look||NET.look<NET.delay)NET.look=NET.delay; // buffer adaptativo: envia os turnos mais à frente quando a rede engasga
   while(n<10){
     const T=NET.turn;
-    while(NET.sent<T+NET.delay){NET.sent++;netSeal(NET.sent)}
+    while(NET.sent<T+NET.look){NET.sent++;netSeal(NET.sent)}
     if(NET.acc<TURN_DT&&n>0)break;
     if(NET.acc<TURN_DT)break;
-    if(!netHave(T)){NET.waitT+=raw/(n+1);break}
+    if(!netHave(T)){NET.waitT+=raw/(n+1);
+      if(NET.look<14&&(!NET.lookT||Date.now()-NET.lookT>1200)){NET.look++;NET.lookT=Date.now()} // esperou pelo adversário: aumenta o avanço
+      break}
     for(let o=0;o<2;o++)for(const c of NET.cmds[o].get(T)){try{EXEC[c.k]&&EXEC[c.k](o,c.d)}catch(e){console.error(e)}}
     for(let i=0;i<TURN_STEPS;i++)step(1/30);
     NET.turn=T+1;NET.acc-=TURN_DT;n++;NET.waitT=0;NET.stats.turns++;
+    if(NET.look>NET.delay&&T%300===0)NET.look--; // rede estável: baixa devagar para reduzir o atraso de input
     if(T%HASH_EVERY===0){const h=stateHash();NET.myHash.set(T,h);netRelay({g:'hash',t:T,h,ep:NET.epoch});netCmpHash(T)}
     if(T%100===0){for(const M of NET.cmds)for(const k of M.keys())if(k<T-300)M.delete(k);for(const H of [NET.myHash,NET.peerHash])for(const k of H.keys())if(k<T-600)H.delete(k)}
   }
@@ -4474,7 +4478,7 @@ function netHostStart(){
   const map=O.map==='aleatorio'?pick(['rios','continental','lagos','arquipelago']):O.map;const c0=NET.myCiv&&NET.myCiv!=='aleatorio'?NET.myCiv:pick(CIV_KEYS),c1=NET.peerCiv&&NET.peerCiv!=='aleatorio'?NET.peerCiv:pick(CIV_KEYS);
   const opts={map,vic:O.vic||'classico',civ:[c0,c1]};
   netRelay({g:'start',seed,delay,ver:GAME_VER,opts});netBegin(seed,opts)}
-function netEnterGame(){NET.on=true;NET.game=true;NET.cmds=[new Map(),new Map()];NET.out=[];NET.myHash.clear();NET.peerHash.clear();NET.desync=0;NET.epoch=0;NET.lastSnapT=-1;NET.acc=0;NET.waitT=0;ME=NET.slot;NET.lostT=0;NET.reported=false;
+function netEnterGame(){NET.on=true;NET.game=true;NET.cmds=[new Map(),new Map()];NET.out=[];NET.myHash.clear();NET.peerHash.clear();NET.desync=0;NET.epoch=0;NET.lastSnapT=-1;NET.acc=0;NET.waitT=0;NET.look=NET.delay;NET.lookT=0;ME=NET.slot;NET.lostT=0;NET.reported=false;
   $('sOnline').hidden=true;netSave()}
 function netBegin(seed,opts){
   netEnterGame();NET.turn=0;NET.sent=-1;
