@@ -449,7 +449,6 @@ input{font-family:inherit;-webkit-user-select:text;user-select:text;touch-action
         <button class="cta alt" id="bReinoDaily" hidden><i data-ic="trophy"></i><span>Desafio de hoje no meu reino</span></button>
         <button class="ghostbtn" id="bReinoKing">👑 O teu Rei</button>
         <button class="ghostbtn" id="bReinoBig" hidden>🌊 Abrir mundo grande (leva a tua cidade)</button>
-        <button class="ghostbtn" id="bReinoDemo">🏰 Reino de demonstração (para gravar)</button>
         <button class="ghostbtn" id="bReinoNew" hidden>Fundar um reino novo</button>
         <button class="ghostbtn" id="bCampBack">Voltar</button>
       </div>
@@ -5994,7 +5993,8 @@ $('bCampGo').onclick=()=>{sfx('click');$('sCamp').hidden=true;if(reinoHas()){if(
 $('bReinoKing').onclick=()=>{sfx('click');kingEdOpen(null)};
 $('bReinoDaily').onclick=()=>{sfx('click');$('sCamp').hidden=true;if(reinoLoad(false))reinoDailyStart();else{reinoFound();reinoDailyStart()}};
 let reinoBigArm=0;$('bReinoBig').onclick=()=>{if(Date.now()-reinoBigArm>3000){reinoBigArm=Date.now();toast('Vais levar a tua cidade (com tudo o que tens) para um mundo muito maior, com mar aberto e ilhas. Nada se perde. Toca outra vez para confirmar.',true);return}reinoBigArm=0;sfx('click');$('sCamp').hidden=true;reinoBigWorld()};
-let reinoDemoArm=0;$('bReinoDemo').onclick=()=>{if(reinoHas()&&Date.now()-reinoDemoArm>3000){reinoDemoArm=Date.now();toast('Isto cria uma cidade de demonstração e substitui o teu reino atual. Toca outra vez para confirmar.',true);return}reinoDemoArm=0;sfx('click');$('sCamp').hidden=true;reinoDemo()};
+// gesto escondido (sem botão visível): 5 toques rápidos na linha do Rei abre o reino de demonstração para gravar
+let demoTap=0,demoTapT=0;$('cmInfo').addEventListener('click',()=>{const n=Date.now();if(n-demoTapT>1600)demoTap=0;demoTapT=n;if(++demoTap>=5){demoTap=0;sfx('click');$('sCamp').hidden=true;reinoDemo()}});
 let reinoNewArm=0;$('bReinoNew').onclick=()=>{if(Date.now()-reinoNewArm>3000){reinoNewArm=Date.now();toast('Vais apagar o teu reino atual. Toca outra vez para confirmar.',true);return}reinoNewArm=0;sfx('click');
   try{localStorage.removeItem(reinoKey());localStorage.removeItem(reinoCkKey());localStorage.removeItem(reinoMetaKey())}catch(e){}$('sCamp').hidden=true;reinoFound()};
 $('bCamp').onclick=()=>{sfx('click');reinoOpen()};
