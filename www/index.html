@@ -4469,7 +4469,7 @@ function netClose(){NET.closing=true;clearInterval(NET.pingT);try{NET.ws&&NET.ws
 // ---------- início e fim da partida ----------
 function netHostStart(){
   if(!NET.peerOnline){lobbyStatus('Ainda ninguém entrou na sala',true);return}
-  const seed=Math.floor(Math.random()*1e9);const delay=clamp(Math.ceil((NET.rtt/2+70)/(TURN_DT*1000)),2,6);NET.delay=delay;
+  const seed=Math.floor(Math.random()*1e9);const delay=clamp(Math.ceil((NET.rtt+160)/(TURN_DT*1000)),3,14);NET.delay=delay;
   const O=NET.opts||{vic:'classico',map:'rios'},r=mulberry32(seed^0x5bd1e995),pick=a=>a[Math.floor(r()*a.length)];
   const map=O.map==='aleatorio'?pick(['rios','continental','lagos','arquipelago']):O.map;const c0=NET.myCiv&&NET.myCiv!=='aleatorio'?NET.myCiv:pick(CIV_KEYS),c1=NET.peerCiv&&NET.peerCiv!=='aleatorio'?NET.peerCiv:pick(CIV_KEYS);
   const opts={map,vic:O.vic||'classico',civ:[c0,c1]};
@@ -4504,7 +4504,7 @@ function netSavesRender(){const el=$('olSaves');if(!el)return;const peer=NET.pee
 $('olSaves').addEventListener('click',async ev=>{const b=ev.target.closest('button[data-id]');if(!b)return;const it=netSavesList().find(x=>x.id==b.dataset.id);if(!it)return;
   let S;try{S=await unpackJSON(it.data)}catch(e){toast('Não foi possível ler a partida guardada',true);return}
   if(it.me!==NET.slot)S=swapSnap(S);if(S.v!==GAME_VER){toast('Esta partida foi guardada noutra versão do jogo',true);return}
-  NET.delay=clamp(Math.ceil((NET.rtt/2+70)/(TURN_DT*1000)),2,6);netEnterGame();NET.turn=0;NET.sent=-1;for(let t=0;t<NET.delay;t++){NET.cmds[0].set(t,[]);NET.cmds[1].set(t,[])}NET.sent=NET.delay-1;
+  NET.delay=clamp(Math.ceil((NET.rtt+160)/(TURN_DT*1000)),3,14);netEnterGame();NET.turn=0;NET.sent=-1;for(let t=0;t<NET.delay;t++){NET.cmds[0].set(t,[]);NET.cmds[1].set(t,[])}NET.sent=NET.delay-1;
   S.G.over=false;applySnap(S,true);G.over=false;running=true;paused=false;speed=1;netModeUI();document.body.classList.add('ingame');for(const id of ['sMenu','sEnd','sHelp','sPause','sOnline','sSetup','sCamp'])$(id).hidden=true;audioGameStart();
   netSendSnap(true);toast('Partida retomada! Continua onde ficaram.')});
 // troca os lados (quem guardou como convidado volta como anfitrião)
