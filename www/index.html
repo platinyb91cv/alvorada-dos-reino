@@ -449,6 +449,7 @@ input{font-family:inherit;-webkit-user-select:text;user-select:text;touch-action
         <button class="cta alt" id="bReinoDaily" hidden><i data-ic="trophy"></i><span>Desafio de hoje no meu reino</span></button>
         <button class="ghostbtn" id="bReinoKing">👑 O teu Rei</button>
         <button class="ghostbtn" id="bReinoBig" hidden>🌊 Abrir mundo grande (leva a tua cidade)</button>
+        <button class="ghostbtn" id="bReinoDemo">🏰 Reino de demonstração (para gravar)</button>
         <button class="ghostbtn" id="bReinoNew" hidden>Fundar um reino novo</button>
         <button class="ghostbtn" id="bCampBack">Voltar</button>
       </div>
@@ -5896,6 +5897,70 @@ function reinoBigWorld(){
   try{localStorage.setItem(reinoKey(),serialize());localStorage.setItem(reinoCkKey(),serialize())}catch(e){}reinoSaveMeta();
   toast('O teu reino abriu-se para um mundo grande! A tua cidade continua igual — a leste e a sul há mar aberto, ilhas e terras novas. Constrói uma doca na costa e explora.',true);
 }
+// ---------- Reino de demonstração (cidade pronta e avançada, para gravar propaganda) ----------
+function demoRemove(e){const i=ents.indexOf(e);if(i>=0)ents.splice(i,1);byId.delete(e.id);
+  if(e.kind==='b')for(let y=e.ty;y<e.ty+e.h;y++)for(let x=e.tx;x<e.tx+e.w;x++){const j=idx(x,y);if(j>=0&&j<bldAt.length){bldAt[j]=0;if(blk[j]===3||blk[j]===4)blk[j]=0}}}
+function demoDock(PX,PY,PW,PH){
+  const cx=PX+PW/2,cy=PY+PH/2;let best=null,bd=1e9;
+  for(let y=1;y<H-1;y++)for(let x=1;x<W-1;x++){if(terr[idx(x,y)]!==1)continue;const d=hyp(x-cx,y-cy);if(d<bd){bd=d;best={x,y}}}
+  if(!best||bd>75)return;
+  for(let ty=best.y-4;ty<=best.y+4;ty++)for(let tx=best.x-4;tx<=best.x+4;tx++){
+    if(!inb(tx,ty)||!canPlace('doca',tx,ty,0,0,true))continue;
+    const dk=mkBld(0,'doca',tx,ty,true);const ships=['gale','navioPesado','barcoPesca','barcoPesca','transporte'];let p=0;
+    for(let ry=ty-2;ry<=ty+BLDS.doca.h+2&&p<ships.length;ry++)for(let rx=tx-2;rx<=tx+BLDS.doca.w+2&&p<ships.length;rx++){if(inb(rx,ry)&&terr[idx(rx,ry)]===1&&!bldAt[idx(rx,ry)]){const u=mkUnit(0,ships[p++],rx+.5,ry+.5);setMover(u)}}
+    for(let y=ty-3;y<=ty+5;y++)for(let x=tx-3;x<=tx+5;x++)if(inb(x,y))vis[idx(x,y)]=2;
+    return dk}
+}
+function demoCity(sx,sy){
+  const PW=46,PH=44;
+  const PX=clamp(sx-(PW>>1),3,W-PW-3),PY=clamp(sy-(PH>>1),3,H-PH-3);
+  // limpar terreno do lote (+margem), remover recursos/bichos e revelar
+  for(let y=PY-2;y<PY+PH+2;y++)for(let x=PX-2;x<PX+PW+2;x++){if(!inb(x,y))continue;const i=idx(x,y);const r=resAt[i];if(r){byId.delete(r.id);resAt[i]=null}bldAt[i]=0;terr[i]=0;blk[i]=0;vis[i]=2}
+  for(const e of ents.slice())if(e.kind==='u'&&e.o!==0&&e.x>=PX-1&&e.x<PX+PW+1&&e.y>=PY-1&&e.y<PY+PH+1)demoRemove(e);
+  const db=(type,cx,cy)=>{const tx=PX+cx,ty=PY+cy,d=BLDS[type];if(!inb(tx,ty)||!inb(tx+d.w-1,ty+d.h-1))return null;for(let y=ty;y<ty+d.h;y++)for(let x=tx;x<tx+d.w;x++)if(bldAt[idx(x,y)])return null;return mkBld(0,type,tx,ty,true)};
+  const un=(type,cx,cy)=>{const ux=PX+cx,uy=PY+cy;if(!inb(ux|0,uy|0)||blk[idx(ux|0,uy|0)]||bldAt[idx(ux|0,uy|0)])return null;const u=mkUnit(0,type,ux,uy);setMover(u);return u};
+  // muralha fortificada, torres de canto e portões nos 4 lados
+  const gT=23,gB=23,gL=22,gR=22;
+  for(const [cx,cy] of [[0,0],[PW-2,0],[0,PH-2],[PW-2,PH-2]])db('torre',cx,cy);
+  for(let x=0;x<PW;x++)for(const y of [0,PH-1]){const tx=PX+x,ty=PY+y;if(bldAt[idx(tx,ty)])continue;db((y===0&&x===gT)||(y===PH-1&&x===gB)?'portaoPedra':'muralhaFort',x,y)}
+  for(let y=0;y<PH;y++)for(const x of [0,PW-1]){const tx=PX+x,ty=PY+y;if(bldAt[idx(tx,ty)])continue;db((x===0&&y===gL)||(x===PW-1&&y===gR)?'portaoPedra':'muralhaFort',x,y)}
+  db('torre',17,2);db('torre',26,2);db('torre',gB-1,PH-4);
+  // banda de topo: Centro — Maravilha — Centro
+  db('centro',13,2);db('maravilha',20,2);db('centro',30,2);
+  // fila de produção
+  db('quartel',3,9);db('arquearia',7,9);db('estabulo',11,9);db('oficina',15,9);db('templo',19,9);db('mercado',23,9);db('ferreiro',27,9);db('armazem',30,9);
+  // quintas (2 filas)
+  for(const fy of [14,18])for(let i=0;i<9;i++)db('quinta',3+i*4,fy);
+  // casas (2 filas)
+  for(const hy of [22,25])for(let i=0;i<13;i++)db('casa',3+i*3,hy);
+  // Rei e aldeões junto aos centros
+  un('rei',22.5,7.5);if(G.hero&&G.hero[0])G.hero[0].k=1;
+  for(let i=0;i<14;i++)un('aldeao',6.5+(i%7)*4,(i<7?6:7)+.5);
+  // desfile do exército (zona aberta em baixo)
+  const rows=[['espadachim',12],['besteiro',12],['cavPesada',10],['cavaleiro',10],['sacerdote',6]];let ry=29;
+  for(const [t,n] of rows){for(let i=0;i<n;i++)un(t,4.9+i*3,ry+.5);ry+=2}
+  for(let i=0;i<3;i++)un('trebuchet',6.5+i*4,40.5);
+  // recursos lá fora (bosque + minas) para parecer vivo
+  const fo=PY+PH+4;forest(PX+10,fo,4,.8);forest(PX+18,fo,3.4,.8);cluster('gold',PX+26,fo,8);cluster('stone',PX+30,fo,8);
+  for(let i=0;i<W*H;i++)if(terr[i]===1)blk[i]=1;else if(resAt[i]&&!resAt[i].carcass&&!resAt[i].fish)blk[i]=2;
+  try{demoDock(PX,PY,PW,PH)}catch(e){}
+  cam.z=.52;centerCam(PX+PW/2,PY+PH/2);
+}
+function reinoDemo(){
+  mobileLandscape();netLeaveGame();gameMode='normal';const d0=difficulty;difficulty=1;
+  const civ=CIV_KEYS.includes(SETUP.civ)?SETUP.civ:'planicies';const sd=Math.floor(Math.random()*1e9);
+  let hist=[];try{for(let i=0;i<14;i++)hist.push([i,reinoDef(i).t])}catch(e){}
+  startGame(sd,{map:'reino',vic:'classico',civ:[civ,civ==='montanha'?'planicies':'montanha'],reino:{n:14,gl:240,ms:null,calm:1e9,hist,born:new Date().toISOString().slice(0,10)}});
+  difficulty=d0;
+  P[0].age=2;for(const t of ['machado','picareta','arado','roda','forja','flechas','cota'])P[0].techs[t]=1;
+  for(const k of KINDS)P[0].res[k]=8000;
+  for(const e of ents.slice())if(e.o===0||(e.o===2&&UNITS[e.type]&&UNITS[e.type].hostile))demoRemove(e);
+  const s=G.starts[0];demoCity(Math.round(s.x),Math.round(s.y));
+  if(!SPR.oak)makeSprites();buildTerrain();resetChunks();FCACHE.clear();
+  recount();resDirty=true;uiDirty=true;updVis();
+  try{localStorage.setItem(reinoKey(),serialize());localStorage.setItem(reinoCkKey(),serialize())}catch(e){}reinoSaveMeta();
+  toast('Reino de demonstração pronto: Idade do Ferro, cidade murada, maravilha e exército. Está em paz — grava à vontade.',true);
+}
 function reinoLoad(fromCk){mobileLandscape();netLeaveGame();if(fromCk){try{const s=localStorage.getItem(reinoCkKey());if(s)localStorage.setItem(reinoKey(),s)}catch(e){}}
   if(!loadGame(reinoKey()))return false;if(!G.reino){toast('Gravação do reino inválida',true);return false}
   if(!G.hero){G.hero=[heroNew(),heroNew()];if(!hasUnitWhere(0,u=>u.d.king))heroSpawnKing(0)}
@@ -5929,6 +5994,7 @@ $('bCampGo').onclick=()=>{sfx('click');$('sCamp').hidden=true;if(reinoHas()){if(
 $('bReinoKing').onclick=()=>{sfx('click');kingEdOpen(null)};
 $('bReinoDaily').onclick=()=>{sfx('click');$('sCamp').hidden=true;if(reinoLoad(false))reinoDailyStart();else{reinoFound();reinoDailyStart()}};
 let reinoBigArm=0;$('bReinoBig').onclick=()=>{if(Date.now()-reinoBigArm>3000){reinoBigArm=Date.now();toast('Vais levar a tua cidade (com tudo o que tens) para um mundo muito maior, com mar aberto e ilhas. Nada se perde. Toca outra vez para confirmar.',true);return}reinoBigArm=0;sfx('click');$('sCamp').hidden=true;reinoBigWorld()};
+let reinoDemoArm=0;$('bReinoDemo').onclick=()=>{if(reinoHas()&&Date.now()-reinoDemoArm>3000){reinoDemoArm=Date.now();toast('Isto cria uma cidade de demonstração e substitui o teu reino atual. Toca outra vez para confirmar.',true);return}reinoDemoArm=0;sfx('click');$('sCamp').hidden=true;reinoDemo()};
 let reinoNewArm=0;$('bReinoNew').onclick=()=>{if(Date.now()-reinoNewArm>3000){reinoNewArm=Date.now();toast('Vais apagar o teu reino atual. Toca outra vez para confirmar.',true);return}reinoNewArm=0;sfx('click');
   try{localStorage.removeItem(reinoKey());localStorage.removeItem(reinoCkKey());localStorage.removeItem(reinoMetaKey())}catch(e){}$('sCamp').hidden=true;reinoFound()};
 $('bCamp').onclick=()=>{sfx('click');reinoOpen()};
