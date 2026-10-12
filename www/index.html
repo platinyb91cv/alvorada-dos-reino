@@ -448,7 +448,7 @@ input{font-family:inherit;-webkit-user-select:text;user-select:text;touch-action
         <button class="cta" id="bCampGo"><i data-ic="play"></i><span>Continuar o reino</span></button>
         <button class="cta alt" id="bReinoDaily" hidden><i data-ic="trophy"></i><span>Desafio de hoje no meu reino</span></button>
         <button class="ghostbtn" id="bReinoKing">👑 O teu Rei</button>
-        <button class="ghostbtn" id="bReinoBig" hidden>🌊 Ir para o mundo grande (mantém o capítulo)</button>
+        <button class="ghostbtn" id="bReinoBig" hidden>🌊 Abrir mundo grande (leva a tua cidade)</button>
         <button class="ghostbtn" id="bReinoNew" hidden>Fundar um reino novo</button>
         <button class="ghostbtn" id="bCampBack">Voltar</button>
       </div>
@@ -5847,6 +5847,55 @@ function reinoFound(keep){mobileLandscape();netLeaveGame();gameMode='normal';con
     const bonus=350+n*120;for(const k of KINDS)P[0].res[k]+=bonus;recount();resDirty=true;uiDirty=true}
   try{localStorage.setItem(reinoKey(),serialize());localStorage.setItem(reinoCkKey(),serialize())}catch(e){}reinoSaveMeta();
   toast(keep&&n>0?('Novo mundo grande! Continuas no capítulo '+(n+1)+' — reconstrói a cidade enquanto há calmaria ('+Math.ceil(20)+' s).'):'O teu reino nasceu num mundo grande, com mar e ilhas para explorar!')}
+// Abre o reino atual (cidade igual) num mundo muito maior: a cidade fica no mesmo sítio e
+// à volta (a leste e a sul) nasce mar aberto com ilhas de tesouro e terras novas para explorar.
+function expandReino(N){
+  if(W>=N)return false;
+  const on=W,oH=H;
+  const oTerr=terr,oBlk=blk,oBld=bldAt,oRes=resAt,oVis=vis;
+  setMapSize(N);
+  terr=new Uint8Array(W*H);blk=new Uint8Array(W*H);bldAt=new Int32Array(W*H);resAt=new Array(W*H).fill(null);vis=new Uint8Array(W*H);
+  const isOld=(x,y)=>x<on&&y<oH;
+  // a cidade antiga fica no canto superior-esquerdo, com exatamente as mesmas coordenadas
+  for(let y=0;y<oH;y++)for(let x=0;x<on;x++){const oi=y*on+x,ni=y*W+x;terr[ni]=oTerr[oi];blk[ni]=oBlk[oi];bldAt[ni]=oBld[oi];resAt[ni]=oRes[oi];vis[ni]=oVis[oi]}
+  // todo o resto do mundo começa como mar aberto (por descobrir: fica em nevoeiro)
+  for(let y=0;y<H;y++)for(let x=0;x<W;x++)if(!isOld(x,y)){const i=idx(x,y);terr[i]=1;blk[i]=1}
+  rndSeed((G.seed|0)+4242);G.islands=[];G.sea={x:W-1,y:H-1,r:(N-on)+on*.5};
+  // costa nova limpa na borda leste/sul da cidade (para dar para construir docas), sem mexer em edifícios
+  const openCoast=(x,y)=>{if(!inb(x,y))return;const i=idx(x,y);if(terr[i]===1||bldAt[i])return;const r=resAt[i];if(r){byId.delete(r.id);resAt[i]=null}blk[i]=0;terr[i]=2};
+  for(let y=0;y<oH;y++){openCoast(on-1,y);if(rnd()<.5)openCoast(on-2,y)}
+  for(let x=0;x<on;x++){openCoast(x,oH-1);if(rnd()<.5)openCoast(x,oH-2)}
+  // continentes grandes para explorar, só no mar novo
+  const land=(cx,cy,r,ph)=>{for(let y=Math.floor(cy-r*1.5-2);y<=cy+r*1.5+2;y++)for(let x=Math.floor(cx-r*1.5-2);x<=cx+r*1.5+2;x++){if(!inb(x,y)||isOld(x,y))continue;const a=datan2(y-cy,x-cx),rr=r*(1+.16*dsin(a*3+ph)+.09*dsin(a*5-ph));if(hyp(x-cx,y-cy)<rr){const i=idx(x,y);terr[i]=0;blk[i]=0}}};
+  const conts=[],ncn=2+Math.floor(rnd()*2);let tr=0;
+  while(conts.length<ncn&&tr++<400){const cx=on*.5+rnd()*(W-on*.5-8),cy=on*.5+rnd()*(H-on*.5-8),r=10+rnd()*8;
+    if(isOld(cx,cy)||(cx<on+8&&cy<oH+8))continue;if(conts.some(q=>hyp(q.x-cx,q.y-cy)<q.r+r+10))continue;land(cx,cy,r,rnd()*6);conts.push({x:cx,y:cy,r})}
+  // ilhas de tesouro mais pequenas
+  tr=0;while(G.islands.length<8&&tr++<900){const x=on*.4+rnd()*(W-on*.4-8),y=on*.4+rnd()*(H-on*.4-8),r=3+rnd()*2.6;
+    if(isOld(x,y)||(x<on+4&&y<oH+4))continue;if(conts.some(q=>hyp(q.x-x,q.y-y)<q.r+r+6))continue;if(G.islands.some(q=>hyp(q.x-x,q.y-y)<q.r+r+5))continue;
+    for(let yy=Math.floor(y-r-1);yy<=y+r+1;yy++)for(let xx=Math.floor(x-r-1);xx<=x+r+1;xx++){if(!inb(xx,yy)||isOld(xx,yy))continue;if(hyp(xx-x,yy-y)<r){const i=idx(xx,yy);terr[i]=0;blk[i]=0}}
+    G.islands.push({x:Math.round(x),y:Math.round(y),r})}
+  // praias à volta de toda a água do mundo novo
+  for(let y=0;y<H;y++)for(let x=0;x<W;x++){if(isOld(x,y))continue;const i=idx(x,y);if(terr[i]!==0)continue;let w=false;for(let dy=-1;dy<=1&&!w;dy++)for(let dx=-1;dx<=1;dx++)if(inb(x+dx,y+dy)&&terr[idx(x+dx,y+dy)]===1){w=true;break}if(w)terr[i]=2}
+  // recursos: bosques e minas nos continentes; um tesouro + bosque em cada ilha
+  for(const q of conts){for(let k=0;k<6+Math.floor(rnd()*4);k++){const a=rnd()*6.28,d=rnd()*q.r*.85;forest(q.x+dcos(a)*d,q.y+dsin(a)*d,2+rnd()*2.5,.8)}
+    for(let k=0;k<4+Math.floor(rnd()*3);k++){const a=rnd()*6.28,d=rnd()*q.r*.8;cluster(k%3===0?'gold':k%3===1?'stone':'food',Math.round(q.x+dcos(a)*d),Math.round(q.y+dsin(a)*d),4+Math.floor(rnd()*4))}}
+  for(const [k,q] of G.islands.entries()){cluster(k%3===0?'gold':k%3===1?'stone':'food',q.x,q.y,5+Math.floor(rnd()*3));forest(q.x+(rnd()-.5)*q.r,q.y+(rnd()-.5)*q.r,1.8,.7)}
+  for(let i=0;i<W*H;i++)if(terr[i]===1)blk[i]=1;else if(resAt[i]&&!resAt[i].carcass&&!resAt[i].fish)blk[i]=2;
+  // visuais e estado
+  fogCanvas=mkCanvas(W,H);fogCtx=fogCanvas.getContext('2d');fogImg=fogCtx.createImageData(W,H);
+  if(!SPR.oak)makeSprites();buildTerrain();resetChunks();FCACHE.clear();
+  resize();clampCam();recount();updVis();uiDirty=true;resDirty=true;
+  return true;
+}
+function reinoBigWorld(){
+  if(!reinoHas()){reinoFound();return}
+  if(!reinoLoad(false)){reinoFound();return}
+  if(W>=REINO_N){reinoSaveMeta();toast('Já estás num mundo grande.');return}
+  if(!expandReino(REINO_N)){toast('Não foi possível abrir o mundo grande.',true);return}
+  try{localStorage.setItem(reinoKey(),serialize());localStorage.setItem(reinoCkKey(),serialize())}catch(e){}reinoSaveMeta();
+  toast('O teu reino abriu-se para um mundo grande! A tua cidade continua igual — a leste e a sul há mar aberto, ilhas e terras novas. Constrói uma doca na costa e explora.',true);
+}
 function reinoLoad(fromCk){mobileLandscape();netLeaveGame();if(fromCk){try{const s=localStorage.getItem(reinoCkKey());if(s)localStorage.setItem(reinoKey(),s)}catch(e){}}
   if(!loadGame(reinoKey()))return false;if(!G.reino){toast('Gravação do reino inválida',true);return false}
   if(!G.hero){G.hero=[heroNew(),heroNew()];if(!hasUnitWhere(0,u=>u.d.king))heroSpawnKing(0)}
@@ -5879,7 +5928,7 @@ function reinoRender(){const M=reinoMeta(),has=reinoHas();const D=dailyInfo(),b=
 $('bCampGo').onclick=()=>{sfx('click');$('sCamp').hidden=true;if(reinoHas()){if(!reinoLoad(false))reinoFound()}else{let has=false;try{has=!!localStorage.getItem(ukey('alv_rei'))}catch(e){}if(has)reinoFound();else kingEdOpen(()=>reinoFound())}};
 $('bReinoKing').onclick=()=>{sfx('click');kingEdOpen(null)};
 $('bReinoDaily').onclick=()=>{sfx('click');$('sCamp').hidden=true;if(reinoLoad(false))reinoDailyStart();else{reinoFound();reinoDailyStart()}};
-let reinoBigArm=0;$('bReinoBig').onclick=()=>{if(Date.now()-reinoBigArm>3000){reinoBigArm=Date.now();toast('Vais recomeçar a cidade num mundo grande, mas mantendo o teu capítulo. Toca outra vez para confirmar.',true);return}reinoBigArm=0;sfx('click');$('sCamp').hidden=true;reinoFound(true)};
+let reinoBigArm=0;$('bReinoBig').onclick=()=>{if(Date.now()-reinoBigArm>3000){reinoBigArm=Date.now();toast('Vais levar a tua cidade (com tudo o que tens) para um mundo muito maior, com mar aberto e ilhas. Nada se perde. Toca outra vez para confirmar.',true);return}reinoBigArm=0;sfx('click');$('sCamp').hidden=true;reinoBigWorld()};
 let reinoNewArm=0;$('bReinoNew').onclick=()=>{if(Date.now()-reinoNewArm>3000){reinoNewArm=Date.now();toast('Vais apagar o teu reino atual. Toca outra vez para confirmar.',true);return}reinoNewArm=0;sfx('click');
   try{localStorage.removeItem(reinoKey());localStorage.removeItem(reinoCkKey());localStorage.removeItem(reinoMetaKey())}catch(e){}$('sCamp').hidden=true;reinoFound()};
 $('bCamp').onclick=()=>{sfx('click');reinoOpen()};
