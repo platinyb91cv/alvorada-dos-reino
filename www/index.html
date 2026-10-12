@@ -5204,7 +5204,7 @@ function serialize(){
       :{k:'b',id:e.id,o:e.o,t:e.type,tx:e.tx,ty:e.ty,hp:e.hp,mx:e.max,dn:e.done,pg:e.prog,q:e.queue,qt:e.qt,ra:e.rally?{x:e.rally.x,y:e.rally.y,e:ref(e.rally.e)}:null,am:e.amt,sn:e.seen,lv:e.lvl||null,lk:!!e.locked,gd:e.gdir||null,gr:e.garr&&e.garr.length?e.garr.map(su):null}),
     AIs:AIs.map(a=>a?{...a,alarm:null}:null),cam:{x:cam.x,y:cam.y,z:cam.z}});
 }
-function saveGame(silent){if(!running||!G||G.over||NET.on)return;try{localStorage.setItem(G.reino?reinoKey():SAVE_KEY,serialize());if(G.reino)reinoSaveMeta();if(!silent)toast('Jogo guardado')}catch(e){if(!silent)toast('Não foi possível guardar',true)}}
+function saveGame(silent){if(!running||!G||G.over||NET.on||(G.reino&&G.reino.demo)){if(!silent&&G.reino&&G.reino.demo)toast('Modo demonstração: não é guardado (não afeta o teu reino).',true);return}try{localStorage.setItem(G.reino?reinoKey():SAVE_KEY,serialize());if(G.reino)reinoSaveMeta();if(!silent)toast('Jogo guardado')}catch(e){if(!silent)toast('Não foi possível guardar',true)}}
 function hasSave(){try{return !!localStorage.getItem(SAVE_KEY)}catch(e){return false}}
 function clearSave(){try{localStorage.removeItem(SAVE_KEY)}catch(e){}}
 function loadGame(key){
@@ -5450,7 +5450,7 @@ $('acBack').onclick=()=>{$('sAchv').hidden=true;showMenu()};
 $('bAchv').onclick=()=>{sfx('click');achvOpen()};
 // ---------- gravação na nuvem (a tua conta guarda a última partida) ----------
 let cloudBusy=false;
-async function cloudSave(quiet){if(!ACC.sb||!ACC.user||ACC.preview||cloudBusy||!running||NET.on||G.over)return false;cloudBusy=true;
+async function cloudSave(quiet){if(!ACC.sb||!ACC.user||ACC.preview||cloudBusy||!running||NET.on||G.over||(G.reino&&G.reino.demo))return false;cloudBusy=true;
   try{const data=await packJSON(JSON.parse(serialize()));const {error}=await ACC.sb.from('cloud_saves').upsert({user_id:ACC.user.id,data,updated_at:new Date().toISOString()});if(error)throw error;if(!quiet)toast('Guardado também na nuvem ☁️');return true}
   catch(e){if(!quiet)toast('Não foi possível guardar na nuvem',true);return false}finally{cloudBusy=false}}
 async function cloudCheck(){if(!ACC.sb||!ACC.user||ACC.preview||hasSave())return;try{const {data,error}=await ACC.sb.from('cloud_saves').select('updated_at').eq('user_id',ACC.user.id).maybeSingle();if(error||!data||hasSave()||running)return;
@@ -5487,8 +5487,8 @@ function campDone(){try{return +(localStorage.getItem(ukey('alv_camp'))||0)}catc
 function campObjs(){const M=CAMP[G.camp];G.obj=G.obj||{k:{}};return M.objs.map(([d,f])=>{let ok=false;try{ok=!!f()}catch(e){}return{d,ok}})}
 function campTick(dt){const M=CAMP[G.camp];if(!M)return;G.obj=G.obj||{k:{}};if(cntU(0,'transporte'))G.obj.tr=1;if(ents.some(e=>e.o===0&&e.type==='maravilha'&&e.done))G.obj.wonder=1;
   G.obj.t=(G.obj.t||0)-dt;if(G.obj.t<=0){G.obj.t=1;objRender()}}
-function objRender(){const box=$('objBox');if(G.reino){const R=G.reino,m=R.ms;$('objTitle').textContent=m?(m.daily?'Desafio de hoje · ':m.story?'Missão '+(m.n+1)+' · ':'Capítulo '+(m.n+1)+' · ')+m.t:'O reino descansa';
-    $('objList').innerHTML=m?reinoObjs(m).map(o=>`<li class="${o.ok?'ok':''}">${esc(o.d)}</li>`).join('')+(m.daily?`<li class="tm">⏱ ${fmtT(Math.max(0,G.time-m.t0))}</li>`:''):`<li>Próximo capítulo em ${Math.max(0,Math.ceil(R.calm))} s — aproveita para reforçar a cidade.</li>`;
+function objRender(){const box=$('objBox');if(G.reino){const R=G.reino,m=R.ms;$('objTitle').textContent=m?(m.daily?'Desafio de hoje · ':m.story?'Missão '+(m.n+1)+' · ':'Capítulo '+(m.n+1)+' · ')+m.t:(R.demo?'Reino de demonstração':'O reino descansa');
+    $('objList').innerHTML=m?reinoObjs(m).map(o=>`<li class="${o.ok?'ok':''}">${esc(o.d)}</li>`).join('')+(m.daily?`<li class="tm">⏱ ${fmtT(Math.max(0,G.time-m.t0))}</li>`:''):(R.demo?'<li>Modo propaganda — em paz, sem ataques.</li>':`<li>Próximo capítulo em ${Math.max(0,Math.ceil(R.calm))} s — aproveita para reforçar a cidade.</li>`);
     if(G.objShow==null)G.objShow=1;box.hidden=!G.objShow;return}
   if(G.camp==null||!CAMP[G.camp]){box.hidden=true;return}const ob=campObjs();
   $('objTitle').textContent='Missão '+(G.camp+1)+' · '+CAMP[G.camp].t;$('objList').innerHTML=ob.map(o=>`<li class="${o.ok?'ok':''}">${esc(o.d)}</li>`).join('');
@@ -5811,7 +5811,7 @@ function reinoStart(n){setTimeout(()=>voz('missao'),1800);const R=G.reino;const 
   if(m.k==='cerco'){m.nx=20;m.wv=0}
   recount();G.objShow=1;objRender();
   toast((m.story?'Missão '+(n+1):'Capítulo '+(n+1))+': '+m.t);snd('wonder',null,null,{force:1})}
-function reinoTick(dt){const R=G.reino;if(!R)return;
+function reinoTick(dt){const R=G.reino;if(!R||R.demo)return;
   if(!R.ms){R.calm-=dt;if(R.calm<=0)reinoStart(R.n)}
   const m=R.ms;
   if(m){
@@ -5953,7 +5953,7 @@ function reinoDemo(){
   mobileLandscape();netLeaveGame();gameMode='normal';const d0=difficulty;difficulty=1;
   const civ=CIV_KEYS.includes(SETUP.civ)?SETUP.civ:'planicies';const sd=Math.floor(Math.random()*1e9);
   let hist=[];try{for(let i=0;i<14;i++)hist.push([i,reinoDef(i).t])}catch(e){}
-  startGame(sd,{map:'reino',vic:'classico',civ:[civ,civ==='montanha'?'planicies':'montanha'],reino:{n:14,gl:240,ms:null,calm:1e9,hist,born:new Date().toISOString().slice(0,10)}});
+  startGame(sd,{map:'reino',vic:'classico',civ:[civ,civ==='montanha'?'planicies':'montanha'],reino:{n:14,gl:240,ms:null,calm:0,demo:1,hist,born:new Date().toISOString().slice(0,10)}});
   difficulty=d0;
   P[0].age=2;for(const t of ['machado','picareta','arado','roda','forja','flechas','cota'])P[0].techs[t]=1;
   for(const k of KINDS)P[0].res[k]=8000;
@@ -5961,8 +5961,8 @@ function reinoDemo(){
   const s=G.starts[0];demoCity(Math.round(s.x),Math.round(s.y));
   if(!SPR.oak)makeSprites();buildTerrain();resetChunks();FCACHE.clear();
   recount();resDirty=true;uiDirty=true;updVis();
-  try{localStorage.setItem(reinoKey(),serialize());localStorage.setItem(reinoCkKey(),serialize())}catch(e){}reinoSaveMeta();
-  toast('Reino de demonstração pronto: Idade do Ferro, cidade murada, maravilha e exército. Está em paz — grava à vontade.',true);
+  // demo é temporária e NÃO toca no reino/conta real: não grava nada, não há missões nem contador
+  toast('Reino de demonstração (temporário, não afeta o teu reino). Idade do Ferro, cidade murada e exército — grava à vontade. Sai para voltar ao normal.',true);
 }
 function reinoLoad(fromCk){mobileLandscape();netLeaveGame();if(fromCk){try{const s=localStorage.getItem(reinoCkKey());if(s)localStorage.setItem(reinoKey(),s)}catch(e){}}
   if(!loadGame(reinoKey()))return false;if(!G.reino){toast('Gravação do reino inválida',true);return false}
@@ -6038,7 +6038,7 @@ function survSpawn(n){const di=G.sdiff??1,mult=[.7,1,1.35][di];P[1].age=n<=3?0:n
   toast('⚔️ Vaga '+n+': '+cnt+' invasores!',true);snd('alarm',null,null,{force:1});fx.push({t:0,life:4,type:'ping',x:sp.x,y:sp.y,col:'#ff6b5a'});G.lastAttack={x:sp.x,y:sp.y};buzz([90,60,90])}
 // ---------- etiqueta do modo (topo do ecrã) ----------
 function modeHud(){const el=$('modeT');let ic='',tx='',warn=false;
-  if(G.reino){const R=G.reino,m=R.ms;if(m){const ob=reinoObjs(m);ic=m.daily?'🏆':'🏰';tx=(m.daily?'Desafio':m.story?'Missão '+(m.n+1):'Cap. '+(m.n+1))+': '+ob.filter(o=>o.ok).length+'/'+ob.length}else{ic='🏰';tx='Próximo capítulo em '+Math.max(0,Math.ceil(R.calm))+' s'}}
+  if(G.reino){const R=G.reino,m=R.ms;if(m){const ob=reinoObjs(m);ic=m.daily?'🏆':'🏰';tx=(m.daily?'Desafio':m.story?'Missão '+(m.n+1):'Cap. '+(m.n+1))+': '+ob.filter(o=>o.ok).length+'/'+ob.length}else if(R.demo){ic='🏰';tx='Demonstração'}else{ic='🏰';tx='Próximo capítulo em '+Math.max(0,Math.ceil(R.calm))+' s'}}
   else   if(G.camp!=null){const M=CAMP[G.camp];if(M){const ob=campObjs();ic='🚩';tx='Missão '+(G.camp+1)+': '+ob.filter(o=>o.ok).length+'/'+ob.length}}
   else if(G.vic==='sobrevivencia'&&G.surv){const s2=Math.max(0,Math.ceil(G.surv.next));ic='⚔️';tx='Vaga '+G.surv.wave+' · próxima '+Math.floor(s2/60)+':'+String(s2%60).padStart(2,'0');warn=s2<20}
   else if(G.vic==='regicidio'){let k=null;for(const e of ents)if(e.o===ME&&e.d&&e.d.king){k=e;break}ic='👑';tx=k?Math.ceil(k.hp)+'/'+k.max:'abrigado';warn=k&&k.hp<k.max*.5}
