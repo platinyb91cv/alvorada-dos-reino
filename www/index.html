@@ -448,6 +448,7 @@ input{font-family:inherit;-webkit-user-select:text;user-select:text;touch-action
         <button class="cta" id="bCampGo"><i data-ic="play"></i><span>Continuar o reino</span></button>
         <button class="cta alt" id="bReinoDaily" hidden><i data-ic="trophy"></i><span>Desafio de hoje no meu reino</span></button>
         <button class="ghostbtn" id="bReinoKing">👑 O teu Rei</button>
+        <button class="ghostbtn" id="bReinoBig" hidden>🌊 Ir para o mundo grande (mantém o capítulo)</button>
         <button class="ghostbtn" id="bReinoNew" hidden>Fundar um reino novo</button>
         <button class="ghostbtn" id="bCampBack">Voltar</button>
       </div>
@@ -613,7 +614,7 @@ input{font-family:inherit;-webkit-user-select:text;user-select:text;touch-action
 /* =====================================================================
    ALVORADA DOS REINOS — RTS original em HTML5 Canvas
    ===================================================================== */
-let W=112,H=112;const T=32,MAP_N=112;
+let W=112,H=112;const T=32,MAP_N=112,REINO_N=160; // REINO_N: mundo grande do "Meu Reino"
 // tamanho do mapa (mapas guardados antigos podem ser 80×80)
 function setMapSize(n){if(n===W&&n===H)return;W=H=n;gS=new Float32Array(W*H);stamp=new Int32Array(W*H);came=new Int32Array(W*H);closedS=new Int32Array(W*H);reachMap=new Uint8Array(W*H)}
 const $=id=>document.getElementById(id);
@@ -735,7 +736,7 @@ const DIFF=[
   {name:'Difícil',mult:1.15,first:420,raid:{at:330,n:4},wave:7,grow:3,waveMax:28,armyMax:60,gap:[140,220],vills:[14,22,28],maxAge:2,wall:true,siege:true,towers:true,techs:true,bonus:150}];
 let gameMode='normal'; // 'normal' ou 'build' (só construir, sem rival)
 // opções da próxima partida (ecrã «Nova partida»)
-const MAPS={rios:{name:'Rios e Mar',desc:'Mar num canto, rio navegável até ao lago central. Equilibrado.'},continental:{name:'Terra firme',desc:'Pouca água e muitos recursos: guerra em terra, sem barcos.'},lagos:{name:'Lagos',desc:'Um grande lago no centro e muitos lagos pequenos. Peixe e docas contam.'},arquipelago:{name:'Arquipélago',desc:'Cada reino na sua ilha. Precisas de barcos de transporte para atacar.'},aleatorio:{name:'Aleatório',desc:'Um dos quatro mapas, à sorte.'}};
+const MAPS={rios:{name:'Rios e Mar',desc:'Mar num canto, rio navegável até ao lago central. Equilibrado.'},continental:{name:'Terra firme',desc:'Pouca água e muitos recursos: guerra em terra, sem barcos.'},lagos:{name:'Lagos',desc:'Um grande lago no centro e muitos lagos pequenos. Peixe e docas contam.'},arquipelago:{name:'Arquipélago',desc:'Cada reino na sua ilha. Precisas de barcos de transporte para atacar.'},reino:{name:'Mundo do Reino',desc:'Mundo grande com mar aberto e ilhas para explorar.'},aleatorio:{name:'Aleatório',desc:'Um dos quatro mapas, à sorte.'}};
 const VICS={classico:{name:'Clássico',desc:'Ganha quem destruir o Centro da Vila e o exército do rival, ou defender uma Maravilha 5 minutos. Se o teu Rei cair, perdes.'},total:{name:'Guerra total',desc:'Só acaba quando a base inimiga cair por completo: todos os edifícios e aldeões, ou quando cair o Rei. Podes gravar e continuar outro dia.'},regicidio:{name:'Regicídio',desc:'Só o Rei conta: mesmo sem Centro da Vila continuas a lutar, mas quem perde o Rei perde a partida.'},sobrevivencia:{name:'Sobrevivência',desc:'Sem rival: vagas de invasores cada vez mais fortes. Protege o teu Rei: quantas aguentas?'}};
 let SETUP={vic:'classico',map:'rios',civ:'aleatorio'};try{Object.assign(SETUP,JSON.parse(localStorage.getItem('alv_setup')||'{}'))}catch(e){}
 function setupOpts(seed){const r=mulberry32((seed|0)+99);const pick=a=>a[Math.floor(r()*a.length)];
@@ -779,16 +780,20 @@ function genMap(seed){
         for(let i=0;i<W*H;i++)if(terr[i]===1&&!seen[i])terr[i]=0}
     }else{
       // lago central navegável
-      const big=MT==='lagos'?12+rnd()*3:MT==='continental'?5+rnd()*1.5:8+rnd()*3;
+      const big=MT==='lagos'?12+rnd()*3:MT==='continental'?5+rnd()*1.5:MT==='reino'?7+rnd()*2:8+rnd()*3;
       const cx0=W/2+(rnd()-.5)*8,cy0=H/2+(rnd()-.5)*8,r0=big;G.lake={x:cx0,y:cy0,r:r0};disk(cx0,cy0,r0,rnd()*6,.18,.1);
-      if(MT==='rios'){
+      if(MT==='rios'||MT==='reino'){
       // mar num dos cantos livres (sem base), com costa recortada
       const corners=diag?[{x:W-1,y:0},{x:0,y:H-1}]:[{x:0,y:0},{x:W-1,y:H-1}];
-      const sc=corners[rnd()<.5?0:1],SR=W*(.26+rnd()*.05),sph=rnd()*6;G.sea={x:sc.x,y:sc.y,r:SR};
+      const sc=corners[rnd()<.5?0:1],SR=W*(MT==='reino'?.40+rnd()*.05:.26+rnd()*.05),sph=rnd()*6;G.sea={x:sc.x,y:sc.y,r:SR};
       for(let y=0;y<H;y++)for(let x=0;x<W;x++){const a=datan2(y-sc.y,x-sc.x);const rr=SR*(1+.07*dsin(a*7+sph)+.05*dsin(a*13-sph)+.03*dsin(a*23+sph*2));if(hyp(x-sc.x,y-sc.y)<rr)terr[idx(x,y)]=1}
       // ilhas no mar
       for(let i=0;i<2;i++){const a=datan2(H/2-sc.y,W/2-sc.x)+(rnd()-.5)*1.2,d=SR*(.35+rnd()*.35),ix=Math.round(sc.x+dcos(a)*d),iy=Math.round(sc.y+dsin(a)*d);
         for(let y=iy-3;y<=iy+3;y++)for(let x=ix-3;x<=ix+3;x++)if(inb(x,y)&&hyp(x-ix,y-iy)<2.2+rnd()*1.2)terr[idx(x,y)]=0}
+      // mundo grande: várias ilhas no mar, cada uma com tesouro (precisas de barcos para lá chegar)
+      if(MT==='reino'){const ni=5+Math.floor(rnd()*4);let tr=0;while(G.islands.length<ni&&tr++<400){const a=rnd()*6.28,d=SR*(.3+rnd()*.55),ix=Math.round(sc.x+dcos(a)*d),iy=Math.round(sc.y+dsin(a)*d),r=3+rnd()*2.6;
+        if(!inb(ix,iy)||hyp(ix-sc.x,iy-sc.y)>SR*.9)continue;if(G.islands.some(q=>hyp(q.x-ix,q.y-iy)<q.r+r+5))continue;if(G.starts.some(st=>hyp(st.x-ix,st.y-iy)<16))continue;
+        for(let y=Math.floor(iy-r-1);y<=iy+r+1;y++)for(let x=Math.floor(ix-r-1);x<=ix+r+1;x++)if(inb(x,y)&&hyp(x-ix,y-iy)<r)terr[idx(x,y)]=0;G.islands.push({x:ix,y:iy,r})}}
       // rio sinuoso do mar até ao lago (navegável)
       {let x=sc.x,y=sc.y;const tx=cx0,ty=cy0;let ang=datan2(ty-y,tx-x),wv=rnd()*6;const w0=1.3+rnd()*.5;
         for(let st=0;st<W*3;st++){const want=datan2(ty-y,tx-x);ang+=Math.max(-.12,Math.min(.12,(want-ang+Math.PI*3)%(Math.PI*2)-Math.PI))*.35+dsin(st*.11+wv)*.09;
@@ -811,7 +816,7 @@ function genMap(seed){
     for(let i=0;i<W*H;i++)if(terr[i]===1)blk[i]=1;
     // florestas
     const nf=Math.round((20+Math.floor(rnd()*6))*A);
-    for(let i=0;i<nf*(MT==='continental'?1.25:MT==='arquipelago'?.7:1);i++){let cx,cy,k=0;do{cx=rnd()*W;cy=rnd()*H;k++}while((!far(cx,cy,11)||terr[idx(cx|0,cy|0)]===1)&&k<60);forest(cx,cy,2+rnd()*3.8,.78)}
+    for(let i=0;i<nf*(MT==='continental'||MT==='reino'?1.25:MT==='arquipelago'?.7:1);i++){let cx,cy,k=0;do{cx=rnd()*W;cy=rnd()*H;k++}while((!far(cx,cy,11)||terr[idx(cx|0,cy|0)]===1)&&k<60);forest(cx,cy,2+rnd()*3.8,.78)}
     // ilhotas: cada uma com um tesouro (ouro, pedra ou bagas) e um bosque
     for(const [n,q] of G.islands.entries()){cluster(n%3===0?'gold':n%3===1?'stone':'food',Math.round(q.x),Math.round(q.y),5+Math.floor(rnd()*3));forest(q.x+(rnd()-.5)*q.r,q.y+(rnd()-.5)*q.r,1.8,.7)}
     // palmeiras/bosques nas margens do rio
@@ -833,7 +838,7 @@ function genMap(seed){
     }
     // minas e bagas espalhadas (as melhores no centro, perto da água)
     const nm=Math.round(6*A)+2;
-    for(let i=0;i<nm*(MT==='continental'?1.4:1);i++){let cx,cy,k=0;do{cx=5+rnd()*(W-10);cy=5+rnd()*(H-10);k++}while((!far(cx,cy,18)||terr[idx(cx|0,cy|0)]===1)&&k<50);cluster(i%3===0?'stone':i%3===1?'gold':'food',Math.round(cx),Math.round(cy),4+Math.floor(rnd()*4))}
+    for(let i=0;i<nm*(MT==='continental'||MT==='reino'?1.4:1);i++){let cx,cy,k=0;do{cx=5+rnd()*(W-10);cy=5+rnd()*(H-10);k++}while((!far(cx,cy,18)||terr[idx(cx|0,cy|0)]===1)&&k<50);cluster(i%3===0?'stone':i%3===1?'gold':'food',Math.round(cx),Math.round(cy),4+Math.floor(rnd()*4))}
     if(MT!=='arquipelago')for(let i=0;i<3;i++){const L=G.lake,a=rnd()*6.28,d=L.r+3+rnd()*4;cluster('gold',Math.round(L.x+dcos(a)*d),Math.round(L.y+dsin(a)*d),6)}
     // limpar zona inicial
     for(const s of G.starts)for(let y=s.y-4;y<=s.y+4;y++)for(let x=s.x-4;x<=s.x+4;x++){
@@ -4281,7 +4286,7 @@ function command(units,e,w){issueCmd(units,e,w)}
    Turno = 3 passos de 1/30 s (100 ms). As ordens de um turno T são executadas em T+atraso nos dois lados.
    A cada 5 s comparam um resumo (hash) do estado; se divergir, o anfitrião envia o estado completo.
    Se alguém cair, quem fica envia o estado completo quando o outro voltar. */
-const GAME_VER='alvorada-17';
+const GAME_VER='alvorada-18';
 const TURN_STEPS=3,TURN_DT=TURN_STEPS/30,HASH_EVERY=50;
 Object.assign(NET,{ws:null,url:'',slot:0,room:'',token:'',name:'',peer:'',peerOnline:false,game:false,turn:0,delay:2,sent:-1,cmds:[new Map(),new Map()],out:[],
   acc:0,waitT:0,rtt:0,myHash:new Map(),peerHash:new Map(),desync:0,resync:0,epoch:0,lastSnapT:-1,wantSnap:false,awaitSnap:false,lostT:0,pingT:0,closing:false,stats:{turns:0,sent:0,recv:0,bytes:0}});
@@ -5133,7 +5138,7 @@ function startGame(seed,opts){
   const O=opts||(NET.on?{}:setupOpts(seed));
   G={seed,time:0,starts:null,amoveNext:false,over:false,fishRespawn:[],form:'livre',cmdMode:null,mode,
     map:O.map||'rios',vic:mode==='build'?'classico':(O.vic||'classico'),civ:O.civ||['mar','planicies'],camp:O.camp??null,daily:O.daily||null,reino:O.reino||null};
-  P=mkPlayers();setMapSize(MAP_N);
+  P=mkPlayers();setMapSize(O.reino&&O.map==='reino'?REINO_N:MAP_N); // o "Meu Reino" no mundo grande
   if(mode==='build')for(const k of KINDS)P[ME].res[k]+=800;
   if(!NET.on){const mc=myColor();P[ME].col=mc[0];P[ME].dark=mc[1]}
   sel=[];projs=[];fx=[];placing=null;menuMode=null;lastAlert=-99;lastPop=-99;lastImp=-99;GROUPS=[[],[],[]];
@@ -5832,17 +5837,22 @@ function reinoFail(txt){if(G.over)return;G.over=true;const g0=G;G.reino.why=txt;
 function reinoCheckFall(){if(G.over)return;if(kingLost(0)){reinoFail('O teu Rei caiu. Sem Rei, o reino não pode continuar.');return}const lost=!ents.some(e=>e.o===0&&e.kind==='b'&&e.done&&!e.d.wall&&!e.d.gate&&!e.d.farm)&&!hasUnitWhere(0,u=>u.type==='aldeao');
   if(lost)reinoFail('A tua última casa caiu e o povo fugiu.')}
 // --- abrir, fundar, continuar ---
-function reinoFound(){mobileLandscape();netLeaveGame();gameMode='normal';const d0=difficulty;difficulty=1;const sd=Math.floor(Math.random()*1e9);
+function reinoFound(keep){mobileLandscape();netLeaveGame();gameMode='normal';const d0=difficulty;difficulty=1;const sd=Math.floor(Math.random()*1e9);
   const civ=CIV_KEYS.includes(SETUP.civ)?SETUP.civ:'planicies';
-  startGame(sd,{map:'continental',vic:'classico',civ:[civ,civ==='montanha'?'planicies':'montanha'],reino:{n:0,gl:0,ms:null,calm:4,hist:[],born:new Date().toISOString().slice(0,10)}});difficulty=d0;
+  let n=0,gl=0,age=0;
+  if(keep){const M=reinoMeta();if(M){n=Math.max(0,M.n||0);gl=M.gl||0;age=Math.min(2,M.age||0)}}
+  startGame(sd,{map:'reino',vic:'classico',civ:[civ,civ==='montanha'?'planicies':'montanha'],reino:{n,gl,ms:null,calm:keep&&n>0?20:4,hist:[],born:new Date().toISOString().slice(0,10)}});difficulty=d0;
+  if(keep&&n>0){ // recomeço no mundo grande a meio da história: empurrão para reconstruir a cidade
+    if(age>0)P[0].age=age;
+    const bonus=350+n*120;for(const k of KINDS)P[0].res[k]+=bonus;recount();resDirty=true;uiDirty=true}
   try{localStorage.setItem(reinoKey(),serialize());localStorage.setItem(reinoCkKey(),serialize())}catch(e){}reinoSaveMeta();
-  toast('O teu reino nasceu! Daqui para a frente a cidade é sempre a mesma.')}
+  toast(keep&&n>0?('Novo mundo grande! Continuas no capítulo '+(n+1)+' — reconstrói a cidade enquanto há calmaria ('+Math.ceil(20)+' s).'):'O teu reino nasceu num mundo grande, com mar e ilhas para explorar!')}
 function reinoLoad(fromCk){mobileLandscape();netLeaveGame();if(fromCk){try{const s=localStorage.getItem(reinoCkKey());if(s)localStorage.setItem(reinoKey(),s)}catch(e){}}
   if(!loadGame(reinoKey()))return false;if(!G.reino){toast('Gravação do reino inválida',true);return false}
   if(!G.hero){G.hero=[heroNew(),heroNew()];if(!hasUnitWhere(0,u=>u.d.king))heroSpawnKing(0)}
   G.over=false;objRender();const m=G.reino.ms;toast(m?(m.daily?'Desafio de hoje: ':m.story?'Missão '+(m.n+1)+': ':'Capítulo '+(m.n+1)+': ')+m.t:'O reino continua.');return true}
 function reinoRetry(){$('sEnd').hidden=true;$('sPause').hidden=true;if(!reinoLoad(true))reinoFound()}
-function reinoSaveMeta(){const R=G&&G.reino;if(!R)return;const m=R.ms&&R.ms.daily?R.susp:R.ms;try{localStorage.setItem(reinoMetaKey(),JSON.stringify({n:R.n,t:(m||reinoDef(R.n)).t,gl:R.gl||0,age:P[0].age,pop:P[0].pop,klv:G.hero&&G.hero[0]?G.hero[0].lv:1,time:Math.round(G.time),done:(R.hist||[]).slice(-8)}))}catch(e){}}
+function reinoSaveMeta(){const R=G&&G.reino;if(!R)return;const m=R.ms&&R.ms.daily?R.susp:R.ms;try{localStorage.setItem(reinoMetaKey(),JSON.stringify({n:R.n,t:(m||reinoDef(R.n)).t,gl:R.gl||0,age:P[0].age,pop:P[0].pop,klv:G.hero&&G.hero[0]?G.hero[0].lv:1,time:Math.round(G.time),done:(R.hist||[]).slice(-8),big:(W>=REINO_N?1:0)}))}catch(e){}}
 // --- desafio diário dentro do reino ---
 function reinoDailyStart(){const R=G.reino;if(!R)return;const D=dailyInfo();const b=dailyBest(D.day);
   if(b||R.ms&&R.ms.daily){toast(b?'Já cumpriste o desafio de hoje em '+fmtT(b)+'. Volta amanhã!':'O desafio de hoje já está a decorrer.');return}
@@ -5864,10 +5874,12 @@ function reinoRender(){const M=reinoMeta(),has=reinoHas();const D=dailyInfo(),b=
   $('cmList').innerHTML=has&&M?`<div class="rkstat"><b>${M.n<6?'Missão '+(M.n+1):'Capítulo '+(M.n+1)}</b><small>${esc(M.t||'')}</small></div><div class="rkstat"><b>⭐ ${M.gl||0}</b><small>glória</small></div><div class="rkstat"><b>${['Pedra','Bronze','Ferro'][M.age||0]}</b><small>${M.pop||0} habitantes · ${fmtT(M.time||0)}</small></div>`:'';
   $('cmInfo').innerHTML=(()=>{const L=kingLookMine();return `<p class="krline">👑 <b>${L.name?'Rei '+esc(L.name):'O teu Rei'}</b>${M&&M.klv?' · nível '+M.klv:''}</p>`})()+(has&&M?`<h3>A crónica do reino</h3>${M.done&&M.done.length?'<ul>'+M.done.slice().reverse().map(([n,t])=>'<li>✔ '+(n<6?'Missão ':'Capítulo ')+(n+1)+': '+esc(t)+'</li>').join('')+'</ul>':'<p>A história do teu reino ainda está a começar.</p>'}<p class="muted small">Desafio de hoje: ${b?'cumprido em '+fmtT(b)+' ✔':'por fazer — joga-o dentro do teu reino.'}</p>`
     :'<h3>Funda o teu reino</h3><p>Começas com três aldeões e um Centro da Vila. A cidade que construíres fica tua para sempre: as missões vão-se seguindo sem recomeçar, cada uma mais difícil que a anterior — lobos, saqueadores, um reino rival, fortes, campeões e cercos. O jogo grava sozinho.</p><p class="muted small">O desafio diário também se joga dentro do teu reino.</p>');
-  $('bCampGo').lastChild.textContent=has?'Continuar o reino':'Fundar o reino';$('bReinoDaily').hidden=!has||!!b;$('bReinoNew').hidden=!has}
+  $('bCampGo').lastChild.textContent=has?'Continuar o reino':'Fundar o reino';$('bReinoDaily').hidden=!has||!!b;$('bReinoNew').hidden=!has;
+  $('bReinoBig').hidden=!has||!!(M&&M.big)}
 $('bCampGo').onclick=()=>{sfx('click');$('sCamp').hidden=true;if(reinoHas()){if(!reinoLoad(false))reinoFound()}else{let has=false;try{has=!!localStorage.getItem(ukey('alv_rei'))}catch(e){}if(has)reinoFound();else kingEdOpen(()=>reinoFound())}};
 $('bReinoKing').onclick=()=>{sfx('click');kingEdOpen(null)};
 $('bReinoDaily').onclick=()=>{sfx('click');$('sCamp').hidden=true;if(reinoLoad(false))reinoDailyStart();else{reinoFound();reinoDailyStart()}};
+let reinoBigArm=0;$('bReinoBig').onclick=()=>{if(Date.now()-reinoBigArm>3000){reinoBigArm=Date.now();toast('Vais recomeçar a cidade num mundo grande, mas mantendo o teu capítulo. Toca outra vez para confirmar.',true);return}reinoBigArm=0;sfx('click');$('sCamp').hidden=true;reinoFound(true)};
 let reinoNewArm=0;$('bReinoNew').onclick=()=>{if(Date.now()-reinoNewArm>3000){reinoNewArm=Date.now();toast('Vais apagar o teu reino atual. Toca outra vez para confirmar.',true);return}reinoNewArm=0;sfx('click');
   try{localStorage.removeItem(reinoKey());localStorage.removeItem(reinoCkKey());localStorage.removeItem(reinoMetaKey())}catch(e){}$('sCamp').hidden=true;reinoFound()};
 $('bCamp').onclick=()=>{sfx('click');reinoOpen()};
