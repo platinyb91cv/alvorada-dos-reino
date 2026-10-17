@@ -1,0 +1,52 @@
+{
+  "reimportedClipsDistinct": true,
+  "reimportedRootDriftByClip": {
+    "Idle": 9.31613567459516e-09,
+    "Walk": 7.229007173450675e-09,
+    "Attack": 2.611442449094719e-08,
+    "Hit": 1.4556682818954777e-07,
+    "Death": 1.7184116090135048e-07,
+    "Chop": 5.998586817037423e-08,
+    "Mine": 2.6279969251756487e-08,
+    "Harvest": 5.425903223581433e-08,
+    "Carry": 1.0477378964424133e-08
+  },
+  "optimizedGlbSha256": "e9e37d8ee14952006725aa62b93de2b60062e276f7ffa42fdedbf12e3d53a756",
+  "unit": "aldeao",
+  "reimported": true,
+  "meshes": 1,
+  "triangles": 6500,
+  "bones": 24,
+  "clips": [
+    "Attack",
+    "Carry",
+    "Chop",
+    "Death",
+    "Harvest",
+    "Hit",
+    "Idle",
+    "Mine",
+    "Walk"
+  ],
+  "forwardAimDot": null,
+  "stanceVelocityY": {
+    "LeftFoot": 0.07972410108777694,
+    "RightFoot": 0.06503312538552564
+  },
+  "rootHorizontalDrift": 9.954701329782581e-09,
+  "rigidProps": {
+    "axe_shaft": 9.582650840195273e-08,
+    "axe_blade": 2.084878429065018e-07,
+    "pick_shaft": 9.031905085811476e-08,
+    "pick_head": 1.3220785960443848e-07,
+    "hammer_shaft": 1.1498974800475126e-07,
+    "hammer_head": 2.0049309920611158e-07,
+    "hoe_shaft": 8.136770905317614e-08,
+    "hoe_blade": 2.4319098462788347e-07,
+    "knife_shaft": 7.590608766018525e-08,
+    "knife_blade": 1.8331334128429688e-07,
+    "spear_shaft": 2.0802438369799114e-07,
+    "spear_blade": 5.652019839930134e-07,
+    "resource_crate": 7.190624892738917e-07
+  }
+}

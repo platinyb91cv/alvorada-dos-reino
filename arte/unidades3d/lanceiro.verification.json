@@ -1,0 +1,33 @@
+{
+  "reimportedClipsDistinct": true,
+  "reimportedRootDriftByClip": {
+    "Idle": 2.08250058582033e-09,
+    "Walk": 9.313225746154785e-09,
+    "Attack": 5.587935447692871e-08,
+    "Hit": 3.975613068508263e-08,
+    "Death": 1.0619630011332655e-07
+  },
+  "optimizedGlbSha256": "d9193166e8ba9da9936e945c346263916af9a7c88b0c5f00f164cf0436493c7f",
+  "unit": "lanceiro",
+  "reimported": true,
+  "meshes": 3,
+  "triangles": 6542,
+  "bones": 24,
+  "clips": [
+    "Attack",
+    "Death",
+    "Hit",
+    "Idle",
+    "Walk"
+  ],
+  "forwardAimDot": null,
+  "stanceVelocityY": {
+    "LeftFoot": 0.021080212543408076,
+    "RightFoot": 0.01708392424646903
+  },
+  "rootHorizontalDrift": 5.587935447692871e-09,
+  "rigidProps": {
+    "spear_shaft": 9.533986556307938e-08,
+    "spear_blade": 8.086002468710163e-07
+  }
+}

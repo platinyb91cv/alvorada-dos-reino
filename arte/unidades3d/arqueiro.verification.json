@@ -1,0 +1,44 @@
+{
+  "reimportedClipsDistinct": true,
+  "reimportedRootDriftByClip": {
+    "Idle": 8.33000234328132e-09,
+    "Walk": 7.450580596923828e-09,
+    "Attack": 3.725290298461914e-09,
+    "Hit": 7.087848182931709e-08,
+    "Death": 5.21540641784668e-08
+  },
+  "optimizedGlbSha256": "36a888848ca6e8e9e424346d2ecfd632eecb39df3eb46fe4997974d2159a67c7",
+  "unit": "arqueiro",
+  "reimported": true,
+  "meshes": 14,
+  "triangles": 6968,
+  "bones": 24,
+  "clips": [
+    "Attack",
+    "Death",
+    "Hit",
+    "Idle",
+    "Walk"
+  ],
+  "forwardAimDot": 0.9999849796295166,
+  "stanceVelocityY": {
+    "LeftFoot": 0.07759372528110231,
+    "RightFoot": 0.06502577793435194
+  },
+  "rootHorizontalDrift": 8.33000234328132e-09,
+  "rigidProps": {
+    "bow_limb": 8.328635919645222e-08,
+    "bow_limb.001": 6.272019587028055e-08,
+    "bow_limb.002": 6.015155520899818e-08,
+    "bow_limb.003": 7.614502344280294e-08,
+    "bow_limb.004": 1.1764875806896669e-07,
+    "bow_limb.005": 1.2063137854248507e-07,
+    "bow_limb.006": 1.425868602147884e-07,
+    "bow_limb.007": 8.897899224542816e-08,
+    "bow_limb.008": 1.1342898982927285e-07,
+    "bow_limb.009": 1.450837752454276e-07,
+    "bow_limb.010": 7.24538619760462e-08,
+    "bow_limb.011": 1.247967193439281e-07,
+    "bow_string": 6.908812994941248e-08
+  }
+}

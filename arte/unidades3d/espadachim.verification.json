@@ -1,0 +1,34 @@
+{
+  "reimportedClipsDistinct": true,
+  "reimportedRootDriftByClip": {
+    "Idle": 7.454217687985916e-09,
+    "Walk": 1.3560261371136677e-08,
+    "Attack": 2.6078071491035005e-08,
+    "Hit": 8.156154154753749e-08,
+    "Death": 1.7659939564474352e-07
+  },
+  "optimizedGlbSha256": "a7cede48465133253e7373c05d4555b097bbabd237ac30682ad1fe2a845cb51d",
+  "unit": "espadachim",
+  "reimported": true,
+  "meshes": 4,
+  "triangles": 6554,
+  "bones": 24,
+  "clips": [
+    "Attack",
+    "Death",
+    "Hit",
+    "Idle",
+    "Walk"
+  ],
+  "forwardAimDot": null,
+  "stanceVelocityY": {
+    "LeftFoot": 0.0807421774165157,
+    "RightFoot": 0.06692531244334532
+  },
+  "rootHorizontalDrift": 1.064165950010199e-08,
+  "rigidProps": {
+    "sword_shaft": 1.0730024815018557e-07,
+    "sword_blade": 7.62328322467809e-07,
+    "sword_guard": 2.5771453660006216e-07
+  }
+}

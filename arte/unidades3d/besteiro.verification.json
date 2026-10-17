@@ -1,0 +1,36 @@
+{
+  "reimportedClipsDistinct": true,
+  "reimportedRootDriftByClip": {
+    "Idle": 9.339382462264774e-09,
+    "Walk": 4.679838019013819e-09,
+    "Attack": 8.43348460098488e-09,
+    "Hit": 4.590544142638703e-08,
+    "Death": 2.2830335768675362e-07
+  },
+  "optimizedGlbSha256": "8fc7765ab141b2a95cc3bc7914cc5f5170522826b687196b2db0fdb204407fed",
+  "unit": "besteiro",
+  "reimported": true,
+  "meshes": 6,
+  "triangles": 6656,
+  "bones": 24,
+  "clips": [
+    "Attack",
+    "Death",
+    "Hit",
+    "Idle",
+    "Walk"
+  ],
+  "forwardAimDot": 0.9999825358390808,
+  "stanceVelocityY": {
+    "LeftFoot": 0.0741272969437497,
+    "RightFoot": 0.06274532606767025
+  },
+  "rootHorizontalDrift": 8.664929338697528e-09,
+  "rigidProps": {
+    "crossbow_stock": 6.420509461591006e-08,
+    "crossbow_limb": 1.0492230644899847e-07,
+    "crossbow_string": 1.6526229656673233e-07,
+    "crossbow_string.001": 9.095240355240682e-08,
+    "bolt": 1.0435880804220837e-07
+  }
+}

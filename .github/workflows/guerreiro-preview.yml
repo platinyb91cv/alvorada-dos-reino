@@ -8,6 +8,9 @@ on:
       - 'arte/rei-bronze/**'
       - 'tests/check_king_atlas.cjs'
       - 'tests/check_bronze_atlas.cjs'
+      - 'tests/check_unit3d.cjs'
+      - 'www/assets/units3d/**'
+      - 'arte/unidades3d/**'
       - '.github/workflows/guerreiro-preview.yml'
   workflow_dispatch:
 
@@ -25,7 +28,9 @@ jobs:
           node-version: 22
           cache: npm
       - name: Verificar o atlas integrado
-        run: node tests/check_king_atlas.cjs
+        run: |
+          node tests/check_king_atlas.cjs
+          node tests/check_unit3d.cjs
       - uses: actions/setup-java@v4
         with:
           distribution: temurin
@@ -42,7 +47,7 @@ jobs:
           ./gradlew assembleDebug --no-daemon
       - uses: actions/upload-artifact@v4
         with:
-          name: alvorada-reis-apk
+          name: alvorada-unidades3d-apk
           path: android/app/build/outputs/apk/debug/app-debug.apk
           if-no-files-found: error
           retention-days: 7

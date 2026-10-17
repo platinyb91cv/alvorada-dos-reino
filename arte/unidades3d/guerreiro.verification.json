@@ -1,0 +1,33 @@
+{
+  "reimportedClipsDistinct": true,
+  "reimportedRootDriftByClip": {
+    "Idle": 9.497663962827594e-09,
+    "Walk": 2.6685276593816285e-08,
+    "Attack": 3.306195139884949e-08,
+    "Hit": 4.4394399524536315e-08,
+    "Death": 1.0150241161795494e-07
+  },
+  "optimizedGlbSha256": "4ace83e78796e4887138144b7636805ad03b8c0f1959315e41e8d9a6405adb1b",
+  "unit": "guerreiro",
+  "reimported": true,
+  "meshes": 3,
+  "triangles": 6547,
+  "bones": 24,
+  "clips": [
+    "Attack",
+    "Death",
+    "Hit",
+    "Idle",
+    "Walk"
+  ],
+  "forwardAimDot": null,
+  "stanceVelocityY": {
+    "LeftFoot": 0.07876772798065629,
+    "RightFoot": 0.065868173216586
+  },
+  "rootHorizontalDrift": 4.393039798390401e-09,
+  "rigidProps": {
+    "axe_shaft": 1.0864351451464471e-07,
+    "axe_blade": 1.3261218625992832e-07
+  }
+}
