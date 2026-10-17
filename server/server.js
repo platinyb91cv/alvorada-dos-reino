@@ -64,7 +64,7 @@ function onResult(r,slot,m){
     if(offFor>=FORFEIT_MS){recordMatch(r,x.w,'abandono',false);return}
     if(now-x.at>LONE_MAX_MS)recordMatch(r,null,'disputa',true)},Math.min(5000,FORFEIT_MS/3))}
 const log=(...a)=>console.log(new Date().toISOString(),...a);
-const MIME={'.html':'text/html; charset=utf-8','.js':'text/javascript','.css':'text/css','.json':'application/json','.png':'image/png','.svg':'image/svg+xml','.woff2':'font/woff2','.ico':'image/x-icon','.webmanifest':'application/manifest+json'};
+const MIME={'.html':'text/html; charset=utf-8','.js':'text/javascript','.css':'text/css','.json':'application/json','.png':'image/png','.webp':'image/webp','.jpg':'image/jpeg','.jpeg':'image/jpeg','.svg':'image/svg+xml','.woff2':'font/woff2','.ico':'image/x-icon','.webmanifest':'application/manifest+json'};
 const server=http.createServer((req,res)=>{
   const url=decodeURIComponent((req.url||'/').split('?')[0]);
   if(url==='/health'){res.writeHead(200,{'content-type':'application/json'});res.end(JSON.stringify({ok:true,rooms:rooms.size,players:[...rooms.values()].reduce((n,r)=>n+r.p.filter(x=>x&&x.ws).length,0)}));return}
