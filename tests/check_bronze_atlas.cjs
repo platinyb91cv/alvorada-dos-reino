@@ -12,10 +12,12 @@ function verifyAtlas(marker, endMarker, folder) {
   const stored = JSON.parse(fs.readFileSync(path.join(root,folder,'rei.json'),'utf8'));
   assert.deepEqual(meta,stored,marker+': embedded metadata differs');
   assert.equal(meta.h,130);assert.equal(meta.f.length,192);assert.equal(meta.directions,8);assert.equal(meta.framesPerDirection,24);
-  const payload=block.match(/im\.src='data:image\/webp;base64,([^']+)'/);
-  assert.ok(payload,marker+': embedded WebP missing');
-  const webp=Buffer.from(payload[1],'base64');
-  assert.deepEqual(webp,fs.readFileSync(path.join(root,folder,'rei.webp')),marker+': embedded atlas stale');
+  const payload=block.match(/im\.src='(assets\/kings\/[a-z]+\.webp)\?v=([0-9a-f]{12})'/);
+  assert.ok(payload,marker+': atlas file reference missing');
+  assert.ok(!/base64,/.test(block),marker+': atlas must not be embedded in index.html');
+  const webp=fs.readFileSync(path.join(root,'www',payload[1]));
+  assert.deepEqual(webp,fs.readFileSync(path.join(root,folder,'rei.webp')),marker+': shipped atlas stale');
+  assert.equal(require('node:crypto').createHash('sha256').update(webp).digest('hex').slice(0,12),payload[2],marker+': cache-busting hash stale');
   assert.equal(webp.toString('ascii',0,4),'RIFF');assert.equal(webp.toString('ascii',8,12),'WEBP');
   const png=fs.readFileSync(path.join(root,folder,'rei_atlas.png'));
   assert.equal(png.subarray(0,8).toString('hex'),'89504e470d0a1a0a');
@@ -66,13 +68,13 @@ for(const [i,[x,y]]of vectors.entries()){
  assert.equal(fromDelta(0,0,i),i);
 }
 const drawLog=[],scaleLog=[];
-const renderContext={KART:knight,KING_H:34,kingAtlas:()=>({})};
+const renderContext={KART:knight,KING_H:34,kingAtlas:()=>({}),kingFrameCanvas:(s,f)=>({frame:f})};
 const render=vm.runInNewContext('('+fn('drawKingArt')+'\n)',renderContext);
 const cc={save(){},restore(){},translate(){},scale(...a){scaleLog.push(a)},drawImage(...a){drawLog.push(a)}};
 const meta=JSON.parse(fs.readFileSync(path.join(root,'arte/rei-bronze/rei.json'),'utf8'));
 for(let d=0;d<8;d++)for(const i of [4,8,12,15,16,23]){
  render(cc,i,'blue','red',0,0,-1,null,false,{meta},d);
- assert.deepEqual(drawLog.at(-1).slice(1,5),meta.f[d*24+i].slice(0,4));
+ const call=drawLog.at(-1),fr=meta.f[d*24+i];assert.equal(call[0].frame,d*24+i);assert.deepEqual(call.slice(1,5),[0,0,fr[2],fr[3]]);
 }
 assert.equal(scaleLog.length,0,'Directional sprites must not mirror the spear');
 render(cc,8,'blue','red',0,0,-1,null,false,{meta:{h:130,f:meta.f.slice(0,24)}},0);
