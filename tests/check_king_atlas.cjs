@@ -37,7 +37,7 @@ const calls = [];
 const context = {BART:stone,KART:knight,KING_H:34,P:[{age:0,col:'#3366cc'}],G:{hero:{}},ME:0,cam:{z:.5},performance:{now:()=>1000},Math,
   kingLook:()=>({cape:'#aa2244'}),heroWC:()=>false,kingFrameIdx:()=>8,drawKingArt:(...args)=>calls.push(args.at(-1))};
 context.kingAtlasForAge = vm.runInNewContext('('+selector+')',context);
-const draw = vm.runInNewContext('('+html.slice(start,end)+')',context);
+const draw = vm.runInNewContext('('+html.slice(start,end)+'\n)',context);
 const canvas = {beginPath(){},ellipse(){},fill(){}};
 for (const age of [0,1,2]) {
   context.P[0].age=age;
