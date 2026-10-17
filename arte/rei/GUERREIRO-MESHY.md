@@ -1,6 +1,6 @@
 # Guerreiro com lanca
 
-Acrescenta o atlas BART para o rei da Idade da Pedra, com sprites renderizados do personagem Meshy criado a partir da imagem fornecida pelo utilizador. Bronze e Ferro mantem o atlas KART original do cavaleiro. Mantem o contrato de 24 quadros, referencia 130 px, altura de jogo 34 px e ancoras por quadro. O payload WebP e os metadados BART de `www/index.html` correspondem aos arquivos desta pasta. O personagem vivo e a queda selecionam o atlas pela idade; enquanto o novo atlas carrega, existe fallback para KART.
+Acrescenta o atlas BART para o rei da Idade da Pedra, com sprites renderizados do personagem Meshy criado a partir da imagem fornecida pelo utilizador. Ferro mantem o atlas KART original do cavaleiro. Bronze usa o novo BRONZE_ART, documentado em ../rei-bronze/REI-BRONZE.md. Mantem o contrato de 24 quadros, referencia 130 px, altura de jogo 34 px e ancoras por quadro. O payload WebP e os metadados BART de `www/index.html` correspondem aos arquivos desta pasta. O personagem vivo e a queda selecionam o atlas pela idade; enquanto o novo atlas carrega, existe fallback para KART.
 
 Estados: andar antigo 0–3, ataque 4–7, parado 8–9, grito 10, conjuracao/bencao 11, golpe 12, queda 13–15, andar atual 16–23. As duas faixas do cinto recebem as cores de equipa/capa pelas funcoes existentes; pele e pelos conservam as texturas.
 

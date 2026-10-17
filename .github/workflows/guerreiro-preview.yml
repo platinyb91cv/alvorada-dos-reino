@@ -1,14 +1,14 @@
-name: APK de revisao do guerreiro
+name: APK de revisao dos reis
 
 on:
   pull_request:
     paths:
       - 'www/index.html'
       - 'arte/rei/**'
+      - 'arte/rei-bronze/**'
       - 'tests/check_king_atlas.cjs'
+      - 'tests/check_bronze_atlas.cjs'
       - '.github/workflows/guerreiro-preview.yml'
-  push:
-    branches: ['codex/guerreiro-meshy-animado']
   workflow_dispatch:
 
 permissions:
@@ -42,7 +42,7 @@ jobs:
           ./gradlew assembleDebug --no-daemon
       - uses: actions/upload-artifact@v4
         with:
-          name: alvorada-guerreiro-apk
+          name: alvorada-reis-apk
           path: android/app/build/outputs/apk/debug/app-debug.apk
           if-no-files-found: error
           retention-days: 7
