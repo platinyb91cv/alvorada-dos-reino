@@ -17,3 +17,5 @@ Validacao: reimportacao dos seis GLB, existencia de malhas e clips, limite de tr
 Custo confirmado: 315 creditos Meshy (120 geometria, 60 texturas, 30 rig, 105 animacoes). Saldo apos esta geracao: 718. Nao ha credenciais nos artefactos. A geracao foi remota; a preparacao e renderizacao Blender usam CPU e nao carregam modelos generativos locais.
 
 O pacote local de fontes contem os seis GLB otimizados, cenas Blender, scripts e comprovativos. No GLB do aldeao, os clips pertencem ao corpo; as ferramentas alternativas ficam na cena Blender e sao selecionadas pelo script ao produzir cada atividade do atlas. Ainda e necessario testar uma partida completa e memoria num dispositivo Android real. A simulacao online entre dois aparelhos nao foi testada nesta entrega.
+
+Segunda revisao do aldeao/guerreiro: machados em cunha a 1,4x, enxada chata e tres movimentos Prime distintos para minerar, construir e cortar carne. Custo adicional confirmado: 39 creditos, sem repeticoes; ver `meshy-segunda-volta.json` e [detalhes da correcao](CORRECAO-ALDEAO-GUERREIRO.md). A folha comparativa usa a primeira revisao como referencia.

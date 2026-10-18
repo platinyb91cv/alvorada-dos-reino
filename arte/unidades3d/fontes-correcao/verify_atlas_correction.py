@@ -9,8 +9,14 @@ for name in ['aldeao','guerreiro']:
  assert new['states']==old['states']and new['labels']==old['labels']and new['framesPerDirection']==old['framesPerDirection'];assert new['bodyReferencePixels']==old['bodyReferencePixels'];assert meta['h']==64
  errors=[]
  for a,b in zip(old['frames'],new['frames']):
-  for field in ['i','state','clip','phase','direction']:assert a[field]==b[field],(name,field)
+  for field in ['i','state','clip','phase','direction']:
+   if field=='clip'and b['state']in ['build','farm','butcher']and b[field]in ['Build','Farm','Butcher']:continue
+   assert a[field]==b[field],(name,field)
   errors.append(math.dist(a['anchor'],b['anchor']));im=Image.open(d/'frames'/f"{b['direction']:02d}-{b['i']:02d}.png").convert('RGBA');box=im.getbbox();assert box and min(box[:2])>0 and max(box[2:])<192,(name,b,'clipped')
+ if name=='aldeao'and 'segunda-volta'in str(B):
+  for f in new['frames']:
+   if f['state']in ['chop','mine','build','farm','butcher']:continue
+   filename=f"{f['direction']:02d}-{f['i']:02d}.png";assert (B/name/'frames'/filename).read_bytes()==(d/'frames'/filename).read_bytes(),('unexpected change',name,filename)
  assert max(errors)<1e-4,(name,max(errors));atlas=Image.open(d/'atlas.webp').convert('RGBA');unique={}
  for direction in range(8):
   tiles=[]

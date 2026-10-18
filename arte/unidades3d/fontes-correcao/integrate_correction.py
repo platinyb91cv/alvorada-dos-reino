@@ -11,6 +11,11 @@ for name in ['aldeao','guerreiro']:
  if 'carry'in stride:stride['carry'].pop('rows')
  proof['locomotion']=stride;proof['atlasSha256']=data[name]['atlasSha256'];proof['renderCamera']=json.loads((d/'fixed-camera.json').read_text());proof['correction']=json.loads((d/'build-report.json').read_text())['correction'];proof['correctionChecks']=json.loads((d/'correction-verification.json').read_text())
  if name=='aldeao':proof['axeVisibility']=json.loads((d/'axe-visibility.json').read_text());assert proof['axeVisibility']['sourceModelSha256']==proof['optimizedGlbSha256'];assert len(proof['axeVisibility']['frames'])==48 and min(f['visibleBladeAreaAt30px']for f in proof['axeVisibility']['frames'])>0
+ proof['secondPass']=json.loads((d/'second-pass-verification.json').read_text())
+ render=json.loads((d/'render-report.json').read_text());assert render['sourceModelSha256']==proof['optimizedGlbSha256'];proof['renderStateClips']={state:sorted({f['clip']for f in render['frames']if f['state']==state})for state in render['states']}
+ if name=='aldeao':
+  proof['workMotions']=json.loads((d/'work-motion-provenance.json').read_text());proof['knifeVisibility']=json.loads((d/'knife-visibility.json').read_text());assert proof['knifeVisibility']['sourceModelSha256']==proof['optimizedGlbSha256']
+  assert min(f['visibleBladeAreaAt30px']for f in proof['knifeVisibility']['frames']if f['direction']in ['SE','S'])>0
  (repo/'arte/unidades3d'/(name+'.verification.json')).write_text(json.dumps(proof,indent=2)+'\n',encoding='utf-8')
 html=html[:match.start(1)]+json.dumps(data,separators=(',',':'))+html[match.end(1):]
 old="((u.anim/(Math.PI*2))%1+1)%1"

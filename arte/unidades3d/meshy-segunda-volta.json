@@ -1,0 +1,52 @@
+{
+  "provider": "Meshy",
+  "mode": "prime",
+  "authorizedMaximumCredits": 39,
+  "automaticPaidRetries": false,
+  "newCharacterGenerations": 0,
+  "clips": [
+    {
+      "state": "mine",
+      "motion": {
+        "id": "01a14c68-a3d3-7491-8986-f4cdfbd84d68",
+        "consumedCredits": 10,
+        "status": "SUCCEEDED"
+      },
+      "retarget": {
+        "id": "01a14c69-8aa2-761d-ae74-8cfed8779576",
+        "consumedCredits": 3,
+        "status": "SUCCEEDED"
+      },
+      "sourceGlbSha256": "995936ec08092cb4327cf9d341437711e10920f0ee59e6853f350391bafacfa0"
+    },
+    {
+      "state": "build",
+      "motion": {
+        "id": "01a14c68-a702-73c6-95bb-2209b8207f5e",
+        "consumedCredits": 10,
+        "status": "SUCCEEDED"
+      },
+      "retarget": {
+        "id": "01a14c69-8e5a-7727-8aa3-740194376bdf",
+        "consumedCredits": 3,
+        "status": "SUCCEEDED"
+      },
+      "sourceGlbSha256": "91e11b0ac8a98beaaae47cb9c274ab24d2579490ac6d3144f69e5adf7aaf30f9"
+    },
+    {
+      "state": "butcher",
+      "motion": {
+        "id": "01a14c68-aafa-716c-94ae-15dba544b179",
+        "consumedCredits": 10,
+        "status": "SUCCEEDED"
+      },
+      "retarget": {
+        "id": "01a14c69-9131-7005-b40e-c0aecb66d2a3",
+        "consumedCredits": 3,
+        "status": "SUCCEEDED"
+      },
+      "sourceGlbSha256": "6b3a22bf35eb9992a170fd1cd9e13b1bf437c67d8ea7b278ceea85a3122657e4"
+    }
+  ],
+  "totalConsumedCredits": 39
+}

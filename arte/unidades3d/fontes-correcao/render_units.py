@@ -13,7 +13,7 @@ for name in names:
   for phase in phases:states[state].append(len(frames));frames.append({'i':len(frames),'state':state,'clip':clip,'phase':phase,'tool':tool})
  sequence('idle','Idle',[.2,.7],default);sequence('walk','Walk',[i/8 for i in range(8)],default);sequence('attack','Attack',[0,.15,.3,.5,.7,.9],'hammer'if name=='aldeao'else default);sequence('hit','Hit',[.2,.55],default);sequence('death','Death',[.1,.35,.65,1],default)
  if name=='aldeao':
-  for state,clip,tool in [('chop','Chop','axe'),('mine','Mine','pick'),('build','Mine','hammer'),('farm','Harvest','hoe'),('forage','Harvest','basket'),('hunt','Attack','spear'),('butcher','Mine','knife')]:sequence(state,clip,[.05,.2,.35,.5,.65,.8],tool)
+  for state,clip,tool in [('chop','Chop','axe'),('mine','Mine','pick'),('build','Build'if 'Build'in report['clips']else 'Mine','build_hammer'if 'build_hammer'in report['props']else 'hammer'),('farm','Farm'if 'Farm'in report['clips']else 'Harvest','hoe'),('forage','Harvest','basket'),('hunt','Attack','spear'),('butcher','Butcher'if 'Butcher'in report['clips']else 'Mine','knife')]:sequence(state,clip,[.05,.2,.35,.5,.65,.8],tool)
   sequence('carry','Carry',[i/8 for i in range(8)],'cargo')
  anchor=rig.matrix_world@rig.data.bones['Hips'].head_local;anchor.z=0;pivot=bpy.data.objects.new('EightDirectionPivot',None);S.collection.objects.link(pivot);pivot.location=anchor;matrix=rig.matrix_world.copy();rig.parent=pivot;rig.matrix_world=matrix
  camera=S.camera;target=anchor+Vector((0,0,.9));camera.location=target+Vector((6,-6,math.sqrt(72)/math.sqrt(3)));camera.rotation_euler=(target-camera.location).to_track_quat('-Z','Y').to_euler();camera.data.ortho_scale=4
@@ -47,27 +47,27 @@ for name in names:
   fixed=json.loads((d/'fixed-camera.json').read_text());camera.location=fixed['location'];camera.rotation_euler=fixed['rotation'];camera.data.ortho_scale=fixed['orthoScale'];body_pixels=fixed['bodyReferencePixels'];bpy.context.view_layer.update()
  output={'sourceModelSha256':hashlib.sha256((d/(name+'-jogo.glb')).read_bytes()).hexdigest(),'bodyReferencePixels':body_pixels,'unit':name,'directions':8,'framesPerDirection':len(frames),'states':states,'labels':labels,'frames':[],'resolution':192,'cpuSamples':8}
  rendering=True
- if '--verify-axe-visibility'in sys.argv:
+ if '--verify-axe-visibility'in sys.argv or '--verify-knife-visibility'in sys.argv:
   from mathutils.bvhtree import BVHTree
-  checks=[];native=192*30/body_pixels;rotation=camera.matrix_world.to_quaternion();right=rotation@Vector((1,0,0));up=rotation@Vector((0,1,0));ray=rotation@Vector((0,0,-1));size=camera.data.ortho_scale
+  knife_mode='--verify-knife-visibility'in sys.argv;kind='knife'if knife_mode else 'axe';state='butcher'if knife_mode else 'chop';checks=[];native=192*30/body_pixels;rotation=camera.matrix_world.to_quaternion();right=rotation@Vector((1,0,0));up=rotation@Vector((0,1,0));ray=rotation@Vector((0,0,-1));size=camera.data.ortho_scale
   def tree(ob):
    ev=ob.evaluated_get(bpy.context.evaluated_depsgraph_get());me=ev.to_mesh();vertices=[ev.matrix_world@v.co for v in me.vertices];faces=[tuple(p.vertices)for p in me.polygons];result=BVHTree.FromPolygons(vertices,faces);ev.to_mesh_clear();return result,vertices
   for direction in range(8):
    for frame in frames:
-    if frame['state']!='chop':continue
-    pose(direction,frame);occluder,_=tree(body);blade=bpy.data.objects[report['props']['axe'][1]];target,vertices=tree(blade);projected=[world_to_camera_view(S,camera,p)for p in vertices];x0=max(0,int(min(p.x for p in projected)*native)-1);x1=min(math.ceil(native),math.ceil(max(p.x for p in projected)*native)+1);y0=max(0,int(min(p.y for p in projected)*native)-1);y1=min(math.ceil(native),math.ceil(max(p.y for p in projected)*native)+1);area=0
+    if frame['state']!=state:continue
+    pose(direction,frame);occluder,_=tree(body);blade=bpy.data.objects[report['props'][kind][1]];target,vertices=tree(blade);projected=[world_to_camera_view(S,camera,p)for p in vertices];x0=max(0,int(min(p.x for p in projected)*native)-1);x1=min(math.ceil(native),math.ceil(max(p.x for p in projected)*native)+1);y0=max(0,int(min(p.y for p in projected)*native)-1);y1=min(math.ceil(native),math.ceil(max(p.y for p in projected)*native)+1);area=0
     for x in range(x0,x1):
      for y in range(y0,y1):
       for sx,sy in [(.25,.25),(.75,.25),(.25,.75),(.75,.75)]:
        origin=camera.location+right*((x+sx)/native-.5)*size+up*((y+sy)/native-.5)*size;hit=target.ray_cast(origin,ray);block=occluder.ray_cast(origin,ray)
        if hit[0]is not None and (block[0]is None or hit[3]<block[3]+1e-4):area+=.25
     checks.append({'direction':labels[direction],'frame':frame['i'],'phase':frame['phase'],'visibleBladeAreaAt30px':area})
-  (d/'axe-visibility.json').write_text(json.dumps({'sourceModelSha256':hashlib.sha256((d/(name+'-jogo.glb')).read_bytes()).hexdigest(),'method':'4 subpixel orthographic rays per native 30px pixel; evaluated body BVH occlusion against the axe blade mesh','frames':checks},indent=2));print('AXE_VISIBILITY',name,min(c['visibleBladeAreaAt30px']for c in checks),flush=True);continue
+  (d/(kind+'-visibility.json')).write_text(json.dumps({'sourceModelSha256':hashlib.sha256((d/(name+'-jogo.glb')).read_bytes()).hexdigest(),'method':'4 subpixel orthographic rays per native 30px pixel; evaluated body BVH occlusion against the '+kind+' blade mesh','frames':checks},indent=2));print(kind.upper()+'_VISIBILITY',name,min(c['visibleBladeAreaAt30px']for c in checks),flush=True);continue
  for direction in range(8):
   if '--preview'in sys.argv and direction>1:continue
   subset=[frames[0]]if '--calibrate'in sys.argv else frames
   for frame in subset:
-   if '--preview'in sys.argv and frame['i']not in [0,2,4,6,8,22,24,25,27,28,40,46,64]:continue
+   if '--preview'in sys.argv and frame['i']not in [0,2,4,6,8,22,24,25,27,28,30,32,34,36,38,40,41,42,44,46,58,60,62,64]:continue
    pose(direction,frame);p=world_to_camera_view(S,camera,anchor);row={**frame,'direction':direction,'anchor':[p.x*192,(1-p.y)*192]};output['frames'].append(row);file=d/'frames'/f"{direction:02d}-{frame['i']:02d}.png";S.render.filepath=str(file)
    force_state=sys.argv[sys.argv.index('--only-state')+1]if '--only-state'in sys.argv else None
    force_states=sys.argv[sys.argv.index('--only-states')+1].split(',')if '--only-states'in sys.argv else None

@@ -1,5 +1,9 @@
 # Correção dos atlas do aldeão e guerreiro
 
+Estado atual: segunda revisão com machado 1,4× em cunha, enxada chata e três movimentos Prime (39 créditos). Ver a última secção e o comprovativo `meshy-segunda-volta.json`.
+
+## Primeira revisão — histórico (ae45420)
+
 Base: `main` em `0ddc1da498e5cef8f2ec331460fa42f4d89084c8`. Somente estas duas unidades foram renderizadas novamente. Nenhum modelo novo, chamada à Meshy ou crédito gasto.
 
 O clip Walk anterior continha aproximadamente 2,87 ciclos de passada. Amostrar o clip inteiro em oito quadros saltava fases do movimento. A correção extrai um ciclo, mantém o movimento original das pernas e aplica uma camada no tronco/braços. Os braços superiores ficam próximos da vertical, os cotovelos fletidos e o balanço acompanha a perna oposta. Idle e Carry recebem a mesma correção no aldeão. O guerreiro recebe também correção da coluna, pescoço e ombros. A inclinação da coluna medida fica abaixo de 5°.
@@ -41,3 +45,17 @@ Preservar primeiro os diretórios originais `aldeao/` e `guerreiro/` num diretó
 Executar `node tests/check_unit3d.cjs`, `node tests/check_king_atlas.cjs`, `node tests/check_king_memory.cjs` e `node tests/check_unit3d_correction.cjs`. A folha `comparacao-antes-depois.png` apresenta todos os quadros de Walk/Chop/Mine/Farm/Forage/Carry do aldeão e Walk do guerreiro, em SE e S, reduzidos primeiro a 30 px e ampliados 3× para inspeção. O guerreiro não tem os estados de trabalho do aldeão.
 
 Não foi executada uma partida num aparelho Android físico nesta correção. O ramo é entregue para revisão, sem merge no main.
+
+## Segunda revisão — ferramentas e movimentos Prime
+
+Esta revisão parte do commit ae45420 e preserva a caminhada, Idle/Carry, câmaras, âncoras, h=64 e a ordem dos estados. Não gera personagens novos. O machado de ambas as unidades passa de 1,8× para 1,4× (cabo de 0,91 m), com lâmina em cunha: 60 mm junto ao encaixe e 12 mm no gume. A enxada tem lâmina trapezoidal chata de 18 mm e uma camada de orientação do pulso sobre Harvest, apontando-a para o chão durante o trabalho.
+
+Mine, Build e Butcher passam a usar três movimentos próprios Meshy Text to Motion Prime, aplicados ao rig existente. Foram feitas exatamente três gerações (10 créditos cada) e três aplicações (3 créditos cada): **39 créditos**, dentro da autorização, sem repetições pagas. Os identificadores e custos efetivos estão em `meshy-segunda-volta.json`. A pesquisa verificou 678 ações da biblioteca; não encontrou presets exatos para os três trabalhos. Preços API: https://docs.meshy.ai/en/api/pricing e contratos https://docs.meshy.ai/en/api/text-to-motion / https://docs.meshy.ai/en/api/animation .
+
+A picareta executa golpes descendentes; Build usa marteladas curtas à cintura e um martelo separado, preservando Attack. Butcher faz cortes horizontais, com lâmina de aço clara de 100 mm de largura para leitura a 30 px. As ferramentas mantêm-se rígidas e ligadas ao osso da mão. A faca é visível nos 12 quadros de SE/S; o corpo pode ocultá-la nas vistas traseiras. A área medida por raios é geométrica, não uma garantia de contraste em todos os ecrãs.
+
+Os scripts adicionais são `second_tools.py`, `import_work_clips.py`, `calibrate_work_tools.py` e `verify_second_pass.py`. Trabalham na disposição local `outputs/unidades-3d/` e `outputs/correcao-aldeao-guerreiro/segunda-volta/`; o ZIP conserva essa disposição. Para reproduzir: executar os três primeiros scripts nessa ordem com Blender 5.2 CPU, verificar os modelos e renderizar Chop/Mine/Build/Farm/Butcher do aldeão e todos os estados do guerreiro. Empacotar e integrar com os scripts já existentes. Os clips pagos estão incluídos nas fontes locais, pelo que reproduzir não exige novas chamadas Meshy.
+
+`verify_models.py` compara matrizes completas dos ossos após reimportação do GLB, incluindo orientação do pulso (Farm e Harvest conservam posições de articulações, mas têm orientação diferente). `check_unit3d_second_pass.cjs` verifica a cunha, a escala 1,4×, a enxada chata, os clips distintos, os 39 créditos e a visibilidade da faca em SE/S. Executar também os quatro testes da primeira revisão. A folha comparativa desta revisão inclui Walk, Chop, Mine, Build, Farm, Forage, Butcher e Carry em SE/S, com a primeira revisão como ANTES.
+
+Não foi testado em Android físico. Não há merge no main.

@@ -5,7 +5,7 @@ O=Path(sys.argv[sys.argv.index('--sources')+1]).resolve()if '--sources'in sys.ar
 B=Path(sys.argv[sys.argv.index('--baseline')+1]).resolve()if '--baseline'in sys.argv else O.parent/'correcao-aldeao-guerreiro'/'antes'
 out=Path(sys.argv[sys.argv.index('--output')+1]).resolve()if '--output'in sys.argv else O.parent/'correcao-aldeao-guerreiro'
 out.mkdir(parents=True,exist_ok=True)
-rows=[('aldeao',state,d)for state in ['walk','chop','mine','farm','forage','carry']for d in [0,1]]+[('guerreiro','walk',d)for d in [0,1]]
+rows=[('aldeao',state,d)for state in ['walk','chop','mine','build','farm','forage','butcher','carry']for d in [0,1]]+[('guerreiro','walk',d)for d in [0,1]]
 font=ImageFont.truetype('C:/Windows/Fonts/segoeui.ttf',19);big=ImageFont.truetype('C:/Windows/Fonts/segoeuib.ttf',28)
 extents=[0,0,0,0]
 for name,state,direction in rows:
@@ -19,7 +19,7 @@ CW,CH=bw*3,bh*3;left=190;gap=24;W=left+16*CW+gap;header=125;RH=CH+28
 sheet=Image.new('RGB',(W,header+RH*len(rows)),'#222c39');draw=ImageDraw.Draw(sheet)
 draw.text((20,12),'ALDEÃO E GUERREIRO — CORREÇÃO LOCAL DOS ATLAS',font=big,fill='white')
 draw.text((20,52),'30 px de altura no jogo → ampliação 3× sem suavização. Mesma câmara, escala e âncora de chão. Quadros pela ordem do atlas.',font=font,fill='#c7d5e5')
-draw.text((left,88),'ANTES — main 0ddc1da',font=big,fill='#ffcc99');draw.text((left+8*CW+gap,88),'DEPOIS — fontes locais, sem nova geração',font=big,fill='#a7efb4')
+draw.text((left,88),'ANTES — primeira revisão ae45420',font=big,fill='#ffcc99');draw.text((left+8*CW+gap,88),'DEPOIS — ferramentas + 3 clips Prime',font=big,fill='#a7efb4')
 for row,(name,state,direction)in enumerate(rows):
  yy=header+row*RH;draw.text((12,yy+24),name.upper(),font=font,fill='white');draw.text((12,yy+54),state.upper(),font=font,fill='#8fdbff');draw.text((12,yy+84),['SE','S'][direction],font=big,fill='white')
  for side,root in enumerate([B,O]):

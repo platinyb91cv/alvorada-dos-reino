@@ -4,7 +4,7 @@ const start=html.indexOf('function unit3dFrame('),end=html.indexOf('\nfunction '
 const frame=vm.runInNewContext('('+html.slice(start,end)+')',{Math,performance:{now:()=>0},atkPhase:()=>.5});
 for(const name of ['aldeao','guerreiro']){
  const meta=JSON.parse(fs.readFileSync(path.join(root,'www/assets/units3d',name+'.json'))),proof=JSON.parse(fs.readFileSync(path.join(root,'arte/unidades3d',name+'.verification.json')));
- assert.equal(proof.atlasSha256,meta.atlasSha256);assert.equal(proof.correctionChecks.newMeshyCredits,0);
+ assert.equal(proof.atlasSha256,meta.atlasSha256);assert.equal(proof.correctionChecks.localToolCredits??proof.correctionChecks.newMeshyCredits,0);
  assert.ok(proof.correctionChecks.maxArmLateralFraction<.2);assert.ok(Object.values(proof.correctionChecks.boneAttachmentMatrixErrors).every(x=>x<1e-3));
  assert.ok(Object.values(proof.correctionChecks.armLegCorrelation).every(x=>x<-.9),'arms must swing opposite the legs');
  assert.ok(Object.values(proof.correctionChecks.cyclicPoseMatrixError).every(x=>x<1e-4));

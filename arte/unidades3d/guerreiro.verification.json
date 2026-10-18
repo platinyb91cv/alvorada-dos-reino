@@ -1,4 +1,11 @@
 {
+  "reimportedClipPoseSha256": {
+    "Idle": "52e05a0fb97dadf6ce995d2a7986a168995a2472f9778834196260bc1dc589d1",
+    "Walk": "5003a712fa6286eaa301149364f6472dad09be0dc53be9d145b723b5aba6ef2e",
+    "Attack": "cf487cafd40b1f54597c144e47d20c43de2810f48a117c5a4b0825308258f97c",
+    "Hit": "95569b8f00040e7d2aed46178de750ff24be990764732a367ee6fd85432b3176",
+    "Death": "5864921acd4a9d9d3cb89454f8553721fbf8ba79876e00ee80d7ff2f792613e0"
+  },
   "reimportedClipsDistinct": true,
   "reimportedRootDriftByClip": {
     "Idle": 9.497663962827594e-09,
@@ -7,11 +14,11 @@
     "Hit": 4.4394399524536315e-08,
     "Death": 1.0150241161795494e-07
   },
-  "optimizedGlbSha256": "da1833b02cd054733a7b98d5f8972d1ed1897a58b3efa1292474ceb5a1033091",
+  "optimizedGlbSha256": "9a998fc06339239c3ffbcdffad530664656c9722c0916de31c11769c032436fb",
   "unit": "guerreiro",
   "reimported": true,
   "meshes": 3,
-  "triangles": 6547,
+  "triangles": 6563,
   "bones": 24,
   "clips": [
     "Attack",
@@ -27,8 +34,8 @@
   },
   "rootHorizontalDrift": 5.268356063861754e-09,
   "rigidProps": {
-    "axe_shaft": 1.0465226382358472e-07,
-    "axe_blade": 3.391226852111906e-07
+    "axe_shaft": 1.0989101757383213e-07,
+    "axe_blade": 2.476735455336776e-07
   },
   "locomotion": {
     "unit": "guerreiro",
@@ -62,7 +69,7 @@
     "recommendedAnimFactor": 17.313378313569782,
     "visualPhaseMultiplier": 3.4626756627139565
   },
-  "atlasSha256": "d1599874d76c92daa969f026504d09fba690a6285549394e2198fd7bc20f3285",
+  "atlasSha256": "eb965e40ba54b39c823b14d72ab429f13a14adc5d71fe5a2fd8fc1fa55770ee6",
   "renderCamera": {
     "location": [
       5.991625785827637,
@@ -109,6 +116,40 @@
       "axe_shaft": 0.000568389892578125,
       "axe_blade": 0.000568389892578125
     },
+    "localToolCredits": 0,
     "newMeshyCredits": 0
+  },
+  "secondPass": {
+    "unit": "guerreiro",
+    "axeHandleLengthMeters": 0.9100004603114903,
+    "axeScaleVsOriginal": 1.4000007081715236,
+    "axeWedgeThicknessMeters": [
+      0.011999862953533816,
+      0.060000124873541116
+    ],
+    "axeHeadVertexCount": 16,
+    "toolCorrection": {
+      "axeScaleVsOriginal": 1.4,
+      "axeHead": "tapered flared wedge, 60mm socket to 12mm edge",
+      "hoeBlade": null,
+      "newCharacterGenerations": 0
+    }
+  },
+  "renderStateClips": {
+    "idle": [
+      "Idle"
+    ],
+    "walk": [
+      "Walk"
+    ],
+    "attack": [
+      "Attack"
+    ],
+    "hit": [
+      "Hit"
+    ],
+    "death": [
+      "Death"
+    ]
   }
 }

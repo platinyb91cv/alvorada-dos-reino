@@ -41,5 +41,7 @@ for name in ['aldeao','guerreiro']:
  correlations={}
  for side,pairs in opposition.items():
   ax=sum(a for a,b in pairs)/len(pairs);ay=sum(b for a,b in pairs)/len(pairs);corr=sum((a-ax)*(b-ay)for a,b in pairs)/math.sqrt(sum((a-ax)**2 for a,b in pairs)*sum((b-ay)**2 for a,b in pairs));assert corr<-.9,(name,side,'arm must oppose leg',corr);correlations[side]=corr
- result={'unit':name,'armLegCorrelation':correlations,'maxArmLateralFraction':max(arm),'maxTorsoLeanDegrees':max(torso)if torso else None,'cyclicPoseMatrixError':loop,'maxAxeGripErrorMeters':max(grip)if grip else None,'chopFrames':chop,'boneAttachmentMatrixErrors':attachment,'newMeshyCredits':0}
+ motion_credits=0
+ if name=='aldeao'and (d/'work-motion-provenance.json').exists():motion_credits=sum(v['motionCredits']+v['retargetCredits']for v in json.loads((d/'work-motion-provenance.json').read_text()).values())
+ result={'unit':name,'armLegCorrelation':correlations,'maxArmLateralFraction':max(arm),'maxTorsoLeanDegrees':max(torso)if torso else None,'cyclicPoseMatrixError':loop,'maxAxeGripErrorMeters':max(grip)if grip else None,'chopFrames':chop,'boneAttachmentMatrixErrors':attachment,'localToolCredits':0,'newMeshyCredits':motion_credits}
  (d/'correction-verification.json').write_text(json.dumps(result,indent=2));print('CORRECTION_VERIFIED',name,json.dumps(result),flush=True)
