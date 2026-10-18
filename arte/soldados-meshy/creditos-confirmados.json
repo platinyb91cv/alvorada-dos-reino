@@ -1,0 +1,127 @@
+{
+  "authorizedMaximumCredits": 190,
+  "automaticPaidRetries": false,
+  "units": [
+    {
+      "id": "guerreiro",
+      "steps": [
+        {
+          "step": "model",
+          "taskId": "01a14eb4-5c2b-70e4-8e5c-3f08f5be9e7d",
+          "consumedCredits": 30,
+          "status": "SUCCEEDED"
+        },
+        {
+          "step": "rig",
+          "taskId": "01a14ebd-ed6b-7444-a8da-3dc2d87338f3",
+          "consumedCredits": 5,
+          "status": "SUCCEEDED"
+        },
+        {
+          "step": "walk",
+          "taskId": "01a14ec4-8e78-7693-a444-b3c40ce54245",
+          "consumedCredits": 3,
+          "status": "SUCCEEDED"
+        }
+      ],
+      "credits": 38
+    },
+    {
+      "id": "lanceiro",
+      "steps": [
+        {
+          "step": "model",
+          "taskId": "01a14eb5-7a53-7600-9066-dc9cd7770916",
+          "consumedCredits": 30,
+          "status": "SUCCEEDED"
+        },
+        {
+          "step": "rig",
+          "taskId": "01a14ec0-91cb-7413-b9ef-b50b7d171a45",
+          "consumedCredits": 5,
+          "status": "SUCCEEDED"
+        },
+        {
+          "step": "walk",
+          "taskId": "01a14ec4-c193-745d-9d9b-c962374af1e4",
+          "consumedCredits": 3,
+          "status": "SUCCEEDED"
+        }
+      ],
+      "credits": 38
+    },
+    {
+      "id": "espadachim",
+      "steps": [
+        {
+          "step": "model",
+          "taskId": "01a14eb6-a847-74fc-a539-f98f47c39ba9",
+          "consumedCredits": 30,
+          "status": "SUCCEEDED"
+        },
+        {
+          "step": "rig",
+          "taskId": "01a14ec2-abcd-7554-82ba-016e761cbc5a",
+          "consumedCredits": 5,
+          "status": "SUCCEEDED"
+        },
+        {
+          "step": "walk",
+          "taskId": "01a14ec4-f1e4-70dc-b710-6096d79b21eb",
+          "consumedCredits": 3,
+          "status": "SUCCEEDED"
+        }
+      ],
+      "credits": 38
+    },
+    {
+      "id": "arqueiro",
+      "steps": [
+        {
+          "step": "model",
+          "taskId": "01a14eb8-2879-722e-9a2d-be45a1be620e",
+          "consumedCredits": 30,
+          "status": "SUCCEEDED"
+        },
+        {
+          "step": "rig",
+          "taskId": "01a14ec3-858b-7754-aa1e-9834ba354911",
+          "consumedCredits": 5,
+          "status": "SUCCEEDED"
+        },
+        {
+          "step": "walk",
+          "taskId": "01a14ec5-1a7b-71fc-b8a7-30f82dc6af5b",
+          "consumedCredits": 3,
+          "status": "SUCCEEDED"
+        }
+      ],
+      "credits": 38
+    },
+    {
+      "id": "besteiro",
+      "steps": [
+        {
+          "step": "model",
+          "taskId": "01a14eb9-49bd-77da-b6b9-dabcb2c8568a",
+          "consumedCredits": 30,
+          "status": "SUCCEEDED"
+        },
+        {
+          "step": "rig",
+          "taskId": "01a14ec4-342c-7127-ac05-d350bffdc1be",
+          "consumedCredits": 5,
+          "status": "SUCCEEDED"
+        },
+        {
+          "step": "walk",
+          "taskId": "01a14ec5-4591-7478-9cfc-eb58bc943989",
+          "consumedCredits": 3,
+          "status": "SUCCEEDED"
+        }
+      ],
+      "credits": 38
+    }
+  ],
+  "totalConsumedCredits": 190
+}

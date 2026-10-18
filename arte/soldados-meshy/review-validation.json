@@ -1,0 +1,29 @@
+{
+  "base": "ae45420",
+  "testsPresentOnMain": [
+    {
+      "test": "check_bronze_atlas.cjs",
+      "exitCode": 0
+    },
+    {
+      "test": "check_king_atlas.cjs",
+      "exitCode": 0
+    },
+    {
+      "test": "check_king_memory.cjs",
+      "exitCode": 0
+    },
+    {
+      "test": "check_unit3d_correction.cjs",
+      "exitCode": 0
+    },
+    {
+      "test": "check_unit3d.cjs",
+      "exitCode": 0
+    }
+  ],
+  "sixthTest": "check_unit3d_second_pass.cjs is absent from main and depends on previous unmerged changes; not added or claimed as passed.",
+  "globalPatternScan": "Existing matches only in server/server.js, tests/mock_supabase.js and www/vendor/supabase.js. These files are unchanged.",
+  "newPackagePatternScan": "No matches; checked after staging.",
+  "scope": "Only arte/soldados-meshy added; no game integration or merge."
+}

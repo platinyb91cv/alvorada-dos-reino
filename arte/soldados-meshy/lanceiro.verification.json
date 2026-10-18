@@ -1,0 +1,102 @@
+{
+  "name": "lanceiro",
+  "glbBytes": 14870580,
+  "sha256": "574e055afaebf9acfc02ed539f80ff7a1585dafb0914aab51dc1dcada88bbebb",
+  "boneCount": 24,
+  "boneNames": [
+    "Hips",
+    "Spine02",
+    "Spine01",
+    "Spine",
+    "neck",
+    "Head",
+    "head_end",
+    "headfront",
+    "LeftShoulder",
+    "LeftArm",
+    "LeftForeArm",
+    "LeftHand",
+    "RightShoulder",
+    "RightArm",
+    "RightForeArm",
+    "RightHand",
+    "LeftUpLeg",
+    "LeftLeg",
+    "LeftFoot",
+    "LeftToeBase",
+    "RightUpLeg",
+    "RightLeg",
+    "RightFoot",
+    "RightToeBase"
+  ],
+  "clips": [
+    {
+      "name": "MeshyPrime_Walk_SelectedCycle",
+      "durationSeconds": 1.2666666507720947,
+      "walkCycles": 1,
+      "cycleCountMethod": "One contiguous full left/right gait cycle selected by matching foot phase; not a seamless periodic clip."
+    }
+  ],
+  "triangles": 99999,
+  "heightMeters": 1.7181568145751953,
+  "heightMeasurement": "Imported Blender mesh bounds at first selected walking frame; metres, not requested rig height.",
+  "forwardAxis": {
+    "glTF": "+Z",
+    "Blender": "-Y",
+    "evidence": "Front-facing S render looks along local +Y onto the model; face points -Y. Root travels -Y, stance feet move +Y relative to hips."
+  },
+  "rootDisplacementPerWalkCycle": {
+    "bone": "Hips",
+    "coordinateSystem": "glTF Y-up metres",
+    "vectorMeters": [
+      0.021878423690795897,
+      -0.011604843139648437,
+      0.8682560729980469
+    ],
+    "horizontalMeters": 0.8685316768668738,
+    "distanceMeters": 0.8686092021763755,
+    "method": "Original GLB translation channel endpoints multiplied by ancestor scales; no ancestor rotations."
+  },
+  "endpointMaxRotationDifferenceDegrees": 14.701208603846345,
+  "gameIntegration": false,
+  "knownIssues": [
+    "Relaxed shared villager walk; military march not yet supplied.",
+    "Root motion retained; loop endpoints differ; needs game speed/cycle adaptation.",
+    "No weapons or combat clips."
+  ],
+  "preview": {
+    "directions": [
+      "SE",
+      "S",
+      "SW",
+      "W",
+      "NW",
+      "N",
+      "NE",
+      "E"
+    ],
+    "framesPerDirection": 8,
+    "phases": [
+      0.0,
+      0.125,
+      0.25,
+      0.375,
+      0.5,
+      0.625,
+      0.75,
+      0.875
+    ],
+    "cellPixels": 128
+  },
+  "blenderImportedBoneHeadMotion": {
+    "bone": "Hips",
+    "coordinateSystem": "Blender Z-up metres",
+    "vectorMeters": [
+      0.02296520210802555,
+      -0.8409819006919861,
+      -0.02040165662765503
+    ],
+    "horizontalMeters": 0.8412954045989839,
+    "distanceMeters": 0.8415427412749282
+  }
+}
