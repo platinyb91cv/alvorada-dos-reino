@@ -1,5 +1,6 @@
 {
   "base": "ae45420",
+  "previousPilotCommit": "45c99b3be9c6173e5d990e6b67d5741f16feacd7",
   "testsPresentOnMain": [
     {
       "test": "check_bronze_atlas.cjs",
@@ -22,8 +23,41 @@
       "exitCode": 0
     }
   ],
-  "sixthTest": "check_unit3d_second_pass.cjs is absent from main and depends on previous unmerged changes; not added or claimed as passed.",
-  "globalPatternScan": "Existing matches only in server/server.js, tests/mock_supabase.js and www/vendor/supabase.js. These files are unchanged.",
-  "newPackagePatternScan": "No matches; checked after staging.",
-  "scope": "Only arte/soldados-meshy added; no game integration or merge."
+  "sixthTest": "Absent from main; no false pass claim.",
+  "combat": {
+    "remoteTasksSucceeded": 5,
+    "actualCredits": 75,
+    "revisedRequestedCredits": 66,
+    "selectedActions": 22,
+    "unusedActions": 3,
+    "paidRetries": 0,
+    "newRigs": 0,
+    "clipsByUnit": {
+      "guerreiro": 5,
+      "lanceiro": 5,
+      "espadachim": 5,
+      "arqueiro": 5,
+      "besteiro": 4
+    },
+    "bonesPerUnit": 24,
+    "rootLockedClips": [
+      "Idle",
+      "Attack",
+      "Hit"
+    ],
+    "walkRetained": [
+      "arqueiro",
+      "besteiro"
+    ],
+    "excludedFromFinal": [
+      "arqueiro:672",
+      "besteiro:672",
+      "besteiro:690"
+    ],
+    "newUnclippedPreviewFrames": 306,
+    "originalGeometrySkinMaterialsPreserved": true
+  },
+  "globalPatternScan": "Preexisting literals in server/server.js, tests/mock_supabase.js and www/vendor/supabase.js; files unchanged.",
+  "newPackagePatternScan": "No matches; checked before commit.",
+  "scope": "Only arte/soldados-meshy; no www, test or main changes."
 }

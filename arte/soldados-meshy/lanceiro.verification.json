@@ -1,7 +1,7 @@
 {
   "name": "lanceiro",
-  "glbBytes": 14870580,
-  "sha256": "574e055afaebf9acfc02ed539f80ff7a1585dafb0914aab51dc1dcada88bbebb",
+  "glbBytes": 15130456,
+  "sha256": "94a723348ca81ce0c420085f702e861c0e4b9747363b57ba83dcc97e1503eb91",
   "boneCount": 24,
   "boneNames": [
     "Hips",
@@ -31,38 +31,116 @@
   ],
   "clips": [
     {
-      "name": "MeshyPrime_Walk_SelectedCycle",
-      "durationSeconds": 1.2666666507720947,
-      "walkCycles": 1,
-      "cycleCountMethod": "One contiguous full left/right gait cycle selected by matching foot phase; not a seamless periodic clip."
+      "name": "Idle",
+      "durationSeconds": 1.6666666269302368,
+      "animationSha256": "40695c7890bd90b82884654c2249c1664e7ffb483a1ba84fd301028495d188eb",
+      "rootDisplacementMeters": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "rootRangeMeters": [
+        0.0,
+        0.028512725830078127,
+        0.0
+      ],
+      "horizontalRootRangeMeters": 0.0,
+      "rootLocked": true
+    },
+    {
+      "name": "Walk",
+      "durationSeconds": 1.0666667222976685,
+      "animationSha256": "9331c05deed1c588762b5ead08bbf55e4444462738f65c83d49b8fa6b451a244",
+      "rootDisplacementMeters": [
+        -3.3408403396606448e-06,
+        -0.007827682495117188,
+        0.003124375343322754
+      ],
+      "rootRangeMeters": [
+        7.70026445388794e-05,
+        0.03215919494628906,
+        0.023540009260177613
+      ],
+      "horizontalRootRangeMeters": 0.02354013520302111,
+      "rootLocked": false
+    },
+    {
+      "name": "Attack",
+      "durationSeconds": 3.0,
+      "animationSha256": "347bbf7478a586e447ab422e5aa4f2bf80c68351efa2029c59e5f5cad38b17f4",
+      "rootDisplacementMeters": [
+        0.0,
+        5.340576171875e-07,
+        0.0
+      ],
+      "rootRangeMeters": [
+        0.0,
+        0.08876296997070313,
+        0.0
+      ],
+      "horizontalRootRangeMeters": 0.0,
+      "rootLocked": true
+    },
+    {
+      "name": "Hit",
+      "durationSeconds": 1.6333333253860474,
+      "animationSha256": "d38cda8d3963c17e1b5c2bba721d1f87d1d84eb1ed88a7a1406b5fd7f1c7bf45",
+      "rootDisplacementMeters": [
+        0.0,
+        -0.000344696044921875,
+        0.0
+      ],
+      "rootRangeMeters": [
+        0.0,
+        0.05574226379394531,
+        0.0
+      ],
+      "horizontalRootRangeMeters": 0.0,
+      "rootLocked": true
+    },
+    {
+      "name": "Death",
+      "durationSeconds": 2.200000047683716,
+      "animationSha256": "86e89a253108451fe35e1cedfe68cb195bce2b1fb56355cd9b2542f8ce0e2e95",
+      "rootDisplacementMeters": [
+        -0.05013174057006836,
+        -0.7069363975524903,
+        -0.7597425031661987
+      ],
+      "rootRangeMeters": [
+        0.055797672271728514,
+        0.7104320335388183,
+        0.8018350625038148
+      ],
+      "horizontalRootRangeMeters": 0.8037741272841766,
+      "rootLocked": false
     }
   ],
   "triangles": 99999,
   "heightMeters": 1.7181568145751953,
-  "heightMeasurement": "Imported Blender mesh bounds at first selected walking frame; metres, not requested rig height.",
+  "heightMeasurement": "Imported mesh bounds from the original pilot, unchanged geometry; metres.",
   "forwardAxis": {
     "glTF": "+Z",
     "Blender": "-Y",
-    "evidence": "Front-facing S render looks along local +Y onto the model; face points -Y. Root travels -Y, stance feet move +Y relative to hips."
+    "evidence": "Original model orientation and eight-direction preview; original geometry and skin retained."
   },
   "rootDisplacementPerWalkCycle": {
     "bone": "Hips",
     "coordinateSystem": "glTF Y-up metres",
     "vectorMeters": [
-      0.021878423690795897,
-      -0.011604843139648437,
-      0.8682560729980469
+      -3.3408403396606448e-06,
+      -0.007827682495117188,
+      0.003124375343322754
     ],
-    "horizontalMeters": 0.8685316768668738,
-    "distanceMeters": 0.8686092021763755,
-    "method": "Original GLB translation channel endpoints multiplied by ancestor scales; no ancestor rotations."
+    "horizontalMeters": 0.0031243771294735454,
+    "distanceMeters": 0.008428187568602244,
+    "cycleCount": 1,
+    "durationSeconds": 1.0666667222976685
   },
-  "endpointMaxRotationDifferenceDegrees": 14.701208603846345,
   "gameIntegration": false,
   "knownIssues": [
-    "Relaxed shared villager walk; military march not yet supplied.",
-    "Root motion retained; loop endpoints differ; needs game speed/cycle adaptation.",
-    "No weapons or combat clips."
+    "No weapons or shields; no game integration.",
+    "Spear Walk is an infantry-walk approximation, not a dedicated march preset."
   ],
   "preview": {
     "directions": [
@@ -86,17 +164,106 @@
       0.75,
       0.875
     ],
-    "cellPixels": 128
+    "cellPixels": 128,
+    "walkSource": "Rerendered current Walk"
   },
-  "blenderImportedBoneHeadMotion": {
-    "bone": "Hips",
-    "coordinateSystem": "Blender Z-up metres",
-    "vectorMeters": [
-      0.02296520210802555,
-      -0.8409819006919861,
-      -0.02040165662765503
-    ],
-    "horizontalMeters": 0.8412954045989839,
-    "distanceMeters": 0.8415427412749282
+  "rootLockCoordinateSystem": "glTF Y-up; constant Hips X/Z, original Y retained",
+  "sourceProof": [
+    {
+      "clip": "Idle",
+      "source": "Combat_Stance",
+      "sourceFileSha256": "92f11ec34758f134f8f2370cd84bc57cfe0e6be105c768e02844fb3439c2cb17",
+      "sourceAnimationSha256": "9f01ef6c92ddb296405fc90be98d7e8152178eee9480eb3409b370249eec5a08",
+      "rootLocked": true,
+      "modifiedComponents": [
+        "Hips.translation.x",
+        "Hips.translation.z"
+      ],
+      "outputAnimationSha256": "40695c7890bd90b82884654c2249c1664e7ffb483a1ba84fd301028495d188eb"
+    },
+    {
+      "clip": "Walk",
+      "source": "Spear_Walk_inplace",
+      "sourceFileSha256": "92f11ec34758f134f8f2370cd84bc57cfe0e6be105c768e02844fb3439c2cb17",
+      "sourceAnimationSha256": "9331c05deed1c588762b5ead08bbf55e4444462738f65c83d49b8fa6b451a244",
+      "rootLocked": false,
+      "modifiedComponents": [],
+      "outputAnimationSha256": "9331c05deed1c588762b5ead08bbf55e4444462738f65c83d49b8fa6b451a244"
+    },
+    {
+      "clip": "Attack",
+      "source": "Thrust_Slash",
+      "sourceFileSha256": "92f11ec34758f134f8f2370cd84bc57cfe0e6be105c768e02844fb3439c2cb17",
+      "sourceAnimationSha256": "c00618593717eff90ef0906c8280e08719d0e8e8b80a76bde99c02d309565d6a",
+      "rootLocked": true,
+      "modifiedComponents": [
+        "Hips.translation.x",
+        "Hips.translation.z"
+      ],
+      "outputAnimationSha256": "347bbf7478a586e447ab422e5aa4f2bf80c68351efa2029c59e5f5cad38b17f4"
+    },
+    {
+      "clip": "Hit",
+      "source": "Hit_Reaction",
+      "sourceFileSha256": "92f11ec34758f134f8f2370cd84bc57cfe0e6be105c768e02844fb3439c2cb17",
+      "sourceAnimationSha256": "2383322b9ed4bfad207a4b4b6350d0687e7e1c155fec2f3b28e3823e9bf751ce",
+      "rootLocked": true,
+      "modifiedComponents": [
+        "Hips.translation.x",
+        "Hips.translation.z"
+      ],
+      "outputAnimationSha256": "d38cda8d3963c17e1b5c2bba721d1f87d1d84eb1ed88a7a1406b5fd7f1c7bf45"
+    },
+    {
+      "clip": "Death",
+      "source": "dying_backwards",
+      "sourceFileSha256": "92f11ec34758f134f8f2370cd84bc57cfe0e6be105c768e02844fb3439c2cb17",
+      "sourceAnimationSha256": "86e89a253108451fe35e1cedfe68cb195bce2b1fb56355cd9b2542f8ce0e2e95",
+      "rootLocked": false,
+      "modifiedComponents": [],
+      "outputAnimationSha256": "86e89a253108451fe35e1cedfe68cb195bce2b1fb56355cd9b2542f8ce0e2e95"
+    }
+  ],
+  "originalGeometrySkinMaterialsPreserved": true,
+  "walkRetained": false,
+  "combatCreditsConsumed": 15,
+  "retainedActionCostEquivalent": 15,
+  "walkCycleMeasurement": {
+    "cycles": 1,
+    "durationSeconds": 1.0666667222976685,
+    "source": "Full single-cycle Spear Walk preset",
+    "gameCadenceIntegrated": false
+  },
+  "blenderReimport": {
+    "Attack": {
+      "bones": 24,
+      "durationSeconds": 3.0,
+      "renderedFrames": 6,
+      "poseSampleSha256": "8cc366ad16ba9a45eabc90569dd01e7315a92d55c7f7a92999556ef130ef4836"
+    },
+    "Death": {
+      "bones": 24,
+      "durationSeconds": 2.2000001271565757,
+      "renderedFrames": 6,
+      "poseSampleSha256": "b81cab53cce3298222d2f2b6baa1b5c6ee10e51af9ea3e373f29588cbafd0fd5"
+    },
+    "Hit": {
+      "bones": 24,
+      "durationSeconds": 1.6333333651224773,
+      "renderedFrames": 6,
+      "poseSampleSha256": "9bd2255089ef674bcdb126d4b7d54639e9028464d93c41b182e3e7e82f4f62c3"
+    },
+    "Idle": {
+      "bones": 24,
+      "durationSeconds": 1.6666666666666667,
+      "renderedFrames": 6,
+      "poseSampleSha256": "f8a2149636d6e05c49e933f6134a936ba9c081ad70469f11bc86db8e1028bbe8"
+    },
+    "Walk": {
+      "bones": 24,
+      "durationSeconds": 1.0666667620340984,
+      "renderedFrames": 64,
+      "poseSampleSha256": "129452347c8071fc990896cda24cf9c0d731a73e68d03bc64c01b1d79baed51b"
+    }
   }
 }
