@@ -1,0 +1,16 @@
+{
+  "baseCommit": "0ddc1da498e5cef8f2ec331460fa42f4d89084c8",
+  "htmlChangesLimitedToUnit3dMetadataAndLocomotionPhase": true,
+  "preservedAssetSha256": {
+    "www/assets/kings/bronze.webp": "e198d683887e060c7e1cbdc5c7b613fccce1bfd8ec418fbff6b490ad81fd2f46",
+    "www/assets/kings/pedra.webp": "88257390009d89b0f32062989071b95f3123906f6990f82d19102dccbaba338d",
+    "www/assets/units3d/lanceiro.webp": "d80dbdf2bb18705209b9dd69afa2b44432c26812f7bfcbd69dd0ca3b6e26542d",
+    "www/assets/units3d/lanceiro.json": "8bea1112f43cf59307cdfdc4b2cb3094910892f5221ff4dbaaba2aaf42cd542b",
+    "www/assets/units3d/espadachim.webp": "c632e2045a1c1bb698bb4be6968de38a3a330f6316e813fffde9d7766dc49ba5",
+    "www/assets/units3d/espadachim.json": "36203ba7605eaed0f649b8156cf88dcaf9ac19275b3e34ee2731c5689a7df02c",
+    "www/assets/units3d/arqueiro.webp": "7cedbc569fc1524ece5972dd2a47ee8fc2c6c1dfa3c4a3d184a6cab4154cee66",
+    "www/assets/units3d/arqueiro.json": "b2dbd9448a35f5e565932be6985911a4a7ca5d01522ba3f31899374c63681cc4",
+    "www/assets/units3d/besteiro.webp": "17156d8df60d190f49ecf778a0d31b2e3016eddc67be0098816665c48e9c8b00",
+    "www/assets/units3d/besteiro.json": "163a5e39a9d86f1930cdfa70931282f8a5de67e98027838ef5f8a8923fb11b4e"
+  }
+}

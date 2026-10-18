@@ -2,12 +2,12 @@
   "reimportedClipsDistinct": true,
   "reimportedRootDriftByClip": {
     "Idle": 9.497663962827594e-09,
-    "Walk": 2.6685276593816285e-08,
+    "Walk": 1.0030651105818346e-08,
     "Attack": 3.306195139884949e-08,
     "Hit": 4.4394399524536315e-08,
     "Death": 1.0150241161795494e-07
   },
-  "optimizedGlbSha256": "4ace83e78796e4887138144b7636805ad03b8c0f1959315e41e8d9a6405adb1b",
+  "optimizedGlbSha256": "da1833b02cd054733a7b98d5f8972d1ed1897a58b3efa1292474ceb5a1033091",
   "unit": "guerreiro",
   "reimported": true,
   "meshes": 3,
@@ -22,12 +22,93 @@
   ],
   "forwardAimDot": null,
   "stanceVelocityY": {
-    "LeftFoot": 0.07876772798065629,
-    "RightFoot": 0.065868173216586
+    "LeftFoot": 0.02443962386160186,
+    "RightFoot": 0.02116901276167482
   },
-  "rootHorizontalDrift": 4.393039798390401e-09,
+  "rootHorizontalDrift": 5.268356063861754e-09,
   "rigidProps": {
-    "axe_shaft": 1.0864351451464471e-07,
-    "axe_blade": 1.3261218625992832e-07
+    "axe_shaft": 1.0465226382358472e-07,
+    "axe_blade": 3.391226852111906e-07
+  },
+  "locomotion": {
+    "unit": "guerreiro",
+    "method": "Median ground-level backward foot speed over one normalized cycle; average of both feet. Camera projection converted at 30px display height. No mesh or world scaling changed.",
+    "screenPixelsPerMeter": 17.367779607548055,
+    "metersPerTile": 2.605677583349298,
+    "gameCycleTilesAtFactor5": 1.2566370614359172,
+    "animationFrames": 8,
+    "foot": {
+      "LeftFoot": {
+        "stanceTravelPerCycleMeters": 0.9842813014984131,
+        "stanceSampleCount": 133,
+        "stanceSpeedRangeMeters": [
+          0.4644906520843506,
+          1.1882919073104858
+        ],
+        "swingRangeMeters": 0.5748831033706665
+      },
+      "RightFoot": {
+        "stanceTravelPerCycleMeters": 0.9069677442312241,
+        "stanceSampleCount": 134,
+        "stanceSpeedRangeMeters": [
+          0.05726516246795654,
+          1.8904808163642883
+        ],
+        "swingRangeMeters": 0.5357254296541214
+      }
+    },
+    "strideMeters": 0.9456245228648186,
+    "strideTiles": 0.362909259728645,
+    "recommendedAnimFactor": 17.313378313569782,
+    "visualPhaseMultiplier": 3.4626756627139565
+  },
+  "atlasSha256": "d1599874d76c92daa969f026504d09fba690a6285549394e2198fd7bc20f3285",
+  "renderCamera": {
+    "location": [
+      5.991625785827637,
+      -6.010406970977783,
+      5.754758834838867
+    ],
+    "rotation": [
+      1.0471975803375244,
+      4.647866092000186e-09,
+      0.7853982448577881
+    ],
+    "orthoScale": 3.5898029804229736,
+    "bodyReferencePixels": 92.38629913330078,
+    "anchor": [
+      -0.026427943259477615,
+      0.007645735051482916,
+      0.0
+    ]
+  },
+  "correction": {
+    "sourceWalkInterval": [
+      0.0,
+      0.34791666666666665
+    ],
+    "sourceWalkCycles": 2.874251497005988,
+    "sourceCarryInterval": null,
+    "upperBodyLayer": true,
+    "newGenerations": 0
+  },
+  "correctionChecks": {
+    "unit": "guerreiro",
+    "armLegCorrelation": {
+      "Left": -0.9995953480271117,
+      "Right": -0.999640786019537
+    },
+    "maxArmLateralFraction": 0.08367028543999436,
+    "maxTorsoLeanDegrees": 1.5016462223148106,
+    "cyclicPoseMatrixError": {
+      "Walk": 0.0
+    },
+    "maxAxeGripErrorMeters": null,
+    "chopFrames": [],
+    "boneAttachmentMatrixErrors": {
+      "axe_shaft": 0.000568389892578125,
+      "axe_blade": 0.000568389892578125
+    },
+    "newMeshyCredits": 0
   }
 }

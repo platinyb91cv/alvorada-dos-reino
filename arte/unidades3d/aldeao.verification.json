@@ -2,16 +2,16 @@
   "reimportedClipsDistinct": true,
   "reimportedRootDriftByClip": {
     "Idle": 9.31613567459516e-09,
-    "Walk": 7.229007173450675e-09,
+    "Walk": 5.607304432798315e-09,
     "Attack": 2.611442449094719e-08,
     "Hit": 1.4556682818954777e-07,
     "Death": 1.7184116090135048e-07,
-    "Chop": 5.998586817037423e-08,
+    "Chop": 0.0,
     "Mine": 2.6279969251756487e-08,
     "Harvest": 5.425903223581433e-08,
-    "Carry": 1.0477378964424133e-08
+    "Carry": 1.4830050933448764e-08
   },
-  "optimizedGlbSha256": "e9e37d8ee14952006725aa62b93de2b60062e276f7ffa42fdedbf12e3d53a756",
+  "optimizedGlbSha256": "82edf71d8f4807df5463dd35f559853dc7e4b96aa1c98949a0ddc2649bef6663",
   "unit": "aldeao",
   "reimported": true,
   "meshes": 1,
@@ -30,23 +30,502 @@
   ],
   "forwardAimDot": null,
   "stanceVelocityY": {
-    "LeftFoot": 0.07972410108777694,
-    "RightFoot": 0.06503312538552564
+    "LeftFoot": 0.02392113141038201,
+    "RightFoot": 0.02066123194526881
   },
-  "rootHorizontalDrift": 9.954701329782581e-09,
+  "rootHorizontalDrift": 9.726080379544488e-09,
   "rigidProps": {
-    "axe_shaft": 9.582650840195273e-08,
-    "axe_blade": 2.084878429065018e-07,
-    "pick_shaft": 9.031905085811476e-08,
-    "pick_head": 1.3220785960443848e-07,
-    "hammer_shaft": 1.1498974800475126e-07,
-    "hammer_head": 2.0049309920611158e-07,
-    "hoe_shaft": 8.136770905317614e-08,
-    "hoe_blade": 2.4319098462788347e-07,
-    "knife_shaft": 7.590608766018525e-08,
-    "knife_blade": 1.8331334128429688e-07,
-    "spear_shaft": 2.0802438369799114e-07,
-    "spear_blade": 5.652019839930134e-07,
-    "resource_crate": 7.190624892738917e-07
+    "axe_shaft": 9.86981193058789e-08,
+    "axe_blade": 4.639742819390058e-07,
+    "pick_shaft": 1.1726088266703072e-07,
+    "pick_head": 2.094242886191422e-07,
+    "hammer_shaft": 1.1055015425309733e-07,
+    "hammer_head": 4.1931071848022583e-07,
+    "hoe_shaft": 1.3326932241444767e-07,
+    "hoe_blade": 3.858014868685089e-07,
+    "knife_shaft": 9.30410129079684e-08,
+    "knife_blade": 2.623389049882796e-07,
+    "spear_shaft": 2.2054452620580423e-07,
+    "spear_blade": 8.236786980253541e-07,
+    "resource_crate": 3.7474648112434394e-07,
+    "forage_basket": 1.8623242556414787e-07
+  },
+  "locomotion": {
+    "unit": "aldeao",
+    "method": "Median ground-level backward foot speed over one normalized cycle; average of both feet. Camera projection converted at 30px display height. No mesh or world scaling changed.",
+    "screenPixelsPerMeter": 18.42426835166668,
+    "metersPerTile": 2.4562622044009275,
+    "gameCycleTilesAtFactor5": 1.2566370614359172,
+    "animationFrames": 8,
+    "foot": {
+      "LeftFoot": {
+        "stanceTravelPerCycleMeters": 0.9394164383411407,
+        "stanceSampleCount": 145,
+        "stanceSpeedRangeMeters": [
+          0.05276083946228027,
+          1.1680738627910614
+        ],
+        "swingRangeMeters": 0.5932862758636475
+      },
+      "RightFoot": {
+        "stanceTravelPerCycleMeters": 0.9031449258327484,
+        "stanceSampleCount": 135,
+        "stanceSpeedRangeMeters": [
+          0.0084686279296875,
+          1.8396878242492676
+        ],
+        "swingRangeMeters": 0.547099769115448
+      }
+    },
+    "strideMeters": 0.9212806820869446,
+    "strideTiles": 0.375074241030241,
+    "recommendedAnimFactor": 16.751844354656694,
+    "visualPhaseMultiplier": 3.3503688709313386,
+    "carry": {
+      "foot": {
+        "LeftFoot": {
+          "stanceTravelPerCycleMeters": 0.8602306991815567,
+          "stanceSampleCount": 96,
+          "stanceSpeedRangeMeters": [
+            0.22157549858093262,
+            1.088629961013794
+          ],
+          "swingRangeMeters": 0.4926416277885437
+        },
+        "RightFoot": {
+          "stanceTravelPerCycleMeters": 0.669645220041275,
+          "stanceSampleCount": 122,
+          "stanceSpeedRangeMeters": [
+            0.018671751022338867,
+            1.0020228289067745
+          ],
+          "swingRangeMeters": 0.3671206533908844
+        }
+      },
+      "strideMeters": 0.7649379596114159,
+      "strideTiles": 0.3114235761315967,
+      "recommendedAnimFactor": 20.175689282190156,
+      "visualPhaseMultiplier": 4.035137856438031
+    }
+  },
+  "atlasSha256": "52136f672634e18b2ba1ffdad41edfddd0b0ef9cd7579434a46f09232ce73a4c",
+  "renderCamera": {
+    "location": [
+      5.948936462402344,
+      -5.933099746704102,
+      5.914814472198486
+    ],
+    "rotation": [
+      1.0471975803375244,
+      4.647866092000186e-09,
+      0.7853982448577881
+    ],
+    "orthoScale": 4.401383399963379,
+    "bodyReferencePixels": 71.03019905090332,
+    "anchor": [
+      -0.0037751796189695597,
+      0.019610634073615074,
+      0.0
+    ]
+  },
+  "correction": {
+    "sourceWalkInterval": [
+      0.0,
+      0.34791666666666665
+    ],
+    "sourceWalkCycles": 2.874251497005988,
+    "sourceCarryInterval": [
+      0.13333333333333333,
+      0.48125
+    ],
+    "upperBodyLayer": true,
+    "newGenerations": 0
+  },
+  "correctionChecks": {
+    "unit": "aldeao",
+    "armLegCorrelation": {
+      "Left": -0.999445702401126,
+      "Right": -0.9996834126353812
+    },
+    "maxArmLateralFraction": 0.11776172647600484,
+    "maxTorsoLeanDegrees": null,
+    "cyclicPoseMatrixError": {
+      "Walk": 0.0,
+      "Carry": 0.0
+    },
+    "maxAxeGripErrorMeters": 3.893881848144055e-06,
+    "chopFrames": [
+      {
+        "phase": 0.05,
+        "handHeightMeters": 1.5893354415893555,
+        "hipsHeightMeters": 0.8957643508911133,
+        "shaftGripErrorMeters": 3.3842699015648913e-06,
+        "tool": [
+          "axe_shaft",
+          "axe_blade"
+        ]
+      },
+      {
+        "phase": 0.2,
+        "handHeightMeters": 1.6651531457901,
+        "hipsHeightMeters": 0.8957643508911133,
+        "shaftGripErrorMeters": 3.893881848144055e-06,
+        "tool": [
+          "axe_shaft",
+          "axe_blade"
+        ]
+      },
+      {
+        "phase": 0.35,
+        "handHeightMeters": 1.6758419275283813,
+        "hipsHeightMeters": 0.8957643508911133,
+        "shaftGripErrorMeters": 2.1476290493245684e-06,
+        "tool": [
+          "axe_shaft",
+          "axe_blade"
+        ]
+      },
+      {
+        "phase": 0.5,
+        "handHeightMeters": 0.9611443281173706,
+        "hipsHeightMeters": 0.8957643508911133,
+        "shaftGripErrorMeters": 8.301966355552744e-07,
+        "tool": [
+          "axe_shaft",
+          "axe_blade"
+        ]
+      },
+      {
+        "phase": 0.65,
+        "handHeightMeters": 1.4271470308303833,
+        "hipsHeightMeters": 0.8957643508911133,
+        "shaftGripErrorMeters": 2.8284350922098165e-06,
+        "tool": [
+          "axe_shaft",
+          "axe_blade"
+        ]
+      },
+      {
+        "phase": 0.8,
+        "handHeightMeters": 1.662124752998352,
+        "hipsHeightMeters": 0.8957643508911133,
+        "shaftGripErrorMeters": 1.1349364533620843e-06,
+        "tool": [
+          "axe_shaft",
+          "axe_blade"
+        ]
+      }
+    ],
+    "boneAttachmentMatrixErrors": {
+      "axe_shaft": 0.0004687309265136719,
+      "axe_blade": 0.0004687309265136719,
+      "pick_shaft": 0.0003566741943359375,
+      "pick_head": 0.0003566741943359375,
+      "hammer_shaft": 0.0003566741943359375,
+      "hammer_head": 0.0003566741943359375,
+      "hoe_shaft": 0.000354766845703125,
+      "hoe_blade": 0.000354766845703125,
+      "knife_shaft": 0.0003566741943359375,
+      "knife_blade": 0.0003566741943359375,
+      "spear_shaft": 0.00038909912109375,
+      "spear_blade": 0.00038909912109375,
+      "resource_crate": 0.00034332275390625,
+      "forage_basket": 0.00035858154296875
+    },
+    "newMeshyCredits": 0
+  },
+  "axeVisibility": {
+    "sourceModelSha256": "82edf71d8f4807df5463dd35f559853dc7e4b96aa1c98949a0ddc2649bef6663",
+    "method": "4 subpixel orthographic rays per native 30px pixel; evaluated body BVH occlusion against the axe blade mesh",
+    "frames": [
+      {
+        "direction": "SE",
+        "frame": 22,
+        "phase": 0.05,
+        "visibleBladeAreaAt30px": 41.0
+      },
+      {
+        "direction": "SE",
+        "frame": 23,
+        "phase": 0.2,
+        "visibleBladeAreaAt30px": 33.75
+      },
+      {
+        "direction": "SE",
+        "frame": 24,
+        "phase": 0.35,
+        "visibleBladeAreaAt30px": 41.0
+      },
+      {
+        "direction": "SE",
+        "frame": 25,
+        "phase": 0.5,
+        "visibleBladeAreaAt30px": 37.75
+      },
+      {
+        "direction": "SE",
+        "frame": 26,
+        "phase": 0.65,
+        "visibleBladeAreaAt30px": 46.0
+      },
+      {
+        "direction": "SE",
+        "frame": 27,
+        "phase": 0.8,
+        "visibleBladeAreaAt30px": 32.25
+      },
+      {
+        "direction": "S",
+        "frame": 22,
+        "phase": 0.05,
+        "visibleBladeAreaAt30px": 21.75
+      },
+      {
+        "direction": "S",
+        "frame": 23,
+        "phase": 0.2,
+        "visibleBladeAreaAt30px": 25.0
+      },
+      {
+        "direction": "S",
+        "frame": 24,
+        "phase": 0.35,
+        "visibleBladeAreaAt30px": 22.5
+      },
+      {
+        "direction": "S",
+        "frame": 25,
+        "phase": 0.5,
+        "visibleBladeAreaAt30px": 26.75
+      },
+      {
+        "direction": "S",
+        "frame": 26,
+        "phase": 0.65,
+        "visibleBladeAreaAt30px": 43.5
+      },
+      {
+        "direction": "S",
+        "frame": 27,
+        "phase": 0.8,
+        "visibleBladeAreaAt30px": 34.25
+      },
+      {
+        "direction": "SW",
+        "frame": 22,
+        "phase": 0.05,
+        "visibleBladeAreaAt30px": 42.5
+      },
+      {
+        "direction": "SW",
+        "frame": 23,
+        "phase": 0.2,
+        "visibleBladeAreaAt30px": 43.25
+      },
+      {
+        "direction": "SW",
+        "frame": 24,
+        "phase": 0.35,
+        "visibleBladeAreaAt30px": 28.75
+      },
+      {
+        "direction": "SW",
+        "frame": 25,
+        "phase": 0.5,
+        "visibleBladeAreaAt30px": 43.0
+      },
+      {
+        "direction": "SW",
+        "frame": 26,
+        "phase": 0.65,
+        "visibleBladeAreaAt30px": 31.75
+      },
+      {
+        "direction": "SW",
+        "frame": 27,
+        "phase": 0.8,
+        "visibleBladeAreaAt30px": 42.75
+      },
+      {
+        "direction": "W",
+        "frame": 22,
+        "phase": 0.05,
+        "visibleBladeAreaAt30px": 45.0
+      },
+      {
+        "direction": "W",
+        "frame": 23,
+        "phase": 0.2,
+        "visibleBladeAreaAt30px": 44.75
+      },
+      {
+        "direction": "W",
+        "frame": 24,
+        "phase": 0.35,
+        "visibleBladeAreaAt30px": 44.75
+      },
+      {
+        "direction": "W",
+        "frame": 25,
+        "phase": 0.5,
+        "visibleBladeAreaAt30px": 45.5
+      },
+      {
+        "direction": "W",
+        "frame": 26,
+        "phase": 0.65,
+        "visibleBladeAreaAt30px": 20.25
+      },
+      {
+        "direction": "W",
+        "frame": 27,
+        "phase": 0.8,
+        "visibleBladeAreaAt30px": 37.25
+      },
+      {
+        "direction": "NW",
+        "frame": 22,
+        "phase": 0.05,
+        "visibleBladeAreaAt30px": 41.0
+      },
+      {
+        "direction": "NW",
+        "frame": 23,
+        "phase": 0.2,
+        "visibleBladeAreaAt30px": 40.25
+      },
+      {
+        "direction": "NW",
+        "frame": 24,
+        "phase": 0.35,
+        "visibleBladeAreaAt30px": 42.5
+      },
+      {
+        "direction": "NW",
+        "frame": 25,
+        "phase": 0.5,
+        "visibleBladeAreaAt30px": 40.0
+      },
+      {
+        "direction": "NW",
+        "frame": 26,
+        "phase": 0.65,
+        "visibleBladeAreaAt30px": 23.75
+      },
+      {
+        "direction": "NW",
+        "frame": 27,
+        "phase": 0.8,
+        "visibleBladeAreaAt30px": 15.25
+      },
+      {
+        "direction": "N",
+        "frame": 22,
+        "phase": 0.05,
+        "visibleBladeAreaAt30px": 18.5
+      },
+      {
+        "direction": "N",
+        "frame": 23,
+        "phase": 0.2,
+        "visibleBladeAreaAt30px": 25.0
+      },
+      {
+        "direction": "N",
+        "frame": 24,
+        "phase": 0.35,
+        "visibleBladeAreaAt30px": 28.25
+      },
+      {
+        "direction": "N",
+        "frame": 25,
+        "phase": 0.5,
+        "visibleBladeAreaAt30px": 21.5
+      },
+      {
+        "direction": "N",
+        "frame": 26,
+        "phase": 0.65,
+        "visibleBladeAreaAt30px": 25.5
+      },
+      {
+        "direction": "N",
+        "frame": 27,
+        "phase": 0.8,
+        "visibleBladeAreaAt30px": 35.0
+      },
+      {
+        "direction": "NE",
+        "frame": 22,
+        "phase": 0.05,
+        "visibleBladeAreaAt30px": 38.75
+      },
+      {
+        "direction": "NE",
+        "frame": 23,
+        "phase": 0.2,
+        "visibleBladeAreaAt30px": 42.25
+      },
+      {
+        "direction": "NE",
+        "frame": 24,
+        "phase": 0.35,
+        "visibleBladeAreaAt30px": 38.5
+      },
+      {
+        "direction": "NE",
+        "frame": 25,
+        "phase": 0.5,
+        "visibleBladeAreaAt30px": 42.25
+      },
+      {
+        "direction": "NE",
+        "frame": 26,
+        "phase": 0.65,
+        "visibleBladeAreaAt30px": 39.5
+      },
+      {
+        "direction": "NE",
+        "frame": 27,
+        "phase": 0.8,
+        "visibleBladeAreaAt30px": 44.5
+      },
+      {
+        "direction": "E",
+        "frame": 22,
+        "phase": 0.05,
+        "visibleBladeAreaAt30px": 44.25
+      },
+      {
+        "direction": "E",
+        "frame": 23,
+        "phase": 0.2,
+        "visibleBladeAreaAt30px": 45.0
+      },
+      {
+        "direction": "E",
+        "frame": 24,
+        "phase": 0.35,
+        "visibleBladeAreaAt30px": 45.0
+      },
+      {
+        "direction": "E",
+        "frame": 25,
+        "phase": 0.5,
+        "visibleBladeAreaAt30px": 41.25
+      },
+      {
+        "direction": "E",
+        "frame": 26,
+        "phase": 0.65,
+        "visibleBladeAreaAt30px": 40.5
+      },
+      {
+        "direction": "E",
+        "frame": 27,
+        "phase": 0.8,
+        "visibleBladeAreaAt30px": 44.75
+      }
+    ]
   }
 }

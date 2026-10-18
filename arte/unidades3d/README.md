@@ -1,5 +1,7 @@
 # Aldeoes e infantaria 3D Meshy
 
+Correção local de aldeão/guerreiro: [poses, ferramentas, cadência medida, fontes e comparação antes/depois](CORRECAO-ALDEAO-GUERREIRO.md). Não houve nova geração nem gasto de créditos nesta correção.
+
 Seis modelos reais criados em Meshy-6 por texto: aldeao, guerreiro, lanceiro, espadachim, arqueiro e besteiro. O besteiro pesado reutiliza o atlas do besteiro. Os modelos base sao usados nas idades em que essas unidades existem; as regras, tecnologias e atributos por idade permanecem no motor. Nao ha tres modelos de idade diferentes para cada classe nesta entrega. Cavalaria, sacerdote, fauna, barcos e cerco conservam a arte anterior. Os reis de Pedra e Bronze mantem os seus atlas de oito direcoes.
 
 Cada modelo tem um esqueleto de 24 ossos, aproximadamente 6.500 triangulos no corpo, texturas PBR e clips reais da Meshy. Idle, Walk, Attack, Hit e Death sao comuns; o aldeao tem ainda Chop, Mine, Harvest e Carry. Ferramentas e armas rigidas em Blender acompanham as maos. A arma gerada junto ao lanceiro e parte do arco original foram removidas para evitar deformacao. O arqueiro usa Archery_Shot. O besteiro usa o inicio de uma postura de mira com recuo local no tronco. As duas miras foram alinhadas ao alvo no plano horizontal e verificadas numericamente. Nao ha animacao individual dos dedos nem deformacao dinamica da corda do arco/besta.

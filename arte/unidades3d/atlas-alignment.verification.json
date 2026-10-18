@@ -1,0 +1,40 @@
+{
+  "aldeao": {
+    "referenceHeight": 64,
+    "originalBodyReferencePixels": 71.03019905090332,
+    "maxGroundAnchorDifferenceIn192pxSource": 0.0,
+    "statesAndDirectionOrderPreserved": true,
+    "unclippedFrames": 576,
+    "uniqueWalkFramesByDirection": {
+      "0": 8,
+      "1": 8,
+      "2": 8,
+      "3": 8,
+      "4": 8,
+      "5": 8,
+      "6": 8,
+      "7": 8
+    },
+    "beforeAtlasSha256": "196fb2cc5694a0bbdc82737b7abf0376c4658f4fe3aaad7d3000d2d297694886",
+    "atlasSha256": "52136f672634e18b2ba1ffdad41edfddd0b0ef9cd7579434a46f09232ce73a4c"
+  },
+  "guerreiro": {
+    "referenceHeight": 64,
+    "originalBodyReferencePixels": 92.38629913330078,
+    "maxGroundAnchorDifferenceIn192pxSource": 0.0,
+    "statesAndDirectionOrderPreserved": true,
+    "unclippedFrames": 176,
+    "uniqueWalkFramesByDirection": {
+      "0": 8,
+      "1": 8,
+      "2": 8,
+      "3": 8,
+      "4": 8,
+      "5": 8,
+      "6": 8,
+      "7": 8
+    },
+    "beforeAtlasSha256": "5fc8a62f12a0bcad690904cde35ab9ebef910bc3e525d413bab0eaa9937af14f",
+    "atlasSha256": "d1599874d76c92daa969f026504d09fba690a6285549394e2198fd7bc20f3285"
+  }
+}
