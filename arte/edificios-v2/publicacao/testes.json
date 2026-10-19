@@ -1,0 +1,26 @@
+[
+  {
+    "exitCode": 0,
+    "file": "check_bronze_atlas.cjs"
+  },
+  {
+    "exitCode": 0,
+    "file": "check_buildings_v2.cjs"
+  },
+  {
+    "exitCode": 0,
+    "file": "check_king_atlas.cjs"
+  },
+  {
+    "exitCode": 0,
+    "file": "check_king_memory.cjs"
+  },
+  {
+    "exitCode": 0,
+    "file": "check_unit3d_correction.cjs"
+  },
+  {
+    "exitCode": 0,
+    "file": "check_unit3d.cjs"
+  }
+]
