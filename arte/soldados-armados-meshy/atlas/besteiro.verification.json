@@ -1,0 +1,330 @@
+{
+ "unit": "besteiro",
+ "atlas": "www/assets/units3d/besteiro-armas-meshy.webp",
+ "atlasSha256": "7e83a1c755cbd3a96db3cafab67342c3d7b21d4c481cb40d15c2f2469206f654",
+ "directions": 8,
+ "directionLabels": [
+  "SE",
+  "S",
+  "SW",
+  "W",
+  "NW",
+  "N",
+  "NE",
+  "E"
+ ],
+ "framesPerDirection": 22,
+ "referenceHeightPx": 64,
+ "meshyCredits": 0,
+ "body": {
+  "file": "arte/soldados-meshy/besteiro.glb",
+  "sha256": "9e4504253dc1d2daef8754b8681483371953b8273e73fc67f3716a5f4232071d",
+  "sourceBranch": "soldados-meshy-piloto@7cb7cab"
+ },
+ "bones": 24,
+ "boneNames": [
+  "Hips",
+  "Spine02",
+  "Spine01",
+  "Spine",
+  "neck",
+  "Head",
+  "head_end",
+  "headfront",
+  "LeftShoulder",
+  "LeftArm",
+  "LeftForeArm",
+  "LeftHand",
+  "RightShoulder",
+  "RightArm",
+  "RightForeArm",
+  "RightHand",
+  "LeftUpLeg",
+  "LeftLeg",
+  "LeftFoot",
+  "LeftToeBase",
+  "RightUpLeg",
+  "RightLeg",
+  "RightFoot",
+  "RightToeBase"
+ ],
+ "weapon": {
+  "file": "arte/soldados-armados-meshy/armas/otimizados/crossbow.glb",
+  "sha256": "b622fc6e638c3ef6e48d6617d8f976ad1cbe83d3caf0657355973f242a7d3bd5",
+  "triangles": 1488,
+  "masterSha256": "a507ca5dda5ddf688b202e0c7c6298a4c087b1103f459913f42b0b0e874f6072",
+  "masterTriangles": 434902,
+  "originalMeshySha256": "4008e6ed3897773625dcb2bf2804884ad05ddb238dea46da78e3aa1009121bbc",
+  "dimensionsMetres": [
+   0.8195508718490601,
+   0.12950000166893005,
+   1.0188333988189697
+  ],
+  "bone": "RightHand",
+  "orientedIn": "attack"
+ },
+ "states": {
+  "idle": {
+   "clip": "Idle",
+   "frames": 2,
+   "clipFrames": [
+    0,
+    40
+   ],
+   "rootMotionRemoved": 0
+  },
+  "walk": {
+   "clip": "Walk",
+   "frames": 8,
+   "clipFrames": [
+    0,
+    30.4
+   ],
+   "rootMotionRemoved": 0.538
+  },
+  "attack": {
+   "clip": "Idle",
+   "frames": 6,
+   "clipFrames": [
+    0,
+    40
+   ],
+   "rootMotionRemoved": 0
+  },
+  "hit": {
+   "clip": "Hit",
+   "frames": 2,
+   "clipFrames": [
+    0,
+    39.2
+   ],
+   "rootMotionRemoved": 0
+  },
+  "death": {
+   "clip": "Death",
+   "frames": 4,
+   "clipFrames": [
+    0,
+    52.8
+   ],
+   "rootMotionRemoved": 0
+  }
+ },
+ "attackLocalAdaptation": {
+  "sourceClip": "Idle (Combat Idle Meshy)",
+  "method": "camada NLA COMBINE: braços para a frente (towardForward) e tronco -6°, só no estado attack",
+  "meshyAnimation": false,
+  "note": "Adaptação local autorizada; não é uma animação Meshy nova. Sem recuo nem virote: o disparo é o projétil do jogo."
+ },
+ "checks": {
+  "rigid": {
+   "crossbow": 4e-06
+  },
+  "present": {
+   "idle": {
+    "crossbow": true
+   },
+   "walk": {
+    "crossbow": true
+   },
+   "attack": {
+    "crossbow": true
+   },
+   "hit": {
+    "crossbow": true
+   },
+   "death": {
+    "crossbow": true
+   }
+  },
+  "rootHorizontal": {
+   "idle": 0,
+   "walk": 0.0238,
+   "attack": 0,
+   "hit": 0,
+   "death": 0.498
+  },
+  "aimForwardDot": {
+   "idle": [
+    0.1994,
+    0.1978
+   ],
+   "walk": [
+    -0.171,
+    -0.1828,
+    -0.1862,
+    -0.1711,
+    -0.3433,
+    -0.2909,
+    -0.167,
+    -0.1171
+   ],
+   "attack": [
+    1,
+    0.9986,
+    0.9985,
+    0.9995,
+    0.9989,
+    0.9989
+   ],
+   "hit": [
+    0.8959,
+    0.9991
+   ],
+   "death": [
+    0.2113,
+    -0.1971,
+    0.9013,
+    0.6209
+   ]
+  }
+ },
+ "clipMeasurements": {
+  "Idle": {
+   "frames": 40,
+   "seconds": 1.6667,
+   "fps": 24.0,
+   "footCrossings": 0,
+   "cycles": 0.0,
+   "rootHorizontalMetres": 0.0,
+   "rootHorizontalMaxMetres": 0.0,
+   "footSeparationRangeMetres": 0.0027,
+   "hipsHeightMetres": 0.8765,
+   "walkLoopRootClose": 0.0
+  },
+  "Walk": {
+   "frames": 30,
+   "seconds": 1.25,
+   "fps": 24.0,
+   "footCrossings": 2,
+   "cycles": 1.0,
+   "rootHorizontalMetres": 0.8635,
+   "rootHorizontalMaxMetres": 0.8635,
+   "footSeparationRangeMetres": 1.0101,
+   "hipsHeightMetres": 0.9833,
+   "walkLoopRootClose": 0.8635
+  },
+  "Attack": null,
+  "Hit": {
+   "frames": 39,
+   "seconds": 1.625,
+   "fps": 24.0,
+   "footCrossings": 0,
+   "cycles": 0.0,
+   "rootHorizontalMetres": 0.0,
+   "rootHorizontalMaxMetres": 0.0,
+   "footSeparationRangeMetres": 0.0977,
+   "hipsHeightMetres": 0.9506,
+   "walkLoopRootClose": 0.0
+  },
+  "Death": {
+   "frames": 53,
+   "seconds": 2.2083,
+   "fps": 24.0,
+   "footCrossings": 1,
+   "cycles": 0.5,
+   "rootHorizontalMetres": 0.769,
+   "rootHorizontalMaxMetres": 0.8105,
+   "footSeparationRangeMetres": 0.0847,
+   "hipsHeightMetres": 0.9609,
+   "walkLoopRootClose": 0.769
+  }
+ },
+ "walk": {
+  "distancePerCycleHeights": 0.538,
+  "source": "rootMotion",
+  "tileInModelHeights": 1.5084944665313016,
+  "phaseScale": 3.523476,
+  "strideTiles": 0.356647,
+  "animFactor": 17.61738
+ },
+ "poseOffsets": [
+  {
+   "bone": {
+    "names": [
+     "RightArm"
+    ],
+    "role": "upperArm",
+    "side": "right"
+   },
+   "mode": "towardForward",
+   "degrees": 65,
+   "states": [
+    "attack"
+   ]
+  },
+  {
+   "bone": {
+    "names": [
+     "LeftArm"
+    ],
+    "role": "upperArm",
+    "side": "left"
+   },
+   "mode": "towardForward",
+   "degrees": 70,
+   "states": [
+    "attack"
+   ]
+  },
+  {
+   "bone": {
+    "names": [
+     "RightForeArm"
+    ],
+    "role": "forearm",
+    "side": "right"
+   },
+   "mode": "towardForward",
+   "degrees": 25,
+   "states": [
+    "attack"
+   ]
+  },
+  {
+   "bone": {
+    "names": [
+     "LeftForeArm"
+    ],
+    "role": "forearm",
+    "side": "left"
+   },
+   "mode": "towardForward",
+   "degrees": 35,
+   "states": [
+    "attack"
+   ]
+  },
+  {
+   "bone": {
+    "names": [
+     "Spine02",
+     "Spine2",
+     "mixamorig:Spine2",
+     "Chest",
+     "chest"
+    ],
+    "role": "chest"
+   },
+   "mode": "lean",
+   "degrees": -6,
+   "states": [
+    "attack"
+   ]
+  }
+ ],
+ "renderer": "Forge3D RENDER_SPRITE_ATLAS (platinyb91cv-forge3d-ai fase4-imagens) com SPRITE_PROP_DIR, Blender 5.2.2 Cycles CPU",
+ "warnings": [
+  "Osso RightHand muito comprido; a pega foi limitada a 0.16 m da base."
+ ],
+ "model": {
+  "armature": "Armature",
+  "bones": 24,
+  "meshes": [
+   "char1"
+  ],
+  "vertices": 67874,
+  "heightMetres": 1.6258,
+  "rootBone": "Hips"
+ }
+}

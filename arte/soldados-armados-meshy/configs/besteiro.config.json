@@ -1,0 +1,212 @@
+{
+ "version": 1,
+ "modelForward": "-Y",
+ "elevationDeg": 30,
+ "referenceHeightPx": 64,
+ "supersample": 2,
+ "samples": 8,
+ "atlasWidth": 2048,
+ "webpQuality": 90,
+ "states": [
+  {
+   "name": "idle",
+   "clip": "Idle",
+   "frames": 2,
+   "loop": true,
+   "range": [
+    0,
+    1
+   ],
+   "props": [
+    "crossbow"
+   ]
+  },
+  {
+   "name": "walk",
+   "clip": "Walk",
+   "frames": 8,
+   "loop": true,
+   "range": [
+    0,
+    1
+   ],
+   "props": [
+    "crossbow"
+   ]
+  },
+  {
+   "name": "attack",
+   "clip": "Idle",
+   "frames": 6,
+   "loop": true,
+   "range": [
+    0,
+    1
+   ],
+   "props": [
+    "crossbow"
+   ]
+  },
+  {
+   "name": "hit",
+   "clip": "Hit",
+   "frames": 2,
+   "loop": true,
+   "range": [
+    0,
+    1
+   ],
+   "props": [
+    "crossbow"
+   ]
+  },
+  {
+   "name": "death",
+   "clip": "Death",
+   "frames": 4,
+   "loop": false,
+   "range": [
+    0,
+    1
+   ],
+   "props": [
+    "crossbow"
+   ]
+  }
+ ],
+ "props": [
+  {
+   "id": "crossbow",
+   "kind": "crossbow",
+   "bone": {
+    "names": [
+     "RightHand",
+     "mixamorig:RightHand",
+     "Hand_R",
+     "hand.R",
+     "R_Hand"
+    ],
+    "role": "hand",
+    "side": "right"
+   },
+   "thickness": 1.6,
+   "position": [
+    0,
+    0,
+    0
+   ],
+   "rotation": [
+    0,
+    0,
+    0
+   ],
+   "placeIn": "attack",
+   "placeAt": 0,
+   "wood": "#7a4a24",
+   "metal": "#9aa3ad",
+   "accent": "#c9a24a",
+   "model": "crossbow"
+  }
+ ],
+ "poseOffsets": [
+  {
+   "bone": {
+    "names": [
+     "RightArm"
+    ],
+    "role": "upperArm",
+    "side": "right"
+   },
+   "mode": "towardForward",
+   "degrees": 65,
+   "states": [
+    "attack"
+   ]
+  },
+  {
+   "bone": {
+    "names": [
+     "LeftArm"
+    ],
+    "role": "upperArm",
+    "side": "left"
+   },
+   "mode": "towardForward",
+   "degrees": 70,
+   "states": [
+    "attack"
+   ]
+  },
+  {
+   "bone": {
+    "names": [
+     "RightForeArm"
+    ],
+    "role": "forearm",
+    "side": "right"
+   },
+   "mode": "towardForward",
+   "degrees": 25,
+   "states": [
+    "attack"
+   ]
+  },
+  {
+   "bone": {
+    "names": [
+     "LeftForeArm"
+    ],
+    "role": "forearm",
+    "side": "left"
+   },
+   "mode": "towardForward",
+   "degrees": 35,
+   "states": [
+    "attack"
+   ]
+  },
+  {
+   "bone": {
+    "names": [
+     "Spine02",
+     "Spine2",
+     "mixamorig:Spine2",
+     "Chest",
+     "chest"
+    ],
+    "role": "chest"
+   },
+   "mode": "lean",
+   "degrees": -6,
+   "states": [
+    "attack"
+   ]
+  }
+ ],
+ "aliases": {},
+ "measure": {
+  "walkState": "walk",
+  "feet": [
+   {
+    "names": [
+     "LeftFoot",
+     "mixamorig:LeftFoot",
+     "Foot_L",
+     "foot.L"
+    ],
+    "role": "foot",
+    "side": "left"
+   },
+   {
+    "names": [
+     "RightFoot",
+     "mixamorig:RightFoot",
+     "Foot_R",
+     "foot.R"
+    ],
+    "role": "foot",
+    "side": "right"
+   }
+  ]
+ }
+}

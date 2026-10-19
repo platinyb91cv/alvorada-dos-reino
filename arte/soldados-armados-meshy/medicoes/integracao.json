@@ -1,0 +1,77 @@
+{
+ "guerreiro": {
+  "atlasSha256": "d7db78f57c50626b3fbdb747963c0af555d38b6c3a07f1a3435c045926591a6d",
+  "webpBytes": 496650,
+  "size": [
+   2048,
+   349
+  ],
+  "locomotion": {
+   "walk": {
+    "phaseScale": 2.481191,
+    "strideTiles": 0.506465,
+    "animFactor": 12.405956
+   }
+  }
+ },
+ "lanceiro": {
+  "atlasSha256": "3fccde8c876d4bf1f323771ca89cd131366f11e605215b5e9991909e3b23d09d",
+  "webpBytes": 538740,
+  "size": [
+   2048,
+   500
+  ],
+  "locomotion": {
+   "walk": {
+    "phaseScale": 2.484443,
+    "strideTiles": 0.505802,
+    "animFactor": 12.422215
+   }
+  }
+ },
+ "espadachim": {
+  "atlasSha256": "d38be17e013a4434770b07b6eb1fc8862ff824717a2b7bc51a277096cb436cbb",
+  "webpBytes": 518570,
+  "size": [
+   2048,
+   364
+  ],
+  "locomotion": {
+   "walk": {
+    "phaseScale": 2.474713,
+    "strideTiles": 0.507791,
+    "animFactor": 12.373564
+   }
+  }
+ },
+ "arqueiro": {
+  "atlasSha256": "3d13eb52725ac6c24339fd40a4f0ea6211a510176ee21fd1a53ed7c2c93a2e4a",
+  "webpBytes": 500854,
+  "size": [
+   2048,
+   311
+  ],
+  "locomotion": {
+   "walk": {
+    "phaseScale": 3.543234,
+    "strideTiles": 0.354658,
+    "animFactor": 17.716169
+   }
+  }
+ },
+ "besteiro": {
+  "atlasSha256": "7e83a1c755cbd3a96db3cafab67342c3d7b21d4c481cb40d15c2f2469206f654",
+  "webpBytes": 543474,
+  "size": [
+   2048,
+   352
+  ],
+  "locomotion": {
+   "walk": {
+    "phaseScale": 3.523476,
+    "strideTiles": 0.356647,
+    "animFactor": 17.61738
+   }
+  }
+ }
+}

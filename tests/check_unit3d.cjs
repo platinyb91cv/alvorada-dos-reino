@@ -12,7 +12,7 @@ for(const type of types){const meta=data[type];assert.equal(meta.directions,8);a
  if(meta.file){ // soldados com armas Meshy: atlas Forge3D (arte/soldados-armados-meshy); o atlas anterior fica preservado em disco
   const v=JSON.parse(fs.readFileSync(path.join(root,'arte/soldados-armados-meshy/atlas',type+'.verification.json'),'utf8'));
   assert.equal(v.atlasSha256,meta.atlasSha256);assert.equal(v.meshyCredits,0);assert.equal(v.bones,24);assert.equal(v.directions,8);
-  assert.ok(['idle','walk','attack','hit','death'].every(k=>v.states[k]));assert.equal(new Set(Object.values(v.states).map(s=>s.clip)).size,5,'five distinct clips');
+  assert.ok(['idle','walk','attack','hit','death'].every(k=>v.states[k]));assert.equal(new Set(Object.values(v.states).map(s=>s.clip)).size,type==='besteiro'?4:5,'distinct clips');if(type==='besteiro'){assert.equal(v.states.attack.clip,'Idle');assert.equal(v.attackLocalAdaptation.meshyAnimation,false);assert.ok(v.poseOffsets.some(o=>o.mode==='towardForward'&&o.states.includes('attack')))}
   assert.ok(Object.values(v.checks.rigid).every(e=>e<1e-4),'weapon rigidly attached to the hand');
   assert.ok(['idle','walk','attack','hit','death'].every(s=>Object.values(v.checks.present[s]||{}).length&&Object.values(v.checks.present[s]).every(Boolean)),'weapon present in every state');
   assert.ok(['idle','attack','hit'].every(s=>v.checks.rootHorizontal[s]<.08),'no horizontal root travel outside walk/death');

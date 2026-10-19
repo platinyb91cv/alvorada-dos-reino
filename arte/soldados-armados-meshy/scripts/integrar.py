@@ -47,6 +47,8 @@ for n, pr in proofs.items():
                     'dimensionsMetres': opt['dimensionsMetres'], 'bone': rep['props'][[k for k in rep['props'] if k != '_models'][0]]['bone'],
                     'orientedIn': rep['props'][[k for k in rep['props'] if k != '_models'][0]]['placedIn']},
          'states': {k: {**sv, 'clip': sv['clip'].split('|')[-1]} for k, sv in rep['states'].items()},
+         **({'attackLocalAdaptation': {'sourceClip': 'Idle (Combat Idle Meshy)', 'method': 'camada NLA COMBINE: braços para a frente (towardForward) e tronco -6°, só no estado attack', 'meshyAnimation': False,
+             'note': 'Adaptação local autorizada; não é uma animação Meshy nova. Sem recuo nem virote: o disparo é o projétil do jogo.'}} if n == 'besteiro' else {}),
          'checks': rep['checks'], 'clipMeasurements': pr['walkMeasure']['clips'],
          'walk': {**rep['walk'], 'tileInModelHeights': TILE_IN_HEIGHTS, **m['locomotion']['walk']},
          'poseOffsets': cfg['poseOffsets'], 'renderer': 'Forge3D RENDER_SPRITE_ATLAS (platinyb91cv-forge3d-ai fase4-imagens) com SPRITE_PROP_DIR, Blender 5.2.2 Cycles CPU',

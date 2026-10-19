@@ -1,0 +1,245 @@
+{
+ "unit": "lanceiro",
+ "atlas": "www/assets/units3d/lanceiro-armas-meshy.webp",
+ "atlasSha256": "3fccde8c876d4bf1f323771ca89cd131366f11e605215b5e9991909e3b23d09d",
+ "directions": 8,
+ "directionLabels": [
+  "SE",
+  "S",
+  "SW",
+  "W",
+  "NW",
+  "N",
+  "NE",
+  "E"
+ ],
+ "framesPerDirection": 22,
+ "referenceHeightPx": 64,
+ "meshyCredits": 0,
+ "body": {
+  "file": "arte/soldados-meshy/lanceiro.glb",
+  "sha256": "94a723348ca81ce0c420085f702e861c0e4b9747363b57ba83dcc97e1503eb91",
+  "sourceBranch": "soldados-meshy-piloto@7cb7cab"
+ },
+ "bones": 24,
+ "boneNames": [
+  "Hips",
+  "Spine02",
+  "Spine01",
+  "Spine",
+  "neck",
+  "Head",
+  "head_end",
+  "headfront",
+  "LeftShoulder",
+  "LeftArm",
+  "LeftForeArm",
+  "LeftHand",
+  "RightShoulder",
+  "RightArm",
+  "RightForeArm",
+  "RightHand",
+  "LeftUpLeg",
+  "LeftLeg",
+  "LeftFoot",
+  "LeftToeBase",
+  "RightUpLeg",
+  "RightLeg",
+  "RightFoot",
+  "RightToeBase"
+ ],
+ "weapon": {
+  "file": "arte/soldados-armados-meshy/armas/otimizados/spear-2.glb",
+  "sha256": "8f8aadcb18546476bd096447fdba770c2679afcaef95df1c9d79203df9671efc",
+  "triangles": 788,
+  "masterSha256": "d4d7a88f3742f7115b50b2312102a9c5d379e36ef0eb7762acc5d154d12e9f73",
+  "masterTriangles": 109052,
+  "originalMeshySha256": "0ef98d2444aea023b7bec8b18dbda6dc5d2aa91c4804414f919af50bcbd6e133",
+  "dimensionsMetres": [
+   0.04399999976158142,
+   0.07000000029802322,
+   2.0500001907348633
+  ],
+  "bone": "RightHand",
+  "orientedIn": "death"
+ },
+ "states": {
+  "idle": {
+   "clip": "Idle",
+   "frames": 2,
+   "clipFrames": [
+    0,
+    40
+   ],
+   "rootMotionRemoved": 0
+  },
+  "walk": {
+   "clip": "Walk",
+   "frames": 8,
+   "clipFrames": [
+    0,
+    25.6
+   ],
+   "rootMotionRemoved": 0
+  },
+  "attack": {
+   "clip": "Attack",
+   "frames": 6,
+   "clipFrames": [
+    0,
+    72
+   ],
+   "rootMotionRemoved": 0
+  },
+  "hit": {
+   "clip": "Hit",
+   "frames": 2,
+   "clipFrames": [
+    0,
+    39.2
+   ],
+   "rootMotionRemoved": 0
+  },
+  "death": {
+   "clip": "Death",
+   "frames": 4,
+   "clipFrames": [
+    0,
+    52.8
+   ],
+   "rootMotionRemoved": 0
+  }
+ },
+ "checks": {
+  "rigid": {
+   "spear": 2e-06
+  },
+  "present": {
+   "idle": {
+    "spear": true
+   },
+   "walk": {
+    "spear": true
+   },
+   "attack": {
+    "spear": true
+   },
+   "hit": {
+    "spear": true
+   },
+   "death": {
+    "spear": true
+   }
+  },
+  "rootHorizontal": {
+   "idle": 0,
+   "walk": 0.0145,
+   "attack": 0,
+   "hit": 0,
+   "death": 0.5019
+  },
+  "aimForwardDot": {}
+ },
+ "clipMeasurements": {
+  "Idle": {
+   "frames": 40,
+   "seconds": 1.6667,
+   "fps": 24.0,
+   "footCrossings": 0,
+   "cycles": 0.0,
+   "rootHorizontalMetres": 0.0,
+   "rootHorizontalMaxMetres": 0.0,
+   "footSeparationRangeMetres": 0.0036,
+   "hipsHeightMetres": 0.8777,
+   "walkLoopRootClose": 0.0
+  },
+  "Walk": {
+   "frames": 26,
+   "seconds": 1.0833,
+   "fps": 24.0,
+   "footCrossings": 1,
+   "cycles": 0.5,
+   "rootHorizontalMetres": 0.0031,
+   "rootHorizontalMaxMetres": 0.0235,
+   "footSeparationRangeMetres": 1.2131,
+   "hipsHeightMetres": 0.9956,
+   "walkLoopRootClose": 0.0031
+  },
+  "Attack": {
+   "frames": 72,
+   "seconds": 3.0,
+   "fps": 24.0,
+   "footCrossings": 2,
+   "cycles": 1.0,
+   "rootHorizontalMetres": 0.0,
+   "rootHorizontalMaxMetres": 0.0,
+   "footSeparationRangeMetres": 1.7522,
+   "hipsHeightMetres": 0.915,
+   "walkLoopRootClose": 0.0
+  },
+  "Hit": {
+   "frames": 39,
+   "seconds": 1.625,
+   "fps": 24.0,
+   "footCrossings": 0,
+   "cycles": 0.0,
+   "rootHorizontalMetres": 0.0,
+   "rootHorizontalMaxMetres": 0.0,
+   "footSeparationRangeMetres": 0.104,
+   "hipsHeightMetres": 0.9511,
+   "walkLoopRootClose": 0.0
+  },
+  "Death": {
+   "frames": 53,
+   "seconds": 2.2083,
+   "fps": 24.0,
+   "footCrossings": 1,
+   "cycles": 0.5,
+   "rootHorizontalMetres": 0.7614,
+   "rootHorizontalMaxMetres": 0.8024,
+   "footSeparationRangeMetres": 0.0666,
+   "hipsHeightMetres": 0.9612,
+   "walkLoopRootClose": 0.7614
+  }
+ },
+ "walk": {
+  "distancePerCycleHeights": 0.763,
+  "source": "feet",
+  "tileInModelHeights": 1.5084944665313016,
+  "phaseScale": 2.484443,
+  "strideTiles": 0.505802,
+  "animFactor": 12.422215
+ },
+ "poseOffsets": [
+  {
+   "bone": {
+    "names": [
+     "RightForeArm"
+    ],
+    "role": "forearm",
+    "side": "right"
+   },
+   "mode": "towardForward",
+   "degrees": 85,
+   "states": [
+    "idle",
+    "walk",
+    "hit"
+   ]
+  }
+ ],
+ "renderer": "Forge3D RENDER_SPRITE_ATLAS (platinyb91cv-forge3d-ai fase4-imagens) com SPRITE_PROP_DIR, Blender 5.2.2 Cycles CPU",
+ "warnings": [
+  "Osso RightHand muito comprido; a pega foi limitada a 0.16 m da base."
+ ],
+ "model": {
+  "armature": "Armature",
+  "bones": 24,
+  "meshes": [
+   "char1"
+  ],
+  "vertices": 75417,
+  "heightMetres": 1.5973,
+  "rootBone": "Hips"
+ }
+}
