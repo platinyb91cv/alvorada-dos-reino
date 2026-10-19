@@ -1,0 +1,65 @@
+{
+ "unit": "arqueiro",
+ "atlasSha256": "3390b61d13fa1a3c729b6b01c469c5352e9ea2fcad9c6b0516fd9d9f86171148",
+ "sourceGlbSha256": "ad7387df1ed920267d11ba75a9318d1d5cb2e4e90222f26c5e622441fc0656a6",
+ "sourceBranch": "soldados-meshy-piloto@7cb7cab",
+ "renderer": "Forge3D RENDER_SPRITE_ATLAS (platinyb91cv-forge3d-ai fase3-sprites@1db7de4), Blender 5.2.2 Cycles CPU",
+ "meshyCredits": 0,
+ "framesPerDirection": 22,
+ "directions": 8,
+ "states": {
+  "idle": {
+   "clip": "Idle",
+   "frames": 2,
+   "rootMotionRemovedHeights": 0
+  },
+  "walk": {
+   "clip": "Walk",
+   "frames": 8,
+   "rootMotionRemovedHeights": 0.535
+  },
+  "attack": {
+   "clip": "Attack",
+   "frames": 6,
+   "rootMotionRemovedHeights": 0
+  },
+  "hit": {
+   "clip": "Hit",
+   "frames": 2,
+   "rootMotionRemovedHeights": 0
+  },
+  "death": {
+   "clip": "Death",
+   "frames": 4,
+   "rootMotionRemovedHeights": 0
+  }
+ },
+ "walkDistancePerCycleHeights": 0.535,
+ "locomotion": {
+  "walk": {
+   "phaseScale": 3.0723014511367848,
+   "strideTiles": 0.4090214067278288,
+   "animFactor": 15.361507255683923
+  }
+ },
+ "weapons": {
+  "bow": {
+   "kind": "bow",
+   "bone": "LeftHand",
+   "orientedIn": "attack"
+  },
+  "quiver": {
+   "kind": "quiver",
+   "bone": "Spine02",
+   "orientedIn": "idle"
+  }
+ },
+ "poseOffsets": [],
+ "modelHeightMetres": 1.6395,
+ "bones": 24,
+ "warnings": [
+  "Osso LeftHand muito comprido; a pega foi limitada a 0.16 m da base.",
+  "Osso Spine02 muito comprido; a pega foi limitada a 0.49 m da base."
+ ],
+ "notes": "Sprite atlas only; the GLB stays in the pilot branch and is not shipped in the APK. Weapons are rigid procedural props parented to hand/forearm/chest bones."
+}

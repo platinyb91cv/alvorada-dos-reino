@@ -1,0 +1,100 @@
+{
+ "unit": "besteiro",
+ "atlasSha256": "c957ec8e77143cc950019fb3c26d5c321546f473bb7574f1233d33c460cc3bc4",
+ "sourceGlbSha256": "9e4504253dc1d2daef8754b8681483371953b8273e73fc67f3716a5f4232071d",
+ "sourceBranch": "soldados-meshy-piloto@7cb7cab",
+ "renderer": "Forge3D RENDER_SPRITE_ATLAS (platinyb91cv-forge3d-ai fase3-sprites@1db7de4), Blender 5.2.2 Cycles CPU",
+ "meshyCredits": 0,
+ "framesPerDirection": 22,
+ "directions": 8,
+ "states": {
+  "idle": {
+   "clip": "Idle",
+   "frames": 2,
+   "rootMotionRemovedHeights": 0
+  },
+  "walk": {
+   "clip": "Walk",
+   "frames": 8,
+   "rootMotionRemovedHeights": 0.538
+  },
+  "attack": {
+   "clip": "Idle",
+   "frames": 6,
+   "rootMotionRemovedHeights": 0
+  },
+  "hit": {
+   "clip": "Hit",
+   "frames": 2,
+   "rootMotionRemovedHeights": 0
+  },
+  "death": {
+   "clip": "Death",
+   "frames": 4,
+   "rootMotionRemovedHeights": 0
+  }
+ },
+ "walkDistancePerCycleHeights": 0.538,
+ "locomotion": {
+  "walk": {
+   "phaseScale": 3.055169658658327,
+   "strideTiles": 0.41131498470948014,
+   "animFactor": 15.275848293291634
+  }
+ },
+ "weapons": {
+  "crossbow": {
+   "kind": "crossbow",
+   "bone": "RightHand",
+   "orientedIn": "attack"
+  }
+ },
+ "poseOffsets": [
+  {
+   "bone": "RightArm",
+   "mode": "towardForward",
+   "degrees": 65,
+   "states": [
+    "attack"
+   ]
+  },
+  {
+   "bone": "LeftArm",
+   "mode": "towardForward",
+   "degrees": 70,
+   "states": [
+    "attack"
+   ]
+  },
+  {
+   "bone": "RightForeArm",
+   "mode": "towardForward",
+   "degrees": 25,
+   "states": [
+    "attack"
+   ]
+  },
+  {
+   "bone": "LeftForeArm",
+   "mode": "towardForward",
+   "degrees": 35,
+   "states": [
+    "attack"
+   ]
+  },
+  {
+   "bone": "Spine02",
+   "mode": "lean",
+   "degrees": -6,
+   "states": [
+    "attack"
+   ]
+  }
+ ],
+ "modelHeightMetres": 1.6258,
+ "bones": 24,
+ "warnings": [
+  "Osso RightHand muito comprido; a pega foi limitada a 0.16 m da base."
+ ],
+ "notes": "Sprite atlas only; the GLB stays in the pilot branch and is not shipped in the APK. Weapons are rigid procedural props parented to hand/forearm/chest bones."
+}

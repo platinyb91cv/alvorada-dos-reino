@@ -1,0 +1,65 @@
+{
+ "unit": "lanceiro",
+ "atlasSha256": "f5ba49ff82e92b604138f1093dd8c920d6fca6723110d2198a271cc33abf37c1",
+ "sourceGlbSha256": "94a723348ca81ce0c420085f702e861c0e4b9747363b57ba83dcc97e1503eb91",
+ "sourceBranch": "soldados-meshy-piloto@7cb7cab",
+ "renderer": "Forge3D RENDER_SPRITE_ATLAS (platinyb91cv-forge3d-ai fase3-sprites@1db7de4), Blender 5.2.2 Cycles CPU",
+ "meshyCredits": 0,
+ "framesPerDirection": 22,
+ "directions": 8,
+ "states": {
+  "idle": {
+   "clip": "Idle",
+   "frames": 2,
+   "rootMotionRemovedHeights": 0
+  },
+  "walk": {
+   "clip": "Walk",
+   "frames": 8,
+   "rootMotionRemovedHeights": 0
+  },
+  "attack": {
+   "clip": "Attack",
+   "frames": 6,
+   "rootMotionRemovedHeights": 0
+  },
+  "hit": {
+   "clip": "Hit",
+   "frames": 2,
+   "rootMotionRemovedHeights": 0
+  },
+  "death": {
+   "clip": "Death",
+   "frames": 4,
+   "rootMotionRemovedHeights": 0
+  }
+ },
+ "walkDistancePerCycleHeights": 0.763,
+ "locomotion": {
+  "walk": {
+   "phaseScale": 2.1542349624615724,
+   "strideTiles": 0.5833333333333334,
+   "animFactor": 10.771174812307862
+  }
+ },
+ "weapons": {
+  "spear": {
+   "kind": "spear",
+   "bone": "RightHand",
+   "orientedIn": "walk"
+  },
+  "shield": {
+   "kind": "shield",
+   "bone": "LeftForeArm",
+   "orientedIn": "idle"
+  }
+ },
+ "poseOffsets": [],
+ "modelHeightMetres": 1.5973,
+ "bones": 24,
+ "warnings": [
+  "Osso RightHand muito comprido; a pega foi limitada a 0.16 m da base.",
+  "Osso LeftForeArm muito comprido; a pega foi limitada a 0.48 m da base."
+ ],
+ "notes": "Sprite atlas only; the GLB stays in the pilot branch and is not shipped in the APK. Weapons are rigid procedural props parented to hand/forearm/chest bones."
+}
