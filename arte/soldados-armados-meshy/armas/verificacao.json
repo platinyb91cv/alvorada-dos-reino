@@ -1,0 +1,14 @@
+{
+  "passed": true,
+  "files": 5,
+  "variants": 10,
+  "credits": 150,
+  "sourceMastersUnchanged": true,
+  "pbrTextures": "2K base color, metallic/roughness and normal",
+  "normalizationAndBudgetChecks": true,
+  "notes": [
+    "Grip origin and proximity verified, but no animated hand attachment was performed.",
+    "PBR materials are preserved as Meshy supplied them, rather than the earlier flat-material palette.",
+    "Sword width follows its broad blade/guard in X; the generic edge-direction convention requires visual approval."
+  ]
+}
