@@ -55,6 +55,19 @@ O workflow `Edificios v2 - APK de teste` compila apenas o APK debug do ramo. Nã
 
 O APK ainda precisa de uma partida num dispositivo Android físico; as verificações visuais desta entrega foram feitas no Chrome. Não se afirma desempenho medido num telemóvel.
 
+## APK compilado e verificado
+
+[Compilação aprovada no GitHub Actions](https://github.com/platinyb91cv/alvorada-dos-reino/actions/runs/39235076082).
+[Descarregar artifact com o APK de teste](https://github.com/platinyb91cv/alvorada-dos-reino/actions/runs/39235076082/artifacts/12179630136).
+
+- Commit de código compilado: `1530283e5b1ce11ff962283fb5a4654d06ba919f`.
+- APK debug: 23 740 799 bytes.
+- SHA-256 do APK: `ec51af5da2a9b426d221d7bb9b42b789908adee3c99ecff05891fab1bfd3190d`.
+- Seis testes aprovados também no CI; hash do artifact, integridade ZIP, assinatura debug presente e quatro ficheiros empacotados conferidos contra os bytes commitados.
+- Relatório: [apk.verification.json](publicacao/apk.verification.json).
+
+O artifact fica sujeito à retenção do GitHub (expiração indicada: 17/01/2027). Existe também a cópia local `outputs/Alvorada-edificios-v2-teste.apk`. O commit posterior que acrescenta este relatório só modifica documentação; o código do jogo continua idêntico ao commit compilado. As medidas de tamanho acima foram recolhidas no checkout Windows; o APK foi comparado aos bytes normalizados efetivamente commitados, incluindo as quebras de linha do HTML.
+
 ## Lista das 37 imagens
 
 | Chave (tipo / variante) | Tiles | PNG em publicacao |
