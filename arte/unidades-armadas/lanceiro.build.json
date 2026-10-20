@@ -1,0 +1,46 @@
+{
+  "unit": "lanceiro",
+  "body": "char1",
+  "bodyMeshes": [
+    "char1",
+    "Icosphere"
+  ],
+  "rig": "Armature",
+  "clips": {
+    "Death": {
+      "source": "existing Meshy clip/local approved offsets",
+      "frames": 33.0
+    },
+    "Hit": {
+      "source": "existing Meshy clip/local approved offsets",
+      "frames": 33.0
+    },
+    "Attack": {
+      "source": "existing Meshy clip/local approved offsets",
+      "frames": 33.0
+    },
+    "Walk": {
+      "source": "existing Meshy clip/local approved offsets",
+      "frames": 33.0
+    },
+    "Idle": {
+      "source": "existing Meshy clip/local approved offsets",
+      "frames": 33.0
+    }
+  },
+  "props": {
+    "spear": [
+      "Meshy_spear"
+    ]
+  },
+  "defaultProp": "spear",
+  "bones": 24,
+  "triangles": 100079,
+  "sourceSha256": "94a723348ca81ce0c420085f702e861c0e4b9747363b57ba83dcc97e1503eb91",
+  "newMeshyCredits": 0,
+  "localRetargetedClips": [],
+  "supportHandMaximumResidualMetres": 0.05396690015956442,
+  "rigidPropsFollowDirectionPivot": [
+    "Meshy_spear"
+  ]
+}

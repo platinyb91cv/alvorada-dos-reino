@@ -1,0 +1,23 @@
+{
+  "unit": "lanceiro",
+  "method": "Median backwards foot velocity during low ground stance, per normalized clip cycle; both feet; orthographic game projection at 30px.",
+  "screenPixelsPerMeter": 20.89447720010082,
+  "metersPerTile": 2.1658753919777745,
+  "foot": {
+    "LeftFoot": {
+      "stanceTravelPerCycleMeters": 1.270909309387207,
+      "stanceSampleCount": 60,
+      "swingRangeMeters": 0.632296621799469
+    },
+    "RightFoot": {
+      "stanceTravelPerCycleMeters": 1.2644416093826294,
+      "stanceSampleCount": 51,
+      "swingRangeMeters": 0.6336614787578583
+    }
+  },
+  "strideMeters": 1.2676754593849182,
+  "strideTiles": 0.5852947330581827,
+  "recommendedAnimFactor": 10.73507918711271,
+  "visualPhaseMultiplier": 2.147015837422542,
+  "durationSeconds": 1.3333333333333333
+}

@@ -1,0 +1,2235 @@
+{
+  "unit": "guerreiro",
+  "reimported": true,
+  "reimportedClipsDistinct": true,
+  "bones": 24,
+  "boneNames": [
+    "Hips",
+    "LeftUpLeg",
+    "LeftLeg",
+    "LeftFoot",
+    "LeftToeBase",
+    "RightUpLeg",
+    "RightLeg",
+    "RightFoot",
+    "RightToeBase",
+    "Spine02",
+    "Spine01",
+    "Spine",
+    "LeftShoulder",
+    "LeftArm",
+    "LeftForeArm",
+    "LeftHand",
+    "neck",
+    "Head",
+    "head_end",
+    "headfront",
+    "RightShoulder",
+    "RightArm",
+    "RightForeArm",
+    "RightHand"
+  ],
+  "clips": [
+    "Death",
+    "Hit",
+    "Attack",
+    "Walk",
+    "Idle"
+  ],
+  "horizontalRootDriftMetresByClip": {
+    "Death": 0.8081285095214844,
+    "Hit": 5.513429641723633e-09,
+    "Attack": 5.960464477539063e-09,
+    "Walk": 7.227063179016113e-09,
+    "Idle": 5.364418029785156e-09
+  },
+  "sha256": "928859d4f159ac2ec962e033c500fc6099676c315580981d248feaf85f426606",
+  "sourceSha256": "5c685f633dd5f366b5fb6f66c7ce299630bca10e612c0e919ad807ce31d247fe",
+  "bodyTriangles": 100079,
+  "bytes": 24199240,
+  "additionalMeshyCredits": 0,
+  "supportHandMaximumResidualMetres": 0,
+  "source": "Existing Meshy models and motions; local posture/hand layers and villager retarget; no paid requests",
+  "clipDurationsSeconds": {
+    "Death": 1.375,
+    "Hit": 1.375,
+    "Attack": 1.375,
+    "Walk": 1.375,
+    "Idle": 1.375
+  },
+  "atlasSha256": "e5e41e3f51a171730d2caccac0b657853f884fdfd1e6cf369166bf7d6ae91947",
+  "locomotion": {
+    "walk": {
+      "phaseScale": 2.14864628551409,
+      "strideTiles": 0.5848505963536252,
+      "animFactor": 10.74323142757045
+    }
+  },
+  "render": {
+    "sourceModelSha256": "928859d4f159ac2ec962e033c500fc6099676c315580981d248feaf85f426606",
+    "bodyReferencePixels": 38.07181194626623,
+    "unit": "guerreiro",
+    "directions": 8,
+    "framesPerDirection": 22,
+    "states": {
+      "idle": [
+        0,
+        1
+      ],
+      "walk": [
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9
+      ],
+      "attack": [
+        10,
+        11,
+        12,
+        13,
+        14,
+        15
+      ],
+      "hit": [
+        16,
+        17
+      ],
+      "death": [
+        18,
+        19,
+        20,
+        21
+      ]
+    },
+    "labels": [
+      "SE",
+      "S",
+      "SW",
+      "W",
+      "NW",
+      "N",
+      "NE",
+      "E"
+    ],
+    "frames": [
+      {
+        "i": 0,
+        "state": "idle",
+        "clip": "Idle",
+        "phase": 0.2,
+        "tool": "axe",
+        "direction": 0,
+        "anchor": [
+          64.0,
+          74.28120040893555
+        ]
+      },
+      {
+        "i": 1,
+        "state": "idle",
+        "clip": "Idle",
+        "phase": 0.7,
+        "tool": "axe",
+        "direction": 0,
+        "anchor": [
+          64.0,
+          74.28120040893555
+        ]
+      },
+      {
+        "i": 2,
+        "state": "walk",
+        "clip": "Walk",
+        "phase": 0.0,
+        "tool": "axe",
+        "direction": 0,
+        "anchor": [
+          64.0,
+          74.28120040893555
+        ]
+      },
+      {
+        "i": 3,
+        "state": "walk",
+        "clip": "Walk",
+        "phase": 0.125,
+        "tool": "axe",
+        "direction": 0,
+        "anchor": [
+          64.0,
+          74.28120040893555
+        ]
+      },
+      {
+        "i": 4,
+        "state": "walk",
+        "clip": "Walk",
+        "phase": 0.25,
+        "tool": "axe",
+        "direction": 0,
+        "anchor": [
+          64.0,
+          74.28120040893555
+        ]
+      },
+      {
+        "i": 5,
+        "state": "walk",
+        "clip": "Walk",
+        "phase": 0.375,
+        "tool": "axe",
+        "direction": 0,
+        "anchor": [
+          64.0,
+          74.28120040893555
+        ]
+      },
+      {
+        "i": 6,
+        "state": "walk",
+        "clip": "Walk",
+        "phase": 0.5,
+        "tool": "axe",
+        "direction": 0,
+        "anchor": [
+          64.0,
+          74.28120040893555
+        ]
+      },
+      {
+        "i": 7,
+        "state": "walk",
+        "clip": "Walk",
+        "phase": 0.625,
+        "tool": "axe",
+        "direction": 0,
+        "anchor": [
+          64.0,
+          74.28120040893555
+        ]
+      },
+      {
+        "i": 8,
+        "state": "walk",
+        "clip": "Walk",
+        "phase": 0.75,
+        "tool": "axe",
+        "direction": 0,
+        "anchor": [
+          64.0,
+          74.28120040893555
+        ]
+      },
+      {
+        "i": 9,
+        "state": "walk",
+        "clip": "Walk",
+        "phase": 0.875,
+        "tool": "axe",
+        "direction": 0,
+        "anchor": [
+          64.0,
+          74.28120040893555
+        ]
+      },
+      {
+        "i": 10,
+        "state": "attack",
+        "clip": "Attack",
+        "phase": 0,
+        "tool": "axe",
+        "direction": 0,
+        "anchor": [
+          64.0,
+          74.28120040893555
+        ]
+      },
+      {
+        "i": 11,
+        "state": "attack",
+        "clip": "Attack",
+        "phase": 0.15,
+        "tool": "axe",
+        "direction": 0,
+        "anchor": [
+          64.0,
+          74.28120040893555
+        ]
+      },
+      {
+        "i": 12,
+        "state": "attack",
+        "clip": "Attack",
+        "phase": 0.3,
+        "tool": "axe",
+        "direction": 0,
+        "anchor": [
+          64.0,
+          74.28120040893555
+        ]
+      },
+      {
+        "i": 13,
+        "state": "attack",
+        "clip": "Attack",
+        "phase": 0.5,
+        "tool": "axe",
+        "direction": 0,
+        "anchor": [
+          64.0,
+          74.28120040893555
+        ]
+      },
+      {
+        "i": 14,
+        "state": "attack",
+        "clip": "Attack",
+        "phase": 0.7,
+        "tool": "axe",
+        "direction": 0,
+        "anchor": [
+          64.0,
+          74.28120040893555
+        ]
+      },
+      {
+        "i": 15,
+        "state": "attack",
+        "clip": "Attack",
+        "phase": 0.9,
+        "tool": "axe",
+        "direction": 0,
+        "anchor": [
+          64.0,
+          74.28120040893555
+        ]
+      },
+      {
+        "i": 16,
+        "state": "hit",
+        "clip": "Hit",
+        "phase": 0.2,
+        "tool": "axe",
+        "direction": 0,
+        "anchor": [
+          64.0,
+          74.28120040893555
+        ]
+      },
+      {
+        "i": 17,
+        "state": "hit",
+        "clip": "Hit",
+        "phase": 0.55,
+        "tool": "axe",
+        "direction": 0,
+        "anchor": [
+          64.0,
+          74.28120040893555
+        ]
+      },
+      {
+        "i": 18,
+        "state": "death",
+        "clip": "Death",
+        "phase": 0.1,
+        "tool": "axe",
+        "direction": 0,
+        "anchor": [
+          64.0,
+          74.28120040893555
+        ]
+      },
+      {
+        "i": 19,
+        "state": "death",
+        "clip": "Death",
+        "phase": 0.35,
+        "tool": "axe",
+        "direction": 0,
+        "anchor": [
+          64.0,
+          74.28120040893555
+        ]
+      },
+      {
+        "i": 20,
+        "state": "death",
+        "clip": "Death",
+        "phase": 0.65,
+        "tool": "axe",
+        "direction": 0,
+        "anchor": [
+          64.0,
+          74.28120040893555
+        ]
+      },
+      {
+        "i": 21,
+        "state": "death",
+        "clip": "Death",
+        "phase": 1,
+        "tool": "axe",
+        "direction": 0,
+        "anchor": [
+          64.0,
+          74.28120040893555
+        ]
+      },
+      {
+        "i": 0,
+        "state": "idle",
+        "clip": "Idle",
+        "phase": 0.2,
+        "tool": "axe",
+        "direction": 1,
+        "anchor": [
+          64.0,
+          74.28120040893555
+        ]
+      },
+      {
+        "i": 1,
+        "state": "idle",
+        "clip": "Idle",
+        "phase": 0.7,
+        "tool": "axe",
+        "direction": 1,
+        "anchor": [
+          64.0,
+          74.28120040893555
+        ]
+      },
+      {
+        "i": 2,
+        "state": "walk",
+        "clip": "Walk",
+        "phase": 0.0,
+        "tool": "axe",
+        "direction": 1,
+        "anchor": [
+          64.0,
+          74.28120040893555
+        ]
+      },
+      {
+        "i": 3,
+        "state": "walk",
+        "clip": "Walk",
+        "phase": 0.125,
+        "tool": "axe",
+        "direction": 1,
+        "anchor": [
+          64.0,
+          74.28120040893555
+        ]
+      },
+      {
+        "i": 4,
+        "state": "walk",
+        "clip": "Walk",
+        "phase": 0.25,
+        "tool": "axe",
+        "direction": 1,
+        "anchor": [
+          64.0,
+          74.28120040893555
+        ]
+      },
+      {
+        "i": 5,
+        "state": "walk",
+        "clip": "Walk",
+        "phase": 0.375,
+        "tool": "axe",
+        "direction": 1,
+        "anchor": [
+          64.0,
+          74.28120040893555
+        ]
+      },
+      {
+        "i": 6,
+        "state": "walk",
+        "clip": "Walk",
+        "phase": 0.5,
+        "tool": "axe",
+        "direction": 1,
+        "anchor": [
+          64.0,
+          74.28120040893555
+        ]
+      },
+      {
+        "i": 7,
+        "state": "walk",
+        "clip": "Walk",
+        "phase": 0.625,
+        "tool": "axe",
+        "direction": 1,
+        "anchor": [
+          64.0,
+          74.28120040893555
+        ]
+      },
+      {
+        "i": 8,
+        "state": "walk",
+        "clip": "Walk",
+        "phase": 0.75,
+        "tool": "axe",
+        "direction": 1,
+        "anchor": [
+          64.0,
+          74.28120040893555
+        ]
+      },
+      {
+        "i": 9,
+        "state": "walk",
+        "clip": "Walk",
+        "phase": 0.875,
+        "tool": "axe",
+        "direction": 1,
+        "anchor": [
+          64.0,
+          74.28120040893555
+        ]
+      },
+      {
+        "i": 10,
+        "state": "attack",
+        "clip": "Attack",
+        "phase": 0,
+        "tool": "axe",
+        "direction": 1,
+        "anchor": [
+          64.0,
+          74.28120040893555
+        ]
+      },
+      {
+        "i": 11,
+        "state": "attack",
+        "clip": "Attack",
+        "phase": 0.15,
+        "tool": "axe",
+        "direction": 1,
+        "anchor": [
+          64.0,
+          74.28120040893555
+        ]
+      },
+      {
+        "i": 12,
+        "state": "attack",
+        "clip": "Attack",
+        "phase": 0.3,
+        "tool": "axe",
+        "direction": 1,
+        "anchor": [
+          64.0,
+          74.28120040893555
+        ]
+      },
+      {
+        "i": 13,
+        "state": "attack",
+        "clip": "Attack",
+        "phase": 0.5,
+        "tool": "axe",
+        "direction": 1,
+        "anchor": [
+          64.0,
+          74.28120040893555
+        ]
+      },
+      {
+        "i": 14,
+        "state": "attack",
+        "clip": "Attack",
+        "phase": 0.7,
+        "tool": "axe",
+        "direction": 1,
+        "anchor": [
+          64.0,
+          74.28120040893555
+        ]
+      },
+      {
+        "i": 15,
+        "state": "attack",
+        "clip": "Attack",
+        "phase": 0.9,
+        "tool": "axe",
+        "direction": 1,
+        "anchor": [
+          64.0,
+          74.28120040893555
+        ]
+      },
+      {
+        "i": 16,
+        "state": "hit",
+        "clip": "Hit",
+        "phase": 0.2,
+        "tool": "axe",
+        "direction": 1,
+        "anchor": [
+          64.0,
+          74.28120040893555
+        ]
+      },
+      {
+        "i": 17,
+        "state": "hit",
+        "clip": "Hit",
+        "phase": 0.55,
+        "tool": "axe",
+        "direction": 1,
+        "anchor": [
+          64.0,
+          74.28120040893555
+        ]
+      },
+      {
+        "i": 18,
+        "state": "death",
+        "clip": "Death",
+        "phase": 0.1,
+        "tool": "axe",
+        "direction": 1,
+        "anchor": [
+          64.0,
+          74.28120040893555
+        ]
+      },
+      {
+        "i": 19,
+        "state": "death",
+        "clip": "Death",
+        "phase": 0.35,
+        "tool": "axe",
+        "direction": 1,
+        "anchor": [
+          64.0,
+          74.28120040893555
+        ]
+      },
+      {
+        "i": 20,
+        "state": "death",
+        "clip": "Death",
+        "phase": 0.65,
+        "tool": "axe",
+        "direction": 1,
+        "anchor": [
+          64.0,
+          74.28120040893555
+        ]
+      },
+      {
+        "i": 21,
+        "state": "death",
+        "clip": "Death",
+        "phase": 1,
+        "tool": "axe",
+        "direction": 1,
+        "anchor": [
+          64.0,
+          74.28120040893555
+        ]
+      },
+      {
+        "i": 0,
+        "state": "idle",
+        "clip": "Idle",
+        "phase": 0.2,
+        "tool": "axe",
+        "direction": 2,
+        "anchor": [
+          64.0,
+          74.28120040893555
+        ]
+      },
+      {
+        "i": 1,
+        "state": "idle",
+        "clip": "Idle",
+        "phase": 0.7,
+        "tool": "axe",
+        "direction": 2,
+        "anchor": [
+          64.0,
+          74.28120040893555
+        ]
+      },
+      {
+        "i": 2,
+        "state": "walk",
+        "clip": "Walk",
+        "phase": 0.0,
+        "tool": "axe",
+        "direction": 2,
+        "anchor": [
+          64.0,
+          74.28120040893555
+        ]
+      },
+      {
+        "i": 3,
+        "state": "walk",
+        "clip": "Walk",
+        "phase": 0.125,
+        "tool": "axe",
+        "direction": 2,
+        "anchor": [
+          64.0,
+          74.28120040893555
+        ]
+      },
+      {
+        "i": 4,
+        "state": "walk",
+        "clip": "Walk",
+        "phase": 0.25,
+        "tool": "axe",
+        "direction": 2,
+        "anchor": [
+          64.0,
+          74.28120040893555
+        ]
+      },
+      {
+        "i": 5,
+        "state": "walk",
+        "clip": "Walk",
+        "phase": 0.375,
+        "tool": "axe",
+        "direction": 2,
+        "anchor": [
+          64.0,
+          74.28120040893555
+        ]
+      },
+      {
+        "i": 6,
+        "state": "walk",
+        "clip": "Walk",
+        "phase": 0.5,
+        "tool": "axe",
+        "direction": 2,
+        "anchor": [
+          64.0,
+          74.28120040893555
+        ]
+      },
+      {
+        "i": 7,
+        "state": "walk",
+        "clip": "Walk",
+        "phase": 0.625,
+        "tool": "axe",
+        "direction": 2,
+        "anchor": [
+          64.0,
+          74.28120040893555
+        ]
+      },
+      {
+        "i": 8,
+        "state": "walk",
+        "clip": "Walk",
+        "phase": 0.75,
+        "tool": "axe",
+        "direction": 2,
+        "anchor": [
+          64.0,
+          74.28120040893555
+        ]
+      },
+      {
+        "i": 9,
+        "state": "walk",
+        "clip": "Walk",
+        "phase": 0.875,
+        "tool": "axe",
+        "direction": 2,
+        "anchor": [
+          64.0,
+          74.28120040893555
+        ]
+      },
+      {
+        "i": 10,
+        "state": "attack",
+        "clip": "Attack",
+        "phase": 0,
+        "tool": "axe",
+        "direction": 2,
+        "anchor": [
+          64.0,
+          74.28120040893555
+        ]
+      },
+      {
+        "i": 11,
+        "state": "attack",
+        "clip": "Attack",
+        "phase": 0.15,
+        "tool": "axe",
+        "direction": 2,
+        "anchor": [
+          64.0,
+          74.28120040893555
+        ]
+      },
+      {
+        "i": 12,
+        "state": "attack",
+        "clip": "Attack",
+        "phase": 0.3,
+        "tool": "axe",
+        "direction": 2,
+        "anchor": [
+          64.0,
+          74.28120040893555
+        ]
+      },
+      {
+        "i": 13,
+        "state": "attack",
+        "clip": "Attack",
+        "phase": 0.5,
+        "tool": "axe",
+        "direction": 2,
+        "anchor": [
+          64.0,
+          74.28120040893555
+        ]
+      },
+      {
+        "i": 14,
+        "state": "attack",
+        "clip": "Attack",
+        "phase": 0.7,
+        "tool": "axe",
+        "direction": 2,
+        "anchor": [
+          64.0,
+          74.28120040893555
+        ]
+      },
+      {
+        "i": 15,
+        "state": "attack",
+        "clip": "Attack",
+        "phase": 0.9,
+        "tool": "axe",
+        "direction": 2,
+        "anchor": [
+          64.0,
+          74.28120040893555
+        ]
+      },
+      {
+        "i": 16,
+        "state": "hit",
+        "clip": "Hit",
+        "phase": 0.2,
+        "tool": "axe",
+        "direction": 2,
+        "anchor": [
+          64.0,
+          74.28120040893555
+        ]
+      },
+      {
+        "i": 17,
+        "state": "hit",
+        "clip": "Hit",
+        "phase": 0.55,
+        "tool": "axe",
+        "direction": 2,
+        "anchor": [
+          64.0,
+          74.28120040893555
+        ]
+      },
+      {
+        "i": 18,
+        "state": "death",
+        "clip": "Death",
+        "phase": 0.1,
+        "tool": "axe",
+        "direction": 2,
+        "anchor": [
+          64.0,
+          74.28120040893555
+        ]
+      },
+      {
+        "i": 19,
+        "state": "death",
+        "clip": "Death",
+        "phase": 0.35,
+        "tool": "axe",
+        "direction": 2,
+        "anchor": [
+          64.0,
+          74.28120040893555
+        ]
+      },
+      {
+        "i": 20,
+        "state": "death",
+        "clip": "Death",
+        "phase": 0.65,
+        "tool": "axe",
+        "direction": 2,
+        "anchor": [
+          64.0,
+          74.28120040893555
+        ]
+      },
+      {
+        "i": 21,
+        "state": "death",
+        "clip": "Death",
+        "phase": 1,
+        "tool": "axe",
+        "direction": 2,
+        "anchor": [
+          64.0,
+          74.28120040893555
+        ]
+      },
+      {
+        "i": 0,
+        "state": "idle",
+        "clip": "Idle",
+        "phase": 0.2,
+        "tool": "axe",
+        "direction": 3,
+        "anchor": [
+          64.0,
+          74.28120040893555
+        ]
+      },
+      {
+        "i": 1,
+        "state": "idle",
+        "clip": "Idle",
+        "phase": 0.7,
+        "tool": "axe",
+        "direction": 3,
+        "anchor": [
+          64.0,
+          74.28120040893555
+        ]
+      },
+      {
+        "i": 2,
+        "state": "walk",
+        "clip": "Walk",
+        "phase": 0.0,
+        "tool": "axe",
+        "direction": 3,
+        "anchor": [
+          64.0,
+          74.28120040893555
+        ]
+      },
+      {
+        "i": 3,
+        "state": "walk",
+        "clip": "Walk",
+        "phase": 0.125,
+        "tool": "axe",
+        "direction": 3,
+        "anchor": [
+          64.0,
+          74.28120040893555
+        ]
+      },
+      {
+        "i": 4,
+        "state": "walk",
+        "clip": "Walk",
+        "phase": 0.25,
+        "tool": "axe",
+        "direction": 3,
+        "anchor": [
+          64.0,
+          74.28120040893555
+        ]
+      },
+      {
+        "i": 5,
+        "state": "walk",
+        "clip": "Walk",
+        "phase": 0.375,
+        "tool": "axe",
+        "direction": 3,
+        "anchor": [
+          64.0,
+          74.28120040893555
+        ]
+      },
+      {
+        "i": 6,
+        "state": "walk",
+        "clip": "Walk",
+        "phase": 0.5,
+        "tool": "axe",
+        "direction": 3,
+        "anchor": [
+          64.0,
+          74.28120040893555
+        ]
+      },
+      {
+        "i": 7,
+        "state": "walk",
+        "clip": "Walk",
+        "phase": 0.625,
+        "tool": "axe",
+        "direction": 3,
+        "anchor": [
+          64.0,
+          74.28120040893555
+        ]
+      },
+      {
+        "i": 8,
+        "state": "walk",
+        "clip": "Walk",
+        "phase": 0.75,
+        "tool": "axe",
+        "direction": 3,
+        "anchor": [
+          64.0,
+          74.28120040893555
+        ]
+      },
+      {
+        "i": 9,
+        "state": "walk",
+        "clip": "Walk",
+        "phase": 0.875,
+        "tool": "axe",
+        "direction": 3,
+        "anchor": [
+          64.0,
+          74.28120040893555
+        ]
+      },
+      {
+        "i": 10,
+        "state": "attack",
+        "clip": "Attack",
+        "phase": 0,
+        "tool": "axe",
+        "direction": 3,
+        "anchor": [
+          64.0,
+          74.28120040893555
+        ]
+      },
+      {
+        "i": 11,
+        "state": "attack",
+        "clip": "Attack",
+        "phase": 0.15,
+        "tool": "axe",
+        "direction": 3,
+        "anchor": [
+          64.0,
+          74.28120040893555
+        ]
+      },
+      {
+        "i": 12,
+        "state": "attack",
+        "clip": "Attack",
+        "phase": 0.3,
+        "tool": "axe",
+        "direction": 3,
+        "anchor": [
+          64.0,
+          74.28120040893555
+        ]
+      },
+      {
+        "i": 13,
+        "state": "attack",
+        "clip": "Attack",
+        "phase": 0.5,
+        "tool": "axe",
+        "direction": 3,
+        "anchor": [
+          64.0,
+          74.28120040893555
+        ]
+      },
+      {
+        "i": 14,
+        "state": "attack",
+        "clip": "Attack",
+        "phase": 0.7,
+        "tool": "axe",
+        "direction": 3,
+        "anchor": [
+          64.0,
+          74.28120040893555
+        ]
+      },
+      {
+        "i": 15,
+        "state": "attack",
+        "clip": "Attack",
+        "phase": 0.9,
+        "tool": "axe",
+        "direction": 3,
+        "anchor": [
+          64.0,
+          74.28120040893555
+        ]
+      },
+      {
+        "i": 16,
+        "state": "hit",
+        "clip": "Hit",
+        "phase": 0.2,
+        "tool": "axe",
+        "direction": 3,
+        "anchor": [
+          64.0,
+          74.28120040893555
+        ]
+      },
+      {
+        "i": 17,
+        "state": "hit",
+        "clip": "Hit",
+        "phase": 0.55,
+        "tool": "axe",
+        "direction": 3,
+        "anchor": [
+          64.0,
+          74.28120040893555
+        ]
+      },
+      {
+        "i": 18,
+        "state": "death",
+        "clip": "Death",
+        "phase": 0.1,
+        "tool": "axe",
+        "direction": 3,
+        "anchor": [
+          64.0,
+          74.28120040893555
+        ]
+      },
+      {
+        "i": 19,
+        "state": "death",
+        "clip": "Death",
+        "phase": 0.35,
+        "tool": "axe",
+        "direction": 3,
+        "anchor": [
+          64.0,
+          74.28120040893555
+        ]
+      },
+      {
+        "i": 20,
+        "state": "death",
+        "clip": "Death",
+        "phase": 0.65,
+        "tool": "axe",
+        "direction": 3,
+        "anchor": [
+          64.0,
+          74.28120040893555
+        ]
+      },
+      {
+        "i": 21,
+        "state": "death",
+        "clip": "Death",
+        "phase": 1,
+        "tool": "axe",
+        "direction": 3,
+        "anchor": [
+          64.0,
+          74.28120040893555
+        ]
+      },
+      {
+        "i": 0,
+        "state": "idle",
+        "clip": "Idle",
+        "phase": 0.2,
+        "tool": "axe",
+        "direction": 4,
+        "anchor": [
+          64.0,
+          74.28120040893555
+        ]
+      },
+      {
+        "i": 1,
+        "state": "idle",
+        "clip": "Idle",
+        "phase": 0.7,
+        "tool": "axe",
+        "direction": 4,
+        "anchor": [
+          64.0,
+          74.28120040893555
+        ]
+      },
+      {
+        "i": 2,
+        "state": "walk",
+        "clip": "Walk",
+        "phase": 0.0,
+        "tool": "axe",
+        "direction": 4,
+        "anchor": [
+          64.0,
+          74.28120040893555
+        ]
+      },
+      {
+        "i": 3,
+        "state": "walk",
+        "clip": "Walk",
+        "phase": 0.125,
+        "tool": "axe",
+        "direction": 4,
+        "anchor": [
+          64.0,
+          74.28120040893555
+        ]
+      },
+      {
+        "i": 4,
+        "state": "walk",
+        "clip": "Walk",
+        "phase": 0.25,
+        "tool": "axe",
+        "direction": 4,
+        "anchor": [
+          64.0,
+          74.28120040893555
+        ]
+      },
+      {
+        "i": 5,
+        "state": "walk",
+        "clip": "Walk",
+        "phase": 0.375,
+        "tool": "axe",
+        "direction": 4,
+        "anchor": [
+          64.0,
+          74.28120040893555
+        ]
+      },
+      {
+        "i": 6,
+        "state": "walk",
+        "clip": "Walk",
+        "phase": 0.5,
+        "tool": "axe",
+        "direction": 4,
+        "anchor": [
+          64.0,
+          74.28120040893555
+        ]
+      },
+      {
+        "i": 7,
+        "state": "walk",
+        "clip": "Walk",
+        "phase": 0.625,
+        "tool": "axe",
+        "direction": 4,
+        "anchor": [
+          64.0,
+          74.28120040893555
+        ]
+      },
+      {
+        "i": 8,
+        "state": "walk",
+        "clip": "Walk",
+        "phase": 0.75,
+        "tool": "axe",
+        "direction": 4,
+        "anchor": [
+          64.0,
+          74.28120040893555
+        ]
+      },
+      {
+        "i": 9,
+        "state": "walk",
+        "clip": "Walk",
+        "phase": 0.875,
+        "tool": "axe",
+        "direction": 4,
+        "anchor": [
+          64.0,
+          74.28120040893555
+        ]
+      },
+      {
+        "i": 10,
+        "state": "attack",
+        "clip": "Attack",
+        "phase": 0,
+        "tool": "axe",
+        "direction": 4,
+        "anchor": [
+          64.0,
+          74.28120040893555
+        ]
+      },
+      {
+        "i": 11,
+        "state": "attack",
+        "clip": "Attack",
+        "phase": 0.15,
+        "tool": "axe",
+        "direction": 4,
+        "anchor": [
+          64.0,
+          74.28120040893555
+        ]
+      },
+      {
+        "i": 12,
+        "state": "attack",
+        "clip": "Attack",
+        "phase": 0.3,
+        "tool": "axe",
+        "direction": 4,
+        "anchor": [
+          64.0,
+          74.28120040893555
+        ]
+      },
+      {
+        "i": 13,
+        "state": "attack",
+        "clip": "Attack",
+        "phase": 0.5,
+        "tool": "axe",
+        "direction": 4,
+        "anchor": [
+          64.0,
+          74.28120040893555
+        ]
+      },
+      {
+        "i": 14,
+        "state": "attack",
+        "clip": "Attack",
+        "phase": 0.7,
+        "tool": "axe",
+        "direction": 4,
+        "anchor": [
+          64.0,
+          74.28120040893555
+        ]
+      },
+      {
+        "i": 15,
+        "state": "attack",
+        "clip": "Attack",
+        "phase": 0.9,
+        "tool": "axe",
+        "direction": 4,
+        "anchor": [
+          64.0,
+          74.28120040893555
+        ]
+      },
+      {
+        "i": 16,
+        "state": "hit",
+        "clip": "Hit",
+        "phase": 0.2,
+        "tool": "axe",
+        "direction": 4,
+        "anchor": [
+          64.0,
+          74.28120040893555
+        ]
+      },
+      {
+        "i": 17,
+        "state": "hit",
+        "clip": "Hit",
+        "phase": 0.55,
+        "tool": "axe",
+        "direction": 4,
+        "anchor": [
+          64.0,
+          74.28120040893555
+        ]
+      },
+      {
+        "i": 18,
+        "state": "death",
+        "clip": "Death",
+        "phase": 0.1,
+        "tool": "axe",
+        "direction": 4,
+        "anchor": [
+          64.0,
+          74.28120040893555
+        ]
+      },
+      {
+        "i": 19,
+        "state": "death",
+        "clip": "Death",
+        "phase": 0.35,
+        "tool": "axe",
+        "direction": 4,
+        "anchor": [
+          64.0,
+          74.28120040893555
+        ]
+      },
+      {
+        "i": 20,
+        "state": "death",
+        "clip": "Death",
+        "phase": 0.65,
+        "tool": "axe",
+        "direction": 4,
+        "anchor": [
+          64.0,
+          74.28120040893555
+        ]
+      },
+      {
+        "i": 21,
+        "state": "death",
+        "clip": "Death",
+        "phase": 1,
+        "tool": "axe",
+        "direction": 4,
+        "anchor": [
+          64.0,
+          74.28120040893555
+        ]
+      },
+      {
+        "i": 0,
+        "state": "idle",
+        "clip": "Idle",
+        "phase": 0.2,
+        "tool": "axe",
+        "direction": 5,
+        "anchor": [
+          64.0,
+          74.28120040893555
+        ]
+      },
+      {
+        "i": 1,
+        "state": "idle",
+        "clip": "Idle",
+        "phase": 0.7,
+        "tool": "axe",
+        "direction": 5,
+        "anchor": [
+          64.0,
+          74.28120040893555
+        ]
+      },
+      {
+        "i": 2,
+        "state": "walk",
+        "clip": "Walk",
+        "phase": 0.0,
+        "tool": "axe",
+        "direction": 5,
+        "anchor": [
+          64.0,
+          74.28120040893555
+        ]
+      },
+      {
+        "i": 3,
+        "state": "walk",
+        "clip": "Walk",
+        "phase": 0.125,
+        "tool": "axe",
+        "direction": 5,
+        "anchor": [
+          64.0,
+          74.28120040893555
+        ]
+      },
+      {
+        "i": 4,
+        "state": "walk",
+        "clip": "Walk",
+        "phase": 0.25,
+        "tool": "axe",
+        "direction": 5,
+        "anchor": [
+          64.0,
+          74.28120040893555
+        ]
+      },
+      {
+        "i": 5,
+        "state": "walk",
+        "clip": "Walk",
+        "phase": 0.375,
+        "tool": "axe",
+        "direction": 5,
+        "anchor": [
+          64.0,
+          74.28120040893555
+        ]
+      },
+      {
+        "i": 6,
+        "state": "walk",
+        "clip": "Walk",
+        "phase": 0.5,
+        "tool": "axe",
+        "direction": 5,
+        "anchor": [
+          64.0,
+          74.28120040893555
+        ]
+      },
+      {
+        "i": 7,
+        "state": "walk",
+        "clip": "Walk",
+        "phase": 0.625,
+        "tool": "axe",
+        "direction": 5,
+        "anchor": [
+          64.0,
+          74.28120040893555
+        ]
+      },
+      {
+        "i": 8,
+        "state": "walk",
+        "clip": "Walk",
+        "phase": 0.75,
+        "tool": "axe",
+        "direction": 5,
+        "anchor": [
+          64.0,
+          74.28120040893555
+        ]
+      },
+      {
+        "i": 9,
+        "state": "walk",
+        "clip": "Walk",
+        "phase": 0.875,
+        "tool": "axe",
+        "direction": 5,
+        "anchor": [
+          64.0,
+          74.28120040893555
+        ]
+      },
+      {
+        "i": 10,
+        "state": "attack",
+        "clip": "Attack",
+        "phase": 0,
+        "tool": "axe",
+        "direction": 5,
+        "anchor": [
+          64.0,
+          74.28120040893555
+        ]
+      },
+      {
+        "i": 11,
+        "state": "attack",
+        "clip": "Attack",
+        "phase": 0.15,
+        "tool": "axe",
+        "direction": 5,
+        "anchor": [
+          64.0,
+          74.28120040893555
+        ]
+      },
+      {
+        "i": 12,
+        "state": "attack",
+        "clip": "Attack",
+        "phase": 0.3,
+        "tool": "axe",
+        "direction": 5,
+        "anchor": [
+          64.0,
+          74.28120040893555
+        ]
+      },
+      {
+        "i": 13,
+        "state": "attack",
+        "clip": "Attack",
+        "phase": 0.5,
+        "tool": "axe",
+        "direction": 5,
+        "anchor": [
+          64.0,
+          74.28120040893555
+        ]
+      },
+      {
+        "i": 14,
+        "state": "attack",
+        "clip": "Attack",
+        "phase": 0.7,
+        "tool": "axe",
+        "direction": 5,
+        "anchor": [
+          64.0,
+          74.28120040893555
+        ]
+      },
+      {
+        "i": 15,
+        "state": "attack",
+        "clip": "Attack",
+        "phase": 0.9,
+        "tool": "axe",
+        "direction": 5,
+        "anchor": [
+          64.0,
+          74.28120040893555
+        ]
+      },
+      {
+        "i": 16,
+        "state": "hit",
+        "clip": "Hit",
+        "phase": 0.2,
+        "tool": "axe",
+        "direction": 5,
+        "anchor": [
+          64.0,
+          74.28120040893555
+        ]
+      },
+      {
+        "i": 17,
+        "state": "hit",
+        "clip": "Hit",
+        "phase": 0.55,
+        "tool": "axe",
+        "direction": 5,
+        "anchor": [
+          64.0,
+          74.28120040893555
+        ]
+      },
+      {
+        "i": 18,
+        "state": "death",
+        "clip": "Death",
+        "phase": 0.1,
+        "tool": "axe",
+        "direction": 5,
+        "anchor": [
+          64.0,
+          74.28120040893555
+        ]
+      },
+      {
+        "i": 19,
+        "state": "death",
+        "clip": "Death",
+        "phase": 0.35,
+        "tool": "axe",
+        "direction": 5,
+        "anchor": [
+          64.0,
+          74.28120040893555
+        ]
+      },
+      {
+        "i": 20,
+        "state": "death",
+        "clip": "Death",
+        "phase": 0.65,
+        "tool": "axe",
+        "direction": 5,
+        "anchor": [
+          64.0,
+          74.28120040893555
+        ]
+      },
+      {
+        "i": 21,
+        "state": "death",
+        "clip": "Death",
+        "phase": 1,
+        "tool": "axe",
+        "direction": 5,
+        "anchor": [
+          64.0,
+          74.28120040893555
+        ]
+      },
+      {
+        "i": 0,
+        "state": "idle",
+        "clip": "Idle",
+        "phase": 0.2,
+        "tool": "axe",
+        "direction": 6,
+        "anchor": [
+          64.0,
+          74.28120040893555
+        ]
+      },
+      {
+        "i": 1,
+        "state": "idle",
+        "clip": "Idle",
+        "phase": 0.7,
+        "tool": "axe",
+        "direction": 6,
+        "anchor": [
+          64.0,
+          74.28120040893555
+        ]
+      },
+      {
+        "i": 2,
+        "state": "walk",
+        "clip": "Walk",
+        "phase": 0.0,
+        "tool": "axe",
+        "direction": 6,
+        "anchor": [
+          64.0,
+          74.28120040893555
+        ]
+      },
+      {
+        "i": 3,
+        "state": "walk",
+        "clip": "Walk",
+        "phase": 0.125,
+        "tool": "axe",
+        "direction": 6,
+        "anchor": [
+          64.0,
+          74.28120040893555
+        ]
+      },
+      {
+        "i": 4,
+        "state": "walk",
+        "clip": "Walk",
+        "phase": 0.25,
+        "tool": "axe",
+        "direction": 6,
+        "anchor": [
+          64.0,
+          74.28120040893555
+        ]
+      },
+      {
+        "i": 5,
+        "state": "walk",
+        "clip": "Walk",
+        "phase": 0.375,
+        "tool": "axe",
+        "direction": 6,
+        "anchor": [
+          64.0,
+          74.28120040893555
+        ]
+      },
+      {
+        "i": 6,
+        "state": "walk",
+        "clip": "Walk",
+        "phase": 0.5,
+        "tool": "axe",
+        "direction": 6,
+        "anchor": [
+          64.0,
+          74.28120040893555
+        ]
+      },
+      {
+        "i": 7,
+        "state": "walk",
+        "clip": "Walk",
+        "phase": 0.625,
+        "tool": "axe",
+        "direction": 6,
+        "anchor": [
+          64.0,
+          74.28120040893555
+        ]
+      },
+      {
+        "i": 8,
+        "state": "walk",
+        "clip": "Walk",
+        "phase": 0.75,
+        "tool": "axe",
+        "direction": 6,
+        "anchor": [
+          64.0,
+          74.28120040893555
+        ]
+      },
+      {
+        "i": 9,
+        "state": "walk",
+        "clip": "Walk",
+        "phase": 0.875,
+        "tool": "axe",
+        "direction": 6,
+        "anchor": [
+          64.0,
+          74.28120040893555
+        ]
+      },
+      {
+        "i": 10,
+        "state": "attack",
+        "clip": "Attack",
+        "phase": 0,
+        "tool": "axe",
+        "direction": 6,
+        "anchor": [
+          64.0,
+          74.28120040893555
+        ]
+      },
+      {
+        "i": 11,
+        "state": "attack",
+        "clip": "Attack",
+        "phase": 0.15,
+        "tool": "axe",
+        "direction": 6,
+        "anchor": [
+          64.0,
+          74.28120040893555
+        ]
+      },
+      {
+        "i": 12,
+        "state": "attack",
+        "clip": "Attack",
+        "phase": 0.3,
+        "tool": "axe",
+        "direction": 6,
+        "anchor": [
+          64.0,
+          74.28120040893555
+        ]
+      },
+      {
+        "i": 13,
+        "state": "attack",
+        "clip": "Attack",
+        "phase": 0.5,
+        "tool": "axe",
+        "direction": 6,
+        "anchor": [
+          64.0,
+          74.28120040893555
+        ]
+      },
+      {
+        "i": 14,
+        "state": "attack",
+        "clip": "Attack",
+        "phase": 0.7,
+        "tool": "axe",
+        "direction": 6,
+        "anchor": [
+          64.0,
+          74.28120040893555
+        ]
+      },
+      {
+        "i": 15,
+        "state": "attack",
+        "clip": "Attack",
+        "phase": 0.9,
+        "tool": "axe",
+        "direction": 6,
+        "anchor": [
+          64.0,
+          74.28120040893555
+        ]
+      },
+      {
+        "i": 16,
+        "state": "hit",
+        "clip": "Hit",
+        "phase": 0.2,
+        "tool": "axe",
+        "direction": 6,
+        "anchor": [
+          64.0,
+          74.28120040893555
+        ]
+      },
+      {
+        "i": 17,
+        "state": "hit",
+        "clip": "Hit",
+        "phase": 0.55,
+        "tool": "axe",
+        "direction": 6,
+        "anchor": [
+          64.0,
+          74.28120040893555
+        ]
+      },
+      {
+        "i": 18,
+        "state": "death",
+        "clip": "Death",
+        "phase": 0.1,
+        "tool": "axe",
+        "direction": 6,
+        "anchor": [
+          64.0,
+          74.28120040893555
+        ]
+      },
+      {
+        "i": 19,
+        "state": "death",
+        "clip": "Death",
+        "phase": 0.35,
+        "tool": "axe",
+        "direction": 6,
+        "anchor": [
+          64.0,
+          74.28120040893555
+        ]
+      },
+      {
+        "i": 20,
+        "state": "death",
+        "clip": "Death",
+        "phase": 0.65,
+        "tool": "axe",
+        "direction": 6,
+        "anchor": [
+          64.0,
+          74.28120040893555
+        ]
+      },
+      {
+        "i": 21,
+        "state": "death",
+        "clip": "Death",
+        "phase": 1,
+        "tool": "axe",
+        "direction": 6,
+        "anchor": [
+          64.0,
+          74.28120040893555
+        ]
+      },
+      {
+        "i": 0,
+        "state": "idle",
+        "clip": "Idle",
+        "phase": 0.2,
+        "tool": "axe",
+        "direction": 7,
+        "anchor": [
+          64.0,
+          74.28120040893555
+        ]
+      },
+      {
+        "i": 1,
+        "state": "idle",
+        "clip": "Idle",
+        "phase": 0.7,
+        "tool": "axe",
+        "direction": 7,
+        "anchor": [
+          64.0,
+          74.28120040893555
+        ]
+      },
+      {
+        "i": 2,
+        "state": "walk",
+        "clip": "Walk",
+        "phase": 0.0,
+        "tool": "axe",
+        "direction": 7,
+        "anchor": [
+          64.0,
+          74.28120040893555
+        ]
+      },
+      {
+        "i": 3,
+        "state": "walk",
+        "clip": "Walk",
+        "phase": 0.125,
+        "tool": "axe",
+        "direction": 7,
+        "anchor": [
+          64.0,
+          74.28120040893555
+        ]
+      },
+      {
+        "i": 4,
+        "state": "walk",
+        "clip": "Walk",
+        "phase": 0.25,
+        "tool": "axe",
+        "direction": 7,
+        "anchor": [
+          64.0,
+          74.28120040893555
+        ]
+      },
+      {
+        "i": 5,
+        "state": "walk",
+        "clip": "Walk",
+        "phase": 0.375,
+        "tool": "axe",
+        "direction": 7,
+        "anchor": [
+          64.0,
+          74.28120040893555
+        ]
+      },
+      {
+        "i": 6,
+        "state": "walk",
+        "clip": "Walk",
+        "phase": 0.5,
+        "tool": "axe",
+        "direction": 7,
+        "anchor": [
+          64.0,
+          74.28120040893555
+        ]
+      },
+      {
+        "i": 7,
+        "state": "walk",
+        "clip": "Walk",
+        "phase": 0.625,
+        "tool": "axe",
+        "direction": 7,
+        "anchor": [
+          64.0,
+          74.28120040893555
+        ]
+      },
+      {
+        "i": 8,
+        "state": "walk",
+        "clip": "Walk",
+        "phase": 0.75,
+        "tool": "axe",
+        "direction": 7,
+        "anchor": [
+          64.0,
+          74.28120040893555
+        ]
+      },
+      {
+        "i": 9,
+        "state": "walk",
+        "clip": "Walk",
+        "phase": 0.875,
+        "tool": "axe",
+        "direction": 7,
+        "anchor": [
+          64.0,
+          74.28120040893555
+        ]
+      },
+      {
+        "i": 10,
+        "state": "attack",
+        "clip": "Attack",
+        "phase": 0,
+        "tool": "axe",
+        "direction": 7,
+        "anchor": [
+          64.0,
+          74.28120040893555
+        ]
+      },
+      {
+        "i": 11,
+        "state": "attack",
+        "clip": "Attack",
+        "phase": 0.15,
+        "tool": "axe",
+        "direction": 7,
+        "anchor": [
+          64.0,
+          74.28120040893555
+        ]
+      },
+      {
+        "i": 12,
+        "state": "attack",
+        "clip": "Attack",
+        "phase": 0.3,
+        "tool": "axe",
+        "direction": 7,
+        "anchor": [
+          64.0,
+          74.28120040893555
+        ]
+      },
+      {
+        "i": 13,
+        "state": "attack",
+        "clip": "Attack",
+        "phase": 0.5,
+        "tool": "axe",
+        "direction": 7,
+        "anchor": [
+          64.0,
+          74.28120040893555
+        ]
+      },
+      {
+        "i": 14,
+        "state": "attack",
+        "clip": "Attack",
+        "phase": 0.7,
+        "tool": "axe",
+        "direction": 7,
+        "anchor": [
+          64.0,
+          74.28120040893555
+        ]
+      },
+      {
+        "i": 15,
+        "state": "attack",
+        "clip": "Attack",
+        "phase": 0.9,
+        "tool": "axe",
+        "direction": 7,
+        "anchor": [
+          64.0,
+          74.28120040893555
+        ]
+      },
+      {
+        "i": 16,
+        "state": "hit",
+        "clip": "Hit",
+        "phase": 0.2,
+        "tool": "axe",
+        "direction": 7,
+        "anchor": [
+          64.0,
+          74.28120040893555
+        ]
+      },
+      {
+        "i": 17,
+        "state": "hit",
+        "clip": "Hit",
+        "phase": 0.55,
+        "tool": "axe",
+        "direction": 7,
+        "anchor": [
+          64.0,
+          74.28120040893555
+        ]
+      },
+      {
+        "i": 18,
+        "state": "death",
+        "clip": "Death",
+        "phase": 0.1,
+        "tool": "axe",
+        "direction": 7,
+        "anchor": [
+          64.0,
+          74.28120040893555
+        ]
+      },
+      {
+        "i": 19,
+        "state": "death",
+        "clip": "Death",
+        "phase": 0.35,
+        "tool": "axe",
+        "direction": 7,
+        "anchor": [
+          64.0,
+          74.28120040893555
+        ]
+      },
+      {
+        "i": 20,
+        "state": "death",
+        "clip": "Death",
+        "phase": 0.65,
+        "tool": "axe",
+        "direction": 7,
+        "anchor": [
+          64.0,
+          74.28120040893555
+        ]
+      },
+      {
+        "i": 21,
+        "state": "death",
+        "clip": "Death",
+        "phase": 1,
+        "tool": "axe",
+        "direction": 7,
+        "anchor": [
+          64.0,
+          74.28120040893555
+        ]
+      }
+    ],
+    "resolution": 128,
+    "cpuSamples": 2
+  }
+}

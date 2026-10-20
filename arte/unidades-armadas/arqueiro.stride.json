@@ -1,0 +1,23 @@
+{
+  "unit": "arqueiro",
+  "method": "Median backwards foot velocity during low ground stance, per normalized clip cycle; both feet; orthographic game projection at 30px.",
+  "screenPixelsPerMeter": 18.76496944230318,
+  "metersPerTile": 2.411665744252048,
+  "foot": {
+    "LeftFoot": {
+      "stanceTravelPerCycleMeters": 1.0273164510726929,
+      "stanceSampleCount": 66,
+      "swingRangeMeters": 0.6137020438909531
+    },
+    "RightFoot": {
+      "stanceTravelPerCycleMeters": 0.8482159674167633,
+      "stanceSampleCount": 67,
+      "swingRangeMeters": 0.5583461672067642
+    }
+  },
+  "strideMeters": 0.9377662092447281,
+  "strideTiles": 0.3888458470995806,
+  "recommendedAnimFactor": 16.15855062885758,
+  "visualPhaseMultiplier": 3.231710125771516,
+  "durationSeconds": 1.3333333333333333
+}

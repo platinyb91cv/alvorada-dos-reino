@@ -1,0 +1,7127 @@
+{
+  "unit": "aldeao",
+  "reimported": true,
+  "reimportedClipsDistinct": true,
+  "bones": 24,
+  "boneNames": [
+    "Hips",
+    "LeftUpLeg",
+    "LeftLeg",
+    "LeftFoot",
+    "LeftToeBase",
+    "RightUpLeg",
+    "RightLeg",
+    "RightFoot",
+    "RightToeBase",
+    "Spine02",
+    "Spine01",
+    "Spine",
+    "LeftShoulder",
+    "LeftArm",
+    "LeftForeArm",
+    "LeftHand",
+    "neck",
+    "Head",
+    "head_end",
+    "headfront",
+    "RightShoulder",
+    "RightArm",
+    "RightForeArm",
+    "RightHand"
+  ],
+  "clips": [
+    "Idle",
+    "Walk",
+    "Attack",
+    "Hit",
+    "Death",
+    "Chop",
+    "Mine",
+    "Harvest",
+    "Carry",
+    "Farm",
+    "Build",
+    "Butcher"
+  ],
+  "horizontalRootDriftMetresByClip": {
+    "Idle": 3.5762786865234374e-09,
+    "Walk": 4.172325134277344e-09,
+    "Attack": 5.364418029785156e-09,
+    "Hit": 5.960464477539063e-09,
+    "Death": 1.5020370483398438e-07,
+    "Chop": 0.0,
+    "Mine": 5.364418029785156e-09,
+    "Harvest": 7.748603820800782e-09,
+    "Carry": 5.960464477539063e-09,
+    "Farm": 7.748603820800782e-09,
+    "Build": 7.152557373046875e-09,
+    "Butcher": 5.960464477539063e-09
+  },
+  "sha256": "70263be1291913d9241391502242e50ae506d3834f2c1e60948a2c19d7fa6add",
+  "sourceSha256": "be2fea0a7c3134d31ec8b1701512fc52b4a600317866d12196b6fe3fa1289fa0",
+  "bodyTriangles": 100080,
+  "bytes": 23681524,
+  "additionalMeshyCredits": 0,
+  "supportHandMaximumResidualMetres": 0,
+  "source": "Existing Meshy models and motions; local posture/hand layers and villager retarget; no paid requests",
+  "clipDurationsSeconds": {
+    "Idle": 1.375,
+    "Walk": 1.375,
+    "Attack": 1.375,
+    "Hit": 1.375,
+    "Death": 1.375,
+    "Chop": 1.375,
+    "Mine": 1.375,
+    "Harvest": 1.375,
+    "Carry": 1.375,
+    "Farm": 1.375,
+    "Build": 1.375,
+    "Butcher": 1.375
+  },
+  "atlasSha256": "0d1049c01aacd1493c7a5282f4d201950fb6157bb3b8c3c2eb7464caaf5bb025",
+  "locomotion": {
+    "walk": {
+      "phaseScale": 3.401938184264104,
+      "strideTiles": 0.3693885642157101,
+      "animFactor": 17.00969092132052
+    },
+    "carry": {
+      "phaseScale": 4.708602740567565,
+      "strideTiles": 0.26688109629831397,
+      "animFactor": 23.543013702837822
+    }
+  },
+  "render": {
+    "sourceModelSha256": "70263be1291913d9241391502242e50ae506d3834f2c1e60948a2c19d7fa6add",
+    "bodyReferencePixels": 38.530421797244436,
+    "unit": "aldeao",
+    "directions": 8,
+    "framesPerDirection": 72,
+    "states": {
+      "idle": [
+        0,
+        1
+      ],
+      "walk": [
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9
+      ],
+      "attack": [
+        10,
+        11,
+        12,
+        13,
+        14,
+        15
+      ],
+      "hit": [
+        16,
+        17
+      ],
+      "death": [
+        18,
+        19,
+        20,
+        21
+      ],
+      "chop": [
+        22,
+        23,
+        24,
+        25,
+        26,
+        27
+      ],
+      "mine": [
+        28,
+        29,
+        30,
+        31,
+        32,
+        33
+      ],
+      "build": [
+        34,
+        35,
+        36,
+        37,
+        38,
+        39
+      ],
+      "farm": [
+        40,
+        41,
+        42,
+        43,
+        44,
+        45
+      ],
+      "forage": [
+        46,
+        47,
+        48,
+        49,
+        50,
+        51
+      ],
+      "hunt": [
+        52,
+        53,
+        54,
+        55,
+        56,
+        57
+      ],
+      "butcher": [
+        58,
+        59,
+        60,
+        61,
+        62,
+        63
+      ],
+      "carry": [
+        64,
+        65,
+        66,
+        67,
+        68,
+        69,
+        70,
+        71
+      ]
+    },
+    "labels": [
+      "SE",
+      "S",
+      "SW",
+      "W",
+      "NW",
+      "N",
+      "NE",
+      "E"
+    ],
+    "frames": [
+      {
+        "i": 0,
+        "state": "idle",
+        "clip": "Idle",
+        "phase": 0.2,
+        "tool": null,
+        "direction": 0,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 1,
+        "state": "idle",
+        "clip": "Idle",
+        "phase": 0.7,
+        "tool": null,
+        "direction": 0,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 2,
+        "state": "walk",
+        "clip": "Walk",
+        "phase": 0.0,
+        "tool": null,
+        "direction": 0,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 3,
+        "state": "walk",
+        "clip": "Walk",
+        "phase": 0.125,
+        "tool": null,
+        "direction": 0,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 4,
+        "state": "walk",
+        "clip": "Walk",
+        "phase": 0.25,
+        "tool": null,
+        "direction": 0,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 5,
+        "state": "walk",
+        "clip": "Walk",
+        "phase": 0.375,
+        "tool": null,
+        "direction": 0,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 6,
+        "state": "walk",
+        "clip": "Walk",
+        "phase": 0.5,
+        "tool": null,
+        "direction": 0,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 7,
+        "state": "walk",
+        "clip": "Walk",
+        "phase": 0.625,
+        "tool": null,
+        "direction": 0,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 8,
+        "state": "walk",
+        "clip": "Walk",
+        "phase": 0.75,
+        "tool": null,
+        "direction": 0,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 9,
+        "state": "walk",
+        "clip": "Walk",
+        "phase": 0.875,
+        "tool": null,
+        "direction": 0,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 10,
+        "state": "attack",
+        "clip": "Attack",
+        "phase": 0,
+        "tool": "hammer",
+        "direction": 0,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 11,
+        "state": "attack",
+        "clip": "Attack",
+        "phase": 0.15,
+        "tool": "hammer",
+        "direction": 0,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 12,
+        "state": "attack",
+        "clip": "Attack",
+        "phase": 0.3,
+        "tool": "hammer",
+        "direction": 0,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 13,
+        "state": "attack",
+        "clip": "Attack",
+        "phase": 0.5,
+        "tool": "hammer",
+        "direction": 0,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 14,
+        "state": "attack",
+        "clip": "Attack",
+        "phase": 0.7,
+        "tool": "hammer",
+        "direction": 0,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 15,
+        "state": "attack",
+        "clip": "Attack",
+        "phase": 0.9,
+        "tool": "hammer",
+        "direction": 0,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 16,
+        "state": "hit",
+        "clip": "Hit",
+        "phase": 0.2,
+        "tool": null,
+        "direction": 0,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 17,
+        "state": "hit",
+        "clip": "Hit",
+        "phase": 0.55,
+        "tool": null,
+        "direction": 0,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 18,
+        "state": "death",
+        "clip": "Death",
+        "phase": 0.1,
+        "tool": null,
+        "direction": 0,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 19,
+        "state": "death",
+        "clip": "Death",
+        "phase": 0.35,
+        "tool": null,
+        "direction": 0,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 20,
+        "state": "death",
+        "clip": "Death",
+        "phase": 0.65,
+        "tool": null,
+        "direction": 0,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 21,
+        "state": "death",
+        "clip": "Death",
+        "phase": 1,
+        "tool": null,
+        "direction": 0,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 22,
+        "state": "chop",
+        "clip": "Chop",
+        "phase": 0.05,
+        "tool": "axe",
+        "direction": 0,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 23,
+        "state": "chop",
+        "clip": "Chop",
+        "phase": 0.2,
+        "tool": "axe",
+        "direction": 0,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 24,
+        "state": "chop",
+        "clip": "Chop",
+        "phase": 0.35,
+        "tool": "axe",
+        "direction": 0,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 25,
+        "state": "chop",
+        "clip": "Chop",
+        "phase": 0.5,
+        "tool": "axe",
+        "direction": 0,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 26,
+        "state": "chop",
+        "clip": "Chop",
+        "phase": 0.65,
+        "tool": "axe",
+        "direction": 0,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 27,
+        "state": "chop",
+        "clip": "Chop",
+        "phase": 0.8,
+        "tool": "axe",
+        "direction": 0,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 28,
+        "state": "mine",
+        "clip": "Mine",
+        "phase": 0.05,
+        "tool": "pick",
+        "direction": 0,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 29,
+        "state": "mine",
+        "clip": "Mine",
+        "phase": 0.2,
+        "tool": "pick",
+        "direction": 0,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 30,
+        "state": "mine",
+        "clip": "Mine",
+        "phase": 0.35,
+        "tool": "pick",
+        "direction": 0,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 31,
+        "state": "mine",
+        "clip": "Mine",
+        "phase": 0.5,
+        "tool": "pick",
+        "direction": 0,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 32,
+        "state": "mine",
+        "clip": "Mine",
+        "phase": 0.65,
+        "tool": "pick",
+        "direction": 0,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 33,
+        "state": "mine",
+        "clip": "Mine",
+        "phase": 0.8,
+        "tool": "pick",
+        "direction": 0,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 34,
+        "state": "build",
+        "clip": "Build",
+        "phase": 0.05,
+        "tool": "build_hammer",
+        "direction": 0,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 35,
+        "state": "build",
+        "clip": "Build",
+        "phase": 0.2,
+        "tool": "build_hammer",
+        "direction": 0,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 36,
+        "state": "build",
+        "clip": "Build",
+        "phase": 0.35,
+        "tool": "build_hammer",
+        "direction": 0,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 37,
+        "state": "build",
+        "clip": "Build",
+        "phase": 0.5,
+        "tool": "build_hammer",
+        "direction": 0,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 38,
+        "state": "build",
+        "clip": "Build",
+        "phase": 0.65,
+        "tool": "build_hammer",
+        "direction": 0,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 39,
+        "state": "build",
+        "clip": "Build",
+        "phase": 0.8,
+        "tool": "build_hammer",
+        "direction": 0,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 40,
+        "state": "farm",
+        "clip": "Farm",
+        "phase": 0.05,
+        "tool": "hoe",
+        "direction": 0,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 41,
+        "state": "farm",
+        "clip": "Farm",
+        "phase": 0.2,
+        "tool": "hoe",
+        "direction": 0,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 42,
+        "state": "farm",
+        "clip": "Farm",
+        "phase": 0.35,
+        "tool": "hoe",
+        "direction": 0,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 43,
+        "state": "farm",
+        "clip": "Farm",
+        "phase": 0.5,
+        "tool": "hoe",
+        "direction": 0,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 44,
+        "state": "farm",
+        "clip": "Farm",
+        "phase": 0.65,
+        "tool": "hoe",
+        "direction": 0,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 45,
+        "state": "farm",
+        "clip": "Farm",
+        "phase": 0.8,
+        "tool": "hoe",
+        "direction": 0,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 46,
+        "state": "forage",
+        "clip": "Harvest",
+        "phase": 0.05,
+        "tool": "basket",
+        "direction": 0,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 47,
+        "state": "forage",
+        "clip": "Harvest",
+        "phase": 0.2,
+        "tool": "basket",
+        "direction": 0,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 48,
+        "state": "forage",
+        "clip": "Harvest",
+        "phase": 0.35,
+        "tool": "basket",
+        "direction": 0,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 49,
+        "state": "forage",
+        "clip": "Harvest",
+        "phase": 0.5,
+        "tool": "basket",
+        "direction": 0,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 50,
+        "state": "forage",
+        "clip": "Harvest",
+        "phase": 0.65,
+        "tool": "basket",
+        "direction": 0,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 51,
+        "state": "forage",
+        "clip": "Harvest",
+        "phase": 0.8,
+        "tool": "basket",
+        "direction": 0,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 52,
+        "state": "hunt",
+        "clip": "Attack",
+        "phase": 0.05,
+        "tool": "spear",
+        "direction": 0,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 53,
+        "state": "hunt",
+        "clip": "Attack",
+        "phase": 0.2,
+        "tool": "spear",
+        "direction": 0,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 54,
+        "state": "hunt",
+        "clip": "Attack",
+        "phase": 0.35,
+        "tool": "spear",
+        "direction": 0,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 55,
+        "state": "hunt",
+        "clip": "Attack",
+        "phase": 0.5,
+        "tool": "spear",
+        "direction": 0,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 56,
+        "state": "hunt",
+        "clip": "Attack",
+        "phase": 0.65,
+        "tool": "spear",
+        "direction": 0,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 57,
+        "state": "hunt",
+        "clip": "Attack",
+        "phase": 0.8,
+        "tool": "spear",
+        "direction": 0,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 58,
+        "state": "butcher",
+        "clip": "Butcher",
+        "phase": 0.05,
+        "tool": "knife",
+        "direction": 0,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 59,
+        "state": "butcher",
+        "clip": "Butcher",
+        "phase": 0.2,
+        "tool": "knife",
+        "direction": 0,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 60,
+        "state": "butcher",
+        "clip": "Butcher",
+        "phase": 0.35,
+        "tool": "knife",
+        "direction": 0,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 61,
+        "state": "butcher",
+        "clip": "Butcher",
+        "phase": 0.5,
+        "tool": "knife",
+        "direction": 0,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 62,
+        "state": "butcher",
+        "clip": "Butcher",
+        "phase": 0.65,
+        "tool": "knife",
+        "direction": 0,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 63,
+        "state": "butcher",
+        "clip": "Butcher",
+        "phase": 0.8,
+        "tool": "knife",
+        "direction": 0,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 64,
+        "state": "carry",
+        "clip": "Carry",
+        "phase": 0.0,
+        "tool": "cargo",
+        "direction": 0,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 65,
+        "state": "carry",
+        "clip": "Carry",
+        "phase": 0.125,
+        "tool": "cargo",
+        "direction": 0,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 66,
+        "state": "carry",
+        "clip": "Carry",
+        "phase": 0.25,
+        "tool": "cargo",
+        "direction": 0,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 67,
+        "state": "carry",
+        "clip": "Carry",
+        "phase": 0.375,
+        "tool": "cargo",
+        "direction": 0,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 68,
+        "state": "carry",
+        "clip": "Carry",
+        "phase": 0.5,
+        "tool": "cargo",
+        "direction": 0,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 69,
+        "state": "carry",
+        "clip": "Carry",
+        "phase": 0.625,
+        "tool": "cargo",
+        "direction": 0,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 70,
+        "state": "carry",
+        "clip": "Carry",
+        "phase": 0.75,
+        "tool": "cargo",
+        "direction": 0,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 71,
+        "state": "carry",
+        "clip": "Carry",
+        "phase": 0.875,
+        "tool": "cargo",
+        "direction": 0,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 0,
+        "state": "idle",
+        "clip": "Idle",
+        "phase": 0.2,
+        "tool": null,
+        "direction": 1,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 1,
+        "state": "idle",
+        "clip": "Idle",
+        "phase": 0.7,
+        "tool": null,
+        "direction": 1,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 2,
+        "state": "walk",
+        "clip": "Walk",
+        "phase": 0.0,
+        "tool": null,
+        "direction": 1,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 3,
+        "state": "walk",
+        "clip": "Walk",
+        "phase": 0.125,
+        "tool": null,
+        "direction": 1,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 4,
+        "state": "walk",
+        "clip": "Walk",
+        "phase": 0.25,
+        "tool": null,
+        "direction": 1,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 5,
+        "state": "walk",
+        "clip": "Walk",
+        "phase": 0.375,
+        "tool": null,
+        "direction": 1,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 6,
+        "state": "walk",
+        "clip": "Walk",
+        "phase": 0.5,
+        "tool": null,
+        "direction": 1,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 7,
+        "state": "walk",
+        "clip": "Walk",
+        "phase": 0.625,
+        "tool": null,
+        "direction": 1,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 8,
+        "state": "walk",
+        "clip": "Walk",
+        "phase": 0.75,
+        "tool": null,
+        "direction": 1,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 9,
+        "state": "walk",
+        "clip": "Walk",
+        "phase": 0.875,
+        "tool": null,
+        "direction": 1,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 10,
+        "state": "attack",
+        "clip": "Attack",
+        "phase": 0,
+        "tool": "hammer",
+        "direction": 1,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 11,
+        "state": "attack",
+        "clip": "Attack",
+        "phase": 0.15,
+        "tool": "hammer",
+        "direction": 1,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 12,
+        "state": "attack",
+        "clip": "Attack",
+        "phase": 0.3,
+        "tool": "hammer",
+        "direction": 1,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 13,
+        "state": "attack",
+        "clip": "Attack",
+        "phase": 0.5,
+        "tool": "hammer",
+        "direction": 1,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 14,
+        "state": "attack",
+        "clip": "Attack",
+        "phase": 0.7,
+        "tool": "hammer",
+        "direction": 1,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 15,
+        "state": "attack",
+        "clip": "Attack",
+        "phase": 0.9,
+        "tool": "hammer",
+        "direction": 1,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 16,
+        "state": "hit",
+        "clip": "Hit",
+        "phase": 0.2,
+        "tool": null,
+        "direction": 1,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 17,
+        "state": "hit",
+        "clip": "Hit",
+        "phase": 0.55,
+        "tool": null,
+        "direction": 1,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 18,
+        "state": "death",
+        "clip": "Death",
+        "phase": 0.1,
+        "tool": null,
+        "direction": 1,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 19,
+        "state": "death",
+        "clip": "Death",
+        "phase": 0.35,
+        "tool": null,
+        "direction": 1,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 20,
+        "state": "death",
+        "clip": "Death",
+        "phase": 0.65,
+        "tool": null,
+        "direction": 1,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 21,
+        "state": "death",
+        "clip": "Death",
+        "phase": 1,
+        "tool": null,
+        "direction": 1,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 22,
+        "state": "chop",
+        "clip": "Chop",
+        "phase": 0.05,
+        "tool": "axe",
+        "direction": 1,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 23,
+        "state": "chop",
+        "clip": "Chop",
+        "phase": 0.2,
+        "tool": "axe",
+        "direction": 1,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 24,
+        "state": "chop",
+        "clip": "Chop",
+        "phase": 0.35,
+        "tool": "axe",
+        "direction": 1,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 25,
+        "state": "chop",
+        "clip": "Chop",
+        "phase": 0.5,
+        "tool": "axe",
+        "direction": 1,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 26,
+        "state": "chop",
+        "clip": "Chop",
+        "phase": 0.65,
+        "tool": "axe",
+        "direction": 1,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 27,
+        "state": "chop",
+        "clip": "Chop",
+        "phase": 0.8,
+        "tool": "axe",
+        "direction": 1,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 28,
+        "state": "mine",
+        "clip": "Mine",
+        "phase": 0.05,
+        "tool": "pick",
+        "direction": 1,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 29,
+        "state": "mine",
+        "clip": "Mine",
+        "phase": 0.2,
+        "tool": "pick",
+        "direction": 1,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 30,
+        "state": "mine",
+        "clip": "Mine",
+        "phase": 0.35,
+        "tool": "pick",
+        "direction": 1,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 31,
+        "state": "mine",
+        "clip": "Mine",
+        "phase": 0.5,
+        "tool": "pick",
+        "direction": 1,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 32,
+        "state": "mine",
+        "clip": "Mine",
+        "phase": 0.65,
+        "tool": "pick",
+        "direction": 1,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 33,
+        "state": "mine",
+        "clip": "Mine",
+        "phase": 0.8,
+        "tool": "pick",
+        "direction": 1,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 34,
+        "state": "build",
+        "clip": "Build",
+        "phase": 0.05,
+        "tool": "build_hammer",
+        "direction": 1,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 35,
+        "state": "build",
+        "clip": "Build",
+        "phase": 0.2,
+        "tool": "build_hammer",
+        "direction": 1,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 36,
+        "state": "build",
+        "clip": "Build",
+        "phase": 0.35,
+        "tool": "build_hammer",
+        "direction": 1,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 37,
+        "state": "build",
+        "clip": "Build",
+        "phase": 0.5,
+        "tool": "build_hammer",
+        "direction": 1,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 38,
+        "state": "build",
+        "clip": "Build",
+        "phase": 0.65,
+        "tool": "build_hammer",
+        "direction": 1,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 39,
+        "state": "build",
+        "clip": "Build",
+        "phase": 0.8,
+        "tool": "build_hammer",
+        "direction": 1,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 40,
+        "state": "farm",
+        "clip": "Farm",
+        "phase": 0.05,
+        "tool": "hoe",
+        "direction": 1,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 41,
+        "state": "farm",
+        "clip": "Farm",
+        "phase": 0.2,
+        "tool": "hoe",
+        "direction": 1,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 42,
+        "state": "farm",
+        "clip": "Farm",
+        "phase": 0.35,
+        "tool": "hoe",
+        "direction": 1,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 43,
+        "state": "farm",
+        "clip": "Farm",
+        "phase": 0.5,
+        "tool": "hoe",
+        "direction": 1,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 44,
+        "state": "farm",
+        "clip": "Farm",
+        "phase": 0.65,
+        "tool": "hoe",
+        "direction": 1,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 45,
+        "state": "farm",
+        "clip": "Farm",
+        "phase": 0.8,
+        "tool": "hoe",
+        "direction": 1,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 46,
+        "state": "forage",
+        "clip": "Harvest",
+        "phase": 0.05,
+        "tool": "basket",
+        "direction": 1,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 47,
+        "state": "forage",
+        "clip": "Harvest",
+        "phase": 0.2,
+        "tool": "basket",
+        "direction": 1,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 48,
+        "state": "forage",
+        "clip": "Harvest",
+        "phase": 0.35,
+        "tool": "basket",
+        "direction": 1,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 49,
+        "state": "forage",
+        "clip": "Harvest",
+        "phase": 0.5,
+        "tool": "basket",
+        "direction": 1,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 50,
+        "state": "forage",
+        "clip": "Harvest",
+        "phase": 0.65,
+        "tool": "basket",
+        "direction": 1,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 51,
+        "state": "forage",
+        "clip": "Harvest",
+        "phase": 0.8,
+        "tool": "basket",
+        "direction": 1,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 52,
+        "state": "hunt",
+        "clip": "Attack",
+        "phase": 0.05,
+        "tool": "spear",
+        "direction": 1,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 53,
+        "state": "hunt",
+        "clip": "Attack",
+        "phase": 0.2,
+        "tool": "spear",
+        "direction": 1,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 54,
+        "state": "hunt",
+        "clip": "Attack",
+        "phase": 0.35,
+        "tool": "spear",
+        "direction": 1,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 55,
+        "state": "hunt",
+        "clip": "Attack",
+        "phase": 0.5,
+        "tool": "spear",
+        "direction": 1,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 56,
+        "state": "hunt",
+        "clip": "Attack",
+        "phase": 0.65,
+        "tool": "spear",
+        "direction": 1,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 57,
+        "state": "hunt",
+        "clip": "Attack",
+        "phase": 0.8,
+        "tool": "spear",
+        "direction": 1,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 58,
+        "state": "butcher",
+        "clip": "Butcher",
+        "phase": 0.05,
+        "tool": "knife",
+        "direction": 1,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 59,
+        "state": "butcher",
+        "clip": "Butcher",
+        "phase": 0.2,
+        "tool": "knife",
+        "direction": 1,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 60,
+        "state": "butcher",
+        "clip": "Butcher",
+        "phase": 0.35,
+        "tool": "knife",
+        "direction": 1,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 61,
+        "state": "butcher",
+        "clip": "Butcher",
+        "phase": 0.5,
+        "tool": "knife",
+        "direction": 1,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 62,
+        "state": "butcher",
+        "clip": "Butcher",
+        "phase": 0.65,
+        "tool": "knife",
+        "direction": 1,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 63,
+        "state": "butcher",
+        "clip": "Butcher",
+        "phase": 0.8,
+        "tool": "knife",
+        "direction": 1,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 64,
+        "state": "carry",
+        "clip": "Carry",
+        "phase": 0.0,
+        "tool": "cargo",
+        "direction": 1,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 65,
+        "state": "carry",
+        "clip": "Carry",
+        "phase": 0.125,
+        "tool": "cargo",
+        "direction": 1,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 66,
+        "state": "carry",
+        "clip": "Carry",
+        "phase": 0.25,
+        "tool": "cargo",
+        "direction": 1,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 67,
+        "state": "carry",
+        "clip": "Carry",
+        "phase": 0.375,
+        "tool": "cargo",
+        "direction": 1,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 68,
+        "state": "carry",
+        "clip": "Carry",
+        "phase": 0.5,
+        "tool": "cargo",
+        "direction": 1,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 69,
+        "state": "carry",
+        "clip": "Carry",
+        "phase": 0.625,
+        "tool": "cargo",
+        "direction": 1,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 70,
+        "state": "carry",
+        "clip": "Carry",
+        "phase": 0.75,
+        "tool": "cargo",
+        "direction": 1,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 71,
+        "state": "carry",
+        "clip": "Carry",
+        "phase": 0.875,
+        "tool": "cargo",
+        "direction": 1,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 0,
+        "state": "idle",
+        "clip": "Idle",
+        "phase": 0.2,
+        "tool": null,
+        "direction": 2,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 1,
+        "state": "idle",
+        "clip": "Idle",
+        "phase": 0.7,
+        "tool": null,
+        "direction": 2,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 2,
+        "state": "walk",
+        "clip": "Walk",
+        "phase": 0.0,
+        "tool": null,
+        "direction": 2,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 3,
+        "state": "walk",
+        "clip": "Walk",
+        "phase": 0.125,
+        "tool": null,
+        "direction": 2,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 4,
+        "state": "walk",
+        "clip": "Walk",
+        "phase": 0.25,
+        "tool": null,
+        "direction": 2,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 5,
+        "state": "walk",
+        "clip": "Walk",
+        "phase": 0.375,
+        "tool": null,
+        "direction": 2,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 6,
+        "state": "walk",
+        "clip": "Walk",
+        "phase": 0.5,
+        "tool": null,
+        "direction": 2,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 7,
+        "state": "walk",
+        "clip": "Walk",
+        "phase": 0.625,
+        "tool": null,
+        "direction": 2,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 8,
+        "state": "walk",
+        "clip": "Walk",
+        "phase": 0.75,
+        "tool": null,
+        "direction": 2,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 9,
+        "state": "walk",
+        "clip": "Walk",
+        "phase": 0.875,
+        "tool": null,
+        "direction": 2,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 10,
+        "state": "attack",
+        "clip": "Attack",
+        "phase": 0,
+        "tool": "hammer",
+        "direction": 2,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 11,
+        "state": "attack",
+        "clip": "Attack",
+        "phase": 0.15,
+        "tool": "hammer",
+        "direction": 2,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 12,
+        "state": "attack",
+        "clip": "Attack",
+        "phase": 0.3,
+        "tool": "hammer",
+        "direction": 2,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 13,
+        "state": "attack",
+        "clip": "Attack",
+        "phase": 0.5,
+        "tool": "hammer",
+        "direction": 2,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 14,
+        "state": "attack",
+        "clip": "Attack",
+        "phase": 0.7,
+        "tool": "hammer",
+        "direction": 2,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 15,
+        "state": "attack",
+        "clip": "Attack",
+        "phase": 0.9,
+        "tool": "hammer",
+        "direction": 2,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 16,
+        "state": "hit",
+        "clip": "Hit",
+        "phase": 0.2,
+        "tool": null,
+        "direction": 2,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 17,
+        "state": "hit",
+        "clip": "Hit",
+        "phase": 0.55,
+        "tool": null,
+        "direction": 2,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 18,
+        "state": "death",
+        "clip": "Death",
+        "phase": 0.1,
+        "tool": null,
+        "direction": 2,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 19,
+        "state": "death",
+        "clip": "Death",
+        "phase": 0.35,
+        "tool": null,
+        "direction": 2,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 20,
+        "state": "death",
+        "clip": "Death",
+        "phase": 0.65,
+        "tool": null,
+        "direction": 2,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 21,
+        "state": "death",
+        "clip": "Death",
+        "phase": 1,
+        "tool": null,
+        "direction": 2,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 22,
+        "state": "chop",
+        "clip": "Chop",
+        "phase": 0.05,
+        "tool": "axe",
+        "direction": 2,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 23,
+        "state": "chop",
+        "clip": "Chop",
+        "phase": 0.2,
+        "tool": "axe",
+        "direction": 2,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 24,
+        "state": "chop",
+        "clip": "Chop",
+        "phase": 0.35,
+        "tool": "axe",
+        "direction": 2,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 25,
+        "state": "chop",
+        "clip": "Chop",
+        "phase": 0.5,
+        "tool": "axe",
+        "direction": 2,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 26,
+        "state": "chop",
+        "clip": "Chop",
+        "phase": 0.65,
+        "tool": "axe",
+        "direction": 2,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 27,
+        "state": "chop",
+        "clip": "Chop",
+        "phase": 0.8,
+        "tool": "axe",
+        "direction": 2,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 28,
+        "state": "mine",
+        "clip": "Mine",
+        "phase": 0.05,
+        "tool": "pick",
+        "direction": 2,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 29,
+        "state": "mine",
+        "clip": "Mine",
+        "phase": 0.2,
+        "tool": "pick",
+        "direction": 2,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 30,
+        "state": "mine",
+        "clip": "Mine",
+        "phase": 0.35,
+        "tool": "pick",
+        "direction": 2,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 31,
+        "state": "mine",
+        "clip": "Mine",
+        "phase": 0.5,
+        "tool": "pick",
+        "direction": 2,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 32,
+        "state": "mine",
+        "clip": "Mine",
+        "phase": 0.65,
+        "tool": "pick",
+        "direction": 2,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 33,
+        "state": "mine",
+        "clip": "Mine",
+        "phase": 0.8,
+        "tool": "pick",
+        "direction": 2,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 34,
+        "state": "build",
+        "clip": "Build",
+        "phase": 0.05,
+        "tool": "build_hammer",
+        "direction": 2,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 35,
+        "state": "build",
+        "clip": "Build",
+        "phase": 0.2,
+        "tool": "build_hammer",
+        "direction": 2,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 36,
+        "state": "build",
+        "clip": "Build",
+        "phase": 0.35,
+        "tool": "build_hammer",
+        "direction": 2,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 37,
+        "state": "build",
+        "clip": "Build",
+        "phase": 0.5,
+        "tool": "build_hammer",
+        "direction": 2,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 38,
+        "state": "build",
+        "clip": "Build",
+        "phase": 0.65,
+        "tool": "build_hammer",
+        "direction": 2,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 39,
+        "state": "build",
+        "clip": "Build",
+        "phase": 0.8,
+        "tool": "build_hammer",
+        "direction": 2,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 40,
+        "state": "farm",
+        "clip": "Farm",
+        "phase": 0.05,
+        "tool": "hoe",
+        "direction": 2,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 41,
+        "state": "farm",
+        "clip": "Farm",
+        "phase": 0.2,
+        "tool": "hoe",
+        "direction": 2,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 42,
+        "state": "farm",
+        "clip": "Farm",
+        "phase": 0.35,
+        "tool": "hoe",
+        "direction": 2,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 43,
+        "state": "farm",
+        "clip": "Farm",
+        "phase": 0.5,
+        "tool": "hoe",
+        "direction": 2,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 44,
+        "state": "farm",
+        "clip": "Farm",
+        "phase": 0.65,
+        "tool": "hoe",
+        "direction": 2,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 45,
+        "state": "farm",
+        "clip": "Farm",
+        "phase": 0.8,
+        "tool": "hoe",
+        "direction": 2,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 46,
+        "state": "forage",
+        "clip": "Harvest",
+        "phase": 0.05,
+        "tool": "basket",
+        "direction": 2,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 47,
+        "state": "forage",
+        "clip": "Harvest",
+        "phase": 0.2,
+        "tool": "basket",
+        "direction": 2,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 48,
+        "state": "forage",
+        "clip": "Harvest",
+        "phase": 0.35,
+        "tool": "basket",
+        "direction": 2,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 49,
+        "state": "forage",
+        "clip": "Harvest",
+        "phase": 0.5,
+        "tool": "basket",
+        "direction": 2,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 50,
+        "state": "forage",
+        "clip": "Harvest",
+        "phase": 0.65,
+        "tool": "basket",
+        "direction": 2,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 51,
+        "state": "forage",
+        "clip": "Harvest",
+        "phase": 0.8,
+        "tool": "basket",
+        "direction": 2,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 52,
+        "state": "hunt",
+        "clip": "Attack",
+        "phase": 0.05,
+        "tool": "spear",
+        "direction": 2,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 53,
+        "state": "hunt",
+        "clip": "Attack",
+        "phase": 0.2,
+        "tool": "spear",
+        "direction": 2,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 54,
+        "state": "hunt",
+        "clip": "Attack",
+        "phase": 0.35,
+        "tool": "spear",
+        "direction": 2,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 55,
+        "state": "hunt",
+        "clip": "Attack",
+        "phase": 0.5,
+        "tool": "spear",
+        "direction": 2,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 56,
+        "state": "hunt",
+        "clip": "Attack",
+        "phase": 0.65,
+        "tool": "spear",
+        "direction": 2,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 57,
+        "state": "hunt",
+        "clip": "Attack",
+        "phase": 0.8,
+        "tool": "spear",
+        "direction": 2,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 58,
+        "state": "butcher",
+        "clip": "Butcher",
+        "phase": 0.05,
+        "tool": "knife",
+        "direction": 2,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 59,
+        "state": "butcher",
+        "clip": "Butcher",
+        "phase": 0.2,
+        "tool": "knife",
+        "direction": 2,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 60,
+        "state": "butcher",
+        "clip": "Butcher",
+        "phase": 0.35,
+        "tool": "knife",
+        "direction": 2,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 61,
+        "state": "butcher",
+        "clip": "Butcher",
+        "phase": 0.5,
+        "tool": "knife",
+        "direction": 2,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 62,
+        "state": "butcher",
+        "clip": "Butcher",
+        "phase": 0.65,
+        "tool": "knife",
+        "direction": 2,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 63,
+        "state": "butcher",
+        "clip": "Butcher",
+        "phase": 0.8,
+        "tool": "knife",
+        "direction": 2,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 64,
+        "state": "carry",
+        "clip": "Carry",
+        "phase": 0.0,
+        "tool": "cargo",
+        "direction": 2,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 65,
+        "state": "carry",
+        "clip": "Carry",
+        "phase": 0.125,
+        "tool": "cargo",
+        "direction": 2,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 66,
+        "state": "carry",
+        "clip": "Carry",
+        "phase": 0.25,
+        "tool": "cargo",
+        "direction": 2,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 67,
+        "state": "carry",
+        "clip": "Carry",
+        "phase": 0.375,
+        "tool": "cargo",
+        "direction": 2,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 68,
+        "state": "carry",
+        "clip": "Carry",
+        "phase": 0.5,
+        "tool": "cargo",
+        "direction": 2,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 69,
+        "state": "carry",
+        "clip": "Carry",
+        "phase": 0.625,
+        "tool": "cargo",
+        "direction": 2,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 70,
+        "state": "carry",
+        "clip": "Carry",
+        "phase": 0.75,
+        "tool": "cargo",
+        "direction": 2,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 71,
+        "state": "carry",
+        "clip": "Carry",
+        "phase": 0.875,
+        "tool": "cargo",
+        "direction": 2,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 0,
+        "state": "idle",
+        "clip": "Idle",
+        "phase": 0.2,
+        "tool": null,
+        "direction": 3,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 1,
+        "state": "idle",
+        "clip": "Idle",
+        "phase": 0.7,
+        "tool": null,
+        "direction": 3,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 2,
+        "state": "walk",
+        "clip": "Walk",
+        "phase": 0.0,
+        "tool": null,
+        "direction": 3,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 3,
+        "state": "walk",
+        "clip": "Walk",
+        "phase": 0.125,
+        "tool": null,
+        "direction": 3,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 4,
+        "state": "walk",
+        "clip": "Walk",
+        "phase": 0.25,
+        "tool": null,
+        "direction": 3,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 5,
+        "state": "walk",
+        "clip": "Walk",
+        "phase": 0.375,
+        "tool": null,
+        "direction": 3,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 6,
+        "state": "walk",
+        "clip": "Walk",
+        "phase": 0.5,
+        "tool": null,
+        "direction": 3,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 7,
+        "state": "walk",
+        "clip": "Walk",
+        "phase": 0.625,
+        "tool": null,
+        "direction": 3,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 8,
+        "state": "walk",
+        "clip": "Walk",
+        "phase": 0.75,
+        "tool": null,
+        "direction": 3,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 9,
+        "state": "walk",
+        "clip": "Walk",
+        "phase": 0.875,
+        "tool": null,
+        "direction": 3,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 10,
+        "state": "attack",
+        "clip": "Attack",
+        "phase": 0,
+        "tool": "hammer",
+        "direction": 3,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 11,
+        "state": "attack",
+        "clip": "Attack",
+        "phase": 0.15,
+        "tool": "hammer",
+        "direction": 3,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 12,
+        "state": "attack",
+        "clip": "Attack",
+        "phase": 0.3,
+        "tool": "hammer",
+        "direction": 3,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 13,
+        "state": "attack",
+        "clip": "Attack",
+        "phase": 0.5,
+        "tool": "hammer",
+        "direction": 3,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 14,
+        "state": "attack",
+        "clip": "Attack",
+        "phase": 0.7,
+        "tool": "hammer",
+        "direction": 3,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 15,
+        "state": "attack",
+        "clip": "Attack",
+        "phase": 0.9,
+        "tool": "hammer",
+        "direction": 3,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 16,
+        "state": "hit",
+        "clip": "Hit",
+        "phase": 0.2,
+        "tool": null,
+        "direction": 3,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 17,
+        "state": "hit",
+        "clip": "Hit",
+        "phase": 0.55,
+        "tool": null,
+        "direction": 3,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 18,
+        "state": "death",
+        "clip": "Death",
+        "phase": 0.1,
+        "tool": null,
+        "direction": 3,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 19,
+        "state": "death",
+        "clip": "Death",
+        "phase": 0.35,
+        "tool": null,
+        "direction": 3,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 20,
+        "state": "death",
+        "clip": "Death",
+        "phase": 0.65,
+        "tool": null,
+        "direction": 3,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 21,
+        "state": "death",
+        "clip": "Death",
+        "phase": 1,
+        "tool": null,
+        "direction": 3,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 22,
+        "state": "chop",
+        "clip": "Chop",
+        "phase": 0.05,
+        "tool": "axe",
+        "direction": 3,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 23,
+        "state": "chop",
+        "clip": "Chop",
+        "phase": 0.2,
+        "tool": "axe",
+        "direction": 3,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 24,
+        "state": "chop",
+        "clip": "Chop",
+        "phase": 0.35,
+        "tool": "axe",
+        "direction": 3,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 25,
+        "state": "chop",
+        "clip": "Chop",
+        "phase": 0.5,
+        "tool": "axe",
+        "direction": 3,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 26,
+        "state": "chop",
+        "clip": "Chop",
+        "phase": 0.65,
+        "tool": "axe",
+        "direction": 3,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 27,
+        "state": "chop",
+        "clip": "Chop",
+        "phase": 0.8,
+        "tool": "axe",
+        "direction": 3,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 28,
+        "state": "mine",
+        "clip": "Mine",
+        "phase": 0.05,
+        "tool": "pick",
+        "direction": 3,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 29,
+        "state": "mine",
+        "clip": "Mine",
+        "phase": 0.2,
+        "tool": "pick",
+        "direction": 3,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 30,
+        "state": "mine",
+        "clip": "Mine",
+        "phase": 0.35,
+        "tool": "pick",
+        "direction": 3,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 31,
+        "state": "mine",
+        "clip": "Mine",
+        "phase": 0.5,
+        "tool": "pick",
+        "direction": 3,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 32,
+        "state": "mine",
+        "clip": "Mine",
+        "phase": 0.65,
+        "tool": "pick",
+        "direction": 3,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 33,
+        "state": "mine",
+        "clip": "Mine",
+        "phase": 0.8,
+        "tool": "pick",
+        "direction": 3,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 34,
+        "state": "build",
+        "clip": "Build",
+        "phase": 0.05,
+        "tool": "build_hammer",
+        "direction": 3,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 35,
+        "state": "build",
+        "clip": "Build",
+        "phase": 0.2,
+        "tool": "build_hammer",
+        "direction": 3,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 36,
+        "state": "build",
+        "clip": "Build",
+        "phase": 0.35,
+        "tool": "build_hammer",
+        "direction": 3,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 37,
+        "state": "build",
+        "clip": "Build",
+        "phase": 0.5,
+        "tool": "build_hammer",
+        "direction": 3,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 38,
+        "state": "build",
+        "clip": "Build",
+        "phase": 0.65,
+        "tool": "build_hammer",
+        "direction": 3,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 39,
+        "state": "build",
+        "clip": "Build",
+        "phase": 0.8,
+        "tool": "build_hammer",
+        "direction": 3,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 40,
+        "state": "farm",
+        "clip": "Farm",
+        "phase": 0.05,
+        "tool": "hoe",
+        "direction": 3,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 41,
+        "state": "farm",
+        "clip": "Farm",
+        "phase": 0.2,
+        "tool": "hoe",
+        "direction": 3,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 42,
+        "state": "farm",
+        "clip": "Farm",
+        "phase": 0.35,
+        "tool": "hoe",
+        "direction": 3,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 43,
+        "state": "farm",
+        "clip": "Farm",
+        "phase": 0.5,
+        "tool": "hoe",
+        "direction": 3,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 44,
+        "state": "farm",
+        "clip": "Farm",
+        "phase": 0.65,
+        "tool": "hoe",
+        "direction": 3,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 45,
+        "state": "farm",
+        "clip": "Farm",
+        "phase": 0.8,
+        "tool": "hoe",
+        "direction": 3,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 46,
+        "state": "forage",
+        "clip": "Harvest",
+        "phase": 0.05,
+        "tool": "basket",
+        "direction": 3,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 47,
+        "state": "forage",
+        "clip": "Harvest",
+        "phase": 0.2,
+        "tool": "basket",
+        "direction": 3,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 48,
+        "state": "forage",
+        "clip": "Harvest",
+        "phase": 0.35,
+        "tool": "basket",
+        "direction": 3,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 49,
+        "state": "forage",
+        "clip": "Harvest",
+        "phase": 0.5,
+        "tool": "basket",
+        "direction": 3,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 50,
+        "state": "forage",
+        "clip": "Harvest",
+        "phase": 0.65,
+        "tool": "basket",
+        "direction": 3,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 51,
+        "state": "forage",
+        "clip": "Harvest",
+        "phase": 0.8,
+        "tool": "basket",
+        "direction": 3,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 52,
+        "state": "hunt",
+        "clip": "Attack",
+        "phase": 0.05,
+        "tool": "spear",
+        "direction": 3,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 53,
+        "state": "hunt",
+        "clip": "Attack",
+        "phase": 0.2,
+        "tool": "spear",
+        "direction": 3,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 54,
+        "state": "hunt",
+        "clip": "Attack",
+        "phase": 0.35,
+        "tool": "spear",
+        "direction": 3,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 55,
+        "state": "hunt",
+        "clip": "Attack",
+        "phase": 0.5,
+        "tool": "spear",
+        "direction": 3,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 56,
+        "state": "hunt",
+        "clip": "Attack",
+        "phase": 0.65,
+        "tool": "spear",
+        "direction": 3,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 57,
+        "state": "hunt",
+        "clip": "Attack",
+        "phase": 0.8,
+        "tool": "spear",
+        "direction": 3,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 58,
+        "state": "butcher",
+        "clip": "Butcher",
+        "phase": 0.05,
+        "tool": "knife",
+        "direction": 3,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 59,
+        "state": "butcher",
+        "clip": "Butcher",
+        "phase": 0.2,
+        "tool": "knife",
+        "direction": 3,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 60,
+        "state": "butcher",
+        "clip": "Butcher",
+        "phase": 0.35,
+        "tool": "knife",
+        "direction": 3,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 61,
+        "state": "butcher",
+        "clip": "Butcher",
+        "phase": 0.5,
+        "tool": "knife",
+        "direction": 3,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 62,
+        "state": "butcher",
+        "clip": "Butcher",
+        "phase": 0.65,
+        "tool": "knife",
+        "direction": 3,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 63,
+        "state": "butcher",
+        "clip": "Butcher",
+        "phase": 0.8,
+        "tool": "knife",
+        "direction": 3,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 64,
+        "state": "carry",
+        "clip": "Carry",
+        "phase": 0.0,
+        "tool": "cargo",
+        "direction": 3,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 65,
+        "state": "carry",
+        "clip": "Carry",
+        "phase": 0.125,
+        "tool": "cargo",
+        "direction": 3,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 66,
+        "state": "carry",
+        "clip": "Carry",
+        "phase": 0.25,
+        "tool": "cargo",
+        "direction": 3,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 67,
+        "state": "carry",
+        "clip": "Carry",
+        "phase": 0.375,
+        "tool": "cargo",
+        "direction": 3,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 68,
+        "state": "carry",
+        "clip": "Carry",
+        "phase": 0.5,
+        "tool": "cargo",
+        "direction": 3,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 69,
+        "state": "carry",
+        "clip": "Carry",
+        "phase": 0.625,
+        "tool": "cargo",
+        "direction": 3,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 70,
+        "state": "carry",
+        "clip": "Carry",
+        "phase": 0.75,
+        "tool": "cargo",
+        "direction": 3,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 71,
+        "state": "carry",
+        "clip": "Carry",
+        "phase": 0.875,
+        "tool": "cargo",
+        "direction": 3,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 0,
+        "state": "idle",
+        "clip": "Idle",
+        "phase": 0.2,
+        "tool": null,
+        "direction": 4,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 1,
+        "state": "idle",
+        "clip": "Idle",
+        "phase": 0.7,
+        "tool": null,
+        "direction": 4,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 2,
+        "state": "walk",
+        "clip": "Walk",
+        "phase": 0.0,
+        "tool": null,
+        "direction": 4,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 3,
+        "state": "walk",
+        "clip": "Walk",
+        "phase": 0.125,
+        "tool": null,
+        "direction": 4,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 4,
+        "state": "walk",
+        "clip": "Walk",
+        "phase": 0.25,
+        "tool": null,
+        "direction": 4,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 5,
+        "state": "walk",
+        "clip": "Walk",
+        "phase": 0.375,
+        "tool": null,
+        "direction": 4,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 6,
+        "state": "walk",
+        "clip": "Walk",
+        "phase": 0.5,
+        "tool": null,
+        "direction": 4,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 7,
+        "state": "walk",
+        "clip": "Walk",
+        "phase": 0.625,
+        "tool": null,
+        "direction": 4,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 8,
+        "state": "walk",
+        "clip": "Walk",
+        "phase": 0.75,
+        "tool": null,
+        "direction": 4,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 9,
+        "state": "walk",
+        "clip": "Walk",
+        "phase": 0.875,
+        "tool": null,
+        "direction": 4,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 10,
+        "state": "attack",
+        "clip": "Attack",
+        "phase": 0,
+        "tool": "hammer",
+        "direction": 4,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 11,
+        "state": "attack",
+        "clip": "Attack",
+        "phase": 0.15,
+        "tool": "hammer",
+        "direction": 4,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 12,
+        "state": "attack",
+        "clip": "Attack",
+        "phase": 0.3,
+        "tool": "hammer",
+        "direction": 4,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 13,
+        "state": "attack",
+        "clip": "Attack",
+        "phase": 0.5,
+        "tool": "hammer",
+        "direction": 4,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 14,
+        "state": "attack",
+        "clip": "Attack",
+        "phase": 0.7,
+        "tool": "hammer",
+        "direction": 4,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 15,
+        "state": "attack",
+        "clip": "Attack",
+        "phase": 0.9,
+        "tool": "hammer",
+        "direction": 4,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 16,
+        "state": "hit",
+        "clip": "Hit",
+        "phase": 0.2,
+        "tool": null,
+        "direction": 4,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 17,
+        "state": "hit",
+        "clip": "Hit",
+        "phase": 0.55,
+        "tool": null,
+        "direction": 4,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 18,
+        "state": "death",
+        "clip": "Death",
+        "phase": 0.1,
+        "tool": null,
+        "direction": 4,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 19,
+        "state": "death",
+        "clip": "Death",
+        "phase": 0.35,
+        "tool": null,
+        "direction": 4,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 20,
+        "state": "death",
+        "clip": "Death",
+        "phase": 0.65,
+        "tool": null,
+        "direction": 4,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 21,
+        "state": "death",
+        "clip": "Death",
+        "phase": 1,
+        "tool": null,
+        "direction": 4,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 22,
+        "state": "chop",
+        "clip": "Chop",
+        "phase": 0.05,
+        "tool": "axe",
+        "direction": 4,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 23,
+        "state": "chop",
+        "clip": "Chop",
+        "phase": 0.2,
+        "tool": "axe",
+        "direction": 4,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 24,
+        "state": "chop",
+        "clip": "Chop",
+        "phase": 0.35,
+        "tool": "axe",
+        "direction": 4,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 25,
+        "state": "chop",
+        "clip": "Chop",
+        "phase": 0.5,
+        "tool": "axe",
+        "direction": 4,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 26,
+        "state": "chop",
+        "clip": "Chop",
+        "phase": 0.65,
+        "tool": "axe",
+        "direction": 4,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 27,
+        "state": "chop",
+        "clip": "Chop",
+        "phase": 0.8,
+        "tool": "axe",
+        "direction": 4,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 28,
+        "state": "mine",
+        "clip": "Mine",
+        "phase": 0.05,
+        "tool": "pick",
+        "direction": 4,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 29,
+        "state": "mine",
+        "clip": "Mine",
+        "phase": 0.2,
+        "tool": "pick",
+        "direction": 4,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 30,
+        "state": "mine",
+        "clip": "Mine",
+        "phase": 0.35,
+        "tool": "pick",
+        "direction": 4,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 31,
+        "state": "mine",
+        "clip": "Mine",
+        "phase": 0.5,
+        "tool": "pick",
+        "direction": 4,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 32,
+        "state": "mine",
+        "clip": "Mine",
+        "phase": 0.65,
+        "tool": "pick",
+        "direction": 4,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 33,
+        "state": "mine",
+        "clip": "Mine",
+        "phase": 0.8,
+        "tool": "pick",
+        "direction": 4,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 34,
+        "state": "build",
+        "clip": "Build",
+        "phase": 0.05,
+        "tool": "build_hammer",
+        "direction": 4,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 35,
+        "state": "build",
+        "clip": "Build",
+        "phase": 0.2,
+        "tool": "build_hammer",
+        "direction": 4,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 36,
+        "state": "build",
+        "clip": "Build",
+        "phase": 0.35,
+        "tool": "build_hammer",
+        "direction": 4,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 37,
+        "state": "build",
+        "clip": "Build",
+        "phase": 0.5,
+        "tool": "build_hammer",
+        "direction": 4,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 38,
+        "state": "build",
+        "clip": "Build",
+        "phase": 0.65,
+        "tool": "build_hammer",
+        "direction": 4,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 39,
+        "state": "build",
+        "clip": "Build",
+        "phase": 0.8,
+        "tool": "build_hammer",
+        "direction": 4,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 40,
+        "state": "farm",
+        "clip": "Farm",
+        "phase": 0.05,
+        "tool": "hoe",
+        "direction": 4,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 41,
+        "state": "farm",
+        "clip": "Farm",
+        "phase": 0.2,
+        "tool": "hoe",
+        "direction": 4,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 42,
+        "state": "farm",
+        "clip": "Farm",
+        "phase": 0.35,
+        "tool": "hoe",
+        "direction": 4,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 43,
+        "state": "farm",
+        "clip": "Farm",
+        "phase": 0.5,
+        "tool": "hoe",
+        "direction": 4,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 44,
+        "state": "farm",
+        "clip": "Farm",
+        "phase": 0.65,
+        "tool": "hoe",
+        "direction": 4,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 45,
+        "state": "farm",
+        "clip": "Farm",
+        "phase": 0.8,
+        "tool": "hoe",
+        "direction": 4,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 46,
+        "state": "forage",
+        "clip": "Harvest",
+        "phase": 0.05,
+        "tool": "basket",
+        "direction": 4,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 47,
+        "state": "forage",
+        "clip": "Harvest",
+        "phase": 0.2,
+        "tool": "basket",
+        "direction": 4,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 48,
+        "state": "forage",
+        "clip": "Harvest",
+        "phase": 0.35,
+        "tool": "basket",
+        "direction": 4,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 49,
+        "state": "forage",
+        "clip": "Harvest",
+        "phase": 0.5,
+        "tool": "basket",
+        "direction": 4,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 50,
+        "state": "forage",
+        "clip": "Harvest",
+        "phase": 0.65,
+        "tool": "basket",
+        "direction": 4,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 51,
+        "state": "forage",
+        "clip": "Harvest",
+        "phase": 0.8,
+        "tool": "basket",
+        "direction": 4,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 52,
+        "state": "hunt",
+        "clip": "Attack",
+        "phase": 0.05,
+        "tool": "spear",
+        "direction": 4,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 53,
+        "state": "hunt",
+        "clip": "Attack",
+        "phase": 0.2,
+        "tool": "spear",
+        "direction": 4,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 54,
+        "state": "hunt",
+        "clip": "Attack",
+        "phase": 0.35,
+        "tool": "spear",
+        "direction": 4,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 55,
+        "state": "hunt",
+        "clip": "Attack",
+        "phase": 0.5,
+        "tool": "spear",
+        "direction": 4,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 56,
+        "state": "hunt",
+        "clip": "Attack",
+        "phase": 0.65,
+        "tool": "spear",
+        "direction": 4,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 57,
+        "state": "hunt",
+        "clip": "Attack",
+        "phase": 0.8,
+        "tool": "spear",
+        "direction": 4,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 58,
+        "state": "butcher",
+        "clip": "Butcher",
+        "phase": 0.05,
+        "tool": "knife",
+        "direction": 4,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 59,
+        "state": "butcher",
+        "clip": "Butcher",
+        "phase": 0.2,
+        "tool": "knife",
+        "direction": 4,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 60,
+        "state": "butcher",
+        "clip": "Butcher",
+        "phase": 0.35,
+        "tool": "knife",
+        "direction": 4,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 61,
+        "state": "butcher",
+        "clip": "Butcher",
+        "phase": 0.5,
+        "tool": "knife",
+        "direction": 4,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 62,
+        "state": "butcher",
+        "clip": "Butcher",
+        "phase": 0.65,
+        "tool": "knife",
+        "direction": 4,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 63,
+        "state": "butcher",
+        "clip": "Butcher",
+        "phase": 0.8,
+        "tool": "knife",
+        "direction": 4,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 64,
+        "state": "carry",
+        "clip": "Carry",
+        "phase": 0.0,
+        "tool": "cargo",
+        "direction": 4,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 65,
+        "state": "carry",
+        "clip": "Carry",
+        "phase": 0.125,
+        "tool": "cargo",
+        "direction": 4,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 66,
+        "state": "carry",
+        "clip": "Carry",
+        "phase": 0.25,
+        "tool": "cargo",
+        "direction": 4,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 67,
+        "state": "carry",
+        "clip": "Carry",
+        "phase": 0.375,
+        "tool": "cargo",
+        "direction": 4,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 68,
+        "state": "carry",
+        "clip": "Carry",
+        "phase": 0.5,
+        "tool": "cargo",
+        "direction": 4,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 69,
+        "state": "carry",
+        "clip": "Carry",
+        "phase": 0.625,
+        "tool": "cargo",
+        "direction": 4,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 70,
+        "state": "carry",
+        "clip": "Carry",
+        "phase": 0.75,
+        "tool": "cargo",
+        "direction": 4,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 71,
+        "state": "carry",
+        "clip": "Carry",
+        "phase": 0.875,
+        "tool": "cargo",
+        "direction": 4,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 0,
+        "state": "idle",
+        "clip": "Idle",
+        "phase": 0.2,
+        "tool": null,
+        "direction": 5,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 1,
+        "state": "idle",
+        "clip": "Idle",
+        "phase": 0.7,
+        "tool": null,
+        "direction": 5,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 2,
+        "state": "walk",
+        "clip": "Walk",
+        "phase": 0.0,
+        "tool": null,
+        "direction": 5,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 3,
+        "state": "walk",
+        "clip": "Walk",
+        "phase": 0.125,
+        "tool": null,
+        "direction": 5,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 4,
+        "state": "walk",
+        "clip": "Walk",
+        "phase": 0.25,
+        "tool": null,
+        "direction": 5,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 5,
+        "state": "walk",
+        "clip": "Walk",
+        "phase": 0.375,
+        "tool": null,
+        "direction": 5,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 6,
+        "state": "walk",
+        "clip": "Walk",
+        "phase": 0.5,
+        "tool": null,
+        "direction": 5,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 7,
+        "state": "walk",
+        "clip": "Walk",
+        "phase": 0.625,
+        "tool": null,
+        "direction": 5,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 8,
+        "state": "walk",
+        "clip": "Walk",
+        "phase": 0.75,
+        "tool": null,
+        "direction": 5,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 9,
+        "state": "walk",
+        "clip": "Walk",
+        "phase": 0.875,
+        "tool": null,
+        "direction": 5,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 10,
+        "state": "attack",
+        "clip": "Attack",
+        "phase": 0,
+        "tool": "hammer",
+        "direction": 5,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 11,
+        "state": "attack",
+        "clip": "Attack",
+        "phase": 0.15,
+        "tool": "hammer",
+        "direction": 5,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 12,
+        "state": "attack",
+        "clip": "Attack",
+        "phase": 0.3,
+        "tool": "hammer",
+        "direction": 5,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 13,
+        "state": "attack",
+        "clip": "Attack",
+        "phase": 0.5,
+        "tool": "hammer",
+        "direction": 5,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 14,
+        "state": "attack",
+        "clip": "Attack",
+        "phase": 0.7,
+        "tool": "hammer",
+        "direction": 5,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 15,
+        "state": "attack",
+        "clip": "Attack",
+        "phase": 0.9,
+        "tool": "hammer",
+        "direction": 5,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 16,
+        "state": "hit",
+        "clip": "Hit",
+        "phase": 0.2,
+        "tool": null,
+        "direction": 5,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 17,
+        "state": "hit",
+        "clip": "Hit",
+        "phase": 0.55,
+        "tool": null,
+        "direction": 5,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 18,
+        "state": "death",
+        "clip": "Death",
+        "phase": 0.1,
+        "tool": null,
+        "direction": 5,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 19,
+        "state": "death",
+        "clip": "Death",
+        "phase": 0.35,
+        "tool": null,
+        "direction": 5,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 20,
+        "state": "death",
+        "clip": "Death",
+        "phase": 0.65,
+        "tool": null,
+        "direction": 5,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 21,
+        "state": "death",
+        "clip": "Death",
+        "phase": 1,
+        "tool": null,
+        "direction": 5,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 22,
+        "state": "chop",
+        "clip": "Chop",
+        "phase": 0.05,
+        "tool": "axe",
+        "direction": 5,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 23,
+        "state": "chop",
+        "clip": "Chop",
+        "phase": 0.2,
+        "tool": "axe",
+        "direction": 5,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 24,
+        "state": "chop",
+        "clip": "Chop",
+        "phase": 0.35,
+        "tool": "axe",
+        "direction": 5,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 25,
+        "state": "chop",
+        "clip": "Chop",
+        "phase": 0.5,
+        "tool": "axe",
+        "direction": 5,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 26,
+        "state": "chop",
+        "clip": "Chop",
+        "phase": 0.65,
+        "tool": "axe",
+        "direction": 5,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 27,
+        "state": "chop",
+        "clip": "Chop",
+        "phase": 0.8,
+        "tool": "axe",
+        "direction": 5,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 28,
+        "state": "mine",
+        "clip": "Mine",
+        "phase": 0.05,
+        "tool": "pick",
+        "direction": 5,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 29,
+        "state": "mine",
+        "clip": "Mine",
+        "phase": 0.2,
+        "tool": "pick",
+        "direction": 5,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 30,
+        "state": "mine",
+        "clip": "Mine",
+        "phase": 0.35,
+        "tool": "pick",
+        "direction": 5,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 31,
+        "state": "mine",
+        "clip": "Mine",
+        "phase": 0.5,
+        "tool": "pick",
+        "direction": 5,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 32,
+        "state": "mine",
+        "clip": "Mine",
+        "phase": 0.65,
+        "tool": "pick",
+        "direction": 5,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 33,
+        "state": "mine",
+        "clip": "Mine",
+        "phase": 0.8,
+        "tool": "pick",
+        "direction": 5,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 34,
+        "state": "build",
+        "clip": "Build",
+        "phase": 0.05,
+        "tool": "build_hammer",
+        "direction": 5,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 35,
+        "state": "build",
+        "clip": "Build",
+        "phase": 0.2,
+        "tool": "build_hammer",
+        "direction": 5,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 36,
+        "state": "build",
+        "clip": "Build",
+        "phase": 0.35,
+        "tool": "build_hammer",
+        "direction": 5,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 37,
+        "state": "build",
+        "clip": "Build",
+        "phase": 0.5,
+        "tool": "build_hammer",
+        "direction": 5,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 38,
+        "state": "build",
+        "clip": "Build",
+        "phase": 0.65,
+        "tool": "build_hammer",
+        "direction": 5,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 39,
+        "state": "build",
+        "clip": "Build",
+        "phase": 0.8,
+        "tool": "build_hammer",
+        "direction": 5,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 40,
+        "state": "farm",
+        "clip": "Farm",
+        "phase": 0.05,
+        "tool": "hoe",
+        "direction": 5,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 41,
+        "state": "farm",
+        "clip": "Farm",
+        "phase": 0.2,
+        "tool": "hoe",
+        "direction": 5,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 42,
+        "state": "farm",
+        "clip": "Farm",
+        "phase": 0.35,
+        "tool": "hoe",
+        "direction": 5,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 43,
+        "state": "farm",
+        "clip": "Farm",
+        "phase": 0.5,
+        "tool": "hoe",
+        "direction": 5,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 44,
+        "state": "farm",
+        "clip": "Farm",
+        "phase": 0.65,
+        "tool": "hoe",
+        "direction": 5,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 45,
+        "state": "farm",
+        "clip": "Farm",
+        "phase": 0.8,
+        "tool": "hoe",
+        "direction": 5,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 46,
+        "state": "forage",
+        "clip": "Harvest",
+        "phase": 0.05,
+        "tool": "basket",
+        "direction": 5,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 47,
+        "state": "forage",
+        "clip": "Harvest",
+        "phase": 0.2,
+        "tool": "basket",
+        "direction": 5,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 48,
+        "state": "forage",
+        "clip": "Harvest",
+        "phase": 0.35,
+        "tool": "basket",
+        "direction": 5,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 49,
+        "state": "forage",
+        "clip": "Harvest",
+        "phase": 0.5,
+        "tool": "basket",
+        "direction": 5,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 50,
+        "state": "forage",
+        "clip": "Harvest",
+        "phase": 0.65,
+        "tool": "basket",
+        "direction": 5,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 51,
+        "state": "forage",
+        "clip": "Harvest",
+        "phase": 0.8,
+        "tool": "basket",
+        "direction": 5,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 52,
+        "state": "hunt",
+        "clip": "Attack",
+        "phase": 0.05,
+        "tool": "spear",
+        "direction": 5,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 53,
+        "state": "hunt",
+        "clip": "Attack",
+        "phase": 0.2,
+        "tool": "spear",
+        "direction": 5,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 54,
+        "state": "hunt",
+        "clip": "Attack",
+        "phase": 0.35,
+        "tool": "spear",
+        "direction": 5,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 55,
+        "state": "hunt",
+        "clip": "Attack",
+        "phase": 0.5,
+        "tool": "spear",
+        "direction": 5,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 56,
+        "state": "hunt",
+        "clip": "Attack",
+        "phase": 0.65,
+        "tool": "spear",
+        "direction": 5,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 57,
+        "state": "hunt",
+        "clip": "Attack",
+        "phase": 0.8,
+        "tool": "spear",
+        "direction": 5,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 58,
+        "state": "butcher",
+        "clip": "Butcher",
+        "phase": 0.05,
+        "tool": "knife",
+        "direction": 5,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 59,
+        "state": "butcher",
+        "clip": "Butcher",
+        "phase": 0.2,
+        "tool": "knife",
+        "direction": 5,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 60,
+        "state": "butcher",
+        "clip": "Butcher",
+        "phase": 0.35,
+        "tool": "knife",
+        "direction": 5,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 61,
+        "state": "butcher",
+        "clip": "Butcher",
+        "phase": 0.5,
+        "tool": "knife",
+        "direction": 5,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 62,
+        "state": "butcher",
+        "clip": "Butcher",
+        "phase": 0.65,
+        "tool": "knife",
+        "direction": 5,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 63,
+        "state": "butcher",
+        "clip": "Butcher",
+        "phase": 0.8,
+        "tool": "knife",
+        "direction": 5,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 64,
+        "state": "carry",
+        "clip": "Carry",
+        "phase": 0.0,
+        "tool": "cargo",
+        "direction": 5,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 65,
+        "state": "carry",
+        "clip": "Carry",
+        "phase": 0.125,
+        "tool": "cargo",
+        "direction": 5,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 66,
+        "state": "carry",
+        "clip": "Carry",
+        "phase": 0.25,
+        "tool": "cargo",
+        "direction": 5,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 67,
+        "state": "carry",
+        "clip": "Carry",
+        "phase": 0.375,
+        "tool": "cargo",
+        "direction": 5,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 68,
+        "state": "carry",
+        "clip": "Carry",
+        "phase": 0.5,
+        "tool": "cargo",
+        "direction": 5,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 69,
+        "state": "carry",
+        "clip": "Carry",
+        "phase": 0.625,
+        "tool": "cargo",
+        "direction": 5,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 70,
+        "state": "carry",
+        "clip": "Carry",
+        "phase": 0.75,
+        "tool": "cargo",
+        "direction": 5,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 71,
+        "state": "carry",
+        "clip": "Carry",
+        "phase": 0.875,
+        "tool": "cargo",
+        "direction": 5,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 0,
+        "state": "idle",
+        "clip": "Idle",
+        "phase": 0.2,
+        "tool": null,
+        "direction": 6,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 1,
+        "state": "idle",
+        "clip": "Idle",
+        "phase": 0.7,
+        "tool": null,
+        "direction": 6,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 2,
+        "state": "walk",
+        "clip": "Walk",
+        "phase": 0.0,
+        "tool": null,
+        "direction": 6,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 3,
+        "state": "walk",
+        "clip": "Walk",
+        "phase": 0.125,
+        "tool": null,
+        "direction": 6,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 4,
+        "state": "walk",
+        "clip": "Walk",
+        "phase": 0.25,
+        "tool": null,
+        "direction": 6,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 5,
+        "state": "walk",
+        "clip": "Walk",
+        "phase": 0.375,
+        "tool": null,
+        "direction": 6,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 6,
+        "state": "walk",
+        "clip": "Walk",
+        "phase": 0.5,
+        "tool": null,
+        "direction": 6,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 7,
+        "state": "walk",
+        "clip": "Walk",
+        "phase": 0.625,
+        "tool": null,
+        "direction": 6,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 8,
+        "state": "walk",
+        "clip": "Walk",
+        "phase": 0.75,
+        "tool": null,
+        "direction": 6,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 9,
+        "state": "walk",
+        "clip": "Walk",
+        "phase": 0.875,
+        "tool": null,
+        "direction": 6,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 10,
+        "state": "attack",
+        "clip": "Attack",
+        "phase": 0,
+        "tool": "hammer",
+        "direction": 6,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 11,
+        "state": "attack",
+        "clip": "Attack",
+        "phase": 0.15,
+        "tool": "hammer",
+        "direction": 6,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 12,
+        "state": "attack",
+        "clip": "Attack",
+        "phase": 0.3,
+        "tool": "hammer",
+        "direction": 6,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 13,
+        "state": "attack",
+        "clip": "Attack",
+        "phase": 0.5,
+        "tool": "hammer",
+        "direction": 6,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 14,
+        "state": "attack",
+        "clip": "Attack",
+        "phase": 0.7,
+        "tool": "hammer",
+        "direction": 6,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 15,
+        "state": "attack",
+        "clip": "Attack",
+        "phase": 0.9,
+        "tool": "hammer",
+        "direction": 6,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 16,
+        "state": "hit",
+        "clip": "Hit",
+        "phase": 0.2,
+        "tool": null,
+        "direction": 6,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 17,
+        "state": "hit",
+        "clip": "Hit",
+        "phase": 0.55,
+        "tool": null,
+        "direction": 6,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 18,
+        "state": "death",
+        "clip": "Death",
+        "phase": 0.1,
+        "tool": null,
+        "direction": 6,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 19,
+        "state": "death",
+        "clip": "Death",
+        "phase": 0.35,
+        "tool": null,
+        "direction": 6,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 20,
+        "state": "death",
+        "clip": "Death",
+        "phase": 0.65,
+        "tool": null,
+        "direction": 6,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 21,
+        "state": "death",
+        "clip": "Death",
+        "phase": 1,
+        "tool": null,
+        "direction": 6,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 22,
+        "state": "chop",
+        "clip": "Chop",
+        "phase": 0.05,
+        "tool": "axe",
+        "direction": 6,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 23,
+        "state": "chop",
+        "clip": "Chop",
+        "phase": 0.2,
+        "tool": "axe",
+        "direction": 6,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 24,
+        "state": "chop",
+        "clip": "Chop",
+        "phase": 0.35,
+        "tool": "axe",
+        "direction": 6,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 25,
+        "state": "chop",
+        "clip": "Chop",
+        "phase": 0.5,
+        "tool": "axe",
+        "direction": 6,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 26,
+        "state": "chop",
+        "clip": "Chop",
+        "phase": 0.65,
+        "tool": "axe",
+        "direction": 6,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 27,
+        "state": "chop",
+        "clip": "Chop",
+        "phase": 0.8,
+        "tool": "axe",
+        "direction": 6,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 28,
+        "state": "mine",
+        "clip": "Mine",
+        "phase": 0.05,
+        "tool": "pick",
+        "direction": 6,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 29,
+        "state": "mine",
+        "clip": "Mine",
+        "phase": 0.2,
+        "tool": "pick",
+        "direction": 6,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 30,
+        "state": "mine",
+        "clip": "Mine",
+        "phase": 0.35,
+        "tool": "pick",
+        "direction": 6,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 31,
+        "state": "mine",
+        "clip": "Mine",
+        "phase": 0.5,
+        "tool": "pick",
+        "direction": 6,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 32,
+        "state": "mine",
+        "clip": "Mine",
+        "phase": 0.65,
+        "tool": "pick",
+        "direction": 6,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 33,
+        "state": "mine",
+        "clip": "Mine",
+        "phase": 0.8,
+        "tool": "pick",
+        "direction": 6,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 34,
+        "state": "build",
+        "clip": "Build",
+        "phase": 0.05,
+        "tool": "build_hammer",
+        "direction": 6,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 35,
+        "state": "build",
+        "clip": "Build",
+        "phase": 0.2,
+        "tool": "build_hammer",
+        "direction": 6,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 36,
+        "state": "build",
+        "clip": "Build",
+        "phase": 0.35,
+        "tool": "build_hammer",
+        "direction": 6,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 37,
+        "state": "build",
+        "clip": "Build",
+        "phase": 0.5,
+        "tool": "build_hammer",
+        "direction": 6,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 38,
+        "state": "build",
+        "clip": "Build",
+        "phase": 0.65,
+        "tool": "build_hammer",
+        "direction": 6,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 39,
+        "state": "build",
+        "clip": "Build",
+        "phase": 0.8,
+        "tool": "build_hammer",
+        "direction": 6,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 40,
+        "state": "farm",
+        "clip": "Farm",
+        "phase": 0.05,
+        "tool": "hoe",
+        "direction": 6,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 41,
+        "state": "farm",
+        "clip": "Farm",
+        "phase": 0.2,
+        "tool": "hoe",
+        "direction": 6,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 42,
+        "state": "farm",
+        "clip": "Farm",
+        "phase": 0.35,
+        "tool": "hoe",
+        "direction": 6,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 43,
+        "state": "farm",
+        "clip": "Farm",
+        "phase": 0.5,
+        "tool": "hoe",
+        "direction": 6,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 44,
+        "state": "farm",
+        "clip": "Farm",
+        "phase": 0.65,
+        "tool": "hoe",
+        "direction": 6,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 45,
+        "state": "farm",
+        "clip": "Farm",
+        "phase": 0.8,
+        "tool": "hoe",
+        "direction": 6,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 46,
+        "state": "forage",
+        "clip": "Harvest",
+        "phase": 0.05,
+        "tool": "basket",
+        "direction": 6,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 47,
+        "state": "forage",
+        "clip": "Harvest",
+        "phase": 0.2,
+        "tool": "basket",
+        "direction": 6,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 48,
+        "state": "forage",
+        "clip": "Harvest",
+        "phase": 0.35,
+        "tool": "basket",
+        "direction": 6,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 49,
+        "state": "forage",
+        "clip": "Harvest",
+        "phase": 0.5,
+        "tool": "basket",
+        "direction": 6,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 50,
+        "state": "forage",
+        "clip": "Harvest",
+        "phase": 0.65,
+        "tool": "basket",
+        "direction": 6,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 51,
+        "state": "forage",
+        "clip": "Harvest",
+        "phase": 0.8,
+        "tool": "basket",
+        "direction": 6,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 52,
+        "state": "hunt",
+        "clip": "Attack",
+        "phase": 0.05,
+        "tool": "spear",
+        "direction": 6,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 53,
+        "state": "hunt",
+        "clip": "Attack",
+        "phase": 0.2,
+        "tool": "spear",
+        "direction": 6,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 54,
+        "state": "hunt",
+        "clip": "Attack",
+        "phase": 0.35,
+        "tool": "spear",
+        "direction": 6,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 55,
+        "state": "hunt",
+        "clip": "Attack",
+        "phase": 0.5,
+        "tool": "spear",
+        "direction": 6,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 56,
+        "state": "hunt",
+        "clip": "Attack",
+        "phase": 0.65,
+        "tool": "spear",
+        "direction": 6,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 57,
+        "state": "hunt",
+        "clip": "Attack",
+        "phase": 0.8,
+        "tool": "spear",
+        "direction": 6,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 58,
+        "state": "butcher",
+        "clip": "Butcher",
+        "phase": 0.05,
+        "tool": "knife",
+        "direction": 6,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 59,
+        "state": "butcher",
+        "clip": "Butcher",
+        "phase": 0.2,
+        "tool": "knife",
+        "direction": 6,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 60,
+        "state": "butcher",
+        "clip": "Butcher",
+        "phase": 0.35,
+        "tool": "knife",
+        "direction": 6,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 61,
+        "state": "butcher",
+        "clip": "Butcher",
+        "phase": 0.5,
+        "tool": "knife",
+        "direction": 6,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 62,
+        "state": "butcher",
+        "clip": "Butcher",
+        "phase": 0.65,
+        "tool": "knife",
+        "direction": 6,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 63,
+        "state": "butcher",
+        "clip": "Butcher",
+        "phase": 0.8,
+        "tool": "knife",
+        "direction": 6,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 64,
+        "state": "carry",
+        "clip": "Carry",
+        "phase": 0.0,
+        "tool": "cargo",
+        "direction": 6,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 65,
+        "state": "carry",
+        "clip": "Carry",
+        "phase": 0.125,
+        "tool": "cargo",
+        "direction": 6,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 66,
+        "state": "carry",
+        "clip": "Carry",
+        "phase": 0.25,
+        "tool": "cargo",
+        "direction": 6,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 67,
+        "state": "carry",
+        "clip": "Carry",
+        "phase": 0.375,
+        "tool": "cargo",
+        "direction": 6,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 68,
+        "state": "carry",
+        "clip": "Carry",
+        "phase": 0.5,
+        "tool": "cargo",
+        "direction": 6,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 69,
+        "state": "carry",
+        "clip": "Carry",
+        "phase": 0.625,
+        "tool": "cargo",
+        "direction": 6,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 70,
+        "state": "carry",
+        "clip": "Carry",
+        "phase": 0.75,
+        "tool": "cargo",
+        "direction": 6,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 71,
+        "state": "carry",
+        "clip": "Carry",
+        "phase": 0.875,
+        "tool": "cargo",
+        "direction": 6,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 0,
+        "state": "idle",
+        "clip": "Idle",
+        "phase": 0.2,
+        "tool": null,
+        "direction": 7,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 1,
+        "state": "idle",
+        "clip": "Idle",
+        "phase": 0.7,
+        "tool": null,
+        "direction": 7,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 2,
+        "state": "walk",
+        "clip": "Walk",
+        "phase": 0.0,
+        "tool": null,
+        "direction": 7,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 3,
+        "state": "walk",
+        "clip": "Walk",
+        "phase": 0.125,
+        "tool": null,
+        "direction": 7,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 4,
+        "state": "walk",
+        "clip": "Walk",
+        "phase": 0.25,
+        "tool": null,
+        "direction": 7,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 5,
+        "state": "walk",
+        "clip": "Walk",
+        "phase": 0.375,
+        "tool": null,
+        "direction": 7,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 6,
+        "state": "walk",
+        "clip": "Walk",
+        "phase": 0.5,
+        "tool": null,
+        "direction": 7,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 7,
+        "state": "walk",
+        "clip": "Walk",
+        "phase": 0.625,
+        "tool": null,
+        "direction": 7,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 8,
+        "state": "walk",
+        "clip": "Walk",
+        "phase": 0.75,
+        "tool": null,
+        "direction": 7,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 9,
+        "state": "walk",
+        "clip": "Walk",
+        "phase": 0.875,
+        "tool": null,
+        "direction": 7,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 10,
+        "state": "attack",
+        "clip": "Attack",
+        "phase": 0,
+        "tool": "hammer",
+        "direction": 7,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 11,
+        "state": "attack",
+        "clip": "Attack",
+        "phase": 0.15,
+        "tool": "hammer",
+        "direction": 7,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 12,
+        "state": "attack",
+        "clip": "Attack",
+        "phase": 0.3,
+        "tool": "hammer",
+        "direction": 7,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 13,
+        "state": "attack",
+        "clip": "Attack",
+        "phase": 0.5,
+        "tool": "hammer",
+        "direction": 7,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 14,
+        "state": "attack",
+        "clip": "Attack",
+        "phase": 0.7,
+        "tool": "hammer",
+        "direction": 7,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 15,
+        "state": "attack",
+        "clip": "Attack",
+        "phase": 0.9,
+        "tool": "hammer",
+        "direction": 7,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 16,
+        "state": "hit",
+        "clip": "Hit",
+        "phase": 0.2,
+        "tool": null,
+        "direction": 7,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 17,
+        "state": "hit",
+        "clip": "Hit",
+        "phase": 0.55,
+        "tool": null,
+        "direction": 7,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 18,
+        "state": "death",
+        "clip": "Death",
+        "phase": 0.1,
+        "tool": null,
+        "direction": 7,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 19,
+        "state": "death",
+        "clip": "Death",
+        "phase": 0.35,
+        "tool": null,
+        "direction": 7,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 20,
+        "state": "death",
+        "clip": "Death",
+        "phase": 0.65,
+        "tool": null,
+        "direction": 7,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 21,
+        "state": "death",
+        "clip": "Death",
+        "phase": 1,
+        "tool": null,
+        "direction": 7,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 22,
+        "state": "chop",
+        "clip": "Chop",
+        "phase": 0.05,
+        "tool": "axe",
+        "direction": 7,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 23,
+        "state": "chop",
+        "clip": "Chop",
+        "phase": 0.2,
+        "tool": "axe",
+        "direction": 7,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 24,
+        "state": "chop",
+        "clip": "Chop",
+        "phase": 0.35,
+        "tool": "axe",
+        "direction": 7,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 25,
+        "state": "chop",
+        "clip": "Chop",
+        "phase": 0.5,
+        "tool": "axe",
+        "direction": 7,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 26,
+        "state": "chop",
+        "clip": "Chop",
+        "phase": 0.65,
+        "tool": "axe",
+        "direction": 7,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 27,
+        "state": "chop",
+        "clip": "Chop",
+        "phase": 0.8,
+        "tool": "axe",
+        "direction": 7,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 28,
+        "state": "mine",
+        "clip": "Mine",
+        "phase": 0.05,
+        "tool": "pick",
+        "direction": 7,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 29,
+        "state": "mine",
+        "clip": "Mine",
+        "phase": 0.2,
+        "tool": "pick",
+        "direction": 7,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 30,
+        "state": "mine",
+        "clip": "Mine",
+        "phase": 0.35,
+        "tool": "pick",
+        "direction": 7,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 31,
+        "state": "mine",
+        "clip": "Mine",
+        "phase": 0.5,
+        "tool": "pick",
+        "direction": 7,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 32,
+        "state": "mine",
+        "clip": "Mine",
+        "phase": 0.65,
+        "tool": "pick",
+        "direction": 7,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 33,
+        "state": "mine",
+        "clip": "Mine",
+        "phase": 0.8,
+        "tool": "pick",
+        "direction": 7,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 34,
+        "state": "build",
+        "clip": "Build",
+        "phase": 0.05,
+        "tool": "build_hammer",
+        "direction": 7,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 35,
+        "state": "build",
+        "clip": "Build",
+        "phase": 0.2,
+        "tool": "build_hammer",
+        "direction": 7,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 36,
+        "state": "build",
+        "clip": "Build",
+        "phase": 0.35,
+        "tool": "build_hammer",
+        "direction": 7,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 37,
+        "state": "build",
+        "clip": "Build",
+        "phase": 0.5,
+        "tool": "build_hammer",
+        "direction": 7,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 38,
+        "state": "build",
+        "clip": "Build",
+        "phase": 0.65,
+        "tool": "build_hammer",
+        "direction": 7,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 39,
+        "state": "build",
+        "clip": "Build",
+        "phase": 0.8,
+        "tool": "build_hammer",
+        "direction": 7,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 40,
+        "state": "farm",
+        "clip": "Farm",
+        "phase": 0.05,
+        "tool": "hoe",
+        "direction": 7,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 41,
+        "state": "farm",
+        "clip": "Farm",
+        "phase": 0.2,
+        "tool": "hoe",
+        "direction": 7,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 42,
+        "state": "farm",
+        "clip": "Farm",
+        "phase": 0.35,
+        "tool": "hoe",
+        "direction": 7,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 43,
+        "state": "farm",
+        "clip": "Farm",
+        "phase": 0.5,
+        "tool": "hoe",
+        "direction": 7,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 44,
+        "state": "farm",
+        "clip": "Farm",
+        "phase": 0.65,
+        "tool": "hoe",
+        "direction": 7,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 45,
+        "state": "farm",
+        "clip": "Farm",
+        "phase": 0.8,
+        "tool": "hoe",
+        "direction": 7,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 46,
+        "state": "forage",
+        "clip": "Harvest",
+        "phase": 0.05,
+        "tool": "basket",
+        "direction": 7,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 47,
+        "state": "forage",
+        "clip": "Harvest",
+        "phase": 0.2,
+        "tool": "basket",
+        "direction": 7,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 48,
+        "state": "forage",
+        "clip": "Harvest",
+        "phase": 0.35,
+        "tool": "basket",
+        "direction": 7,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 49,
+        "state": "forage",
+        "clip": "Harvest",
+        "phase": 0.5,
+        "tool": "basket",
+        "direction": 7,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 50,
+        "state": "forage",
+        "clip": "Harvest",
+        "phase": 0.65,
+        "tool": "basket",
+        "direction": 7,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 51,
+        "state": "forage",
+        "clip": "Harvest",
+        "phase": 0.8,
+        "tool": "basket",
+        "direction": 7,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 52,
+        "state": "hunt",
+        "clip": "Attack",
+        "phase": 0.05,
+        "tool": "spear",
+        "direction": 7,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 53,
+        "state": "hunt",
+        "clip": "Attack",
+        "phase": 0.2,
+        "tool": "spear",
+        "direction": 7,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 54,
+        "state": "hunt",
+        "clip": "Attack",
+        "phase": 0.35,
+        "tool": "spear",
+        "direction": 7,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 55,
+        "state": "hunt",
+        "clip": "Attack",
+        "phase": 0.5,
+        "tool": "spear",
+        "direction": 7,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 56,
+        "state": "hunt",
+        "clip": "Attack",
+        "phase": 0.65,
+        "tool": "spear",
+        "direction": 7,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 57,
+        "state": "hunt",
+        "clip": "Attack",
+        "phase": 0.8,
+        "tool": "spear",
+        "direction": 7,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 58,
+        "state": "butcher",
+        "clip": "Butcher",
+        "phase": 0.05,
+        "tool": "knife",
+        "direction": 7,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 59,
+        "state": "butcher",
+        "clip": "Butcher",
+        "phase": 0.2,
+        "tool": "knife",
+        "direction": 7,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 60,
+        "state": "butcher",
+        "clip": "Butcher",
+        "phase": 0.35,
+        "tool": "knife",
+        "direction": 7,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 61,
+        "state": "butcher",
+        "clip": "Butcher",
+        "phase": 0.5,
+        "tool": "knife",
+        "direction": 7,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 62,
+        "state": "butcher",
+        "clip": "Butcher",
+        "phase": 0.65,
+        "tool": "knife",
+        "direction": 7,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 63,
+        "state": "butcher",
+        "clip": "Butcher",
+        "phase": 0.8,
+        "tool": "knife",
+        "direction": 7,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 64,
+        "state": "carry",
+        "clip": "Carry",
+        "phase": 0.0,
+        "tool": "cargo",
+        "direction": 7,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 65,
+        "state": "carry",
+        "clip": "Carry",
+        "phase": 0.125,
+        "tool": "cargo",
+        "direction": 7,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 66,
+        "state": "carry",
+        "clip": "Carry",
+        "phase": 0.25,
+        "tool": "cargo",
+        "direction": 7,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 67,
+        "state": "carry",
+        "clip": "Carry",
+        "phase": 0.375,
+        "tool": "cargo",
+        "direction": 7,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 68,
+        "state": "carry",
+        "clip": "Carry",
+        "phase": 0.5,
+        "tool": "cargo",
+        "direction": 7,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 69,
+        "state": "carry",
+        "clip": "Carry",
+        "phase": 0.625,
+        "tool": "cargo",
+        "direction": 7,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 70,
+        "state": "carry",
+        "clip": "Carry",
+        "phase": 0.75,
+        "tool": "cargo",
+        "direction": 7,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      },
+      {
+        "i": 71,
+        "state": "carry",
+        "clip": "Carry",
+        "phase": 0.875,
+        "tool": "cargo",
+        "direction": 7,
+        "anchor": [
+          63.999996185302734,
+          81.32341003417969
+        ]
+      }
+    ],
+    "resolution": 128,
+    "cpuSamples": 2
+  }
+}

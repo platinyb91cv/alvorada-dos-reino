@@ -1,0 +1,42 @@
+{
+  "passed": true,
+  "verifiedAtUtc": "2026-10-19T23:36:09.6749524Z",
+  "command": "node tests/<each>.cjs",
+  "tests": [
+    {
+      "file": "tests/check_bronze_atlas.cjs",
+      "exitCode": 0,
+      "sha256": "c6063bd0c73acbb11722b05dace684239a007c92c2ba4810d422fb147ede8d5c"
+    },
+    {
+      "file": "tests/check_buildings_v2.cjs",
+      "exitCode": 0,
+      "sha256": "2abf0061f966acf7f61620fcf63de2266bac2478c7a36ed6e159c7e61c392464"
+    },
+    {
+      "file": "tests/check_king_atlas.cjs",
+      "exitCode": 0,
+      "sha256": "787439ebc09c032d52b79deed0adf27b48558190534e91d87978f5a4132ed1a9"
+    },
+    {
+      "file": "tests/check_king_memory.cjs",
+      "exitCode": 0,
+      "sha256": "b6c9a376f9b26aff35092501412c30c42eddc5da5b79690161ed2af7e694672f"
+    },
+    {
+      "file": "tests/check_unit3d_armed.cjs",
+      "exitCode": 0,
+      "sha256": "fb4e96c02adba03b012c1a23a2ed1ecb6da73a45c6142e789f8eee2ecae25d5d"
+    },
+    {
+      "file": "tests/check_unit3d_correction.cjs",
+      "exitCode": 0,
+      "sha256": "072404accd1e2d81ee71159ff12f6b178962026261a942e88638eb0ec0c2e38e"
+    },
+    {
+      "file": "tests/check_unit3d.cjs",
+      "exitCode": 0,
+      "sha256": "12fc9a13646b09133ecb1c4fe9b2fd878eb62776d264da93f9fdb3f5e86c591e"
+    }
+  ]
+}

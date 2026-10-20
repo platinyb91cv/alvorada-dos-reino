@@ -1,0 +1,46 @@
+{
+  "unit": "guerreiro",
+  "body": "char1",
+  "bodyMeshes": [
+    "char1",
+    "Icosphere"
+  ],
+  "rig": "Armature",
+  "clips": {
+    "Death": {
+      "source": "existing Meshy clip/local approved offsets",
+      "frames": 33.0
+    },
+    "Hit": {
+      "source": "existing Meshy clip/local approved offsets",
+      "frames": 33.0
+    },
+    "Attack": {
+      "source": "existing Meshy clip/local approved offsets",
+      "frames": 33.0
+    },
+    "Walk": {
+      "source": "existing Meshy clip/local approved offsets",
+      "frames": 33.0
+    },
+    "Idle": {
+      "source": "existing Meshy clip/local approved offsets",
+      "frames": 33.0
+    }
+  },
+  "props": {
+    "axe": [
+      "Meshy_axe"
+    ]
+  },
+  "defaultProp": "axe",
+  "bones": 24,
+  "triangles": 100079,
+  "sourceSha256": "5c685f633dd5f366b5fb6f66c7ce299630bca10e612c0e919ad807ce31d247fe",
+  "newMeshyCredits": 0,
+  "localRetargetedClips": [],
+  "supportHandMaximumResidualMetres": 0,
+  "rigidPropsFollowDirectionPivot": [
+    "Meshy_axe"
+  ]
+}

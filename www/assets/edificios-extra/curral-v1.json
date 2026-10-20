@@ -1,0 +1,35 @@
+{
+  "version": 1,
+  "url": "assets/edificios-extra/curral-v1.webp",
+  "atlasSha256": "398c4186301c22b97c3ab50dac584337a27f2aa94b6fb04d2945d8c1fdce9664",
+  "imageSize": [
+    640,
+    640
+  ],
+  "tiles": [
+    3,
+    3
+  ],
+  "ground": {
+    "back": [
+      320.0,
+      174.545455
+    ],
+    "right": [
+      631.834131,
+      334.800638
+    ],
+    "front": [
+      320.0,
+      518.022329
+    ],
+    "left": [
+      10.207337,
+      334.800638
+    ]
+  },
+  "transparent": true,
+  "background": "alpha",
+  "builtInImageGen": true,
+  "additionalMeshyCredits": 0
+}

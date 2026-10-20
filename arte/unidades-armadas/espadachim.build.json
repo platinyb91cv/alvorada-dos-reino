@@ -1,0 +1,42 @@
+{
+  "unit": "espadachim",
+  "body": "char1",
+  "bodyMeshes": [
+    "char1"
+  ],
+  "rig": "Armature",
+  "clips": {
+    "Idle": {
+      "source": "existing Meshy clip/local approved offsets",
+      "frames": 41.0
+    },
+    "Walk": {
+      "source": "existing Meshy clip/local approved offsets",
+      "frames": 26.0
+    },
+    "Attack": {
+      "source": "existing Meshy clip/local approved offsets",
+      "frames": 37.0
+    },
+    "Hit": {
+      "source": "existing Meshy clip/local approved offsets",
+      "frames": 40.0
+    },
+    "Death": {
+      "source": "existing Meshy clip/local approved offsets",
+      "frames": 53.0
+    }
+  },
+  "props": {
+    "sword": [
+      "Espada_Meshy_PBR2K",
+      "Icosphere"
+    ]
+  },
+  "defaultProp": "sword",
+  "bones": 24,
+  "triangles": 99999,
+  "sourceSha256": "d8394e71b5c9b7714c0ff596ffe3c310b05ac0b2b127f37c9ccb69488850057c",
+  "newMeshyCredits": 0,
+  "localRetargetedClips": []
+}

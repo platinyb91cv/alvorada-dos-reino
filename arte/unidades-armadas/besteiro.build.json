@@ -1,0 +1,46 @@
+{
+  "unit": "besteiro",
+  "body": "char1",
+  "bodyMeshes": [
+    "char1",
+    "Icosphere"
+  ],
+  "rig": "Armature",
+  "clips": {
+    "Death": {
+      "source": "existing Meshy clip/local approved offsets",
+      "frames": 33.0
+    },
+    "Hit": {
+      "source": "existing Meshy clip/local approved offsets",
+      "frames": 33.0
+    },
+    "Walk": {
+      "source": "existing Meshy clip/local approved offsets",
+      "frames": 33.0
+    },
+    "Idle": {
+      "source": "existing Meshy clip/local approved offsets",
+      "frames": 33.0
+    },
+    "Attack": {
+      "source": "existing Meshy clip/local approved offsets",
+      "frames": 33.0
+    }
+  },
+  "props": {
+    "crossbow": [
+      "Meshy_crossbow"
+    ]
+  },
+  "defaultProp": "crossbow",
+  "bones": 24,
+  "triangles": 100017,
+  "sourceSha256": "9e4504253dc1d2daef8754b8681483371953b8273e73fc67f3716a5f4232071d",
+  "newMeshyCredits": 0,
+  "localRetargetedClips": [],
+  "supportHandMaximumResidualMetres": 4.228860876624449e-07,
+  "rigidPropsFollowDirectionPivot": [
+    "Meshy_crossbow"
+  ]
+}

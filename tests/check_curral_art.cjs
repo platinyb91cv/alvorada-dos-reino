@@ -1,0 +1,20 @@
+const fs=require('node:fs'),path=require('node:path'),vm=require('node:vm'),assert=require('node:assert/strict'),crypto=require('node:crypto');
+const root=path.resolve(__dirname,'..'),html=fs.readFileSync(path.join(root,'www/index.html'),'utf8');
+const data=JSON.parse(html.match(/const CURRAL_ART_DATA=(\{[^\n]+\});/)[1]);
+assert.deepEqual(data,JSON.parse(fs.readFileSync(path.join(root,'www/assets/edificios-extra/curral-v1.json'))));
+const bytes=fs.readFileSync(path.join(root,'www',data.url)),hash=b=>crypto.createHash('sha256').update(b).digest('hex');
+assert.equal(data.atlasSha256,hash(bytes));assert.equal(bytes.toString('ascii',8,16),'WEBPVP8L');
+const bits=bytes.readUInt32LE(21),width=(bits&16383)+1,height=((bits>>>14)&16383)+1;
+assert.deepEqual(data.imageSize,[width,height]);assert.ok(width*height*4<=2*1024*1024);assert.equal(data.additionalMeshyCredits,0);assert.equal(data.transparent,true);assert.deepEqual(data.tiles,[3,3]);
+const proof=JSON.parse(fs.readFileSync(path.join(root,'arte/curral-v1/verification.json')));
+assert.equal(proof.sourceSha256,hash(fs.readFileSync(path.join(root,'arte/curral-v1/curral-fonte.png'))));assert.equal(proof.atlasSha256,data.atlasSha256);assert.deepEqual(proof.sourceAlphaRange,[0,255]);
+const start=html.indexOf('function pastureSprite('),end=html.indexOf('\nfunction bldSprite(',start),source=html.slice(start,end);
+assert.doesNotMatch(source,/bldSprite\('quinta'|FLORA\.tex|2\.34\*GT/,'Do not rebuild the pen from a rectangular farm cutout');
+assert.match(html,/type==='curral'&&CURRAL_ART\.ready/,'Keep the procedural fallback available while the new image is unavailable');
+const calls=[],canvas={scale(){},drawImage(...args){calls.push(args)}};
+const ctx={Math,BCACHE:{},P:[{col:'#3f86e0'}],HW:32,HH:16,SS:2,CURRAL_ART_DATA:data,CURRAL_ART:{teams:new Map()},mkCanvas:(width,height)=>({width,height,getContext:()=>canvas}),recolorImg:()=>({width,height})};
+const draw=vm.runInNewContext('('+source+'\n)',ctx),sprite=draw(0,0);assert.equal(calls.length,2);assert.equal(draw(0,0),sprite,'Cache the finished sprite');
+const q=data.ground,kx=192/(q.right[0]-q.left[0]),split=q.left[1],back=48/(split-q.back[1]),front=48/(q.front[1]-split);
+const project=([x,y])=>[1+x*kx-sprite.ox,1+(y<=split?y*back:split*back+(y-split)*front)-sprite.oy];
+for(const[name,expected]of [['back',[0,0]],['left',[-96,48]],['right',[96,48]],['front',[0,96]]]){const p=project(q[name]);assert.ok(Math.abs(p[0]-expected[0])<.5&&Math.abs(p[1]-expected[1])<.5,name+' footprint must align with the 3x3 tile grid')}
+console.log('PASS: dedicated corral art, transparent compact WebP, source/runtime hashes, 3x3 anchors, cached drawing and farm-cutout removal');

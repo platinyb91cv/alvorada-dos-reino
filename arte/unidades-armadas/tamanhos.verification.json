@@ -1,0 +1,13 @@
+{
+  "htmlBeforeBytes": 2809582,
+  "htmlAfterBytes": 2865408,
+  "htmlGrowthPercent": 1.9869859644601862,
+  "assetsBeforeBytes": 11224478,
+  "assetsAfterBytes": 18405223,
+  "assetsGrowthPercent": 63.973977230834244,
+  "sixModelBytesOutsideWWW": 158155356,
+  "sixAtlasWebpBytes": 7131572,
+  "additionalMeshyCredits": 0,
+  "allSevenTestsPassed": true,
+  "androidSDKAvailableLocally": false
+}

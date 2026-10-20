@@ -1,0 +1,2235 @@
+{
+  "unit": "lanceiro",
+  "reimported": true,
+  "reimportedClipsDistinct": true,
+  "bones": 24,
+  "boneNames": [
+    "Hips",
+    "LeftUpLeg",
+    "LeftLeg",
+    "LeftFoot",
+    "LeftToeBase",
+    "RightUpLeg",
+    "RightLeg",
+    "RightFoot",
+    "RightToeBase",
+    "Spine02",
+    "Spine01",
+    "Spine",
+    "LeftShoulder",
+    "LeftArm",
+    "LeftForeArm",
+    "LeftHand",
+    "neck",
+    "Head",
+    "head_end",
+    "headfront",
+    "RightShoulder",
+    "RightArm",
+    "RightForeArm",
+    "RightHand"
+  ],
+  "clips": [
+    "Death",
+    "Hit",
+    "Attack",
+    "Walk",
+    "Idle"
+  ],
+  "horizontalRootDriftMetresByClip": {
+    "Death": 0.8017549133300781,
+    "Hit": 1.0058283805847169e-08,
+    "Attack": 1.3262033462524414e-08,
+    "Walk": 1.4863908290863038e-08,
+    "Idle": 1.2721866369247437e-08
+  },
+  "sha256": "f50726801d8c7643950a1048533eb48e4ac7825ae73156089ba5314723129bd6",
+  "sourceSha256": "94a723348ca81ce0c420085f702e861c0e4b9747363b57ba83dcc97e1503eb91",
+  "bodyTriangles": 100079,
+  "bytes": 24960116,
+  "additionalMeshyCredits": 0,
+  "supportHandMaximumResidualMetres": 0.05396690015956442,
+  "source": "Existing Meshy models and motions; local posture/hand layers and villager retarget; no paid requests",
+  "clipDurationsSeconds": {
+    "Death": 1.375,
+    "Hit": 1.375,
+    "Attack": 1.375,
+    "Walk": 1.375,
+    "Idle": 1.375
+  },
+  "atlasSha256": "4353899e7105032be57f39db3d554b67c429373f19993a1f029f1561f2951621",
+  "locomotion": {
+    "walk": {
+      "phaseScale": 2.147015837422542,
+      "strideTiles": 0.5852947330581827,
+      "animFactor": 10.73507918711271
+    }
+  },
+  "render": {
+    "sourceModelSha256": "f50726801d8c7643950a1048533eb48e4ac7825ae73156089ba5314723129bd6",
+    "bodyReferencePixels": 30.001829877541393,
+    "unit": "lanceiro",
+    "directions": 8,
+    "framesPerDirection": 22,
+    "states": {
+      "idle": [
+        0,
+        1
+      ],
+      "walk": [
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9
+      ],
+      "attack": [
+        10,
+        11,
+        12,
+        13,
+        14,
+        15
+      ],
+      "hit": [
+        16,
+        17
+      ],
+      "death": [
+        18,
+        19,
+        20,
+        21
+      ]
+    },
+    "labels": [
+      "SE",
+      "S",
+      "SW",
+      "W",
+      "NW",
+      "N",
+      "NE",
+      "E"
+    ],
+    "frames": [
+      {
+        "i": 0,
+        "state": "idle",
+        "clip": "Idle",
+        "phase": 0.2,
+        "tool": "spear",
+        "direction": 0,
+        "anchor": [
+          64.0,
+          71.29850769042969
+        ]
+      },
+      {
+        "i": 1,
+        "state": "idle",
+        "clip": "Idle",
+        "phase": 0.7,
+        "tool": "spear",
+        "direction": 0,
+        "anchor": [
+          64.0,
+          71.29850769042969
+        ]
+      },
+      {
+        "i": 2,
+        "state": "walk",
+        "clip": "Walk",
+        "phase": 0.0,
+        "tool": "spear",
+        "direction": 0,
+        "anchor": [
+          64.0,
+          71.29850769042969
+        ]
+      },
+      {
+        "i": 3,
+        "state": "walk",
+        "clip": "Walk",
+        "phase": 0.125,
+        "tool": "spear",
+        "direction": 0,
+        "anchor": [
+          64.0,
+          71.29850769042969
+        ]
+      },
+      {
+        "i": 4,
+        "state": "walk",
+        "clip": "Walk",
+        "phase": 0.25,
+        "tool": "spear",
+        "direction": 0,
+        "anchor": [
+          64.0,
+          71.29850769042969
+        ]
+      },
+      {
+        "i": 5,
+        "state": "walk",
+        "clip": "Walk",
+        "phase": 0.375,
+        "tool": "spear",
+        "direction": 0,
+        "anchor": [
+          64.0,
+          71.29850769042969
+        ]
+      },
+      {
+        "i": 6,
+        "state": "walk",
+        "clip": "Walk",
+        "phase": 0.5,
+        "tool": "spear",
+        "direction": 0,
+        "anchor": [
+          64.0,
+          71.29850769042969
+        ]
+      },
+      {
+        "i": 7,
+        "state": "walk",
+        "clip": "Walk",
+        "phase": 0.625,
+        "tool": "spear",
+        "direction": 0,
+        "anchor": [
+          64.0,
+          71.29850769042969
+        ]
+      },
+      {
+        "i": 8,
+        "state": "walk",
+        "clip": "Walk",
+        "phase": 0.75,
+        "tool": "spear",
+        "direction": 0,
+        "anchor": [
+          64.0,
+          71.29850769042969
+        ]
+      },
+      {
+        "i": 9,
+        "state": "walk",
+        "clip": "Walk",
+        "phase": 0.875,
+        "tool": "spear",
+        "direction": 0,
+        "anchor": [
+          64.0,
+          71.29850769042969
+        ]
+      },
+      {
+        "i": 10,
+        "state": "attack",
+        "clip": "Attack",
+        "phase": 0,
+        "tool": "spear",
+        "direction": 0,
+        "anchor": [
+          64.0,
+          71.29850769042969
+        ]
+      },
+      {
+        "i": 11,
+        "state": "attack",
+        "clip": "Attack",
+        "phase": 0.15,
+        "tool": "spear",
+        "direction": 0,
+        "anchor": [
+          64.0,
+          71.29850769042969
+        ]
+      },
+      {
+        "i": 12,
+        "state": "attack",
+        "clip": "Attack",
+        "phase": 0.3,
+        "tool": "spear",
+        "direction": 0,
+        "anchor": [
+          64.0,
+          71.29850769042969
+        ]
+      },
+      {
+        "i": 13,
+        "state": "attack",
+        "clip": "Attack",
+        "phase": 0.5,
+        "tool": "spear",
+        "direction": 0,
+        "anchor": [
+          64.0,
+          71.29850769042969
+        ]
+      },
+      {
+        "i": 14,
+        "state": "attack",
+        "clip": "Attack",
+        "phase": 0.7,
+        "tool": "spear",
+        "direction": 0,
+        "anchor": [
+          64.0,
+          71.29850769042969
+        ]
+      },
+      {
+        "i": 15,
+        "state": "attack",
+        "clip": "Attack",
+        "phase": 0.9,
+        "tool": "spear",
+        "direction": 0,
+        "anchor": [
+          64.0,
+          71.29850769042969
+        ]
+      },
+      {
+        "i": 16,
+        "state": "hit",
+        "clip": "Hit",
+        "phase": 0.2,
+        "tool": "spear",
+        "direction": 0,
+        "anchor": [
+          64.0,
+          71.29850769042969
+        ]
+      },
+      {
+        "i": 17,
+        "state": "hit",
+        "clip": "Hit",
+        "phase": 0.55,
+        "tool": "spear",
+        "direction": 0,
+        "anchor": [
+          64.0,
+          71.29850769042969
+        ]
+      },
+      {
+        "i": 18,
+        "state": "death",
+        "clip": "Death",
+        "phase": 0.1,
+        "tool": "spear",
+        "direction": 0,
+        "anchor": [
+          64.0,
+          71.29850769042969
+        ]
+      },
+      {
+        "i": 19,
+        "state": "death",
+        "clip": "Death",
+        "phase": 0.35,
+        "tool": "spear",
+        "direction": 0,
+        "anchor": [
+          64.0,
+          71.29850769042969
+        ]
+      },
+      {
+        "i": 20,
+        "state": "death",
+        "clip": "Death",
+        "phase": 0.65,
+        "tool": "spear",
+        "direction": 0,
+        "anchor": [
+          64.0,
+          71.29850769042969
+        ]
+      },
+      {
+        "i": 21,
+        "state": "death",
+        "clip": "Death",
+        "phase": 1,
+        "tool": "spear",
+        "direction": 0,
+        "anchor": [
+          64.0,
+          71.29850769042969
+        ]
+      },
+      {
+        "i": 0,
+        "state": "idle",
+        "clip": "Idle",
+        "phase": 0.2,
+        "tool": "spear",
+        "direction": 1,
+        "anchor": [
+          64.0,
+          71.29850769042969
+        ]
+      },
+      {
+        "i": 1,
+        "state": "idle",
+        "clip": "Idle",
+        "phase": 0.7,
+        "tool": "spear",
+        "direction": 1,
+        "anchor": [
+          64.0,
+          71.29850769042969
+        ]
+      },
+      {
+        "i": 2,
+        "state": "walk",
+        "clip": "Walk",
+        "phase": 0.0,
+        "tool": "spear",
+        "direction": 1,
+        "anchor": [
+          64.0,
+          71.29850769042969
+        ]
+      },
+      {
+        "i": 3,
+        "state": "walk",
+        "clip": "Walk",
+        "phase": 0.125,
+        "tool": "spear",
+        "direction": 1,
+        "anchor": [
+          64.0,
+          71.29850769042969
+        ]
+      },
+      {
+        "i": 4,
+        "state": "walk",
+        "clip": "Walk",
+        "phase": 0.25,
+        "tool": "spear",
+        "direction": 1,
+        "anchor": [
+          64.0,
+          71.29850769042969
+        ]
+      },
+      {
+        "i": 5,
+        "state": "walk",
+        "clip": "Walk",
+        "phase": 0.375,
+        "tool": "spear",
+        "direction": 1,
+        "anchor": [
+          64.0,
+          71.29850769042969
+        ]
+      },
+      {
+        "i": 6,
+        "state": "walk",
+        "clip": "Walk",
+        "phase": 0.5,
+        "tool": "spear",
+        "direction": 1,
+        "anchor": [
+          64.0,
+          71.29850769042969
+        ]
+      },
+      {
+        "i": 7,
+        "state": "walk",
+        "clip": "Walk",
+        "phase": 0.625,
+        "tool": "spear",
+        "direction": 1,
+        "anchor": [
+          64.0,
+          71.29850769042969
+        ]
+      },
+      {
+        "i": 8,
+        "state": "walk",
+        "clip": "Walk",
+        "phase": 0.75,
+        "tool": "spear",
+        "direction": 1,
+        "anchor": [
+          64.0,
+          71.29850769042969
+        ]
+      },
+      {
+        "i": 9,
+        "state": "walk",
+        "clip": "Walk",
+        "phase": 0.875,
+        "tool": "spear",
+        "direction": 1,
+        "anchor": [
+          64.0,
+          71.29850769042969
+        ]
+      },
+      {
+        "i": 10,
+        "state": "attack",
+        "clip": "Attack",
+        "phase": 0,
+        "tool": "spear",
+        "direction": 1,
+        "anchor": [
+          64.0,
+          71.29850769042969
+        ]
+      },
+      {
+        "i": 11,
+        "state": "attack",
+        "clip": "Attack",
+        "phase": 0.15,
+        "tool": "spear",
+        "direction": 1,
+        "anchor": [
+          64.0,
+          71.29850769042969
+        ]
+      },
+      {
+        "i": 12,
+        "state": "attack",
+        "clip": "Attack",
+        "phase": 0.3,
+        "tool": "spear",
+        "direction": 1,
+        "anchor": [
+          64.0,
+          71.29850769042969
+        ]
+      },
+      {
+        "i": 13,
+        "state": "attack",
+        "clip": "Attack",
+        "phase": 0.5,
+        "tool": "spear",
+        "direction": 1,
+        "anchor": [
+          64.0,
+          71.29850769042969
+        ]
+      },
+      {
+        "i": 14,
+        "state": "attack",
+        "clip": "Attack",
+        "phase": 0.7,
+        "tool": "spear",
+        "direction": 1,
+        "anchor": [
+          64.0,
+          71.29850769042969
+        ]
+      },
+      {
+        "i": 15,
+        "state": "attack",
+        "clip": "Attack",
+        "phase": 0.9,
+        "tool": "spear",
+        "direction": 1,
+        "anchor": [
+          64.0,
+          71.29850769042969
+        ]
+      },
+      {
+        "i": 16,
+        "state": "hit",
+        "clip": "Hit",
+        "phase": 0.2,
+        "tool": "spear",
+        "direction": 1,
+        "anchor": [
+          64.0,
+          71.29850769042969
+        ]
+      },
+      {
+        "i": 17,
+        "state": "hit",
+        "clip": "Hit",
+        "phase": 0.55,
+        "tool": "spear",
+        "direction": 1,
+        "anchor": [
+          64.0,
+          71.29850769042969
+        ]
+      },
+      {
+        "i": 18,
+        "state": "death",
+        "clip": "Death",
+        "phase": 0.1,
+        "tool": "spear",
+        "direction": 1,
+        "anchor": [
+          64.0,
+          71.29850769042969
+        ]
+      },
+      {
+        "i": 19,
+        "state": "death",
+        "clip": "Death",
+        "phase": 0.35,
+        "tool": "spear",
+        "direction": 1,
+        "anchor": [
+          64.0,
+          71.29850769042969
+        ]
+      },
+      {
+        "i": 20,
+        "state": "death",
+        "clip": "Death",
+        "phase": 0.65,
+        "tool": "spear",
+        "direction": 1,
+        "anchor": [
+          64.0,
+          71.29850769042969
+        ]
+      },
+      {
+        "i": 21,
+        "state": "death",
+        "clip": "Death",
+        "phase": 1,
+        "tool": "spear",
+        "direction": 1,
+        "anchor": [
+          64.0,
+          71.29850769042969
+        ]
+      },
+      {
+        "i": 0,
+        "state": "idle",
+        "clip": "Idle",
+        "phase": 0.2,
+        "tool": "spear",
+        "direction": 2,
+        "anchor": [
+          64.0,
+          71.29850769042969
+        ]
+      },
+      {
+        "i": 1,
+        "state": "idle",
+        "clip": "Idle",
+        "phase": 0.7,
+        "tool": "spear",
+        "direction": 2,
+        "anchor": [
+          64.0,
+          71.29850769042969
+        ]
+      },
+      {
+        "i": 2,
+        "state": "walk",
+        "clip": "Walk",
+        "phase": 0.0,
+        "tool": "spear",
+        "direction": 2,
+        "anchor": [
+          64.0,
+          71.29850769042969
+        ]
+      },
+      {
+        "i": 3,
+        "state": "walk",
+        "clip": "Walk",
+        "phase": 0.125,
+        "tool": "spear",
+        "direction": 2,
+        "anchor": [
+          64.0,
+          71.29850769042969
+        ]
+      },
+      {
+        "i": 4,
+        "state": "walk",
+        "clip": "Walk",
+        "phase": 0.25,
+        "tool": "spear",
+        "direction": 2,
+        "anchor": [
+          64.0,
+          71.29850769042969
+        ]
+      },
+      {
+        "i": 5,
+        "state": "walk",
+        "clip": "Walk",
+        "phase": 0.375,
+        "tool": "spear",
+        "direction": 2,
+        "anchor": [
+          64.0,
+          71.29850769042969
+        ]
+      },
+      {
+        "i": 6,
+        "state": "walk",
+        "clip": "Walk",
+        "phase": 0.5,
+        "tool": "spear",
+        "direction": 2,
+        "anchor": [
+          64.0,
+          71.29850769042969
+        ]
+      },
+      {
+        "i": 7,
+        "state": "walk",
+        "clip": "Walk",
+        "phase": 0.625,
+        "tool": "spear",
+        "direction": 2,
+        "anchor": [
+          64.0,
+          71.29850769042969
+        ]
+      },
+      {
+        "i": 8,
+        "state": "walk",
+        "clip": "Walk",
+        "phase": 0.75,
+        "tool": "spear",
+        "direction": 2,
+        "anchor": [
+          64.0,
+          71.29850769042969
+        ]
+      },
+      {
+        "i": 9,
+        "state": "walk",
+        "clip": "Walk",
+        "phase": 0.875,
+        "tool": "spear",
+        "direction": 2,
+        "anchor": [
+          64.0,
+          71.29850769042969
+        ]
+      },
+      {
+        "i": 10,
+        "state": "attack",
+        "clip": "Attack",
+        "phase": 0,
+        "tool": "spear",
+        "direction": 2,
+        "anchor": [
+          64.0,
+          71.29850769042969
+        ]
+      },
+      {
+        "i": 11,
+        "state": "attack",
+        "clip": "Attack",
+        "phase": 0.15,
+        "tool": "spear",
+        "direction": 2,
+        "anchor": [
+          64.0,
+          71.29850769042969
+        ]
+      },
+      {
+        "i": 12,
+        "state": "attack",
+        "clip": "Attack",
+        "phase": 0.3,
+        "tool": "spear",
+        "direction": 2,
+        "anchor": [
+          64.0,
+          71.29850769042969
+        ]
+      },
+      {
+        "i": 13,
+        "state": "attack",
+        "clip": "Attack",
+        "phase": 0.5,
+        "tool": "spear",
+        "direction": 2,
+        "anchor": [
+          64.0,
+          71.29850769042969
+        ]
+      },
+      {
+        "i": 14,
+        "state": "attack",
+        "clip": "Attack",
+        "phase": 0.7,
+        "tool": "spear",
+        "direction": 2,
+        "anchor": [
+          64.0,
+          71.29850769042969
+        ]
+      },
+      {
+        "i": 15,
+        "state": "attack",
+        "clip": "Attack",
+        "phase": 0.9,
+        "tool": "spear",
+        "direction": 2,
+        "anchor": [
+          64.0,
+          71.29850769042969
+        ]
+      },
+      {
+        "i": 16,
+        "state": "hit",
+        "clip": "Hit",
+        "phase": 0.2,
+        "tool": "spear",
+        "direction": 2,
+        "anchor": [
+          64.0,
+          71.29850769042969
+        ]
+      },
+      {
+        "i": 17,
+        "state": "hit",
+        "clip": "Hit",
+        "phase": 0.55,
+        "tool": "spear",
+        "direction": 2,
+        "anchor": [
+          64.0,
+          71.29850769042969
+        ]
+      },
+      {
+        "i": 18,
+        "state": "death",
+        "clip": "Death",
+        "phase": 0.1,
+        "tool": "spear",
+        "direction": 2,
+        "anchor": [
+          64.0,
+          71.29850769042969
+        ]
+      },
+      {
+        "i": 19,
+        "state": "death",
+        "clip": "Death",
+        "phase": 0.35,
+        "tool": "spear",
+        "direction": 2,
+        "anchor": [
+          64.0,
+          71.29850769042969
+        ]
+      },
+      {
+        "i": 20,
+        "state": "death",
+        "clip": "Death",
+        "phase": 0.65,
+        "tool": "spear",
+        "direction": 2,
+        "anchor": [
+          64.0,
+          71.29850769042969
+        ]
+      },
+      {
+        "i": 21,
+        "state": "death",
+        "clip": "Death",
+        "phase": 1,
+        "tool": "spear",
+        "direction": 2,
+        "anchor": [
+          64.0,
+          71.29850769042969
+        ]
+      },
+      {
+        "i": 0,
+        "state": "idle",
+        "clip": "Idle",
+        "phase": 0.2,
+        "tool": "spear",
+        "direction": 3,
+        "anchor": [
+          64.0,
+          71.29850769042969
+        ]
+      },
+      {
+        "i": 1,
+        "state": "idle",
+        "clip": "Idle",
+        "phase": 0.7,
+        "tool": "spear",
+        "direction": 3,
+        "anchor": [
+          64.0,
+          71.29850769042969
+        ]
+      },
+      {
+        "i": 2,
+        "state": "walk",
+        "clip": "Walk",
+        "phase": 0.0,
+        "tool": "spear",
+        "direction": 3,
+        "anchor": [
+          64.0,
+          71.29850769042969
+        ]
+      },
+      {
+        "i": 3,
+        "state": "walk",
+        "clip": "Walk",
+        "phase": 0.125,
+        "tool": "spear",
+        "direction": 3,
+        "anchor": [
+          64.0,
+          71.29850769042969
+        ]
+      },
+      {
+        "i": 4,
+        "state": "walk",
+        "clip": "Walk",
+        "phase": 0.25,
+        "tool": "spear",
+        "direction": 3,
+        "anchor": [
+          64.0,
+          71.29850769042969
+        ]
+      },
+      {
+        "i": 5,
+        "state": "walk",
+        "clip": "Walk",
+        "phase": 0.375,
+        "tool": "spear",
+        "direction": 3,
+        "anchor": [
+          64.0,
+          71.29850769042969
+        ]
+      },
+      {
+        "i": 6,
+        "state": "walk",
+        "clip": "Walk",
+        "phase": 0.5,
+        "tool": "spear",
+        "direction": 3,
+        "anchor": [
+          64.0,
+          71.29850769042969
+        ]
+      },
+      {
+        "i": 7,
+        "state": "walk",
+        "clip": "Walk",
+        "phase": 0.625,
+        "tool": "spear",
+        "direction": 3,
+        "anchor": [
+          64.0,
+          71.29850769042969
+        ]
+      },
+      {
+        "i": 8,
+        "state": "walk",
+        "clip": "Walk",
+        "phase": 0.75,
+        "tool": "spear",
+        "direction": 3,
+        "anchor": [
+          64.0,
+          71.29850769042969
+        ]
+      },
+      {
+        "i": 9,
+        "state": "walk",
+        "clip": "Walk",
+        "phase": 0.875,
+        "tool": "spear",
+        "direction": 3,
+        "anchor": [
+          64.0,
+          71.29850769042969
+        ]
+      },
+      {
+        "i": 10,
+        "state": "attack",
+        "clip": "Attack",
+        "phase": 0,
+        "tool": "spear",
+        "direction": 3,
+        "anchor": [
+          64.0,
+          71.29850769042969
+        ]
+      },
+      {
+        "i": 11,
+        "state": "attack",
+        "clip": "Attack",
+        "phase": 0.15,
+        "tool": "spear",
+        "direction": 3,
+        "anchor": [
+          64.0,
+          71.29850769042969
+        ]
+      },
+      {
+        "i": 12,
+        "state": "attack",
+        "clip": "Attack",
+        "phase": 0.3,
+        "tool": "spear",
+        "direction": 3,
+        "anchor": [
+          64.0,
+          71.29850769042969
+        ]
+      },
+      {
+        "i": 13,
+        "state": "attack",
+        "clip": "Attack",
+        "phase": 0.5,
+        "tool": "spear",
+        "direction": 3,
+        "anchor": [
+          64.0,
+          71.29850769042969
+        ]
+      },
+      {
+        "i": 14,
+        "state": "attack",
+        "clip": "Attack",
+        "phase": 0.7,
+        "tool": "spear",
+        "direction": 3,
+        "anchor": [
+          64.0,
+          71.29850769042969
+        ]
+      },
+      {
+        "i": 15,
+        "state": "attack",
+        "clip": "Attack",
+        "phase": 0.9,
+        "tool": "spear",
+        "direction": 3,
+        "anchor": [
+          64.0,
+          71.29850769042969
+        ]
+      },
+      {
+        "i": 16,
+        "state": "hit",
+        "clip": "Hit",
+        "phase": 0.2,
+        "tool": "spear",
+        "direction": 3,
+        "anchor": [
+          64.0,
+          71.29850769042969
+        ]
+      },
+      {
+        "i": 17,
+        "state": "hit",
+        "clip": "Hit",
+        "phase": 0.55,
+        "tool": "spear",
+        "direction": 3,
+        "anchor": [
+          64.0,
+          71.29850769042969
+        ]
+      },
+      {
+        "i": 18,
+        "state": "death",
+        "clip": "Death",
+        "phase": 0.1,
+        "tool": "spear",
+        "direction": 3,
+        "anchor": [
+          64.0,
+          71.29850769042969
+        ]
+      },
+      {
+        "i": 19,
+        "state": "death",
+        "clip": "Death",
+        "phase": 0.35,
+        "tool": "spear",
+        "direction": 3,
+        "anchor": [
+          64.0,
+          71.29850769042969
+        ]
+      },
+      {
+        "i": 20,
+        "state": "death",
+        "clip": "Death",
+        "phase": 0.65,
+        "tool": "spear",
+        "direction": 3,
+        "anchor": [
+          64.0,
+          71.29850769042969
+        ]
+      },
+      {
+        "i": 21,
+        "state": "death",
+        "clip": "Death",
+        "phase": 1,
+        "tool": "spear",
+        "direction": 3,
+        "anchor": [
+          64.0,
+          71.29850769042969
+        ]
+      },
+      {
+        "i": 0,
+        "state": "idle",
+        "clip": "Idle",
+        "phase": 0.2,
+        "tool": "spear",
+        "direction": 4,
+        "anchor": [
+          64.0,
+          71.29850769042969
+        ]
+      },
+      {
+        "i": 1,
+        "state": "idle",
+        "clip": "Idle",
+        "phase": 0.7,
+        "tool": "spear",
+        "direction": 4,
+        "anchor": [
+          64.0,
+          71.29850769042969
+        ]
+      },
+      {
+        "i": 2,
+        "state": "walk",
+        "clip": "Walk",
+        "phase": 0.0,
+        "tool": "spear",
+        "direction": 4,
+        "anchor": [
+          64.0,
+          71.29850769042969
+        ]
+      },
+      {
+        "i": 3,
+        "state": "walk",
+        "clip": "Walk",
+        "phase": 0.125,
+        "tool": "spear",
+        "direction": 4,
+        "anchor": [
+          64.0,
+          71.29850769042969
+        ]
+      },
+      {
+        "i": 4,
+        "state": "walk",
+        "clip": "Walk",
+        "phase": 0.25,
+        "tool": "spear",
+        "direction": 4,
+        "anchor": [
+          64.0,
+          71.29850769042969
+        ]
+      },
+      {
+        "i": 5,
+        "state": "walk",
+        "clip": "Walk",
+        "phase": 0.375,
+        "tool": "spear",
+        "direction": 4,
+        "anchor": [
+          64.0,
+          71.29850769042969
+        ]
+      },
+      {
+        "i": 6,
+        "state": "walk",
+        "clip": "Walk",
+        "phase": 0.5,
+        "tool": "spear",
+        "direction": 4,
+        "anchor": [
+          64.0,
+          71.29850769042969
+        ]
+      },
+      {
+        "i": 7,
+        "state": "walk",
+        "clip": "Walk",
+        "phase": 0.625,
+        "tool": "spear",
+        "direction": 4,
+        "anchor": [
+          64.0,
+          71.29850769042969
+        ]
+      },
+      {
+        "i": 8,
+        "state": "walk",
+        "clip": "Walk",
+        "phase": 0.75,
+        "tool": "spear",
+        "direction": 4,
+        "anchor": [
+          64.0,
+          71.29850769042969
+        ]
+      },
+      {
+        "i": 9,
+        "state": "walk",
+        "clip": "Walk",
+        "phase": 0.875,
+        "tool": "spear",
+        "direction": 4,
+        "anchor": [
+          64.0,
+          71.29850769042969
+        ]
+      },
+      {
+        "i": 10,
+        "state": "attack",
+        "clip": "Attack",
+        "phase": 0,
+        "tool": "spear",
+        "direction": 4,
+        "anchor": [
+          64.0,
+          71.29850769042969
+        ]
+      },
+      {
+        "i": 11,
+        "state": "attack",
+        "clip": "Attack",
+        "phase": 0.15,
+        "tool": "spear",
+        "direction": 4,
+        "anchor": [
+          64.0,
+          71.29850769042969
+        ]
+      },
+      {
+        "i": 12,
+        "state": "attack",
+        "clip": "Attack",
+        "phase": 0.3,
+        "tool": "spear",
+        "direction": 4,
+        "anchor": [
+          64.0,
+          71.29850769042969
+        ]
+      },
+      {
+        "i": 13,
+        "state": "attack",
+        "clip": "Attack",
+        "phase": 0.5,
+        "tool": "spear",
+        "direction": 4,
+        "anchor": [
+          64.0,
+          71.29850769042969
+        ]
+      },
+      {
+        "i": 14,
+        "state": "attack",
+        "clip": "Attack",
+        "phase": 0.7,
+        "tool": "spear",
+        "direction": 4,
+        "anchor": [
+          64.0,
+          71.29850769042969
+        ]
+      },
+      {
+        "i": 15,
+        "state": "attack",
+        "clip": "Attack",
+        "phase": 0.9,
+        "tool": "spear",
+        "direction": 4,
+        "anchor": [
+          64.0,
+          71.29850769042969
+        ]
+      },
+      {
+        "i": 16,
+        "state": "hit",
+        "clip": "Hit",
+        "phase": 0.2,
+        "tool": "spear",
+        "direction": 4,
+        "anchor": [
+          64.0,
+          71.29850769042969
+        ]
+      },
+      {
+        "i": 17,
+        "state": "hit",
+        "clip": "Hit",
+        "phase": 0.55,
+        "tool": "spear",
+        "direction": 4,
+        "anchor": [
+          64.0,
+          71.29850769042969
+        ]
+      },
+      {
+        "i": 18,
+        "state": "death",
+        "clip": "Death",
+        "phase": 0.1,
+        "tool": "spear",
+        "direction": 4,
+        "anchor": [
+          64.0,
+          71.29850769042969
+        ]
+      },
+      {
+        "i": 19,
+        "state": "death",
+        "clip": "Death",
+        "phase": 0.35,
+        "tool": "spear",
+        "direction": 4,
+        "anchor": [
+          64.0,
+          71.29850769042969
+        ]
+      },
+      {
+        "i": 20,
+        "state": "death",
+        "clip": "Death",
+        "phase": 0.65,
+        "tool": "spear",
+        "direction": 4,
+        "anchor": [
+          64.0,
+          71.29850769042969
+        ]
+      },
+      {
+        "i": 21,
+        "state": "death",
+        "clip": "Death",
+        "phase": 1,
+        "tool": "spear",
+        "direction": 4,
+        "anchor": [
+          64.0,
+          71.29850769042969
+        ]
+      },
+      {
+        "i": 0,
+        "state": "idle",
+        "clip": "Idle",
+        "phase": 0.2,
+        "tool": "spear",
+        "direction": 5,
+        "anchor": [
+          64.0,
+          71.29850769042969
+        ]
+      },
+      {
+        "i": 1,
+        "state": "idle",
+        "clip": "Idle",
+        "phase": 0.7,
+        "tool": "spear",
+        "direction": 5,
+        "anchor": [
+          64.0,
+          71.29850769042969
+        ]
+      },
+      {
+        "i": 2,
+        "state": "walk",
+        "clip": "Walk",
+        "phase": 0.0,
+        "tool": "spear",
+        "direction": 5,
+        "anchor": [
+          64.0,
+          71.29850769042969
+        ]
+      },
+      {
+        "i": 3,
+        "state": "walk",
+        "clip": "Walk",
+        "phase": 0.125,
+        "tool": "spear",
+        "direction": 5,
+        "anchor": [
+          64.0,
+          71.29850769042969
+        ]
+      },
+      {
+        "i": 4,
+        "state": "walk",
+        "clip": "Walk",
+        "phase": 0.25,
+        "tool": "spear",
+        "direction": 5,
+        "anchor": [
+          64.0,
+          71.29850769042969
+        ]
+      },
+      {
+        "i": 5,
+        "state": "walk",
+        "clip": "Walk",
+        "phase": 0.375,
+        "tool": "spear",
+        "direction": 5,
+        "anchor": [
+          64.0,
+          71.29850769042969
+        ]
+      },
+      {
+        "i": 6,
+        "state": "walk",
+        "clip": "Walk",
+        "phase": 0.5,
+        "tool": "spear",
+        "direction": 5,
+        "anchor": [
+          64.0,
+          71.29850769042969
+        ]
+      },
+      {
+        "i": 7,
+        "state": "walk",
+        "clip": "Walk",
+        "phase": 0.625,
+        "tool": "spear",
+        "direction": 5,
+        "anchor": [
+          64.0,
+          71.29850769042969
+        ]
+      },
+      {
+        "i": 8,
+        "state": "walk",
+        "clip": "Walk",
+        "phase": 0.75,
+        "tool": "spear",
+        "direction": 5,
+        "anchor": [
+          64.0,
+          71.29850769042969
+        ]
+      },
+      {
+        "i": 9,
+        "state": "walk",
+        "clip": "Walk",
+        "phase": 0.875,
+        "tool": "spear",
+        "direction": 5,
+        "anchor": [
+          64.0,
+          71.29850769042969
+        ]
+      },
+      {
+        "i": 10,
+        "state": "attack",
+        "clip": "Attack",
+        "phase": 0,
+        "tool": "spear",
+        "direction": 5,
+        "anchor": [
+          64.0,
+          71.29850769042969
+        ]
+      },
+      {
+        "i": 11,
+        "state": "attack",
+        "clip": "Attack",
+        "phase": 0.15,
+        "tool": "spear",
+        "direction": 5,
+        "anchor": [
+          64.0,
+          71.29850769042969
+        ]
+      },
+      {
+        "i": 12,
+        "state": "attack",
+        "clip": "Attack",
+        "phase": 0.3,
+        "tool": "spear",
+        "direction": 5,
+        "anchor": [
+          64.0,
+          71.29850769042969
+        ]
+      },
+      {
+        "i": 13,
+        "state": "attack",
+        "clip": "Attack",
+        "phase": 0.5,
+        "tool": "spear",
+        "direction": 5,
+        "anchor": [
+          64.0,
+          71.29850769042969
+        ]
+      },
+      {
+        "i": 14,
+        "state": "attack",
+        "clip": "Attack",
+        "phase": 0.7,
+        "tool": "spear",
+        "direction": 5,
+        "anchor": [
+          64.0,
+          71.29850769042969
+        ]
+      },
+      {
+        "i": 15,
+        "state": "attack",
+        "clip": "Attack",
+        "phase": 0.9,
+        "tool": "spear",
+        "direction": 5,
+        "anchor": [
+          64.0,
+          71.29850769042969
+        ]
+      },
+      {
+        "i": 16,
+        "state": "hit",
+        "clip": "Hit",
+        "phase": 0.2,
+        "tool": "spear",
+        "direction": 5,
+        "anchor": [
+          64.0,
+          71.29850769042969
+        ]
+      },
+      {
+        "i": 17,
+        "state": "hit",
+        "clip": "Hit",
+        "phase": 0.55,
+        "tool": "spear",
+        "direction": 5,
+        "anchor": [
+          64.0,
+          71.29850769042969
+        ]
+      },
+      {
+        "i": 18,
+        "state": "death",
+        "clip": "Death",
+        "phase": 0.1,
+        "tool": "spear",
+        "direction": 5,
+        "anchor": [
+          64.0,
+          71.29850769042969
+        ]
+      },
+      {
+        "i": 19,
+        "state": "death",
+        "clip": "Death",
+        "phase": 0.35,
+        "tool": "spear",
+        "direction": 5,
+        "anchor": [
+          64.0,
+          71.29850769042969
+        ]
+      },
+      {
+        "i": 20,
+        "state": "death",
+        "clip": "Death",
+        "phase": 0.65,
+        "tool": "spear",
+        "direction": 5,
+        "anchor": [
+          64.0,
+          71.29850769042969
+        ]
+      },
+      {
+        "i": 21,
+        "state": "death",
+        "clip": "Death",
+        "phase": 1,
+        "tool": "spear",
+        "direction": 5,
+        "anchor": [
+          64.0,
+          71.29850769042969
+        ]
+      },
+      {
+        "i": 0,
+        "state": "idle",
+        "clip": "Idle",
+        "phase": 0.2,
+        "tool": "spear",
+        "direction": 6,
+        "anchor": [
+          64.0,
+          71.29850769042969
+        ]
+      },
+      {
+        "i": 1,
+        "state": "idle",
+        "clip": "Idle",
+        "phase": 0.7,
+        "tool": "spear",
+        "direction": 6,
+        "anchor": [
+          64.0,
+          71.29850769042969
+        ]
+      },
+      {
+        "i": 2,
+        "state": "walk",
+        "clip": "Walk",
+        "phase": 0.0,
+        "tool": "spear",
+        "direction": 6,
+        "anchor": [
+          64.0,
+          71.29850769042969
+        ]
+      },
+      {
+        "i": 3,
+        "state": "walk",
+        "clip": "Walk",
+        "phase": 0.125,
+        "tool": "spear",
+        "direction": 6,
+        "anchor": [
+          64.0,
+          71.29850769042969
+        ]
+      },
+      {
+        "i": 4,
+        "state": "walk",
+        "clip": "Walk",
+        "phase": 0.25,
+        "tool": "spear",
+        "direction": 6,
+        "anchor": [
+          64.0,
+          71.29850769042969
+        ]
+      },
+      {
+        "i": 5,
+        "state": "walk",
+        "clip": "Walk",
+        "phase": 0.375,
+        "tool": "spear",
+        "direction": 6,
+        "anchor": [
+          64.0,
+          71.29850769042969
+        ]
+      },
+      {
+        "i": 6,
+        "state": "walk",
+        "clip": "Walk",
+        "phase": 0.5,
+        "tool": "spear",
+        "direction": 6,
+        "anchor": [
+          64.0,
+          71.29850769042969
+        ]
+      },
+      {
+        "i": 7,
+        "state": "walk",
+        "clip": "Walk",
+        "phase": 0.625,
+        "tool": "spear",
+        "direction": 6,
+        "anchor": [
+          64.0,
+          71.29850769042969
+        ]
+      },
+      {
+        "i": 8,
+        "state": "walk",
+        "clip": "Walk",
+        "phase": 0.75,
+        "tool": "spear",
+        "direction": 6,
+        "anchor": [
+          64.0,
+          71.29850769042969
+        ]
+      },
+      {
+        "i": 9,
+        "state": "walk",
+        "clip": "Walk",
+        "phase": 0.875,
+        "tool": "spear",
+        "direction": 6,
+        "anchor": [
+          64.0,
+          71.29850769042969
+        ]
+      },
+      {
+        "i": 10,
+        "state": "attack",
+        "clip": "Attack",
+        "phase": 0,
+        "tool": "spear",
+        "direction": 6,
+        "anchor": [
+          64.0,
+          71.29850769042969
+        ]
+      },
+      {
+        "i": 11,
+        "state": "attack",
+        "clip": "Attack",
+        "phase": 0.15,
+        "tool": "spear",
+        "direction": 6,
+        "anchor": [
+          64.0,
+          71.29850769042969
+        ]
+      },
+      {
+        "i": 12,
+        "state": "attack",
+        "clip": "Attack",
+        "phase": 0.3,
+        "tool": "spear",
+        "direction": 6,
+        "anchor": [
+          64.0,
+          71.29850769042969
+        ]
+      },
+      {
+        "i": 13,
+        "state": "attack",
+        "clip": "Attack",
+        "phase": 0.5,
+        "tool": "spear",
+        "direction": 6,
+        "anchor": [
+          64.0,
+          71.29850769042969
+        ]
+      },
+      {
+        "i": 14,
+        "state": "attack",
+        "clip": "Attack",
+        "phase": 0.7,
+        "tool": "spear",
+        "direction": 6,
+        "anchor": [
+          64.0,
+          71.29850769042969
+        ]
+      },
+      {
+        "i": 15,
+        "state": "attack",
+        "clip": "Attack",
+        "phase": 0.9,
+        "tool": "spear",
+        "direction": 6,
+        "anchor": [
+          64.0,
+          71.29850769042969
+        ]
+      },
+      {
+        "i": 16,
+        "state": "hit",
+        "clip": "Hit",
+        "phase": 0.2,
+        "tool": "spear",
+        "direction": 6,
+        "anchor": [
+          64.0,
+          71.29850769042969
+        ]
+      },
+      {
+        "i": 17,
+        "state": "hit",
+        "clip": "Hit",
+        "phase": 0.55,
+        "tool": "spear",
+        "direction": 6,
+        "anchor": [
+          64.0,
+          71.29850769042969
+        ]
+      },
+      {
+        "i": 18,
+        "state": "death",
+        "clip": "Death",
+        "phase": 0.1,
+        "tool": "spear",
+        "direction": 6,
+        "anchor": [
+          64.0,
+          71.29850769042969
+        ]
+      },
+      {
+        "i": 19,
+        "state": "death",
+        "clip": "Death",
+        "phase": 0.35,
+        "tool": "spear",
+        "direction": 6,
+        "anchor": [
+          64.0,
+          71.29850769042969
+        ]
+      },
+      {
+        "i": 20,
+        "state": "death",
+        "clip": "Death",
+        "phase": 0.65,
+        "tool": "spear",
+        "direction": 6,
+        "anchor": [
+          64.0,
+          71.29850769042969
+        ]
+      },
+      {
+        "i": 21,
+        "state": "death",
+        "clip": "Death",
+        "phase": 1,
+        "tool": "spear",
+        "direction": 6,
+        "anchor": [
+          64.0,
+          71.29850769042969
+        ]
+      },
+      {
+        "i": 0,
+        "state": "idle",
+        "clip": "Idle",
+        "phase": 0.2,
+        "tool": "spear",
+        "direction": 7,
+        "anchor": [
+          64.0,
+          71.29850769042969
+        ]
+      },
+      {
+        "i": 1,
+        "state": "idle",
+        "clip": "Idle",
+        "phase": 0.7,
+        "tool": "spear",
+        "direction": 7,
+        "anchor": [
+          64.0,
+          71.29850769042969
+        ]
+      },
+      {
+        "i": 2,
+        "state": "walk",
+        "clip": "Walk",
+        "phase": 0.0,
+        "tool": "spear",
+        "direction": 7,
+        "anchor": [
+          64.0,
+          71.29850769042969
+        ]
+      },
+      {
+        "i": 3,
+        "state": "walk",
+        "clip": "Walk",
+        "phase": 0.125,
+        "tool": "spear",
+        "direction": 7,
+        "anchor": [
+          64.0,
+          71.29850769042969
+        ]
+      },
+      {
+        "i": 4,
+        "state": "walk",
+        "clip": "Walk",
+        "phase": 0.25,
+        "tool": "spear",
+        "direction": 7,
+        "anchor": [
+          64.0,
+          71.29850769042969
+        ]
+      },
+      {
+        "i": 5,
+        "state": "walk",
+        "clip": "Walk",
+        "phase": 0.375,
+        "tool": "spear",
+        "direction": 7,
+        "anchor": [
+          64.0,
+          71.29850769042969
+        ]
+      },
+      {
+        "i": 6,
+        "state": "walk",
+        "clip": "Walk",
+        "phase": 0.5,
+        "tool": "spear",
+        "direction": 7,
+        "anchor": [
+          64.0,
+          71.29850769042969
+        ]
+      },
+      {
+        "i": 7,
+        "state": "walk",
+        "clip": "Walk",
+        "phase": 0.625,
+        "tool": "spear",
+        "direction": 7,
+        "anchor": [
+          64.0,
+          71.29850769042969
+        ]
+      },
+      {
+        "i": 8,
+        "state": "walk",
+        "clip": "Walk",
+        "phase": 0.75,
+        "tool": "spear",
+        "direction": 7,
+        "anchor": [
+          64.0,
+          71.29850769042969
+        ]
+      },
+      {
+        "i": 9,
+        "state": "walk",
+        "clip": "Walk",
+        "phase": 0.875,
+        "tool": "spear",
+        "direction": 7,
+        "anchor": [
+          64.0,
+          71.29850769042969
+        ]
+      },
+      {
+        "i": 10,
+        "state": "attack",
+        "clip": "Attack",
+        "phase": 0,
+        "tool": "spear",
+        "direction": 7,
+        "anchor": [
+          64.0,
+          71.29850769042969
+        ]
+      },
+      {
+        "i": 11,
+        "state": "attack",
+        "clip": "Attack",
+        "phase": 0.15,
+        "tool": "spear",
+        "direction": 7,
+        "anchor": [
+          64.0,
+          71.29850769042969
+        ]
+      },
+      {
+        "i": 12,
+        "state": "attack",
+        "clip": "Attack",
+        "phase": 0.3,
+        "tool": "spear",
+        "direction": 7,
+        "anchor": [
+          64.0,
+          71.29850769042969
+        ]
+      },
+      {
+        "i": 13,
+        "state": "attack",
+        "clip": "Attack",
+        "phase": 0.5,
+        "tool": "spear",
+        "direction": 7,
+        "anchor": [
+          64.0,
+          71.29850769042969
+        ]
+      },
+      {
+        "i": 14,
+        "state": "attack",
+        "clip": "Attack",
+        "phase": 0.7,
+        "tool": "spear",
+        "direction": 7,
+        "anchor": [
+          64.0,
+          71.29850769042969
+        ]
+      },
+      {
+        "i": 15,
+        "state": "attack",
+        "clip": "Attack",
+        "phase": 0.9,
+        "tool": "spear",
+        "direction": 7,
+        "anchor": [
+          64.0,
+          71.29850769042969
+        ]
+      },
+      {
+        "i": 16,
+        "state": "hit",
+        "clip": "Hit",
+        "phase": 0.2,
+        "tool": "spear",
+        "direction": 7,
+        "anchor": [
+          64.0,
+          71.29850769042969
+        ]
+      },
+      {
+        "i": 17,
+        "state": "hit",
+        "clip": "Hit",
+        "phase": 0.55,
+        "tool": "spear",
+        "direction": 7,
+        "anchor": [
+          64.0,
+          71.29850769042969
+        ]
+      },
+      {
+        "i": 18,
+        "state": "death",
+        "clip": "Death",
+        "phase": 0.1,
+        "tool": "spear",
+        "direction": 7,
+        "anchor": [
+          64.0,
+          71.29850769042969
+        ]
+      },
+      {
+        "i": 19,
+        "state": "death",
+        "clip": "Death",
+        "phase": 0.35,
+        "tool": "spear",
+        "direction": 7,
+        "anchor": [
+          64.0,
+          71.29850769042969
+        ]
+      },
+      {
+        "i": 20,
+        "state": "death",
+        "clip": "Death",
+        "phase": 0.65,
+        "tool": "spear",
+        "direction": 7,
+        "anchor": [
+          64.0,
+          71.29850769042969
+        ]
+      },
+      {
+        "i": 21,
+        "state": "death",
+        "clip": "Death",
+        "phase": 1,
+        "tool": "spear",
+        "direction": 7,
+        "anchor": [
+          64.0,
+          71.29850769042969
+        ]
+      }
+    ],
+    "resolution": 128,
+    "cpuSamples": 2
+  }
+}
