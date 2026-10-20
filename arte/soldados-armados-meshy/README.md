@@ -114,7 +114,8 @@ Foi acrescentado o workflow só de leitura `.github/workflows/soldados-armas-mes
 
 ## Limitações e acessórios em falta
 
-- **Escudos, aljava, flechas e virotes não fazem parte do pacote** e não foram inventados. Os escudos procedimentais do ramo `soldados-v2` foram retirados.
+- **Escudo:** o escudo redondo gerado no site meshy.ai (`Meshy_AI_round_shield_1020033443`) foi reduzido de 290 960 para 1 500 triângulos (`scripts/preparar_escudo.py`) e está no antebraço esquerdo do guerreiro, lanceiro e espadachim, rígido e presente em todos os estados.
+- **Aljava, flechas e virotes** continuam sem modelo próprio e não foram inventados.
   - O arqueiro tem só a pequena aljava vazia modelada no corpo Meshy.
   - O disparo do arco não mostra flecha nem corda puxada pela mão direita. O besteiro não mostra virote nem recuo. Os projéteis continuam a ser os do jogo.
   - A relação mão–corda–disparo **não** está validada.

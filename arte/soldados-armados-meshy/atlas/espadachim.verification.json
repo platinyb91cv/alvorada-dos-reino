@@ -1,7 +1,7 @@
 {
  "unit": "espadachim",
  "atlas": "www/assets/units3d/espadachim-armas-meshy.webp",
- "atlasSha256": "d38be17e013a4434770b07b6eb1fc8862ff824717a2b7bc51a277096cb436cbb",
+ "atlasSha256": "d22deefad91bb7c2d32b027d80107914bdd497f66fcbb9264d08f0eeb745117e",
  "directions": 8,
  "directionLabels": [
   "SE",
@@ -112,23 +112,29 @@
  },
  "checks": {
   "rigid": {
-   "sword": 3e-06
+   "sword": 3e-06,
+   "shield": 4e-06
   },
   "present": {
    "idle": {
-    "sword": true
+    "sword": true,
+    "shield": true
    },
    "walk": {
-    "sword": true
+    "sword": true,
+    "shield": true
    },
    "attack": {
-    "sword": true
+    "sword": true,
+    "shield": true
    },
    "hit": {
-    "sword": true
+    "sword": true,
+    "shield": true
    },
    "death": {
-    "sword": true
+    "sword": true,
+    "shield": true
    }
   },
   "rootHorizontal": {
@@ -230,7 +236,8 @@
  ],
  "renderer": "Forge3D RENDER_SPRITE_ATLAS (platinyb91cv-forge3d-ai fase4-imagens) com SPRITE_PROP_DIR, Blender 5.2.2 Cycles CPU",
  "warnings": [
-  "Osso RightHand muito comprido; a pega foi limitada a 0.16 m da base."
+  "Osso RightHand muito comprido; a pega foi limitada a 0.16 m da base.",
+  "Osso LeftForeArm muito comprido; a pega foi limitada a 0.49 m da base."
  ],
  "model": {
   "armature": "Armature",
@@ -241,5 +248,15 @@
   "vertices": 78468,
   "heightMetres": 1.6456,
   "rootBone": "Hips"
+ },
+ "escudo": {
+  "file": "arte/soldados-armados-meshy/armas/otimizados/shield.glb",
+  "sha256": "1e7350adfdd9e22f6adbe76e7d4c335c7efb7449c57a6e0d151476034dabe79e",
+  "triangles": 1500,
+  "diameterMetres": 0.62,
+  "bone": "LeftForeArm",
+  "source": "Meshy_AI_round_shield_1020033443_image-to-3d-texture.glb (gerado pelo utilizador no site meshy.ai)",
+  "sourceSha256": "6013e359a776b04c9dd0a84051f7593e9f7a6cd8d12fab92f11913d8000fa05e",
+  "reduction": "Decimate 290 960 -> 1 500 triângulos, texturas 512 px (scripts/preparar_escudo.py)"
  }
 }

@@ -10,7 +10,9 @@ export function soldierConfig(n: string, extra: Record<string, unknown> = {}) {
   const [preset, id, model] = map[n]; const c = presetConfig(preset);
   // Eixo da pega escolhido na pose neutra (1.º quadro de Death: braços caídos, polegar para a frente), sem as correções de transporte.
   const neutral = ['guerreiro', 'espadachim', 'lanceiro'].includes(n) ? { placeIn: 'death', placeAt: 0 } : {};
-  const props = c.props.filter(p => p.id === id).map(p => ({ ...p, model, ...neutral }));
+  const props: any[] = c.props.filter(p => p.id === id).map(p => ({ ...p, model, ...neutral }));
+  // Escudo Meshy (site meshy.ai, reduzido) no antebraço esquerdo da infantaria
+  const sh = c.props.find(p => p.id === 'shield'); if (sh && process.env.ESCUDO !== '0') props.push({ ...sh, model: 'shield' });
   const ra = (part: 'upperArm' | 'forearm') => ({ names: [part === 'forearm' ? 'RightForeArm' : 'RightArm'], role: part, side: 'right' as const });
   // Pega de transporte: cotovelo dobrado em Idle/Walk/Hit para a arma ficar erguida ao lado do corpo, em vez de espetada para a frente.
   const carry = (deg: number) => [{ bone: ra('forearm'), mode: 'towardForward' as const, degrees: deg, states: ['idle', 'walk', 'hit'] }];
@@ -18,7 +20,7 @@ export function soldierConfig(n: string, extra: Record<string, unknown> = {}) {
   // Arqueiro: arco orientado na pose de disparo; ao andar/parado o cotovelo esquerdo dobra para o arco ficar de pé, à frente.
   const bowCarry = n === 'arqueiro' ? [{ bone: la, mode: 'towardForward' as const, degrees: Number(process.env.BOWCARRY ?? 70), states: ['idle', 'walk', 'hit'] }] : [];
   const extraOffsets = [...bowCarry, ...(['guerreiro', 'espadachim', 'lanceiro'].includes(n) ? carry(Number(process.env.CARRY ?? 85)) : [])];
-  return { ...c, props, poseOffsets: [...c.poseOffsets, ...extraOffsets], states: c.states.map(s => ({ ...s, props: s.props.filter(x => x === id), ...(n === 'arqueiro' && s.name === 'attack' ? { range: [0.4, 1] as [number, number] } : {}) })), samples: 8, ...extra };
+  return { ...c, props, poseOffsets: [...c.poseOffsets, ...extraOffsets], states: c.states.map(s => ({ ...s, props: s.props.filter(x => x === id || (x === 'shield' && props.some(p => p.id === 'shield'))), ...(n === 'arqueiro' && s.name === 'attack' ? { range: [0.4, 1] as [number, number] } : {}) })), samples: 8, ...extra };
 }
 async function main() {
   process.env.SPRITE_PROP_DIR ??= process.env.ARMAS ?? 'armas'; // pasta com axe-2.glb, spear-2.glb, sword-2.glb, bow-2.glb, crossbow.glb (otimizados/)

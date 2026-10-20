@@ -551,30 +551,30 @@
  "attack": [
   {
    "t": "guerreiro",
-   "s": "hit",
+   "s": "attack",
    "dir": 1,
    "hp": 33,
    "alive": true
   },
   {
    "t": "lanceiro",
-   "s": "hit",
+   "s": "attack",
    "dir": 1,
    "hp": 27,
    "alive": true
   },
   {
    "t": "espadachim",
-   "s": "hit",
+   "s": "attack",
    "dir": 1,
    "hp": 63,
    "alive": true
   },
   {
    "t": "arqueiro",
-   "s": "attack",
+   "s": "hit",
    "dir": 1,
-   "hp": 27,
+   "hp": 22,
    "alive": true
   },
   {
@@ -616,9 +616,9 @@
   },
   {
    "t": "besteiro",
-   "s": "attack",
+   "s": "hit",
    "dir": 1,
-   "hp": 35,
+   "hp": 30,
    "alive": true
   }
  ],

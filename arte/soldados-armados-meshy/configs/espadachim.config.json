@@ -18,7 +18,8 @@
     1
    ],
    "props": [
-    "sword"
+    "sword",
+    "shield"
    ]
   },
   {
@@ -31,7 +32,8 @@
     1
    ],
    "props": [
-    "sword"
+    "sword",
+    "shield"
    ]
   },
   {
@@ -44,7 +46,8 @@
     1
    ],
    "props": [
-    "sword"
+    "sword",
+    "shield"
    ]
   },
   {
@@ -57,7 +60,8 @@
     1
    ],
    "props": [
-    "sword"
+    "sword",
+    "shield"
    ]
   },
   {
@@ -70,7 +74,8 @@
     1
    ],
    "props": [
-    "sword"
+    "sword",
+    "shield"
    ]
   }
  ],
@@ -106,6 +111,36 @@
    "accent": "#c9a24a",
    "model": "sword-2",
    "placeIn": "death"
+  },
+  {
+   "id": "shield",
+   "kind": "shield",
+   "bone": {
+    "names": [
+     "LeftForeArm",
+     "mixamorig:LeftForeArm",
+     "ForeArm_L",
+     "forearm.L"
+    ],
+    "role": "forearm",
+    "side": "left"
+   },
+   "thickness": 1.6,
+   "position": [
+    0.06,
+    0.04,
+    0
+   ],
+   "rotation": [
+    0,
+    0,
+    0
+   ],
+   "placeAt": 0,
+   "wood": "#7a4a24",
+   "metal": "#9aa3ad",
+   "accent": "#c9a24a",
+   "model": "shield"
   }
  ],
  "poseOffsets": [

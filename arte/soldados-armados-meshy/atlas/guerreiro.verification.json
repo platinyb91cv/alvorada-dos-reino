@@ -1,7 +1,7 @@
 {
  "unit": "guerreiro",
  "atlas": "www/assets/units3d/guerreiro-armas-meshy.webp",
- "atlasSha256": "d7db78f57c50626b3fbdb747963c0af555d38b6c3a07f1a3435c045926591a6d",
+ "atlasSha256": "af433162bef274f6c080512b1dae2d558ae6bc1055deed6fe70504068d9a9a57",
  "directions": 8,
  "directionLabels": [
   "SE",
@@ -112,23 +112,29 @@
  },
  "checks": {
   "rigid": {
-   "axe": 2e-06
+   "axe": 2e-06,
+   "shield": 5e-06
   },
   "present": {
    "idle": {
-    "axe": true
+    "axe": true,
+    "shield": true
    },
    "walk": {
-    "axe": true
+    "axe": true,
+    "shield": true
    },
    "attack": {
-    "axe": true
+    "axe": true,
+    "shield": true
    },
    "hit": {
-    "axe": true
+    "axe": true,
+    "shield": true
    },
    "death": {
-    "axe": true
+    "axe": true,
+    "shield": true
    }
   },
   "rootHorizontal": {
@@ -230,7 +236,8 @@
  ],
  "renderer": "Forge3D RENDER_SPRITE_ATLAS (platinyb91cv-forge3d-ai fase4-imagens) com SPRITE_PROP_DIR, Blender 5.2.2 Cycles CPU",
  "warnings": [
-  "Osso RightHand muito comprido; a pega foi limitada a 0.16 m da base."
+  "Osso RightHand muito comprido; a pega foi limitada a 0.16 m da base.",
+  "Osso LeftForeArm muito comprido; a pega foi limitada a 0.48 m da base."
  ],
  "model": {
   "armature": "Armature",
@@ -241,5 +248,15 @@
   "vertices": 77280,
   "heightMetres": 1.6117,
   "rootBone": "Hips"
+ },
+ "escudo": {
+  "file": "arte/soldados-armados-meshy/armas/otimizados/shield.glb",
+  "sha256": "1e7350adfdd9e22f6adbe76e7d4c335c7efb7449c57a6e0d151476034dabe79e",
+  "triangles": 1500,
+  "diameterMetres": 0.62,
+  "bone": "LeftForeArm",
+  "source": "Meshy_AI_round_shield_1020033443_image-to-3d-texture.glb (gerado pelo utilizador no site meshy.ai)",
+  "sourceSha256": "6013e359a776b04c9dd0a84051f7593e9f7a6cd8d12fab92f11913d8000fa05e",
+  "reduction": "Decimate 290 960 -> 1 500 triângulos, texturas 512 px (scripts/preparar_escudo.py)"
  }
 }
