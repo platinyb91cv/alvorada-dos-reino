@@ -28,7 +28,7 @@ else:
     PIV = P(0.30, 0, 0.36); END = P(0.75, 0, 0.36)
     parts = {
         'contrapeso': lambda c: c.x > 0.52 * S and -0.22 * S + dz < c.z < 0.30 * S + dz and abs(c.y) < 0.27 * S,
-        'braco': lambda c: (0.27 * S + dz < c.z < 0.46 * S + dz and c.x < 0.82 * S and abs(c.y) < 0.12 * S and not (0.12 * S < c.x < 0.48 * S))
+        'braco': lambda c: (0.27 * S + dz < c.z < 0.46 * S + dz and c.x < 0.95 * S and abs(c.y) < 0.12 * S and not (0.12 * S < c.x < 0.48 * S))
                            or (c.x < -0.62 * S and 0.12 * S + dz < c.z < 0.46 * S + dz),
     }
 centers = {k: P(x, 0, z) for k, v in wheels.items() for (x, z) in v}
@@ -43,11 +43,19 @@ for f in bm.faces:
         for k, test in parts.items():
             if test(c): g = k; break
     face_group[f.index] = g
-vg = {k: mesh.vertex_groups.new(name=k) for k in groups}
+# corta a malha nas fronteiras entre partes (malhas ligadas esticariam faces entre peças rígidas)
+for f in bm.faces: f.tag = False
+gl = bm.faces.layers.int.new('grp'); names = list(groups)
+for f in bm.faces: f[gl] = names.index(face_group[f.index])
+cut = [e for e in bm.edges if len({f[gl] for f in e.link_faces}) > 1]
+if cut: bmesh.ops.split_edges(bm, edges=cut)
+bm.verts.ensure_lookup_table(); bm.faces.ensure_lookup_table()
 vert_group = {}
 for f in bm.faces:
-    for v in f.verts: vert_group.setdefault(v.index, face_group[f.index])
-bm.free()
+    for v in f.verts: vert_group.setdefault(v.index, names[f[gl]])
+print('CORTES', len(cut))
+bm.to_mesh(mesh.data); bm.free()
+vg = {k: mesh.vertex_groups.new(name=k) for k in groups}
 counts = {}
 for vi, g in vert_group.items(): vg[g].add([vi], 1.0, 'REPLACE'); counts[g] = counts.get(g, 0) + 1
 print('GRUPOS', json.dumps(counts))

@@ -1,28 +1,29 @@
 {
- "fonte": "Modelos gerados pelo utilizador no site meshy.ai (low-poly com textura); créditos gastos no site, não por este pipeline",
+ "fonte": "Modelos gerados pelo utilizador no site meshy.ai (image-to-3D com textura), reduzidos a 40 000 triângulos; créditos gastos no site, não por este pipeline",
  "creditosAdicionais": 0,
  "originais": {
   "trebuchet": {
-   "ficheiro": "Meshy_AI_trebuchet_lowpoly_1020033030_texture.glb",
-   "sha256": "28d7d2b72c93faa7832576280eff39dd28db145a60cbddcae12446e98dd6a620"
+   "ficheiro": "Meshy_AI_trebuchet_1020095418_image-to-3d-texture.glb",
+   "sha256": "abeb6191d7456a79d3616f74601cc5c717cf8c6db5989c06af822d4dc371e430"
   },
   "ariete": {
-   "ficheiro": "Meshy_AI_battering_ram_lowpoly_1020033232_texture.glb",
-   "sha256": "5c4f4c10853860105397b2aaf5df7abe8e118b6141bce1d34f3e9a394180977e"
+   "ficheiro": "Meshy_AI_battering_ram_1020033550_image-to-3d-texture.glb",
+   "sha256": "1d1fc75472d5e44c9e81f847c7ae8560dcf4cd21c01bb1c845c9cef57c0f8c27"
   }
  },
  "naoUsados": {
-  "Meshy_AI_battering_ram_1020033550_image-to-3d-texture.glb": "1,8 M triângulos (pesado; igual em forma ao low-poly)",
-  "Meshy_AI_round_shield_1020033443_image-to-3d-texture.glb": "escudo: reservado para os soldados (291 k triângulos, a reduzir)"
+  "Meshy_AI_trebuchet_lowpoly_1020033030_texture.glb": "low-poly anterior (faces soltas, farpas nas rodas); substituído pela versão image-to-3D",
+  "Meshy_AI_battering_ram_lowpoly_1020033232_texture.glb": "low-poly anterior; substituído pela versão image-to-3D",
+  "a7297f02-Meshy_AI_trebuchet_lowpoly_1020033030_texture_1.glb": "cópia idêntica do low-poly do trebuchet"
  },
  "riggados": {
   "trebuchet": {
    "ficheiro": "arte/cerco-meshy/modelos/trebuchet-rig.glb",
-   "sha256": "a508fc5a3b0404e280ef0eba1d25ca5ae5796f85111fdf79fd8cef22d1cadf88"
+   "sha256": "bdd0827c35a3ef30c7f9a4eab52b38b92e6a314d141e12557b83a807aec9f3a8"
   },
   "ariete": {
    "ficheiro": "arte/cerco-meshy/modelos/ariete-rig.glb",
-   "sha256": "9c9ad269d5230b7cd371c878ee328073325e48d4622006e4d7b0800c47353bea"
+   "sha256": "7e3b7f14ddf095e3b5a771e20034253c9ac9063d65d2ebcdb10bcc5d5985c9b5"
   }
  },
  "escalaReal": {
@@ -46,11 +47,16 @@
   "Death": 52
  },
  "atlas": {
-  "trebuchet": "e0a235d2a776e293d663f7225df48895e34f08dae9db72510d4210a2655652cc",
-  "ariete": "dae18cdab1c7a1b6c89988b90e2090c6e2b8720db581edd6c2142b2d8717d127"
+  "trebuchet": "048096bd9f997f96c000f2a5d308c9b694fe15cb77d355119e08eb1d555205a3",
+  "ariete": "355e3adbfd1bb60eab8befc44089f64ff01837a10b2054d5657c754fb604bb46"
  },
  "limites": [
-  "Partes rígidas separadas por região (o low-poly do Meshy vem em faces soltas): algumas faces junto às rodas ficam com o corpo e aparecem como pequenas farpas a girar, visíveis só ampliado",
+  "Partes rígidas separadas por região e malha cortada nas fronteiras entre peças",
   "A catapulta continua com o desenho antigo (não houve modelo)"
- ]
+ ],
+ "reducao": {
+  "script": "arte/cerco-meshy/scripts/reduzir.py",
+  "triangulos": 40000,
+  "texturaMax": 2048
+ }
 }
