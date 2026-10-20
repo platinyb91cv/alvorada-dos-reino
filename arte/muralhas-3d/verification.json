@@ -1,0 +1,18 @@
+{
+ "creditosAdicionais": 0,
+ "ferramentas": [
+  "Blender 5.2 no PC do utilizador (Cycles CUDA, Quadro P5000)",
+  "Texturas Poly Haven (CC0), as mesmas dos portões"
+ ],
+ "tipos": {
+  "madeira": "muralhaMadeira",
+  "pedra": "muralhaPedra",
+  "fort": "muralhaFort"
+ },
+ "mascaras": "0-15 (1=+x, 2=+y, 4=-x, 8=-y)",
+ "metodo": "cada braço é modelado prolongado e o render é recortado à coluna de ecrã da casa (|x| < 16 px do jogo), por isso as casas vizinhas encaixam sem costura",
+ "atlas": {
+  "ficheiro": "www/assets/edificios-extra/muralhas-3d.webp",
+  "sha256": "676525724971ce22c8d83165318d8827882383b96dd2bb15fdb5b0f81c755737"
+ }
+}
