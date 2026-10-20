@@ -67,7 +67,14 @@ def tex_mat(name, tid, scale, tint=(1, 1, 1), sat=1.25, val=1.0, rough_k=1.0, no
         L.new(off.outputs['Vector'], t.inputs['Vector']); return t
     d = img('diff', True); hs = N.new('ShaderNodeHueSaturation'); hs.inputs['Saturation'].default_value = sat; hs.inputs['Value'].default_value = val; L.new(d.outputs['Color'], hs.inputs['Color'])
     mu = N.new('ShaderNodeMixRGB'); mu.blend_type = 'MULTIPLY'; mu.inputs['Fac'].default_value = 1; L.new(hs.outputs['Color'], mu.inputs[1]); mu.inputs[2].default_value = (*tint, 1)
-    L.new(mu.outputs[0], bs.inputs['Base Color'])
+    sz = N.new('ShaderNodeSeparateXYZ'); L.new(tc.outputs['Object'], sz.inputs[0])
+    mr = N.new('ShaderNodeMapRange'); L.new(sz.outputs[2], mr.inputs['Value']); mr.inputs['From Min'].default_value = 0; mr.inputs['From Max'].default_value = .32; mr.inputs['To Min'].default_value = .5; mr.inputs['To Max'].default_value = 1
+    gn = N.new('ShaderNodeTexNoise'); gn.inputs['Scale'].default_value = 9; L.new(tc.outputs['Object'], gn.inputs['Vector'])
+    gm = N.new('ShaderNodeMath'); gm.operation = 'MULTIPLY_ADD'; L.new(gn.outputs['Fac'], gm.inputs[0]); gm.inputs[1].default_value = .25; L.new(mr.outputs[0], gm.inputs[2])
+    gc = N.new('ShaderNodeMath'); gc.operation = 'MINIMUM'; L.new(gm.outputs[0], gc.inputs[0]); gc.inputs[1].default_value = 1
+    dm = N.new('ShaderNodeMixRGB'); dm.blend_type = 'MULTIPLY'; dm.inputs['Fac'].default_value = 1; L.new(mu.outputs[0], dm.inputs[1])
+    cc = N.new('ShaderNodeCombineColor'); [L.new(gc.outputs[0], cc.inputs[i]) for i in range(3)]; L.new(cc.outputs[0], dm.inputs[2])
+    L.new(dm.outputs[0], bs.inputs['Base Color'])
     if os.path.exists(p('rough')):
         r = img('rough', False); rm = N.new('ShaderNodeMath'); rm.operation = 'MULTIPLY'; rm.inputs[1].default_value = rough_k; L.new(r.outputs['Color'], rm.inputs[0]); L.new(rm.outputs[0], bs.inputs['Roughness'])
     if os.path.exists(p('nor')):
@@ -75,6 +82,7 @@ def tex_mat(name, tid, scale, tint=(1, 1, 1), sat=1.25, val=1.0, rough_k=1.0, no
     return m
 def mats():
     M = dict(
+        vao=node_mat('vao', (.012, .01, .008), bump=0, var=0, rough=1),
         wood=node_mat('wood', (.2, .09, .03), noise=14, var=.3),
         wood_lt=node_mat('wood_lt', (.3, .15, .05), noise=14, var=.25),
         plank=node_mat('plank', (.27, .12, .04), noise=22, var=.3, brick=(9, .01, .9, .12)),
@@ -90,12 +98,12 @@ def mats():
         dirt=node_mat('dirt', (.3, .17, .07), noise=20, var=.25, bump=.2),
         fire=node_mat('fire', (1, .5, .15), emit=(1, .45, .1), bump=0, var=0))
     real = dict(  # texturas reais Poly Haven (CC0); cores puxadas para o estilo pintado do jogo
-        wood=tex_mat('t_wood', 'bark_brown_02', 3.2, tint=(1, .82, .62), sat=1.2, val=1.05),
+        wood=tex_mat('t_wood', 'bark_brown_02', 3.2, tint=(1, .78, .55), sat=1.5, val=1.2),
         wood_lt=tex_mat('t_wood_lt', 'brown_planks_05', 1.6, tint=(1, .85, .65), sat=1.2, val=1.1),
-        plank=tex_mat('t_plank', 'weathered_brown_planks', 1.6, tint=(1, .8, .58), sat=1.35, val=1.0),
-        stone=tex_mat('t_stone', 'large_sandstone_blocks_01', 1.1, tint=(1, .86, .66), sat=1.3, val=1.12, normal=1.4),
+        plank=tex_mat('t_plank', 'weathered_brown_planks', 1.6, tint=(1, .76, .52), sat=1.55, val=1.12),
+        stone=tex_mat('t_stone', 'large_sandstone_blocks_01', 1.1, tint=(1.05, .86, .62), sat=1.45, val=1.18, normal=1.4),
         stone_dk=tex_mat('t_stone_dk', 'medieval_blocks_02', 1.4, tint=(.95, .8, .62), sat=1.2, val=.95, normal=1.4),
-        thatch=tex_mat('t_thatch', 'thatch_roof_angled', 1.6, tint=(1, .85, .55), sat=1.2, val=1.1),
+        thatch=tex_mat('t_thatch', 'thatch_roof_angled', 1.6, tint=(1.15, .86, .42), sat=1.8, val=1.45),
         shingle=tex_mat('t_shingle', 'clay_roof_tiles_02', 2.4, tint=(1, .8, .7), sat=1.15, val=.95),
         slate=tex_mat('t_slate', 'roof_slates_02', 2.4, tint=(.75, .7, .66), sat=.3, val=.9))
     for k, v in real.items():
@@ -176,13 +184,13 @@ def merlons(x0, x1, y0, y1, z, mat, n, size=.07, h=.08, sides='all'):
             xx = x0 + (x1 - x0) * t; box(xx - size / 2, xx + size / 2, y1 - .05, y1, z, z + h, mat, 'merlon'); box(xx - size / 2, xx + size / 2, y0, y0 + .05, z, z + h, mat, 'merlon')
         if sides == 'all':
             yy = y0 + (y1 - y0) * t; box(x0, x0 + .05, yy - size / 2, yy + size / 2, z, z + h, mat, 'merlon'); box(x1 - .05, x1, yy - size / 2, yy + size / 2, z, z + h, mat, 'merlon')
-def arch_cut(o, x0, x1, z_spring, y0, y1):  # recorta uma porta em arco num bloco (boolean)
+def arch_cut(o, x0, x1, z_spring, y0, y1, only_round=False):  # recorta uma porta em arco num bloco (boolean)
     w = x1 - x0; cut = box(x0, x1, y0 - .1, y1 + .1, -.05, z_spring, o.data.materials[0], 'cut')
     bm = bmesh.new(); bmesh.ops.create_cone(bm, cap_ends=True, segments=24, radius1=w / 2, radius2=w / 2, depth=(y1 - y0) + .2)
     bmesh.ops.transform(bm, matrix=Matrix.Rotation(R(90), 4, 'X'), verts=bm.verts)
     for v in bm.verts: v.co += Vector(((x0 + x1) / 2, -(y0 + y1) / 2, z_spring))
     me = bpy.data.meshes.new('c2'); bm.to_mesh(me); bm.free(); c2 = bpy.data.objects.new('c2', me); SCN().collection.objects.link(c2)
-    for c in (cut, c2):
+    for c in ((c2,) if only_round else (cut, c2)):
         b = o.modifiers.new('b', 'BOOLEAN'); b.operation = 'DIFFERENCE'; b.object = c; c.hide_render = True
     dg = SCN().view_layers[0].depsgraph; dg.update()
     me = bpy.data.meshes.new_from_object(o.evaluated_get(dg)); old = o.data; o.modifiers.clear(); o.data = me; bpy.data.meshes.remove(old)
@@ -249,7 +257,7 @@ def madeira(age, M, open_):
             for x in (tx0, tx1):
                 for y in (.32, .68): box(x - .025, x + .025, y - .025, y + .025, .26, Ht - .1, M['wood'], 'canto')
             box(tx0 + .08, tx1 - .08, .675, .69, Ht * .62, Ht * .62 + .1, M['wood'], 'janela')  # seteira
-            box(tx0 + .12, tx1 - .12, .676, .695, Ht * .62 + .015, Ht * .62 + .085, M['iron'], 'vao')
+            box(tx0 + .12, tx1 - .12, .676, .695, Ht * .62 + .015, Ht * .62 + .085, M['vao'], 'vao')
             if age == 1: pyramid(tx0, tx1, .32, .68, Ht - .12, .3, M['shingle'], over=.07)
             else:
                 box(tx0 - .03, tx1 + .03, .29, .71, Ht - .14, Ht - .1, M['wood'], 'beiral')
@@ -277,12 +285,14 @@ def madeira(age, M, open_):
 def pedra(age, M, open_):
     Ht = (0, 1.42, 1.6)[age]; Hm = (0, 1.08, 1.2)[age]; dz = .8
     path(M)
-    mid = box(.2, .8, .34, .66, 0, Hm, M['stone'], 'meio'); arch_cut(mid, .27, .73, dz - .23 + .23, .34, .66)
+    # passagem em arco: dois pilares até ao chão e um bloco por cima com o arco semicircular recortado
+    box(.2, .27, .34, .66, 0, Hm, M['stone'], 'meio'); box(.73, .8, .34, .66, 0, Hm, M['stone'], 'meio')
+    top = box(.27, .73, .34, .66, dz, Hm, M['stone'], 'meio'); arch_cut(top, .27, .73, dz, .34, .66, only_round=True)
     merlons(.2, .8, .34, .66, Hm, M['stone'], 4, size=.08, h=.1, sides='front')
     for tx0, tx1 in ((-.08, .28), (.72, 1.08)):
         box(tx0 - .02, tx1 + .02, .26, .74, 0, .12, M['stone_dk'], 'sapata')
         box(tx0, tx1, .28, .72, .12, Ht, M['stone'], 'torre')
-        box(tx0 + .1, tx1 - .1, .719, .735, Ht * .6, Ht * .6 + .14, M['iron'], 'seteira')
+        box(tx0 + .1, tx1 - .1, .719, .735, Ht * .6, Ht * .6 + .14, M['vao'], 'seteira')
         if age == 1:
             box(tx0 - .03, tx1 + .03, .25, .75, Ht, Ht + .05, M['stone_dk'], 'cornija')
             merlons(tx0 - .03, tx1 + .03, .25, .75, Ht + .05, M['stone'], 3, size=.08, h=.1)
@@ -302,9 +312,9 @@ def pedra(age, M, open_):
         for k in range(6):
             x = .3 + k * .4 / 5; cyl(x, .6, dz - .1, dz + .18, .01, M['iron'], seg=6)
         for zz in (dz - .05, dz + .1): box(.29, .71, .595, .605, zz - .008, zz + .008, M['iron'], 'grade')
-        banner(.5, .675, Hm - .06, .22, .42, M['banner'])
+        for xc in (.1, .9): banner(xc, .742, Ht * .5, .2, .34, M['banner'])
     else:
-        banner(.5, .675, Hm - .08, .2, .32, M['banner'])
+        for xc in (.1, .9): banner(xc, .722, Ht * .5, .2, .3, M['banner'])
 
 # ---------- cena: câmara isométrica e luz ----------
 def scene():
@@ -333,12 +343,23 @@ def scene():
     sc.view_layers[0].freestyle_settings.crease_angle = R(120)
     return cam
 
+def finish(objs):
+    for o in objs:
+        if o.type != 'MESH': continue
+        n = o.name.split('.')[0]
+        if n in ('banner', 'flag', 'path'): continue
+        if n in ('roof', 'gable', 'cone'):
+            sm = o.modifiers.new('esp', 'SOLIDIFY'); sm.thickness = .022; sm.offset = 1
+            continue
+        if n in ('log', 'logtip', 'hlog'): continue
+        b = o.modifiers.new('bisel', 'BEVEL'); b.width = .009 if n not in ('merlon', 'aduela', 'corbel') else .006; b.segments = 2; b.limit_method = 'ANGLE'
 def build(var, M, dirn, open_):
     global G
     for o in G: bpy.data.objects.remove(o, do_unlink=True)
     G = []
     kind, age = var[:-1], int(var[-1])
     (madeira if kind == 'madeira' else pedra)(age, M, open_)
+    finish(G)
     if dirn == 'y':  # roda 90° em torno do centro da casa: a frente (+y do jogo) passa a olhar para +x
         rot = Matrix.Translation((.5, -.5, 0)) @ Matrix.Rotation(R(90), 4, 'Z') @ Matrix.Translation((-.5, .5, 0))
         for o in G: o.matrix_world = rot @ o.matrix_world

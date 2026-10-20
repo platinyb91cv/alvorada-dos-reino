@@ -1,5 +1,5 @@
 {
- "versao": 2,
+ "versao": 3,
  "creditosAdicionais": 0,
  "ferramentas": [
   "Blender 5.2 (GPL) no PC do utilizador, Cycles CUDA numa Quadro P5000",
@@ -13,7 +13,8 @@
   "bark_brown_02": "https://polyhaven.com/a/bark_brown_02",
   "thatch_roof_angled": "https://polyhaven.com/a/thatch_roof_angled",
   "clay_roof_tiles_02": "https://polyhaven.com/a/clay_roof_tiles_02",
-  "roof_slates_02": "https://polyhaven.com/a/roof_slates_02"
+  "roof_slates_02": "https://polyhaven.com/a/roof_slates_02",
+  "kloofendal_48d_partly_cloudy_puresky": "https://polyhaven.com/a/kloofendal_48d_partly_cloudy_puresky (só na vitrine)"
  },
  "variantes": [
   "madeira0",
@@ -33,11 +34,19 @@
  ],
  "atlas": {
   "ficheiro": "www/assets/edificios-extra/portoes-3d.webp",
-  "sha256": "610336882917dbdce812f4ad75e214dc35950090dfe2501577bd935ab690da40",
+  "sha256": "f8c4a14f903a283f32fed9805bdd699894e15fd40736300acad7b8c951791b02",
   "tamanho": [
    2048,
    2012
   ]
  },
- "regenerar": "Blender: TEX_DIR=<texturas> OUT=<render> VARS=madeira0,... GPU=1 -> scripts/montar_portao2.py; depois python3 scripts/integrar_portao.py <render> <repo>"
+ "regenerar": "Blender: TEX_DIR=<texturas> OUT=<render> VARS=madeira0,... GPU=1 -> scripts/montar_portao2.py; depois python3 scripts/integrar_portao.py <render> <repo>",
+ "melhorias": [
+  "arestas biseladas",
+  "sujidade junto ao chão",
+  "seteiras escuras",
+  "telhados com espessura",
+  "arco de pedra até ao chão (pilares + arco semicircular)",
+  "estandartes da pedra nas torres"
+ ]
 }
