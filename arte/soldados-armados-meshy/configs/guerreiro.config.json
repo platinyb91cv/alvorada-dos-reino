@@ -1,0 +1,190 @@
+{
+ "version": 1,
+ "modelForward": "-Y",
+ "elevationDeg": 30,
+ "referenceHeightPx": 64,
+ "supersample": 2,
+ "samples": 8,
+ "atlasWidth": 2048,
+ "webpQuality": 90,
+ "states": [
+  {
+   "name": "idle",
+   "clip": "Idle",
+   "frames": 2,
+   "loop": true,
+   "range": [
+    0,
+    1
+   ],
+   "props": [
+    "axe",
+    "shield"
+   ]
+  },
+  {
+   "name": "walk",
+   "clip": "Walk",
+   "frames": 8,
+   "loop": true,
+   "range": [
+    0,
+    1
+   ],
+   "props": [
+    "axe",
+    "shield"
+   ]
+  },
+  {
+   "name": "attack",
+   "clip": "Attack",
+   "frames": 6,
+   "loop": true,
+   "range": [
+    0,
+    1
+   ],
+   "props": [
+    "axe",
+    "shield"
+   ]
+  },
+  {
+   "name": "hit",
+   "clip": "Hit",
+   "frames": 2,
+   "loop": true,
+   "range": [
+    0,
+    1
+   ],
+   "props": [
+    "axe",
+    "shield"
+   ]
+  },
+  {
+   "name": "death",
+   "clip": "Death",
+   "frames": 4,
+   "loop": false,
+   "range": [
+    0,
+    1
+   ],
+   "props": [
+    "axe",
+    "shield"
+   ]
+  }
+ ],
+ "props": [
+  {
+   "id": "axe",
+   "kind": "axe",
+   "bone": {
+    "names": [
+     "RightHand",
+     "mixamorig:RightHand",
+     "Hand_R",
+     "hand.R",
+     "R_Hand"
+    ],
+    "role": "hand",
+    "side": "right"
+   },
+   "thickness": 1.6,
+   "position": [
+    0,
+    0,
+    0
+   ],
+   "rotation": [
+    0,
+    0,
+    0
+   ],
+   "placeAt": 0,
+   "wood": "#7a4a24",
+   "metal": "#9aa3ad",
+   "accent": "#c9a24a",
+   "model": "axe-2",
+   "placeIn": "death"
+  },
+  {
+   "id": "shield",
+   "kind": "shield",
+   "bone": {
+    "names": [
+     "LeftForeArm",
+     "mixamorig:LeftForeArm",
+     "ForeArm_L",
+     "forearm.L"
+    ],
+    "role": "forearm",
+    "side": "left"
+   },
+   "thickness": 1.6,
+   "position": [
+    0.06,
+    0.04,
+    0
+   ],
+   "rotation": [
+    0,
+    0,
+    0
+   ],
+   "placeAt": 0,
+   "wood": "#7a4a24",
+   "metal": "#9aa3ad",
+   "accent": "#c9a24a",
+   "model": "shield"
+  }
+ ],
+ "poseOffsets": [
+  {
+   "bone": {
+    "names": [
+     "RightForeArm"
+    ],
+    "role": "forearm",
+    "side": "right"
+   },
+   "mode": "towardForward",
+   "degrees": 85,
+   "states": [
+    "idle",
+    "walk",
+    "hit"
+   ]
+  }
+ ],
+ "aliases": {},
+ "measure": {
+  "walkState": "walk",
+  "feet": [
+   {
+    "names": [
+     "LeftFoot",
+     "mixamorig:LeftFoot",
+     "Foot_L",
+     "foot.L"
+    ],
+    "role": "foot",
+    "side": "left"
+   },
+   {
+    "names": [
+     "RightFoot",
+     "mixamorig:RightFoot",
+     "Foot_R",
+     "foot.R"
+    ],
+    "role": "foot",
+    "side": "right"
+   }
+  ]
+ }
+}

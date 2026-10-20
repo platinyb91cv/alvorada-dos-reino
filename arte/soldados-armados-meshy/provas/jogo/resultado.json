@@ -1,0 +1,681 @@
+{
+ "setup": [
+  {
+   "x": 26,
+   "y": 81,
+   "found": 1
+  },
+  {
+   "t": "guerreiro",
+   "file": "guerreiro-armas-meshy",
+   "ready": true
+  },
+  {
+   "t": "lanceiro",
+   "file": "lanceiro-armas-meshy",
+   "ready": true
+  },
+  {
+   "t": "espadachim",
+   "file": "espadachim-armas-meshy",
+   "ready": true
+  },
+  {
+   "t": "arqueiro",
+   "file": "arqueiro-armas-meshy",
+   "ready": true
+  },
+  {
+   "t": "besteiro",
+   "file": "besteiro-armas-meshy",
+   "ready": true
+  }
+ ],
+ "walk": {
+  "SE": [
+   {
+    "t": "guerreiro",
+    "s": "walk",
+    "dir": 0,
+    "hp": 45,
+    "alive": true
+   },
+   {
+    "t": "lanceiro",
+    "s": "walk",
+    "dir": 0,
+    "hp": 42,
+    "alive": true
+   },
+   {
+    "t": "espadachim",
+    "s": "walk",
+    "dir": 0,
+    "hp": 72,
+    "alive": true
+   },
+   {
+    "t": "arqueiro",
+    "s": "walk",
+    "dir": 0,
+    "hp": 32,
+    "alive": true
+   },
+   {
+    "t": "besteiro",
+    "s": "walk",
+    "dir": 0,
+    "hp": 40,
+    "alive": true
+   }
+  ],
+  "S": [
+   {
+    "t": "guerreiro",
+    "s": "walk",
+    "dir": 1,
+    "hp": 45,
+    "alive": true
+   },
+   {
+    "t": "lanceiro",
+    "s": "walk",
+    "dir": 1,
+    "hp": 42,
+    "alive": true
+   },
+   {
+    "t": "espadachim",
+    "s": "walk",
+    "dir": 1,
+    "hp": 72,
+    "alive": true
+   },
+   {
+    "t": "arqueiro",
+    "s": "walk",
+    "dir": 1,
+    "hp": 32,
+    "alive": true
+   },
+   {
+    "t": "besteiro",
+    "s": "walk",
+    "dir": 1,
+    "hp": 40,
+    "alive": true
+   }
+  ],
+  "SW": [
+   {
+    "t": "guerreiro",
+    "s": "walk",
+    "dir": 2,
+    "hp": 45,
+    "alive": true
+   },
+   {
+    "t": "lanceiro",
+    "s": "walk",
+    "dir": 2,
+    "hp": 42,
+    "alive": true
+   },
+   {
+    "t": "espadachim",
+    "s": "walk",
+    "dir": 2,
+    "hp": 72,
+    "alive": true
+   },
+   {
+    "t": "arqueiro",
+    "s": "walk",
+    "dir": 2,
+    "hp": 32,
+    "alive": true
+   },
+   {
+    "t": "besteiro",
+    "s": "walk",
+    "dir": 2,
+    "hp": 40,
+    "alive": true
+   }
+  ],
+  "W": [
+   {
+    "t": "guerreiro",
+    "s": "walk",
+    "dir": 3,
+    "hp": 45,
+    "alive": true
+   },
+   {
+    "t": "lanceiro",
+    "s": "walk",
+    "dir": 3,
+    "hp": 42,
+    "alive": true
+   },
+   {
+    "t": "espadachim",
+    "s": "walk",
+    "dir": 3,
+    "hp": 72,
+    "alive": true
+   },
+   {
+    "t": "arqueiro",
+    "s": "walk",
+    "dir": 3,
+    "hp": 32,
+    "alive": true
+   },
+   {
+    "t": "besteiro",
+    "s": "walk",
+    "dir": 3,
+    "hp": 40,
+    "alive": true
+   }
+  ],
+  "NW": [
+   {
+    "t": "guerreiro",
+    "s": "walk",
+    "dir": 4,
+    "hp": 45,
+    "alive": true
+   },
+   {
+    "t": "lanceiro",
+    "s": "walk",
+    "dir": 4,
+    "hp": 42,
+    "alive": true
+   },
+   {
+    "t": "espadachim",
+    "s": "walk",
+    "dir": 4,
+    "hp": 72,
+    "alive": true
+   },
+   {
+    "t": "arqueiro",
+    "s": "walk",
+    "dir": 4,
+    "hp": 32,
+    "alive": true
+   },
+   {
+    "t": "besteiro",
+    "s": "walk",
+    "dir": 4,
+    "hp": 40,
+    "alive": true
+   }
+  ],
+  "N": [
+   {
+    "t": "guerreiro",
+    "s": "walk",
+    "dir": 5,
+    "hp": 45,
+    "alive": true
+   },
+   {
+    "t": "lanceiro",
+    "s": "walk",
+    "dir": 5,
+    "hp": 42,
+    "alive": true
+   },
+   {
+    "t": "espadachim",
+    "s": "walk",
+    "dir": 5,
+    "hp": 72,
+    "alive": true
+   },
+   {
+    "t": "arqueiro",
+    "s": "walk",
+    "dir": 5,
+    "hp": 32,
+    "alive": true
+   },
+   {
+    "t": "besteiro",
+    "s": "walk",
+    "dir": 5,
+    "hp": 40,
+    "alive": true
+   }
+  ],
+  "NE": [
+   {
+    "t": "guerreiro",
+    "s": "walk",
+    "dir": 6,
+    "hp": 45,
+    "alive": true
+   },
+   {
+    "t": "lanceiro",
+    "s": "walk",
+    "dir": 6,
+    "hp": 42,
+    "alive": true
+   },
+   {
+    "t": "espadachim",
+    "s": "walk",
+    "dir": 6,
+    "hp": 72,
+    "alive": true
+   },
+   {
+    "t": "arqueiro",
+    "s": "walk",
+    "dir": 6,
+    "hp": 32,
+    "alive": true
+   },
+   {
+    "t": "besteiro",
+    "s": "walk",
+    "dir": 6,
+    "hp": 40,
+    "alive": true
+   }
+  ],
+  "E": [
+   {
+    "t": "guerreiro",
+    "s": "walk",
+    "dir": 7,
+    "hp": 45,
+    "alive": true
+   },
+   {
+    "t": "lanceiro",
+    "s": "walk",
+    "dir": 7,
+    "hp": 42,
+    "alive": true
+   },
+   {
+    "t": "espadachim",
+    "s": "walk",
+    "dir": 7,
+    "hp": 72,
+    "alive": true
+   },
+   {
+    "t": "arqueiro",
+    "s": "walk",
+    "dir": 7,
+    "hp": 32,
+    "alive": true
+   },
+   {
+    "t": "besteiro",
+    "s": "walk",
+    "dir": 7,
+    "hp": 40,
+    "alive": true
+   }
+  ]
+ },
+ "orders": {
+  "SE": [
+   [
+    "guerreiro",
+    "move",
+    1
+   ],
+   [
+    "lanceiro",
+    "move",
+    1
+   ],
+   [
+    "espadachim",
+    "move",
+    1
+   ],
+   [
+    "arqueiro",
+    "move",
+    1
+   ],
+   [
+    "besteiro",
+    "move",
+    1
+   ]
+  ],
+  "S": [
+   [
+    "guerreiro",
+    "move",
+    1
+   ],
+   [
+    "lanceiro",
+    "move",
+    1
+   ],
+   [
+    "espadachim",
+    "move",
+    1
+   ],
+   [
+    "arqueiro",
+    "move",
+    1
+   ],
+   [
+    "besteiro",
+    "move",
+    1
+   ]
+  ],
+  "SW": [
+   [
+    "guerreiro",
+    "move",
+    1
+   ],
+   [
+    "lanceiro",
+    "move",
+    1
+   ],
+   [
+    "espadachim",
+    "move",
+    1
+   ],
+   [
+    "arqueiro",
+    "move",
+    1
+   ],
+   [
+    "besteiro",
+    "move",
+    1
+   ]
+  ],
+  "W": [
+   [
+    "guerreiro",
+    "move",
+    1
+   ],
+   [
+    "lanceiro",
+    "move",
+    1
+   ],
+   [
+    "espadachim",
+    "move",
+    1
+   ],
+   [
+    "arqueiro",
+    "move",
+    1
+   ],
+   [
+    "besteiro",
+    "move",
+    1
+   ]
+  ],
+  "NW": [
+   [
+    "guerreiro",
+    "move",
+    1
+   ],
+   [
+    "lanceiro",
+    "move",
+    1
+   ],
+   [
+    "espadachim",
+    "move",
+    1
+   ],
+   [
+    "arqueiro",
+    "move",
+    1
+   ],
+   [
+    "besteiro",
+    "move",
+    1
+   ]
+  ],
+  "N": [
+   [
+    "guerreiro",
+    "move",
+    1
+   ],
+   [
+    "lanceiro",
+    "move",
+    1
+   ],
+   [
+    "espadachim",
+    "move",
+    1
+   ],
+   [
+    "arqueiro",
+    "move",
+    1
+   ],
+   [
+    "besteiro",
+    "move",
+    1
+   ]
+  ],
+  "NE": [
+   [
+    "guerreiro",
+    "move",
+    1
+   ],
+   [
+    "lanceiro",
+    "move",
+    1
+   ],
+   [
+    "espadachim",
+    "move",
+    1
+   ],
+   [
+    "arqueiro",
+    "move",
+    1
+   ],
+   [
+    "besteiro",
+    "move",
+    1
+   ]
+  ],
+  "E": [
+   [
+    "guerreiro",
+    "move",
+    1
+   ],
+   [
+    "lanceiro",
+    "move",
+    1
+   ],
+   [
+    "espadachim",
+    "move",
+    1
+   ],
+   [
+    "arqueiro",
+    "move",
+    1
+   ],
+   [
+    "besteiro",
+    "move",
+    1
+   ]
+  ]
+ },
+ "fight": 5,
+ "attack": [
+  {
+   "t": "guerreiro",
+   "s": "attack",
+   "dir": 1,
+   "hp": 33,
+   "alive": true
+  },
+  {
+   "t": "lanceiro",
+   "s": "attack",
+   "dir": 1,
+   "hp": 27,
+   "alive": true
+  },
+  {
+   "t": "espadachim",
+   "s": "attack",
+   "dir": 1,
+   "hp": 63,
+   "alive": true
+  },
+  {
+   "t": "arqueiro",
+   "s": "hit",
+   "dir": 1,
+   "hp": 22,
+   "alive": true
+  },
+  {
+   "t": "besteiro",
+   "s": "attack",
+   "dir": 2,
+   "hp": 40,
+   "alive": true
+  }
+ ],
+ "damaged": [
+  {
+   "t": "guerreiro",
+   "s": "attack",
+   "dir": 1,
+   "hp": 21,
+   "alive": true
+  },
+  {
+   "t": "lanceiro",
+   "s": "attack",
+   "dir": 1,
+   "hp": 12,
+   "alive": true
+  },
+  {
+   "t": "espadachim",
+   "s": "attack",
+   "dir": 1,
+   "hp": 54,
+   "alive": true
+  },
+  {
+   "t": "arqueiro",
+   "s": "hit",
+   "dir": 1,
+   "hp": 7,
+   "alive": true
+  },
+  {
+   "t": "besteiro",
+   "s": "hit",
+   "dir": 1,
+   "hp": 30,
+   "alive": true
+  }
+ ],
+ "dead": [
+  {
+   "t": "guerreiro",
+   "alive": false
+  },
+  {
+   "t": "lanceiro",
+   "alive": false
+  },
+  {
+   "t": "espadachim",
+   "alive": false
+  },
+  {
+   "t": "arqueiro",
+   "alive": false
+  },
+  {
+   "t": "besteiro",
+   "alive": false
+  }
+ ],
+ "corpses": [
+  "guerreiro",
+  "lanceiro",
+  "espadachim",
+  "arqueiro",
+  "besteiro"
+ ],
+ "atlasRequests": [
+  [
+   "aldeao.webp",
+   200
+  ],
+  [
+   "arqueiro-armas-meshy.webp",
+   200
+  ],
+  [
+   "besteiro-armas-meshy.webp",
+   200
+  ],
+  [
+   "espadachim-armas-meshy.webp",
+   200
+  ],
+  [
+   "guerreiro-armas-meshy.webp",
+   200
+  ],
+  [
+   "lanceiro-armas-meshy.webp",
+   200
+  ]
+ ],
+ "errors": []
+}

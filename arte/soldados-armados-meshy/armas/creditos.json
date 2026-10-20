@@ -1,0 +1,117 @@
+{
+  "authorizedMaximumCredits": 150,
+  "authorization": "Human approved five Iron Age weapons with PBR 2K, max 150 credits; one attempt per piece, no automatic retries, stop on failure.",
+  "model": "meshy-7.1",
+  "automaticPaidRetries": false,
+  "plannedCredits": 150,
+  "reservedCredits": 150,
+  "steps": [
+    {
+      "unit": "axe",
+      "stage": "geometria",
+      "estimatedCredits": 20,
+      "status": "SUCCEEDED",
+      "submittedAt": "2026-10-19T14:10:20.591Z",
+      "id": "01a1547f-bd0c-749f-9782-b3282ef50fa4",
+      "progress": 100,
+      "consumedCredits": 20
+    },
+    {
+      "unit": "axe",
+      "stage": "texturas",
+      "estimatedCredits": 10,
+      "status": "SUCCEEDED",
+      "submittedAt": "2026-10-19T14:11:04.239Z",
+      "id": "01a15480-67a8-767f-a702-6e70501d36f9",
+      "progress": 100,
+      "consumedCredits": 10
+    },
+    {
+      "unit": "spear",
+      "stage": "geometria",
+      "estimatedCredits": 20,
+      "status": "SUCCEEDED",
+      "submittedAt": "2026-10-19T14:11:50.797Z",
+      "id": "01a15481-1d76-77a8-8ccc-1600d7912860",
+      "progress": 100,
+      "consumedCredits": 20
+    },
+    {
+      "unit": "spear",
+      "stage": "texturas",
+      "estimatedCredits": 10,
+      "status": "SUCCEEDED",
+      "submittedAt": "2026-10-19T14:12:34.242Z",
+      "id": "01a15481-c73b-715a-bf6d-d3132ede4d10",
+      "progress": 100,
+      "consumedCredits": 10
+    },
+    {
+      "unit": "sword",
+      "stage": "geometria",
+      "estimatedCredits": 20,
+      "status": "SUCCEEDED",
+      "submittedAt": "2026-10-19T14:13:18.958Z",
+      "id": "01a15482-75e2-73d0-a6be-34203936f399",
+      "progress": 100,
+      "consumedCredits": 20
+    },
+    {
+      "unit": "sword",
+      "stage": "texturas",
+      "estimatedCredits": 10,
+      "status": "SUCCEEDED",
+      "submittedAt": "2026-10-19T14:14:02.323Z",
+      "id": "01a15483-1f60-761f-ad24-31071c901f8c",
+      "progress": 100,
+      "consumedCredits": 10
+    },
+    {
+      "unit": "bow",
+      "stage": "geometria",
+      "estimatedCredits": 20,
+      "status": "SUCCEEDED",
+      "submittedAt": "2026-10-19T14:15:09.189Z",
+      "id": "01a15484-2474-71af-b631-951573905672",
+      "progress": 100,
+      "consumedCredits": 20
+    },
+    {
+      "unit": "bow",
+      "stage": "texturas",
+      "estimatedCredits": 10,
+      "status": "SUCCEEDED",
+      "submittedAt": "2026-10-19T14:15:52.574Z",
+      "id": "01a15484-ce13-7322-ade6-3a9fe0ec718e",
+      "progress": 100,
+      "consumedCredits": 10
+    },
+    {
+      "unit": "crossbow",
+      "stage": "geometria",
+      "estimatedCredits": 20,
+      "status": "SUCCEEDED",
+      "submittedAt": "2026-10-19T14:16:36.834Z",
+      "id": "01a15485-7ad0-76e6-bc88-b0001640c0ca",
+      "progress": 100,
+      "consumedCredits": 20
+    },
+    {
+      "unit": "crossbow",
+      "stage": "texturas",
+      "estimatedCredits": 10,
+      "status": "SUCCEEDED",
+      "submittedAt": "2026-10-19T14:18:02.069Z",
+      "id": "01a15486-c7da-74c5-bb1b-5e97d28518a5",
+      "progress": 100,
+      "consumedCredits": 10
+    }
+  ],
+  "state": "COMPLETE",
+  "startedAt": "2026-10-19T14:10:19.869Z",
+  "balanceBefore": 386,
+  "balanceAfter": 236,
+  "consumedCredits": 150,
+  "observedBalanceDelta": 150,
+  "finishedAt": "2026-10-19T14:19:10.118Z"
+}

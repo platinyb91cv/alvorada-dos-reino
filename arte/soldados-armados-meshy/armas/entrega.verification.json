@@ -1,0 +1,30 @@
+{
+  "meshGenerationProvider": "Meshy 7.1",
+  "pilotWeapons": 5,
+  "approvedMaximumCredits": 150,
+  "actualCredits": 150,
+  "accountBalanceBefore": 386,
+  "accountBalanceAfter": 236,
+  "paidStageSuccesses": 10,
+  "additionalPaidRetries": 0,
+  "comparisonRenders": 15,
+  "gameHumanReferencePixels": 30,
+  "integrated": false,
+  "gitPush": false,
+  "images": {
+    "comparacao-piloto.png": {
+      "size": [
+        1600,
+        1500
+      ],
+      "sha256": "150e944eb05b50aea9ded6636f4bdff08ff7febc83d1e22c2284e096b1ecb4e6"
+    },
+    "comparacao-jogo-30px.png": {
+      "size": [
+        1600,
+        1050
+      ],
+      "sha256": "296e53f7b6f278520de18c79565d241f9583f6a400feb5a38a43a76ae95e0ca6"
+    }
+  }
+}

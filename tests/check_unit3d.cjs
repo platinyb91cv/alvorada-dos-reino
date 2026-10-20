@@ -4,10 +4,25 @@ const match=html.match(/const UNIT3D_DATA=(\{[^\n]+\});/);assert.ok(match,'Unit 
 const types=['aldeao','guerreiro','lanceiro','espadachim','arqueiro','besteiro'];assert.deepEqual(Object.keys(data),types);
 let pixels=0;
 for(const type of types){const meta=data[type];assert.equal(meta.directions,8);assert.equal(meta.h,64);assert.equal(meta.f.length,8*meta.framesPerDirection);assert.equal(meta.states.walk.length,8);assert.equal(meta.states.attack.length,6);assert.equal(meta.states.death.length,4);
- assert.deepEqual(meta,JSON.parse(fs.readFileSync(path.join(root,'www/assets/units3d',type+'.json'),'utf8')));
- const webp=fs.readFileSync(path.join(root,'www/assets/units3d',type+'.webp'));assert.equal(meta.atlasSha256,crypto.createHash('sha256').update(webp).digest('hex'));assert.equal(webp.toString('ascii',0,4),'RIFF');assert.equal(webp.toString('ascii',8,16),'WEBPVP8L');assert.equal(webp[20],47);const bits=webp.readUInt32LE(21),width=(bits&16383)+1,height=((bits>>>14)&16383)+1;assert.ok(width<=4096&&height<=8192);pixels+=width*height;
+ const file=meta.file||type;assert.match(file,/^[a-z]+(-armas-meshy)?$/);
+ assert.deepEqual(meta,JSON.parse(fs.readFileSync(path.join(root,'www/assets/units3d',file+'.json'),'utf8')));
+ const webp=fs.readFileSync(path.join(root,'www/assets/units3d',file+'.webp'));assert.equal(meta.atlasSha256,crypto.createHash('sha256').update(webp).digest('hex'));assert.equal(webp.toString('ascii',0,4),'RIFF');assert.equal(webp.toString('ascii',8,16),'WEBPVP8L');assert.equal(webp[20],47);const bits=webp.readUInt32LE(21),width=(bits&16383)+1,height=((bits>>>14)&16383)+1;assert.ok(width<=4096&&height<=8192);pixels+=width*height;
  for(const f of meta.f){assert.equal(f.length,6);assert.ok(f.every(Number.isFinite));const[x,y,w,h,ax,ay]=f;assert.ok(x>=0&&y>=0&&w>0&&h>0&&x+w<=width&&y+h<=height);assert.ok(Math.abs(ax)<width&&Math.abs(ay)<height)}
  for(const ids of Object.values(meta.states))assert.ok(ids.length&&ids.every(i=>Number.isInteger(i)&&i>=0&&i<meta.framesPerDirection));
+ if(meta.file){ // soldados com armas Meshy: atlas Forge3D (arte/soldados-armados-meshy); o atlas anterior fica preservado em disco
+  const v=JSON.parse(fs.readFileSync(path.join(root,'arte/soldados-armados-meshy/atlas',type+'.verification.json'),'utf8'));
+  assert.equal(v.atlasSha256,meta.atlasSha256);assert.equal(v.meshyCredits,0);assert.equal(v.bones,24);assert.equal(v.directions,8);
+  assert.ok(['idle','walk','attack','hit','death'].every(k=>v.states[k]));assert.equal(new Set(Object.values(v.states).map(s=>s.clip)).size,type==='besteiro'?4:5,'distinct clips');if(type==='besteiro'){assert.equal(v.states.attack.clip,'Idle');assert.equal(v.attackLocalAdaptation.meshyAnimation,false);assert.ok(v.poseOffsets.some(o=>o.mode==='towardForward'&&o.states.includes('attack')))}
+  assert.ok(Object.values(v.checks.rigid).every(e=>e<1e-4),'weapon rigidly attached to the hand');
+  assert.ok(['idle','walk','attack','hit','death'].every(s=>Object.values(v.checks.present[s]||{}).length&&Object.values(v.checks.present[s]).every(Boolean)),'weapon present in every state');
+  assert.ok(['idle','attack','hit'].every(s=>v.checks.rootHorizontal[s]<.08),'no horizontal root travel outside walk/death');
+  assert.ok(v.checks.rootHorizontal.walk<.08,'walk in place');
+  assert.ok(Math.abs(meta.locomotion.walk.phaseScale*meta.locomotion.walk.strideTiles-2*Math.PI/5)<1e-5,'cadence from measured stride');
+  assert.match(v.weapon.sha256,/^[0-9a-f]{64}$/);assert.equal(v.weapon.triangles<=1500,true);
+  if(type==='besteiro')assert.ok(v.checks.aimForwardDot.attack.every(d=>d>.9),'crossbow aimed forward');
+  const old=JSON.parse(fs.readFileSync(path.join(root,'www/assets/units3d',type+'.json'),'utf8'));assert.equal(old.atlasSha256,crypto.createHash('sha256').update(fs.readFileSync(path.join(root,'www/assets/units3d',type+'.webp'))).digest('hex'),'previous atlas preserved');
+  continue;
+ }
  const proof=JSON.parse(fs.readFileSync(path.join(root,'arte/unidades3d',type+'.verification.json'),'utf8'));assert.equal(proof.reimported,true);assert.equal(proof.reimportedClipsDistinct,true);assert.ok(Object.values(proof.reimportedRootDriftByClip).every(v=>v<1e-4));if(type==='arqueiro'||type==='besteiro')assert.ok(proof.forwardAimDot>.9);assert.ok(proof.triangles<8000&&proof.bones>=24&&proof.rootHorizontalDrift<1e-4);assert.ok(Object.values(proof.stanceVelocityY).every(v=>v>0));assert.ok(Object.values(proof.rigidProps).every(v=>v<1e-4));
 }
 assert.ok(pixels<10000000,'Atlas set exceeded decoded image budget');

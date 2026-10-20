@@ -1,0 +1,686 @@
+{
+  "meshyCredits": 150,
+  "authorizedMaximumCredits": 150,
+  "pilotCount": 5,
+  "age": 2,
+  "source": "Meshy 7.1 Text to 3D + PBR 2K",
+  "integrated": false,
+  "gitPush": false,
+  "items": [
+    {
+      "file": "axe-2.glb",
+      "type": "axe",
+      "age": 2,
+      "credits": 30,
+      "original": {
+        "file": "axe-2.glb",
+        "previewTaskId": "01a1547f-bd0c-749f-9782-b3282ef50fa4",
+        "textureTaskId": "01a15480-67a8-767f-a702-6e70501d36f9",
+        "bytes": 10333500,
+        "sha256": "d8b85c47a0985dbb4d0d5d755aa328dbbac6f8cf24059a10fec37a3eb1191b6b",
+        "source": "Meshy 7.1 Text to 3D + PBR 2K",
+        "credits": 30
+      },
+      "variants": [
+        {
+          "path": "modelos/axe-2.glb",
+          "triangles": 79040,
+          "boundingBox": {
+            "min": [
+              -0.02500000037252903,
+              -0.03500000014901161,
+              -0.10000002384185791
+            ],
+            "max": [
+              0.02500000037252903,
+              0.15000000596046448,
+              0.7599999904632568
+            ]
+          },
+          "dimensionsMetres": [
+            0.05000000074505806,
+            0.1850000023841858,
+            0.8600000143051147
+          ],
+          "materials": [
+            "Material_0"
+          ],
+          "images": [
+            {
+              "mimeType": "image/jpeg",
+              "size": [
+                2048,
+                2048
+              ]
+            },
+            {
+              "mimeType": "image/jpeg",
+              "size": [
+                2048,
+                2048
+              ]
+            },
+            {
+              "mimeType": "image/jpeg",
+              "size": [
+                2048,
+                2048
+              ]
+            }
+          ],
+          "bytes": 9858788,
+          "sha256": "e22bb50c0b9bde837f81b543d66233bb097f393ae1615f2f0fe6779dd17cea90",
+          "scale": [
+            1,
+            1,
+            1
+          ],
+          "origin": [
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "path": "otimizados/axe-2.glb",
+          "triangles": 788,
+          "boundingBox": {
+            "min": [
+              -0.02500000037252903,
+              -0.03500000014901161,
+              -0.10000002384185791
+            ],
+            "max": [
+              0.02500000037252903,
+              0.15000000596046448,
+              0.7599999904632568
+            ]
+          },
+          "dimensionsMetres": [
+            0.05000000074505806,
+            0.1850000023841858,
+            0.8600000143051147
+          ],
+          "materials": [
+            "Meshy_PBR_reprojetado"
+          ],
+          "images": [
+            {
+              "mimeType": "image/png",
+              "size": [
+                2048,
+                2048
+              ]
+            },
+            {
+              "mimeType": "image/png",
+              "size": [
+                2048,
+                2048
+              ]
+            },
+            {
+              "mimeType": "image/png",
+              "size": [
+                2048,
+                2048
+              ]
+            }
+          ],
+          "bytes": 4501068,
+          "sha256": "47cc6f1a07800ff73fc015ecd57f6a91d9dd799a0e3037e0d2e458d771f8de12",
+          "scale": [
+            1,
+            1,
+            1
+          ],
+          "origin": [
+            0,
+            0,
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "file": "spear-2.glb",
+      "type": "spear",
+      "age": 2,
+      "credits": 30,
+      "original": {
+        "file": "spear-2.glb",
+        "previewTaskId": "01a15481-1d76-77a8-8ccc-1600d7912860",
+        "textureTaskId": "01a15481-c73b-715a-bf6d-d3132ede4d10",
+        "bytes": 10807084,
+        "sha256": "0ef98d2444aea023b7bec8b18dbda6dc5d2aa91c4804414f919af50bcbd6e133",
+        "source": "Meshy 7.1 Text to 3D + PBR 2K",
+        "credits": 30
+      },
+      "variants": [
+        {
+          "path": "modelos/spear-2.glb",
+          "triangles": 109052,
+          "boundingBox": {
+            "min": [
+              -0.02199999988079071,
+              -0.03500000014901161,
+              -0.7200000286102295
+            ],
+            "max": [
+              0.02199999988079071,
+              0.03500000014901161,
+              1.3300001621246338
+            ]
+          },
+          "dimensionsMetres": [
+            0.04399999976158142,
+            0.07000000029802322,
+            2.0500001907348633
+          ],
+          "materials": [
+            "Material_0"
+          ],
+          "images": [
+            {
+              "mimeType": "image/jpeg",
+              "size": [
+                2048,
+                2048
+              ]
+            },
+            {
+              "mimeType": "image/jpeg",
+              "size": [
+                2048,
+                2048
+              ]
+            },
+            {
+              "mimeType": "image/jpeg",
+              "size": [
+                2048,
+                2048
+              ]
+            }
+          ],
+          "bytes": 10152316,
+          "sha256": "d4d7a88f3742f7115b50b2312102a9c5d379e36ef0eb7762acc5d154d12e9f73",
+          "scale": [
+            1,
+            1,
+            1
+          ],
+          "origin": [
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "path": "otimizados/spear-2.glb",
+          "triangles": 788,
+          "boundingBox": {
+            "min": [
+              -0.02199999988079071,
+              -0.03500000014901161,
+              -0.7200000286102295
+            ],
+            "max": [
+              0.02199999988079071,
+              0.03500000014901161,
+              1.3300001621246338
+            ]
+          },
+          "dimensionsMetres": [
+            0.04399999976158142,
+            0.07000000029802322,
+            2.0500001907348633
+          ],
+          "materials": [
+            "Meshy_PBR_reprojetado"
+          ],
+          "images": [
+            {
+              "mimeType": "image/png",
+              "size": [
+                2048,
+                2048
+              ]
+            },
+            {
+              "mimeType": "image/png",
+              "size": [
+                2048,
+                2048
+              ]
+            },
+            {
+              "mimeType": "image/png",
+              "size": [
+                2048,
+                2048
+              ]
+            }
+          ],
+          "bytes": 4410592,
+          "sha256": "8f8aadcb18546476bd096447fdba770c2679afcaef95df1c9d79203df9671efc",
+          "scale": [
+            1,
+            1,
+            1
+          ],
+          "origin": [
+            0,
+            0,
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "file": "sword-2.glb",
+      "type": "sword",
+      "age": 2,
+      "credits": 30,
+      "original": {
+        "file": "sword-2.glb",
+        "previewTaskId": "01a15482-75e2-73d0-a6be-34203936f399",
+        "textureTaskId": "01a15483-1f60-761f-ad24-31071c901f8c",
+        "bytes": 10073848,
+        "sha256": "67a3a21c9c3050f392a8ebddaee64842aa3e2dca38e9d023e0f5a840abca47ec",
+        "source": "Meshy 7.1 Text to 3D + PBR 2K",
+        "credits": 30
+      },
+      "variants": [
+        {
+          "path": "modelos/sword-2.glb",
+          "triangles": 103692,
+          "boundingBox": {
+            "min": [
+              -0.125,
+              -0.03099999949336052,
+              -0.11999999731779099
+            ],
+            "max": [
+              0.125,
+              0.03099999949336052,
+              0.949999988079071
+            ]
+          },
+          "dimensionsMetres": [
+            0.25,
+            0.06199999898672104,
+            1.0699999332427979
+          ],
+          "materials": [
+            "Material_0"
+          ],
+          "images": [
+            {
+              "mimeType": "image/jpeg",
+              "size": [
+                2048,
+                2048
+              ]
+            },
+            {
+              "mimeType": "image/jpeg",
+              "size": [
+                2048,
+                2048
+              ]
+            },
+            {
+              "mimeType": "image/jpeg",
+              "size": [
+                2048,
+                2048
+              ]
+            }
+          ],
+          "bytes": 9451200,
+          "sha256": "80caed943cacbcf563652dc562b341ba1af9452b5c7d3aecd658b2084d9dd297",
+          "scale": [
+            1,
+            1,
+            1
+          ],
+          "origin": [
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "path": "otimizados/sword-2.glb",
+          "triangles": 788,
+          "boundingBox": {
+            "min": [
+              -0.125,
+              -0.03099999949336052,
+              -0.11999999731779099
+            ],
+            "max": [
+              0.125,
+              0.03099999949336052,
+              0.949999988079071
+            ]
+          },
+          "dimensionsMetres": [
+            0.25,
+            0.06199999898672104,
+            1.0699999332427979
+          ],
+          "materials": [
+            "Meshy_PBR_reprojetado"
+          ],
+          "images": [
+            {
+              "mimeType": "image/png",
+              "size": [
+                2048,
+                2048
+              ]
+            },
+            {
+              "mimeType": "image/png",
+              "size": [
+                2048,
+                2048
+              ]
+            },
+            {
+              "mimeType": "image/png",
+              "size": [
+                2048,
+                2048
+              ]
+            }
+          ],
+          "bytes": 4974108,
+          "sha256": "9c45d201f4ea02fd45e95dc38543d6ac434357e861a2e704e3c3f4130f1f1e8f",
+          "scale": [
+            1,
+            1,
+            1
+          ],
+          "origin": [
+            0,
+            0,
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "file": "bow-2.glb",
+      "type": "bow",
+      "age": 2,
+      "credits": 30,
+      "original": {
+        "file": "bow-2.glb",
+        "previewTaskId": "01a15484-2474-71af-b631-951573905672",
+        "textureTaskId": "01a15484-ce13-7322-ade6-3a9fe0ec718e",
+        "bytes": 9176236,
+        "sha256": "70bad7bda5722162bbe79c02fc44e0ae4925fcf8b89f4211c42de0cc4dee75bf",
+        "source": "Meshy 7.1 Text to 3D + PBR 2K",
+        "credits": 30
+      },
+      "variants": [
+        {
+          "path": "modelos/bow-2.glb",
+          "triangles": 66476,
+          "boundingBox": {
+            "min": [
+              -0.020999999716877937,
+              -0.20814922451972961,
+              -0.6788197755813599
+            ],
+            "max": [
+              0.020999999716877937,
+              0.020999997854232788,
+              0.6788197755813599
+            ]
+          },
+          "dimensionsMetres": [
+            0.041999999433755875,
+            0.2291492223739624,
+            1.3576395511627197
+          ],
+          "materials": [
+            "Material_0"
+          ],
+          "images": [
+            {
+              "mimeType": "image/jpeg",
+              "size": [
+                2048,
+                2048
+              ]
+            },
+            {
+              "mimeType": "image/jpeg",
+              "size": [
+                2048,
+                2048
+              ]
+            },
+            {
+              "mimeType": "image/jpeg",
+              "size": [
+                2048,
+                2048
+              ]
+            }
+          ],
+          "bytes": 8776904,
+          "sha256": "13985c53832d2770bd2fa48efcbdb4d9acfec6c5af2799fca6f5ab4bd1bf6aa9",
+          "scale": [
+            1,
+            1,
+            1
+          ],
+          "origin": [
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "path": "otimizados/bow-2.glb",
+          "triangles": 788,
+          "boundingBox": {
+            "min": [
+              -0.020999999716877937,
+              -0.20814922451972961,
+              -0.6788197755813599
+            ],
+            "max": [
+              0.020999999716877937,
+              0.020999997854232788,
+              0.6788197755813599
+            ]
+          },
+          "dimensionsMetres": [
+            0.041999999433755875,
+            0.2291492223739624,
+            1.3576395511627197
+          ],
+          "materials": [
+            "Meshy_PBR_reprojetado"
+          ],
+          "images": [
+            {
+              "mimeType": "image/png",
+              "size": [
+                2048,
+                2048
+              ]
+            },
+            {
+              "mimeType": "image/png",
+              "size": [
+                2048,
+                2048
+              ]
+            },
+            {
+              "mimeType": "image/png",
+              "size": [
+                2048,
+                2048
+              ]
+            }
+          ],
+          "bytes": 4006560,
+          "sha256": "159677ca057bee00b8525bbdb000579fadf77cbd86c4c10d6a9dd2f56192259d",
+          "scale": [
+            1,
+            1,
+            1
+          ],
+          "origin": [
+            0,
+            0,
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "file": "crossbow.glb",
+      "type": "crossbow",
+      "age": 2,
+      "credits": 30,
+      "original": {
+        "file": "crossbow.glb",
+        "previewTaskId": "01a15485-7ad0-76e6-bc88-b0001640c0ca",
+        "textureTaskId": "01a15486-c7da-74c5-bb1b-5e97d28518a5",
+        "bytes": 20934104,
+        "sha256": "4008e6ed3897773625dcb2bf2804884ad05ddb238dea46da78e3aa1009121bbc",
+        "source": "Meshy 7.1 Text to 3D + PBR 2K",
+        "credits": 30
+      },
+      "variants": [
+        {
+          "path": "modelos/crossbow.glb",
+          "triangles": 434902,
+          "boundingBox": {
+            "min": [
+              -0.40977543592453003,
+              -0.054999999701976776,
+              -0.30000001192092896
+            ],
+            "max": [
+              0.40977543592453003,
+              0.07450000196695328,
+              0.718833327293396
+            ]
+          },
+          "dimensionsMetres": [
+            0.8195508718490601,
+            0.12950000166893005,
+            1.0188333988189697
+          ],
+          "materials": [
+            "Material_0"
+          ],
+          "images": [
+            {
+              "mimeType": "image/jpeg",
+              "size": [
+                2048,
+                2048
+              ]
+            },
+            {
+              "mimeType": "image/jpeg",
+              "size": [
+                2048,
+                2048
+              ]
+            },
+            {
+              "mimeType": "image/jpeg",
+              "size": [
+                2048,
+                2048
+              ]
+            }
+          ],
+          "bytes": 20933656,
+          "sha256": "a507ca5dda5ddf688b202e0c7c6298a4c087b1103f459913f42b0b0e874f6072",
+          "scale": [
+            1,
+            1,
+            1
+          ],
+          "origin": [
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "path": "otimizados/crossbow.glb",
+          "triangles": 1488,
+          "boundingBox": {
+            "min": [
+              -0.40977543592453003,
+              -0.054999999701976776,
+              -0.30000001192092896
+            ],
+            "max": [
+              0.40977543592453003,
+              0.07450000196695328,
+              0.718833327293396
+            ]
+          },
+          "dimensionsMetres": [
+            0.8195508718490601,
+            0.12950000166893005,
+            1.0188333988189697
+          ],
+          "materials": [
+            "Meshy_PBR_reprojetado"
+          ],
+          "images": [
+            {
+              "mimeType": "image/png",
+              "size": [
+                2048,
+                2048
+              ]
+            },
+            {
+              "mimeType": "image/png",
+              "size": [
+                2048,
+                2048
+              ]
+            },
+            {
+              "mimeType": "image/png",
+              "size": [
+                2048,
+                2048
+              ]
+            }
+          ],
+          "bytes": 4163884,
+          "sha256": "b622fc6e638c3ef6e48d6617d8f976ad1cbe83d3caf0657355973f242a7d3bd5",
+          "scale": [
+            1,
+            1,
+            1
+          ],
+          "origin": [
+            0,
+            0,
+            0
+          ]
+        }
+      ]
+    }
+  ]
+}

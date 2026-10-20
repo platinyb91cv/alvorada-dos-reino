@@ -1,0 +1,264 @@
+{
+  "name": "arqueiro",
+  "glbBytes": 13970412,
+  "sha256": "ad7387df1ed920267d11ba75a9318d1d5cb2e4e90222f26c5e622441fc0656a6",
+  "boneCount": 24,
+  "boneNames": [
+    "Hips",
+    "Spine02",
+    "Spine01",
+    "Spine",
+    "neck",
+    "Head",
+    "head_end",
+    "headfront",
+    "LeftShoulder",
+    "LeftArm",
+    "LeftForeArm",
+    "LeftHand",
+    "RightShoulder",
+    "RightArm",
+    "RightForeArm",
+    "RightHand",
+    "LeftUpLeg",
+    "LeftLeg",
+    "LeftFoot",
+    "LeftToeBase",
+    "RightUpLeg",
+    "RightLeg",
+    "RightFoot",
+    "RightToeBase"
+  ],
+  "clips": [
+    {
+      "name": "Idle",
+      "durationSeconds": 1.6666666269302368,
+      "animationSha256": "49aeb2b2bf0b2a6eff8dbfd48667abb274d71a60b9c3e35a04fcca47c5646222",
+      "rootDisplacementMeters": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "rootRangeMeters": [
+        0.0,
+        0.028851394653320313,
+        0.0
+      ],
+      "horizontalRootRangeMeters": 0.0,
+      "rootLocked": true
+    },
+    {
+      "name": "Walk",
+      "durationSeconds": 1.2666666507720947,
+      "animationSha256": "de949c1a16eebb79e05c6298bca5670355c8a5fdf243d8a6bc33057c6e98c45e",
+      "rootDisplacementMeters": [
+        0.022091785669326784,
+        -0.011717987060546876,
+        0.8767234611511231
+      ],
+      "rootRangeMeters": [
+        0.03282972514629364,
+        0.07958595275878906,
+        0.8767234611511231
+      ],
+      "horizontalRootRangeMeters": 0.8773379156208775,
+      "rootLocked": false
+    },
+    {
+      "name": "Attack",
+      "durationSeconds": 5.0,
+      "animationSha256": "a50a30f443e469b9d17731d84e99f6e2ffed2b4dcaf62672bc6be4db36021ee2",
+      "rootDisplacementMeters": [
+        0.0,
+        -7.62939453125e-08,
+        0.0
+      ],
+      "rootRangeMeters": [
+        0.0,
+        0.04876045227050781,
+        0.0
+      ],
+      "horizontalRootRangeMeters": 0.0,
+      "rootLocked": true
+    },
+    {
+      "name": "Hit",
+      "durationSeconds": 1.6333333253860474,
+      "animationSha256": "e85ab7989fd4d1e3923d14ba18746be18dbba307950391578c2bb441828912ec",
+      "rootDisplacementMeters": [
+        0.0,
+        -0.00034889221191406253,
+        0.0
+      ],
+      "rootRangeMeters": [
+        0.0,
+        0.0564044189453125,
+        0.0
+      ],
+      "horizontalRootRangeMeters": 0.0,
+      "rootLocked": true
+    },
+    {
+      "name": "Death",
+      "durationSeconds": 2.200000047683716,
+      "animationSha256": "53f5737a5b63d655498ed905e02568762deb611309dd25f55bce6380b3e57eb3",
+      "rootDisplacementMeters": [
+        -0.050727195739746093,
+        -0.7153332901000977,
+        -0.7687663567066193
+      ],
+      "rootRangeMeters": [
+        0.05646047592163086,
+        0.7188705062866211,
+        0.8113591003417969
+      ],
+      "horizontalRootRangeMeters": 0.8133212004176131,
+      "rootLocked": false
+    }
+  ],
+  "triangles": 99928,
+  "heightMeters": 1.7710674218833447,
+  "heightMeasurement": "Imported mesh bounds from the original pilot, unchanged geometry; metres.",
+  "forwardAxis": {
+    "glTF": "+Z",
+    "Blender": "-Y",
+    "evidence": "Original model orientation and eight-direction preview; original geometry and skin retained."
+  },
+  "rootDisplacementPerWalkCycle": {
+    "bone": "Hips",
+    "coordinateSystem": "glTF Y-up metres",
+    "vectorMeters": [
+      0.022091785669326784,
+      -0.011717987060546876,
+      0.8767234611511231
+    ],
+    "horizontalMeters": 0.8770017527501666,
+    "distanceMeters": 0.8770800337184831,
+    "cycleCount": 1,
+    "durationSeconds": 1.2666666507720947
+  },
+  "gameIntegration": false,
+  "knownIssues": [
+    "No weapons or shields; no game integration.",
+    "Spear Walk is an infantry-walk approximation, not a dedicated march preset.",
+    "Previous Prime Walk retained with root displacement and imperfect seam."
+  ],
+  "preview": {
+    "directions": [
+      "SE",
+      "S",
+      "SW",
+      "W",
+      "NW",
+      "N",
+      "NE",
+      "E"
+    ],
+    "framesPerDirection": 8,
+    "phases": [
+      0.0,
+      0.125,
+      0.25,
+      0.375,
+      0.5,
+      0.625,
+      0.75,
+      0.875
+    ],
+    "cellPixels": 128,
+    "walkSource": "Retained previous eight-direction images"
+  },
+  "rootLockCoordinateSystem": "glTF Y-up; constant Hips X/Z, original Y retained",
+  "sourceProof": [
+    {
+      "clip": "Idle",
+      "source": "Combat_Stance",
+      "sourceFileSha256": "3af2c18dde8173cf096b7e84b9293001efc2de23c4b0ad9b36a38121b1091e54",
+      "sourceAnimationSha256": "fd205538a28e4b59018f5f94771ae4ae6719a9ece46042c2d32cbd365f09dcdc",
+      "rootLocked": true,
+      "modifiedComponents": [
+        "Hips.translation.x",
+        "Hips.translation.z"
+      ],
+      "outputAnimationSha256": "49aeb2b2bf0b2a6eff8dbfd48667abb274d71a60b9c3e35a04fcca47c5646222"
+    },
+    {
+      "clip": "Walk",
+      "source": "previous pilot GLB",
+      "sourceFileSha256": "2ec662494d357eb2cf344f06cf6df7511427769f5ae897ecb0ea1dad970ec2fa",
+      "sourceAnimationSha256": "de949c1a16eebb79e05c6298bca5670355c8a5fdf243d8a6bc33057c6e98c45e",
+      "retainedExistingValues": true,
+      "rootLocked": false,
+      "outputAnimationSha256": "de949c1a16eebb79e05c6298bca5670355c8a5fdf243d8a6bc33057c6e98c45e"
+    },
+    {
+      "clip": "Attack",
+      "source": "Archery_Shot",
+      "sourceFileSha256": "3af2c18dde8173cf096b7e84b9293001efc2de23c4b0ad9b36a38121b1091e54",
+      "sourceAnimationSha256": "02ab7036536d121ae55d37a7558aacba6c652681e0ae42ceeb05fb3172e10266",
+      "rootLocked": true,
+      "modifiedComponents": [
+        "Hips.translation.x",
+        "Hips.translation.z"
+      ],
+      "outputAnimationSha256": "a50a30f443e469b9d17731d84e99f6e2ffed2b4dcaf62672bc6be4db36021ee2"
+    },
+    {
+      "clip": "Hit",
+      "source": "Hit_Reaction",
+      "sourceFileSha256": "3af2c18dde8173cf096b7e84b9293001efc2de23c4b0ad9b36a38121b1091e54",
+      "sourceAnimationSha256": "ea7606c7a9f977826d741c0c908a1f1e8caad6a3a98a405295f9a75712dab6c9",
+      "rootLocked": true,
+      "modifiedComponents": [
+        "Hips.translation.x",
+        "Hips.translation.z"
+      ],
+      "outputAnimationSha256": "e85ab7989fd4d1e3923d14ba18746be18dbba307950391578c2bb441828912ec"
+    },
+    {
+      "clip": "Death",
+      "source": "dying_backwards",
+      "sourceFileSha256": "3af2c18dde8173cf096b7e84b9293001efc2de23c4b0ad9b36a38121b1091e54",
+      "sourceAnimationSha256": "53f5737a5b63d655498ed905e02568762deb611309dd25f55bce6380b3e57eb3",
+      "rootLocked": false,
+      "modifiedComponents": [],
+      "outputAnimationSha256": "53f5737a5b63d655498ed905e02568762deb611309dd25f55bce6380b3e57eb3"
+    }
+  ],
+  "originalGeometrySkinMaterialsPreserved": true,
+  "walkRetained": true,
+  "combatCreditsConsumed": 15,
+  "retainedActionCostEquivalent": 12,
+  "walkCycleMeasurement": {
+    "cycles": 1,
+    "durationSeconds": 1.2666666507720947,
+    "source": "Previously selected contiguous Prime gait cycle",
+    "gameCadenceIntegrated": false
+  },
+  "blenderReimport": {
+    "Attack": {
+      "bones": 24,
+      "durationSeconds": 5.0,
+      "renderedFrames": 6,
+      "poseSampleSha256": "1c3971bb90a97e4874052c69c9a8a9c85103a2e3abcd0cc683fa628e4b7f0263"
+    },
+    "Death": {
+      "bones": 24,
+      "durationSeconds": 2.2000001271565757,
+      "renderedFrames": 6,
+      "poseSampleSha256": "d51512fc66061085fbafba5fc6be4b9694191d4a688f58cf6eac1acf07accac4"
+    },
+    "Hit": {
+      "bones": 24,
+      "durationSeconds": 1.6333333651224773,
+      "renderedFrames": 6,
+      "poseSampleSha256": "0095a82cf826e332bb558f0585f411283a2be7b594091ab706d7703e3f02f935"
+    },
+    "Idle": {
+      "bones": 24,
+      "durationSeconds": 1.6666666666666667,
+      "renderedFrames": 6,
+      "poseSampleSha256": "9d3a513f34bfd4b3c6594d4baa7b90ccee190906eac70e7c8d28b5fc38faaddb"
+    }
+  }
+}

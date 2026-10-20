@@ -1,0 +1,126 @@
+{
+  "file": "sword-2.glb",
+  "source": "Meshy 7.1 Text to 3D + PBR 2K",
+  "sourceSha256": "67a3a21c9c3050f392a8ebddaee64842aa3e2dca38e9d023e0f5a840abca47ec",
+  "normalizationMethod": "PCA with shaft-axis refinement, grip cross-section centring and bounded local coordinate scaling. Sword guard and blade width fitted separately.",
+  "orientationMatrixRows": [
+    [
+      -0.5187876791336036,
+      0.013255229067697202,
+      -0.8548003526447168
+    ],
+    [
+      0.005816973463189883,
+      0.9999113765264748,
+      0.011975053764348818
+    ],
+    [
+      0.8548833293490393,
+      0.0012401593822469748,
+      -0.518818807683192
+    ]
+  ],
+  "sourceGripXYInOrientedCoordinates": [
+    0.02440932153153419,
+    -0.00013186476275381127
+  ],
+  "anchors": {
+    "sourceGuardZ": -0.44769161955228015,
+    "targetGuardZ": 0.05
+  },
+  "authoredGrip": [
+    0,
+    0,
+    0
+  ],
+  "measuredOptimizedGripSurfaceDistanceMetres": 0.01820550113916397,
+  "blenderScale": [
+    1.0,
+    1.0,
+    1.0
+  ],
+  "blenderRotation": [
+    0.0,
+    0.0,
+    0.0
+  ],
+  "highDetail": {
+    "path": "modelos/sword-2.glb",
+    "triangles": 103692,
+    "boundingBox": {
+      "min": [
+        -0.125,
+        -0.031,
+        -0.12
+      ],
+      "max": [
+        0.125,
+        0.031,
+        0.95
+      ]
+    },
+    "sha256": "80caed943cacbcf563652dc562b341ba1af9452b5c7d3aecd658b2084d9dd297"
+  },
+  "optimized": {
+    "path": "otimizados/sword-2.glb",
+    "triangles": 788,
+    "limit": 800,
+    "boundingBox": {
+      "min": [
+        -0.125,
+        -0.03099999949336052,
+        -0.11999999731779099
+      ],
+      "max": [
+        0.125,
+        0.03099999949336052,
+        0.949999988079071
+      ]
+    },
+    "sha256": "9c45d201f4ea02fd45e95dc38543d6ac434357e861a2e704e3c3f4130f1f1e8f",
+    "coincidentVerticesWelded": 4641,
+    "localTextureReprojection": {
+      "resolution": [
+        2048,
+        2048
+      ],
+      "maps": [
+        "basecolor",
+        "normal",
+        "metallicRoughness"
+      ],
+      "method": "Cycles selected-to-active from unchanged normalized Meshy master; smart UV unwrap; no new Meshy task",
+      "samples": 1,
+      "cageExtrusionMetres": 0.02,
+      "maxRayDistanceMetres": 0.08
+    }
+  },
+  "textures": [
+    {
+      "name": "Image_0",
+      "size": [
+        2048,
+        2048
+      ]
+    },
+    {
+      "name": "Image_1",
+      "size": [
+        2048,
+        2048
+      ]
+    },
+    {
+      "name": "Image_2",
+      "size": [
+        2048,
+        2048
+      ]
+    }
+  ],
+  "notes": [
+    "The source master is preserved unchanged in originais/.",
+    "Final visual approval and attachment to animated hands are not part of normalization.",
+    "Sword guard spans X; broad blade is fitted to 0.07 m in X. The original generic edge-direction convention needs review for a double-edged sword."
+  ]
+}

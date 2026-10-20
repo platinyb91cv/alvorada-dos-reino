@@ -1,0 +1,122 @@
+{
+  "file": "bow-2.glb",
+  "source": "Meshy 7.1 Text to 3D + PBR 2K",
+  "sourceSha256": "70bad7bda5722162bbe79c02fc44e0ae4925fcf8b89f4211c42de0cc4dee75bf",
+  "normalizationMethod": "PCA with shaft-axis refinement, grip cross-section centring and bounded local coordinate scaling. Sword guard and blade width fitted separately.",
+  "orientationMatrixRows": [
+    [
+      -0.0021464486098714724,
+      -0.42782809695304674,
+      0.9038575729703765
+    ],
+    [
+      0.0033510704553559264,
+      -0.9038576573999104,
+      -0.42782017891440033
+    ],
+    [
+      0.999992081511233,
+      0.0021105963803249627,
+      0.0033737661079182293
+    ]
+  ],
+  "sourceGripXYInOrientedCoordinates": [
+    0.014155417409348569,
+    0.02332700649800665
+  ],
+  "anchors": {},
+  "authoredGrip": [
+    0,
+    0,
+    0
+  ],
+  "measuredOptimizedGripSurfaceDistanceMetres": 0.0023179661948233843,
+  "blenderScale": [
+    1.0,
+    1.0,
+    1.0
+  ],
+  "blenderRotation": [
+    0.0,
+    0.0,
+    0.0
+  ],
+  "highDetail": {
+    "path": "modelos/bow-2.glb",
+    "triangles": 66476,
+    "boundingBox": {
+      "min": [
+        -0.020999999716877937,
+        -0.20814922451972961,
+        -0.6788197755813599
+      ],
+      "max": [
+        0.020999999716877937,
+        0.020999997854232788,
+        0.6788197755813599
+      ]
+    },
+    "sha256": "13985c53832d2770bd2fa48efcbdb4d9acfec6c5af2799fca6f5ab4bd1bf6aa9"
+  },
+  "optimized": {
+    "path": "otimizados/bow-2.glb",
+    "triangles": 788,
+    "limit": 800,
+    "boundingBox": {
+      "min": [
+        -0.020999999716877937,
+        -0.20814922451972961,
+        -0.6788197755813599
+      ],
+      "max": [
+        0.020999999716877937,
+        0.020999997854232788,
+        0.6788197755813599
+      ]
+    },
+    "sha256": "159677ca057bee00b8525bbdb000579fadf77cbd86c4c10d6a9dd2f56192259d",
+    "coincidentVerticesWelded": 8387,
+    "localTextureReprojection": {
+      "resolution": [
+        2048,
+        2048
+      ],
+      "maps": [
+        "basecolor",
+        "normal",
+        "metallicRoughness"
+      ],
+      "method": "Cycles selected-to-active from unchanged normalized Meshy master; smart UV unwrap; no new Meshy task",
+      "samples": 1,
+      "cageExtrusionMetres": 0.02,
+      "maxRayDistanceMetres": 0.08
+    }
+  },
+  "textures": [
+    {
+      "name": "Image_0",
+      "size": [
+        2048,
+        2048
+      ]
+    },
+    {
+      "name": "Image_1",
+      "size": [
+        2048,
+        2048
+      ]
+    },
+    {
+      "name": "Image_2",
+      "size": [
+        2048,
+        2048
+      ]
+    }
+  ],
+  "notes": [
+    "The source master is preserved unchanged in originais/.",
+    "Final visual approval and attachment to animated hands are not part of normalization."
+  ]
+}

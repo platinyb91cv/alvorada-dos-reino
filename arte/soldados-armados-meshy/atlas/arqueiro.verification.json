@@ -1,0 +1,245 @@
+{
+ "unit": "arqueiro",
+ "atlas": "www/assets/units3d/arqueiro-armas-meshy.webp",
+ "atlasSha256": "3d13eb52725ac6c24339fd40a4f0ea6211a510176ee21fd1a53ed7c2c93a2e4a",
+ "directions": 8,
+ "directionLabels": [
+  "SE",
+  "S",
+  "SW",
+  "W",
+  "NW",
+  "N",
+  "NE",
+  "E"
+ ],
+ "framesPerDirection": 22,
+ "referenceHeightPx": 64,
+ "meshyCredits": 0,
+ "body": {
+  "file": "arte/soldados-meshy/arqueiro.glb",
+  "sha256": "ad7387df1ed920267d11ba75a9318d1d5cb2e4e90222f26c5e622441fc0656a6",
+  "sourceBranch": "soldados-meshy-piloto@7cb7cab"
+ },
+ "bones": 24,
+ "boneNames": [
+  "Hips",
+  "Spine02",
+  "Spine01",
+  "Spine",
+  "neck",
+  "Head",
+  "head_end",
+  "headfront",
+  "LeftShoulder",
+  "LeftArm",
+  "LeftForeArm",
+  "LeftHand",
+  "RightShoulder",
+  "RightArm",
+  "RightForeArm",
+  "RightHand",
+  "LeftUpLeg",
+  "LeftLeg",
+  "LeftFoot",
+  "LeftToeBase",
+  "RightUpLeg",
+  "RightLeg",
+  "RightFoot",
+  "RightToeBase"
+ ],
+ "weapon": {
+  "file": "arte/soldados-armados-meshy/armas/otimizados/bow-2.glb",
+  "sha256": "159677ca057bee00b8525bbdb000579fadf77cbd86c4c10d6a9dd2f56192259d",
+  "triangles": 788,
+  "masterSha256": "13985c53832d2770bd2fa48efcbdb4d9acfec6c5af2799fca6f5ab4bd1bf6aa9",
+  "masterTriangles": 66476,
+  "originalMeshySha256": "70bad7bda5722162bbe79c02fc44e0ae4925fcf8b89f4211c42de0cc4dee75bf",
+  "dimensionsMetres": [
+   0.041999999433755875,
+   0.2291492223739624,
+   1.3576395511627197
+  ],
+  "bone": "LeftHand",
+  "orientedIn": "attack"
+ },
+ "states": {
+  "idle": {
+   "clip": "Idle",
+   "frames": 2,
+   "clipFrames": [
+    0,
+    40
+   ],
+   "rootMotionRemoved": 0
+  },
+  "walk": {
+   "clip": "Walk",
+   "frames": 8,
+   "clipFrames": [
+    0,
+    30.4
+   ],
+   "rootMotionRemoved": 0.535
+  },
+  "attack": {
+   "clip": "Attack",
+   "frames": 6,
+   "clipFrames": [
+    0,
+    120
+   ],
+   "rootMotionRemoved": 0
+  },
+  "hit": {
+   "clip": "Hit",
+   "frames": 2,
+   "clipFrames": [
+    0,
+    39.2
+   ],
+   "rootMotionRemoved": 0
+  },
+  "death": {
+   "clip": "Death",
+   "frames": 4,
+   "clipFrames": [
+    0,
+    52.8
+   ],
+   "rootMotionRemoved": 0
+  }
+ },
+ "checks": {
+  "rigid": {
+   "bow": 4e-06
+  },
+  "present": {
+   "idle": {
+    "bow": true
+   },
+   "walk": {
+    "bow": true
+   },
+   "attack": {
+    "bow": true
+   },
+   "hit": {
+    "bow": true
+   },
+   "death": {
+    "bow": true
+   }
+  },
+  "rootHorizontal": {
+   "idle": 0,
+   "walk": 0.0236,
+   "attack": 0,
+   "hit": 0,
+   "death": 0.4948
+  },
+  "aimForwardDot": {}
+ },
+ "clipMeasurements": {
+  "Idle": {
+   "frames": 40,
+   "seconds": 1.6667,
+   "fps": 24.0,
+   "footCrossings": 0,
+   "cycles": 0.0,
+   "rootHorizontalMetres": 0.0,
+   "rootHorizontalMaxMetres": 0.0,
+   "footSeparationRangeMetres": 0.0044,
+   "hipsHeightMetres": 0.8763,
+   "walkLoopRootClose": 0.0
+  },
+  "Walk": {
+   "frames": 30,
+   "seconds": 1.25,
+   "fps": 24.0,
+   "footCrossings": 2,
+   "cycles": 1.0,
+   "rootHorizontalMetres": 0.8655,
+   "rootHorizontalMaxMetres": 0.8655,
+   "footSeparationRangeMetres": 1.0308,
+   "hipsHeightMetres": 0.9832,
+   "walkLoopRootClose": 0.8655
+  },
+  "Attack": {
+   "frames": 120,
+   "seconds": 5.0,
+   "fps": 24.0,
+   "footCrossings": 0,
+   "cycles": 0.0,
+   "rootHorizontalMetres": 0.0,
+   "rootHorizontalMaxMetres": 0.0,
+   "footSeparationRangeMetres": 0.043,
+   "hipsHeightMetres": 0.9434,
+   "walkLoopRootClose": 0.0
+  },
+  "Hit": {
+   "frames": 39,
+   "seconds": 1.625,
+   "fps": 24.0,
+   "footCrossings": 0,
+   "cycles": 0.0,
+   "rootHorizontalMetres": 0.0,
+   "rootHorizontalMaxMetres": 0.0,
+   "footSeparationRangeMetres": 0.102,
+   "hipsHeightMetres": 0.9505,
+   "walkLoopRootClose": 0.0
+  },
+  "Death": {
+   "frames": 53,
+   "seconds": 2.2083,
+   "fps": 24.0,
+   "footCrossings": 3,
+   "cycles": 1.5,
+   "rootHorizontalMetres": 0.7704,
+   "rootHorizontalMaxMetres": 0.812,
+   "footSeparationRangeMetres": 0.0483,
+   "hipsHeightMetres": 0.9608,
+   "walkLoopRootClose": 0.7704
+  }
+ },
+ "walk": {
+  "distancePerCycleHeights": 0.535,
+  "source": "rootMotion",
+  "tileInModelHeights": 1.5084944665313016,
+  "phaseScale": 3.543234,
+  "strideTiles": 0.354658,
+  "animFactor": 17.716169
+ },
+ "poseOffsets": [
+  {
+   "bone": {
+    "names": [
+     "LeftForeArm"
+    ],
+    "role": "forearm",
+    "side": "left"
+   },
+   "mode": "towardForward",
+   "degrees": 70,
+   "states": [
+    "idle",
+    "walk",
+    "hit"
+   ]
+  }
+ ],
+ "renderer": "Forge3D RENDER_SPRITE_ATLAS (platinyb91cv-forge3d-ai fase4-imagens) com SPRITE_PROP_DIR, Blender 5.2.2 Cycles CPU",
+ "warnings": [
+  "Osso LeftHand muito comprido; a pega foi limitada a 0.16 m da base."
+ ],
+ "model": {
+  "armature": "Armature",
+  "bones": 24,
+  "meshes": [
+   "char1"
+  ],
+  "vertices": 69007,
+  "heightMetres": 1.6395,
+  "rootBone": "Hips"
+ }
+}

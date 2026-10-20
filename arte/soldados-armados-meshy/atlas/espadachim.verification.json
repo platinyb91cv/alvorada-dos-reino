@@ -1,0 +1,262 @@
+{
+ "unit": "espadachim",
+ "atlas": "www/assets/units3d/espadachim-armas-meshy.webp",
+ "atlasSha256": "d22deefad91bb7c2d32b027d80107914bdd497f66fcbb9264d08f0eeb745117e",
+ "directions": 8,
+ "directionLabels": [
+  "SE",
+  "S",
+  "SW",
+  "W",
+  "NW",
+  "N",
+  "NE",
+  "E"
+ ],
+ "framesPerDirection": 22,
+ "referenceHeightPx": 64,
+ "meshyCredits": 0,
+ "body": {
+  "file": "arte/soldados-meshy/espadachim.glb",
+  "sha256": "369d99e97aef661ef7760221fd72ecf13aebf6fb76c08fa1ae791fdbebea8611",
+  "sourceBranch": "soldados-meshy-piloto@7cb7cab"
+ },
+ "bones": 24,
+ "boneNames": [
+  "Hips",
+  "Spine02",
+  "Spine01",
+  "Spine",
+  "neck",
+  "Head",
+  "head_end",
+  "headfront",
+  "LeftShoulder",
+  "LeftArm",
+  "LeftForeArm",
+  "LeftHand",
+  "RightShoulder",
+  "RightArm",
+  "RightForeArm",
+  "RightHand",
+  "LeftUpLeg",
+  "LeftLeg",
+  "LeftFoot",
+  "LeftToeBase",
+  "RightUpLeg",
+  "RightLeg",
+  "RightFoot",
+  "RightToeBase"
+ ],
+ "weapon": {
+  "file": "arte/soldados-armados-meshy/armas/otimizados/sword-2.glb",
+  "sha256": "9c45d201f4ea02fd45e95dc38543d6ac434357e861a2e704e3c3f4130f1f1e8f",
+  "triangles": 788,
+  "masterSha256": "80caed943cacbcf563652dc562b341ba1af9452b5c7d3aecd658b2084d9dd297",
+  "masterTriangles": 103692,
+  "originalMeshySha256": "67a3a21c9c3050f392a8ebddaee64842aa3e2dca38e9d023e0f5a840abca47ec",
+  "dimensionsMetres": [
+   0.25,
+   0.06199999898672104,
+   1.0699999332427979
+  ],
+  "bone": "RightHand",
+  "orientedIn": "death"
+ },
+ "states": {
+  "idle": {
+   "clip": "Idle",
+   "frames": 2,
+   "clipFrames": [
+    0,
+    40
+   ],
+   "rootMotionRemoved": 0
+  },
+  "walk": {
+   "clip": "Walk",
+   "frames": 8,
+   "clipFrames": [
+    0,
+    25.6
+   ],
+   "rootMotionRemoved": 0
+  },
+  "attack": {
+   "clip": "Attack",
+   "frames": 6,
+   "clipFrames": [
+    0,
+    36
+   ],
+   "rootMotionRemoved": 0
+  },
+  "hit": {
+   "clip": "Hit",
+   "frames": 2,
+   "clipFrames": [
+    0,
+    39.2
+   ],
+   "rootMotionRemoved": 0
+  },
+  "death": {
+   "clip": "Death",
+   "frames": 4,
+   "clipFrames": [
+    0,
+    52.8
+   ],
+   "rootMotionRemoved": 0
+  }
+ },
+ "checks": {
+  "rigid": {
+   "sword": 3e-06,
+   "shield": 4e-06
+  },
+  "present": {
+   "idle": {
+    "sword": true,
+    "shield": true
+   },
+   "walk": {
+    "sword": true,
+    "shield": true
+   },
+   "attack": {
+    "sword": true,
+    "shield": true
+   },
+   "hit": {
+    "sword": true,
+    "shield": true
+   },
+   "death": {
+    "sword": true,
+    "shield": true
+   }
+  },
+  "rootHorizontal": {
+   "idle": 0,
+   "walk": 0.0142,
+   "attack": 0,
+   "hit": 0,
+   "death": 0.4902
+  },
+  "aimForwardDot": {}
+ },
+ "clipMeasurements": {
+  "Idle": {
+   "frames": 40,
+   "seconds": 1.6667,
+   "fps": 24.0,
+   "footCrossings": 0,
+   "cycles": 0.0,
+   "rootHorizontalMetres": 0.0,
+   "rootHorizontalMaxMetres": 0.0,
+   "footSeparationRangeMetres": 0.0023,
+   "hipsHeightMetres": 0.8925,
+   "walkLoopRootClose": 0.0
+  },
+  "Walk": {
+   "frames": 26,
+   "seconds": 1.0833,
+   "fps": 24.0,
+   "footCrossings": 1,
+   "cycles": 0.5,
+   "rootHorizontalMetres": 0.0031,
+   "rootHorizontalMaxMetres": 0.0236,
+   "footSeparationRangeMetres": 1.2528,
+   "hipsHeightMetres": 1.0111,
+   "walkLoopRootClose": 0.0031
+  },
+  "Attack": {
+   "frames": 36,
+   "seconds": 1.5,
+   "fps": 24.0,
+   "footCrossings": 0,
+   "cycles": 0.0,
+   "rootHorizontalMetres": 0.0,
+   "rootHorizontalMaxMetres": 0.0,
+   "footSeparationRangeMetres": 0.2607,
+   "hipsHeightMetres": 0.9115,
+   "walkLoopRootClose": 0.0
+  },
+  "Hit": {
+   "frames": 39,
+   "seconds": 1.625,
+   "fps": 24.0,
+   "footCrossings": 0,
+   "cycles": 0.0,
+   "rootHorizontalMetres": 0.0,
+   "rootHorizontalMaxMetres": 0.0,
+   "footSeparationRangeMetres": 0.0982,
+   "hipsHeightMetres": 0.9663,
+   "walkLoopRootClose": 0.0
+  },
+  "Death": {
+   "frames": 53,
+   "seconds": 2.2083,
+   "fps": 24.0,
+   "footCrossings": 1,
+   "cycles": 0.5,
+   "rootHorizontalMetres": 0.7662,
+   "rootHorizontalMaxMetres": 0.8075,
+   "footSeparationRangeMetres": 0.0983,
+   "hipsHeightMetres": 0.9765,
+   "walkLoopRootClose": 0.7662
+  }
+ },
+ "walk": {
+  "distancePerCycleHeights": 0.766,
+  "source": "feet",
+  "tileInModelHeights": 1.5084944665313016,
+  "phaseScale": 2.474713,
+  "strideTiles": 0.507791,
+  "animFactor": 12.373564
+ },
+ "poseOffsets": [
+  {
+   "bone": {
+    "names": [
+     "RightForeArm"
+    ],
+    "role": "forearm",
+    "side": "right"
+   },
+   "mode": "towardForward",
+   "degrees": 85,
+   "states": [
+    "idle",
+    "walk",
+    "hit"
+   ]
+  }
+ ],
+ "renderer": "Forge3D RENDER_SPRITE_ATLAS (platinyb91cv-forge3d-ai fase4-imagens) com SPRITE_PROP_DIR, Blender 5.2.2 Cycles CPU",
+ "warnings": [
+  "Osso RightHand muito comprido; a pega foi limitada a 0.16 m da base.",
+  "Osso LeftForeArm muito comprido; a pega foi limitada a 0.49 m da base."
+ ],
+ "model": {
+  "armature": "Armature",
+  "bones": 24,
+  "meshes": [
+   "char1"
+  ],
+  "vertices": 78468,
+  "heightMetres": 1.6456,
+  "rootBone": "Hips"
+ },
+ "escudo": {
+  "file": "arte/soldados-armados-meshy/armas/otimizados/shield.glb",
+  "sha256": "1e7350adfdd9e22f6adbe76e7d4c335c7efb7449c57a6e0d151476034dabe79e",
+  "triangles": 1500,
+  "diameterMetres": 0.62,
+  "bone": "LeftForeArm",
+  "source": "Meshy_AI_round_shield_1020033443_image-to-3d-texture.glb (gerado pelo utilizador no site meshy.ai)",
+  "sourceSha256": "6013e359a776b04c9dd0a84051f7593e9f7a6cd8d12fab92f11913d8000fa05e",
+  "reduction": "Decimate 290 960 -> 1 500 triângulos, texturas 512 px (scripts/preparar_escudo.py)"
+ }
+}
