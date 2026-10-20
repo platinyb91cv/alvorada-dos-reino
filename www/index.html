@@ -2566,7 +2566,7 @@ const MATS=[
   {wall:{l:'#d2b27f',r:'#a8875a',t:'#e0c594',k:'brick'},roof:{c:'#b5653c',d:'#874629',k:'tile'},found:'#a08d6c',trim:'#7c5d3b'},
   {wall:{l:'#e6e0d1',r:'#b9b1a1',t:'#f1ece0',k:'stone'},roof:{c:'#ad452c',d:'#7c2e1d',k:'tile'},found:'#ada597',trim:'#8d8676'},
 ];
-const BHEIGHT={vila:46,curral:28,estrada:2,muralhaMadeira:26,muralhaPedra:30,muralhaFort:38,portaoMadeira:46,portaoPedra:52,doca:28,ferreiro:52,templo:66,maravilha:118,centro:78,casa:50,quinta:6,armazem:46,quartel:56,arquearia:52,estabulo:48,torre:96,oficina:58};
+const BHEIGHT={vila:46,curral:28,estrada:2,muralhaMadeira:26,muralhaPedra:30,muralhaFort:38,portaoMadeira:56,portaoPedra:64,doca:28,ferreiro:52,templo:66,maravilha:118,centro:78,casa:50,quinta:6,armazem:46,quartel:56,arquearia:52,estabulo:48,torre:96,oficina:58};
 function bldVariant(e){
   if(e.type==='torre')return e.lvl||1;
   if(e.d.wall||e.d.gate){let m=0;const nb=(x,y)=>{if(!inb(x,y))return false;const n=byId.get(bldAt[idx(x,y)]);return !!n&&n.o===e.o&&(n.d.wall||n.d.gate)};
@@ -2655,6 +2655,7 @@ function pastureSprite(age,o){
 }
 function bldSprite(type,age,o,vr){
   if(type==='vila')return vilaSprite(age,o);
+  if(BLDS[type].gate){const g3=gate3dSprite(type,age,o,vr,0);if(g3)return g3}
   if(type==='curral'&&CURRAL_ART.ready)return pastureSprite(age,o);
   if(type==='mercado'&&!(BLDART.ready&&bldArtKey(type,age)))return marketSprite(age,o); // mercado pintado (Gemini) quando existe; senão o desenhado
   if(BLDART.ready){const k0='art|'+type+'|'+age+'|'+o+'|'+(vr??'')+'|'+(P&&P[o]?P[o].col:'');if(BCACHE[k0])return BCACHE[k0];const r=bldArt(type,age,o,vr);if(r){BCACHE[k0]=r;return r}}
@@ -2968,6 +2969,17 @@ function bldSprite(type,age,o,vr){
   }
   const s={cv,ox,oy,CW,CH};BCACHE[key]=s;return s;
 }
+// portões 3D (Blender, arte/portoes-3d): madeira nas 3 idades, pedra no Bronze/Ferro; direções x/y; portas fechadas, a meio e abertas
+const GATE3D_DATA={"file":"portoes-3d.webp","scale":2,"atlasSha256":"4293fcbd4c69ec3e5d753c2ed4c52d02b827ca766e77158d75bb46d35ef82090","frames":{"madeira0_x_0":[2,2,265,400,85.0,236.44],"madeira0_x_1":[269,2,263,400,83.0,236.44],"madeira0_x_2":[534,2,261,400,81.0,236.44],"madeira0_y_0":[797,2,269,400,89.0,236.44],"madeira0_y_1":[1068,2,266,400,86.0,236.44],"madeira0_y_2":[1336,2,266,400,86.0,236.44],"madeira1_x_0":[1604,2,264,400,84.0,236.44],"madeira1_x_1":[2,404,260,400,80.0,236.44],"madeira1_x_2":[264,404,249,400,69.0,236.44],"madeira1_y_0":[515,404,277,400,97.0,236.44],"madeira1_y_1":[794,404,274,400,94.0,236.44],"madeira1_y_2":[1070,404,274,400,94.0,236.44],"madeira2_x_0":[1346,404,360,400,180.0,236.44],"madeira2_x_1":[1708,404,251,400,71.0,236.44],"madeira2_x_2":[2,806,244,400,64.0,236.44],"madeira2_y_0":[248,806,276,400,96.0,236.44],"madeira2_y_1":[526,806,274,400,94.0,236.44],"madeira2_y_2":[802,806,274,400,94.0,236.44],"pedra1_x_0":[1078,806,245,400,65.0,236.44],"pedra1_x_1":[1325,806,245,400,65.0,236.44],"pedra1_x_2":[1572,806,245,400,65.0,236.44],"pedra1_y_0":[2,1208,246,400,66.0,236.44],"pedra1_y_1":[250,1208,246,400,66.0,236.44],"pedra1_y_2":[498,1208,247,400,67.0,236.44],"pedra2_x_0":[747,1208,247,400,67.0,236.44],"pedra2_x_1":[996,1208,247,400,67.0,236.44],"pedra2_x_2":[1245,1208,247,400,67.0,236.44],"pedra2_y_0":[1494,1208,246,400,66.0,236.44],"pedra2_y_1":[1742,1208,247,400,67.0,236.44],"pedra2_y_2":[2,1610,247,400,67.0,236.44]}};
+const GATE3D={ready:false,img:null,wide:true,teams:new Map(),meta:GATE3D_DATA};
+(()=>{if(!GATE3D_DATA.file)return;const im=new Image();im.onload=()=>{GATE3D.img=im;GATE3D.ready=true;for(const k in BCACHE)delete BCACHE[k];try{PORTS.clear()}catch(e){}};im.src='assets/edificios-extra/'+GATE3D_DATA.file})();
+function gate3dKey(type,age){const kind=type==='portaoMadeira'?'madeira':'pedra',F=GATE3D.meta.frames;
+  for(let a=age;a>=0;a--)if(F[kind+a+'_x_0'])return kind+a;for(let a=age+1;a<=2;a++)if(F[kind+a+'_x_0'])return kind+a;return null}
+function gate3dSprite(type,age,o,vr,op){if(!GATE3D.ready)return null;const v=gate3dKey(type,age);if(!v)return null;const team=P[o]?P[o].col:'#3f86e0',d=vr==='y'?'y':'x';
+  const key='g3|'+v+'|'+d+'|'+op+'|'+team;if(BCACHE[key])return BCACHE[key];
+  const [sx,sy,w,h,ax,ay]=GATE3D.meta.frames[v+'_'+d+'_'+op],k=1/GATE3D.meta.scale,CW=Math.ceil(w*k)+2,CH=Math.ceil(h*k)+2;
+  const cv=mkCanvas(CW*SS,CH*SS),c=cv.getContext('2d');c.scale(SS,SS);c.imageSmoothingEnabled=true;c.imageSmoothingQuality='high';c.drawImage(recolorImg(GATE3D,team),sx,sy,w,h,1,1,w*k,h*k);
+  const r={cv,ox:ax*k+1,oy:ay*k+1,CW,CH};BCACHE[key]=r;return r}
 function drawGateDoor(c,e,p){
   const ax=bldVariant(e);const o=e.open||0;const wood=e.type==='portaoMadeira';const Hh=(wood?30:36)-6;
   const col=wood?'#7a5530':'#6a6a70',dk=wood?'#4a3018':'#3a3a40';
@@ -3804,7 +3816,7 @@ function render(){UCFM=0;
         c.drawImage(img,0,h0*sw,img.width,(s.h-h0)*sw,x0,y0+h0,s.w,s.h-h0);c.drawImage(img,0,0,img.width,h0*sw,x0+dx,y0,s.w,h0)}
       else c.drawImage(lit?s.cv:darkOf(s.cv),p.x-s.ax,p.y+4-s.ay,s.w,s.h);
     }else if(k===1){
-      const s=bldSprite(e.type,P[e.o].age,e.o,bldVariant(e));const lit=visibleTo0(e);
+      const s=(e.d.gate&&e.done&&gate3dSprite(e.type,P[e.o].age,e.o,bldVariant(e),Math.round((e.open||0)*2)))||bldSprite(e.type,P[e.o].age,e.o,bldVariant(e));const lit=visibleTo0(e);
       const dx=p.x-s.ox,dy=p.y-s.oy;
       if(!e.done){
         const fh=(e.w+e.h)*HH+34,rev=fh+(s.CH-fh)*e.prog;
@@ -3817,7 +3829,7 @@ function render(){UCFM=0;
       }else{
         c.drawImage(lit?s.cv:darkOf(s.cv),dx,dy,s.CW,s.CH);
         {const fr=bldFringe(e);if(fr)c.drawImage(lit?fr.cv:darkOf(fr.cv),p.x-fr.ox,p.y-fr.oy,fr.CW,fr.CH)}
-        if(e.d.gate&&!BLDART.ready)drawGateDoor(c,e,p);
+        if(e.d.gate&&!BLDART.ready&&!GATE3D.ready)drawGateDoor(c,e,p);
         if(e.hp<e.max*.6&&lit&&!(e.d.wall&&e.type!=='muralhaMadeira')){ // fogo
           if(!e.fires){const r=mulberry32(e.id);e.fires=[];for(let k=0;k<4;k++)e.fires.push([e.tx+.3+r()*(e.w-.6),e.ty+.3+r()*(e.h-.6),BHEIGHT[e.type]*(.4+r()*.5)])}
           const n=e.hp<e.max*.3?4:2;
