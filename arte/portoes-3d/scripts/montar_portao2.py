@@ -1,0 +1,360 @@
+# Portões 3D para o Alvorada dos Reinos (0 créditos): modelados por código no Blender e renderizados na câmara
+# isométrica do jogo (2:1, ortográfica). Variantes: madeira idade 0/1/2, pedra idade 1/2; direções x/y; portas 0/½/aberta.
+# Coordenadas: 1 casa = 1 unidade; Blender X = x do jogo, Blender Y = −y do jogo (a câmara fica do lado de +x,+y do jogo).
+import bpy, bmesh, math, os, json, random
+from mathutils import Vector, Matrix
+from bpy_extras.object_utils import world_to_camera_view
+OUT = os.environ.get('OUT', '/tmp/claude-0/portao/render'); os.makedirs(OUT, exist_ok=True)
+VARS = os.environ.get('VARS', 'madeira0,madeira1,madeira2,pedra1,pedra2').split(',')
+PXU = 2 * 64 / math.sqrt(2)  # px por unidade a 2× (o atlas guarda a 2× do ecrã, como os edifícios)
+RES = (360, 400); SAMPLES = int(os.environ.get('SAMPLES', '96'))
+R = math.radians
+
+def SCN(): return bpy.data.scenes['portoes']
+def reset():  # cena própria "portoes" (não mexe no resto do ficheiro do utilizador)
+    old = bpy.data.scenes.get('portoes')
+    if old:
+        for o in list(old.objects): bpy.data.objects.remove(o, do_unlink=True)
+        bpy.data.scenes.remove(old)
+    for c in list(bpy.data.collections):
+        if c.name.startswith('chao'): bpy.data.collections.remove(c)
+    sc = bpy.data.scenes.new('portoes')
+    for w in bpy.context.window_manager.windows: w.scene = sc
+    for m in list(bpy.data.meshes):
+        if m.users == 0: bpy.data.meshes.remove(m)
+    for m in list(bpy.data.materials):
+        if m.users == 0: bpy.data.materials.remove(m)
+
+# ---------- materiais ----------
+def node_mat(name, base, rough=.8, metal=0, bump=.3, noise=8, var=.25, brick=None, emit=None):
+    m = bpy.data.materials.get(name)
+    if m: return m
+    m = bpy.data.materials.new(name); m.use_nodes = True; nt = m.node_tree; N = nt.nodes; L = nt.links
+    bs = N['Principled BSDF']; bs.inputs['Roughness'].default_value = rough; bs.inputs['Metallic'].default_value = metal
+    tc = N.new('ShaderNodeTexCoord'); oi = N.new('ShaderNodeObjectInfo')
+    nz = N.new('ShaderNodeTexNoise'); nz.inputs['Scale'].default_value = noise; nz.inputs['Detail'].default_value = 6
+    L.new(tc.outputs['Object'], nz.inputs['Vector'])
+    ramp = N.new('ShaderNodeValToRGB'); ramp.color_ramp.elements[0].color = (*[c * (1 - var) for c in base], 1); ramp.color_ramp.elements[1].color = (*[min(1, c * (1 + var)) for c in base], 1)
+    mix = N.new('ShaderNodeMath'); mix.operation = 'ADD'; L.new(nz.outputs['Fac'], mix.inputs[0]); L.new(oi.outputs['Random'], mix.inputs[1]); mix.inputs[1].default_value = 0
+    mul = N.new('ShaderNodeMath'); mul.operation = 'MULTIPLY_ADD'; L.new(oi.outputs['Random'], mul.inputs[0]); mul.inputs[1].default_value = .35; L.new(nz.outputs['Fac'], mul.inputs[2])
+    L.new(mul.outputs[0], ramp.inputs['Fac']); col = ramp.outputs['Color']; height = nz.outputs['Fac']
+    if brick:  # blocos de pedra/telha: coordenada horizontal = x + y (serve as duas faces visíveis de caixas alinhadas)
+        sx = N.new('ShaderNodeSeparateXYZ'); L.new(tc.outputs['Object'], sx.inputs[0])
+        ad = N.new('ShaderNodeMath'); ad.operation = 'ADD'; L.new(sx.outputs[0], ad.inputs[0]); L.new(sx.outputs[1], ad.inputs[1])
+        cb = N.new('ShaderNodeCombineXYZ'); L.new(ad.outputs[0], cb.inputs[0]); L.new(sx.outputs[2], cb.inputs[1])
+        br = N.new('ShaderNodeTexBrick'); br.inputs['Scale'].default_value = brick[0]; br.inputs['Mortar Size'].default_value = brick[1]
+        br.inputs['Brick Width'].default_value = brick[2]; br.inputs['Row Height'].default_value = brick[3]; br.offset = .5
+        L.new(cb.outputs[0], br.inputs['Vector']); L.new(col, br.inputs['Color1'])
+        dk = N.new('ShaderNodeMixRGB'); dk.blend_type = 'MULTIPLY'; dk.inputs['Fac'].default_value = 1; L.new(col, dk.inputs[1]); dk.inputs[2].default_value = (.82, .78, .72, 1)
+        L.new(dk.outputs[0], br.inputs['Color2']); br.inputs['Mortar'].default_value = (*[c * .55 for c in base], 1)
+        col = br.outputs['Color']; height = br.outputs['Fac']
+    L.new(col, bs.inputs['Base Color'])
+    if bump:
+        b = N.new('ShaderNodeBump'); b.inputs['Strength'].default_value = bump; L.new(height, b.inputs['Height']); L.new(b.outputs['Normal'], bs.inputs['Normal'])
+    if emit:
+        bs.inputs['Emission Color'].default_value = (*emit, 1); bs.inputs['Emission Strength'].default_value = 6
+    return m
+TEX = os.environ.get('TEX_DIR', '')
+def tex_mat(name, tid, scale, tint=(1, 1, 1), sat=1.25, val=1.0, rough_k=1.0, normal=1.0):
+    p = lambda k: os.path.join(TEX, f'{tid}_{k}.jpg')
+    if not TEX or not os.path.exists(p('diff')): return None
+    m = bpy.data.materials.new(name); m.use_nodes = True; nt = m.node_tree; N = nt.nodes; L = nt.links; bs = N['Principled BSDF']
+    tc = N.new('ShaderNodeTexCoord'); mp = N.new('ShaderNodeMapping'); mp.inputs['Scale'].default_value = (scale, scale, scale); L.new(tc.outputs['Object'], mp.inputs['Vector'])
+    oi = N.new('ShaderNodeObjectInfo'); off = N.new('ShaderNodeVectorMath'); off.operation = 'MULTIPLY_ADD'; L.new(oi.outputs['Random'], off.inputs[0]); off.inputs[1].default_value = (7.3, 3.1, 0); L.new(mp.outputs['Vector'], off.inputs[2])
+    def img(k, color):
+        t = N.new('ShaderNodeTexImage'); t.image = bpy.data.images.load(p(k), check_existing=True); t.projection = 'BOX'; t.projection_blend = .25
+        if not color: t.image.colorspace_settings.name = 'Non-Color'
+        L.new(off.outputs['Vector'], t.inputs['Vector']); return t
+    d = img('diff', True); hs = N.new('ShaderNodeHueSaturation'); hs.inputs['Saturation'].default_value = sat; hs.inputs['Value'].default_value = val; L.new(d.outputs['Color'], hs.inputs['Color'])
+    mu = N.new('ShaderNodeMixRGB'); mu.blend_type = 'MULTIPLY'; mu.inputs['Fac'].default_value = 1; L.new(hs.outputs['Color'], mu.inputs[1]); mu.inputs[2].default_value = (*tint, 1)
+    L.new(mu.outputs[0], bs.inputs['Base Color'])
+    if os.path.exists(p('rough')):
+        r = img('rough', False); rm = N.new('ShaderNodeMath'); rm.operation = 'MULTIPLY'; rm.inputs[1].default_value = rough_k; L.new(r.outputs['Color'], rm.inputs[0]); L.new(rm.outputs[0], bs.inputs['Roughness'])
+    if os.path.exists(p('nor')):
+        n = img('nor', False); nm = N.new('ShaderNodeNormalMap'); nm.inputs['Strength'].default_value = normal; L.new(n.outputs['Color'], nm.inputs['Color']); L.new(nm.outputs['Normal'], bs.inputs['Normal'])
+    return m
+def mats():
+    M = dict(
+        wood=node_mat('wood', (.2, .09, .03), noise=14, var=.3),
+        wood_lt=node_mat('wood_lt', (.3, .15, .05), noise=14, var=.25),
+        plank=node_mat('plank', (.27, .12, .04), noise=22, var=.3, brick=(9, .01, .9, .12)),
+        stone=node_mat('stone', (.5, .33, .15), noise=6, var=.22, brick=(5, .03, .6, .22), bump=.6),
+        stone_dk=node_mat('stone_dk', (.33, .21, .1), noise=6, var=.2, brick=(6, .03, .5, .2), bump=.6),
+        thatch=node_mat('thatch', (.5, .26, .06), noise=40, var=.35, bump=.8),
+        shingle=node_mat('shingle', (.24, .05, .02), noise=10, var=.2, brick=(16, .02, .5, .25), bump=.5),
+        slate=node_mat('slate', (.12, .1, .085), noise=10, var=.2, brick=(18, .02, .5, .25), bump=.5),
+        iron=node_mat('iron', (.16, .15, .14), rough=.45, metal=.7, bump=.1, var=.1),
+        gold=node_mat('gold', (.75, .55, .2), rough=.35, metal=.9, bump=0, var=.05),
+        banner=node_mat('banner', (.02, .1, .58), rough=.9, bump=.05, var=.08),  # azul da equipa (recolorido no jogo)
+        cloth=node_mat('cloth', (.75, .68, .5), rough=.9, bump=.05, var=.08),
+        dirt=node_mat('dirt', (.3, .17, .07), noise=20, var=.25, bump=.2),
+        fire=node_mat('fire', (1, .5, .15), emit=(1, .45, .1), bump=0, var=0))
+    real = dict(  # texturas reais Poly Haven (CC0); cores puxadas para o estilo pintado do jogo
+        wood=tex_mat('t_wood', 'bark_brown_02', 3.2, tint=(1, .82, .62), sat=1.2, val=1.05),
+        wood_lt=tex_mat('t_wood_lt', 'brown_planks_05', 1.6, tint=(1, .85, .65), sat=1.2, val=1.1),
+        plank=tex_mat('t_plank', 'weathered_brown_planks', 1.6, tint=(1, .8, .58), sat=1.35, val=1.0),
+        stone=tex_mat('t_stone', 'large_sandstone_blocks_01', 1.1, tint=(1, .86, .66), sat=1.3, val=1.12, normal=1.4),
+        stone_dk=tex_mat('t_stone_dk', 'medieval_blocks_02', 1.4, tint=(.95, .8, .62), sat=1.2, val=.95, normal=1.4),
+        thatch=tex_mat('t_thatch', 'thatch_roof_angled', 1.6, tint=(1, .85, .55), sat=1.2, val=1.1),
+        shingle=tex_mat('t_shingle', 'clay_roof_tiles_02', 2.4, tint=(1, .8, .7), sat=1.15, val=.95),
+        slate=tex_mat('t_slate', 'roof_slates_02', 2.4, tint=(.75, .7, .66), sat=.3, val=.9))
+    for k, v in real.items():
+        if v: M[k] = v
+    return M
+
+# ---------- primitivas (em coordenadas do jogo: x, y, z) ----------
+G = []  # objetos do portão (para rodar em bloco)
+def link(o): SCN().collection.objects.link(o); G.append(o); return o
+def mesh_obj(name, bm, mat):
+    me = bpy.data.meshes.new(name); bm.to_mesh(me); bm.free(); o = bpy.data.objects.new(name, me); me.materials.append(mat)
+    for p in me.polygons: p.use_smooth = False
+    return link(o)
+def box(x0, x1, y0, y1, z0, z1, mat, name='box'):
+    bm = bmesh.new(); bmesh.ops.create_cube(bm, size=1)
+    for v in bm.verts: v.co = Vector(((x0 + x1) / 2 + v.co.x * (x1 - x0), -((y0 + y1) / 2 + v.co.y * (y1 - y0)), (z0 + z1) / 2 + v.co.z * (z1 - z0)))
+    return mesh_obj(name, bm, mat)
+def cyl(x, y, z0, z1, r, mat, tip=0, seg=10, name='log'):
+    bm = bmesh.new(); bmesh.ops.create_cone(bm, cap_ends=True, segments=seg, radius1=r, radius2=r, depth=z1 - z0)
+    for v in bm.verts: v.co += Vector((x, -y, (z0 + z1) / 2))
+    o = mesh_obj(name, bm, mat)
+    for p in o.data.polygons: p.use_smooth = True
+    if tip:
+        bm = bmesh.new(); bmesh.ops.create_cone(bm, cap_ends=True, segments=seg, radius1=r, radius2=0, depth=tip)
+        for v in bm.verts: v.co += Vector((x, -y, z1 + tip / 2))
+        mesh_obj(name + 'tip', bm, mat)
+    return o
+def hlog(x0, x1, y, z, r, mat, axis='x'):
+    bm = bmesh.new(); bmesh.ops.create_cone(bm, cap_ends=True, segments=8, radius1=r, radius2=r, depth=abs(x1 - x0))
+    rot = Matrix.Rotation(R(90), 4, 'Y' if axis == 'x' else 'X'); bmesh.ops.transform(bm, matrix=rot, verts=bm.verts)
+    c = Vector(((x0 + x1) / 2, -y, z)) if axis == 'x' else Vector((x, -(x0 + x1) / 2, z))
+    for v in bm.verts: v.co += c
+    o = mesh_obj('hlog', bm, mat)
+    for p in o.data.polygons: p.use_smooth = True
+    return o
+def pyramid(x0, x1, y0, y1, z0, h, mat, over=.05, name='roof'):  # telhado de 4 águas
+    bm = bmesh.new(); a = [bm.verts.new((x, -y, z0)) for x, y in ((x0 - over, y0 - over), (x1 + over, y0 - over), (x1 + over, y1 + over), (x0 - over, y1 + over))]
+    t = bm.verts.new(((x0 + x1) / 2, -(y0 + y1) / 2, z0 + h))
+    for i in range(4): bm.faces.new((a[i], a[(i + 1) % 4], t))
+    bm.faces.new(a[::-1]); return mesh_obj(name, bm, mat)
+def gable(x0, x1, y0, y1, z0, h, mat, over=.05):  # telhado de duas águas com cumeeira ao longo de x
+    bm = bmesh.new(); ym = (y0 + y1) / 2
+    p = [bm.verts.new(v) for v in ((x0 - over, -(y0 - over), z0), (x1 + over, -(y0 - over), z0), (x1 + over, -ym, z0 + h), (x0 - over, -ym, z0 + h),
+                                    (x0 - over, -(y1 + over), z0), (x1 + over, -(y1 + over), z0))]
+    bm.faces.new((p[0], p[1], p[2], p[3])); bm.faces.new((p[3], p[2], p[5], p[4])); bm.faces.new((p[0], p[3], p[4])); bm.faces.new((p[1], p[5], p[2]))
+    return mesh_obj('gable', bm, mat)
+def cone(x, y, z0, h, r, mat, seg=12):
+    bm = bmesh.new(); bmesh.ops.create_cone(bm, cap_ends=True, segments=seg, radius1=r, radius2=0, depth=h)
+    for v in bm.verts: v.co += Vector((x, -y, z0 + h / 2))
+    o = mesh_obj('cone', bm, mat)
+    for p in o.data.polygons: p.use_smooth = True
+    return o
+def banner(x, y, z_top, w, h, mat, face='y', wave=.02):  # estandarte pendurado, com cauda em V
+    bm = bmesh.new(); nx, nz = 6, 8; vs = {}
+    for i in range(nx + 1):
+        for j in range(nz + 1):
+            u = i / nx - .5; t = j / nz; zz = z_top - t * h
+            if j == nz: zz += abs(u) * h * .35 - h * .12  # recorte em V
+            d = wave * math.sin(u * 6 + t * 3)
+            co = (x + u * w, -(y + .001 + d), zz) if face == 'y' else (x + .001 + d, -(y + u * w), zz)
+            vs[i, j] = bm.verts.new(co)
+    for i in range(nx):
+        for j in range(nz): bm.faces.new((vs[i, j], vs[i + 1, j], vs[i + 1, j + 1], vs[i, j + 1]))
+    o = mesh_obj('banner', bm, mat); s = o.modifiers.new('s', 'SOLIDIFY'); s.thickness = .008; return o
+def flag(x, y, z0, h, mat, M):  # mastro com bandeira
+    cyl(x, y, z0, z0 + h, .012, M['wood'], seg=6)
+    bm = bmesh.new(); vs = {}
+    for i in range(5):
+        for j in range(3):
+            u = i / 4; vs[i, j] = bm.verts.new((x + u * .2, -(y + .02 * math.sin(u * 5)), z0 + h - .02 - j * .06 - u * .01))
+    for i in range(4):
+        for j in range(2): bm.faces.new((vs[i, j], vs[i + 1, j], vs[i + 1, j + 1], vs[i, j + 1]))
+    o = mesh_obj('flag', bm, M['banner']); o.modifiers.new('s', 'SOLIDIFY').thickness = .006
+def merlons(x0, x1, y0, y1, z, mat, n, size=.07, h=.08, sides='all'):
+    for k in range(n):
+        t = (k + .5) / n
+        if sides in ('all', 'front'):
+            xx = x0 + (x1 - x0) * t; box(xx - size / 2, xx + size / 2, y1 - .05, y1, z, z + h, mat, 'merlon'); box(xx - size / 2, xx + size / 2, y0, y0 + .05, z, z + h, mat, 'merlon')
+        if sides == 'all':
+            yy = y0 + (y1 - y0) * t; box(x0, x0 + .05, yy - size / 2, yy + size / 2, z, z + h, mat, 'merlon'); box(x1 - .05, x1, yy - size / 2, yy + size / 2, z, z + h, mat, 'merlon')
+def arch_cut(o, x0, x1, z_spring, y0, y1):  # recorta uma porta em arco num bloco (boolean)
+    w = x1 - x0; cut = box(x0, x1, y0 - .1, y1 + .1, -.05, z_spring, o.data.materials[0], 'cut')
+    bm = bmesh.new(); bmesh.ops.create_cone(bm, cap_ends=True, segments=24, radius1=w / 2, radius2=w / 2, depth=(y1 - y0) + .2)
+    bmesh.ops.transform(bm, matrix=Matrix.Rotation(R(90), 4, 'X'), verts=bm.verts)
+    for v in bm.verts: v.co += Vector(((x0 + x1) / 2, -(y0 + y1) / 2, z_spring))
+    me = bpy.data.meshes.new('c2'); bm.to_mesh(me); bm.free(); c2 = bpy.data.objects.new('c2', me); SCN().collection.objects.link(c2)
+    for c in (cut, c2):
+        b = o.modifiers.new('b', 'BOOLEAN'); b.operation = 'DIFFERENCE'; b.object = c; c.hide_render = True
+    dg = SCN().view_layers[0].depsgraph; dg.update()
+    me = bpy.data.meshes.new_from_object(o.evaluated_get(dg)); old = o.data; o.modifiers.clear(); o.data = me; bpy.data.meshes.remove(old)
+    G.remove(cut); bpy.data.objects.remove(cut, do_unlink=True); bpy.data.objects.remove(c2, do_unlink=True)
+
+# ---------- portas (folhas com dobradiças nas pontas da abertura; abrem para trás, −y) ----------
+def doors(x0, x1, y, h, M, iron=False, arch=False, open_=0):
+    w = (x1 - x0) / 2; ang = R(100) * open_
+    for side in (0, 1):
+        pivot = Vector((x0 if side == 0 else x1, -y, 0))
+        parts = []
+        nb = 4
+        for k in range(nb):  # tábuas verticais
+            a = k * w / nb; b = (k + 1) * w / nb - .004
+            xa, xb = (x0 + a, x0 + b) if side == 0 else (x1 - b, x1 - a)
+            hh = h if not arch else h + (w * .55) * math.sqrt(max(0, 1 - ((((xa + xb) / 2) - (x0 + x1) / 2) / (w * 1.02)) ** 2)) - w * .1
+            parts.append(box(xa, xb, y - .02, y + .02, 0, hh, M['plank'], 'door'))
+        for zz in (.18 * h, .82 * h):  # travessas
+            xa, xb = (x0, x0 + w) if side == 0 else (x1 - w, x1)
+            parts.append(box(xa + .01, xb - .01, y + .02, y + .035, zz - .035, zz + .035, M['iron'] if iron else M['wood'], 'trav'))
+        if not iron:  # travessa diagonal
+            xa, xb = (x0, x0 + w) if side == 0 else (x1 - w, x1)
+            d = box(xa + .02, xb - .02, y + .02, y + .033, .45 * h - .03, .45 * h + .03, M['wood'], 'diag')
+            d.rotation_euler = (0, R(-38 if side == 0 else 38), 0); d.location = Vector(((xa + xb) / 2, -(y + .026), .45 * h)) - Vector(((xa + xb) / 2, -(y + .026), .45 * h)); parts.append(d)
+            # (a rotação faz-se no centro da peça: origem no centro do cubo)
+        else:
+            for zz in (.18 * h, .5 * h, .82 * h):
+                for k in range(3):
+                    xx = (x0 + .03 + k * w / 3) if side == 0 else (x1 - .03 - k * w / 3)
+                    parts.append(cyl(xx, y + .04, zz - .012, zz + .012, .012, M['iron'], seg=6))
+        for p in parts:  # roda em torno da dobradiça
+            mw = Matrix.Translation(pivot) @ Matrix.Rotation(ang if side == 0 else -ang, 4, 'Z') @ Matrix.Translation(-pivot)
+            p.matrix_world = mw @ p.matrix_world
+
+def set_origins_center():
+    for o in G:
+        if o.type == 'MESH' and o.name.startswith('diag'):
+            pass
+
+# ---------- variantes ----------
+def path(M, y0=.2, y1=.8):  # chão de terra batida sob a passagem
+    bm = bmesh.new(); n = 16
+    vs = []
+    for k in range(n):
+        a = 2 * math.pi * k / n; vs.append(bm.verts.new((.5 + .3 * math.cos(a), -(.5 + .22 * math.sin(a)), .004)))
+    bm.faces.new(vs); mesh_obj('path', bm, M['dirt'])
+
+def madeira(age, M, open_):
+    Ht = (1.35, 1.5, 1.68)[age]; dz = .86  # altura das torres; altura da porta
+    path(M)
+    for tx0, tx1 in ((-.06, .24), (.76, 1.06)):
+        if age == 0:  # torre de troncos: 3×2 troncos aguçados
+            for i in range(3):
+                for j in range(2):
+                    x = tx0 + .05 + i * (tx1 - tx0 - .1) / 2; y = .36 + j * .28
+                    cyl(x, y, 0, Ht - .12 + (.05 if (i + j) % 2 else 0), .055, M['wood'], tip=.12)
+            box(tx0 - .01, tx1 + .01, .33, .67, .95, 1.0, M['plank'], 'plat')
+            pyramid(tx0, tx1, .33, .67, Ht + .02, .26, M['thatch'], over=.07)
+            for x in (tx0 + .02, tx1 - .02):
+                for y in (.36, .64): cyl(x, y, 1.0, Ht + .04, .02, M['wood'], seg=6)
+        else:  # torre de tábuas sobre base de pedra, telhado
+            box(tx0 - .02, tx1 + .02, .3, .7, 0, .26, M['stone'], 'base')
+            box(tx0, tx1, .32, .68, .26, Ht - .12, M['plank'], 'torre')
+            for x in (tx0, tx1):
+                for y in (.32, .68): box(x - .025, x + .025, y - .025, y + .025, .26, Ht - .1, M['wood'], 'canto')
+            box(tx0 + .08, tx1 - .08, .675, .69, Ht * .62, Ht * .62 + .1, M['wood'], 'janela')  # seteira
+            box(tx0 + .12, tx1 - .12, .676, .695, Ht * .62 + .015, Ht * .62 + .085, M['iron'], 'vao')
+            if age == 1: pyramid(tx0, tx1, .32, .68, Ht - .12, .3, M['shingle'], over=.07)
+            else:
+                box(tx0 - .03, tx1 + .03, .29, .71, Ht - .14, Ht - .1, M['wood'], 'beiral')
+                cone((tx0 + tx1) / 2, .5, Ht - .1, .42, .26, M['shingle'])
+                cyl((tx0 + tx1) / 2, .5, Ht + .3, Ht + .36, .02, M['gold'], seg=6)
+    # passagem: verga e parapeito por cima da porta
+    if age == 0:
+        hlog(.2, .8, .5, dz + .03, .05, M['wood'])
+        for i in range(9):
+            x = .25 + i * .5 / 8; cyl(x, .58, dz + .06, 1.08 + (.04 if i % 2 else 0), .032, M['wood'], tip=.07, seg=7)
+        box(.24, .76, .4, .6, .95, 1.0, M['plank'], 'passadico')
+    else:
+        box(.22, .78, .38, .62, dz, dz + .1, M['wood'], 'verga')
+        box(.24, .76, .36, .64, dz + .1, 1.1 + .08 * age, M['plank'], 'casa_guarda')
+        gable(.2, .8, .34, .66, 1.1 + .08 * age, .2, M['shingle'], over=.06)
+        if age == 2:
+            for x in (.2, .8): cyl(x, .72, .6, .66, .025, M['fire']); cyl(x, .7, .5, .6, .012, M['iron'], seg=6)  # lanternas
+    doors(.24, .76, .5, dz, M, iron=age == 2, open_=open_)
+    # estandartes da equipa
+    if age == 0: banner(.5, .62, 1.02, .18, .3, M['banner'])
+    else:
+        banner(.5, .645, 1.08 + .08 * age, .2, .34, M['banner'])
+        for x in (.09, .91): flag(x, .5, Ht + (.16 if age == 1 else .3), .3, M['banner'], M) if age == 1 else None
+
+def pedra(age, M, open_):
+    Ht = (0, 1.42, 1.6)[age]; Hm = (0, 1.08, 1.2)[age]; dz = .8
+    path(M)
+    mid = box(.2, .8, .34, .66, 0, Hm, M['stone'], 'meio'); arch_cut(mid, .27, .73, dz - .23 + .23, .34, .66)
+    merlons(.2, .8, .34, .66, Hm, M['stone'], 4, size=.08, h=.1, sides='front')
+    for tx0, tx1 in ((-.08, .28), (.72, 1.08)):
+        box(tx0 - .02, tx1 + .02, .26, .74, 0, .12, M['stone_dk'], 'sapata')
+        box(tx0, tx1, .28, .72, .12, Ht, M['stone'], 'torre')
+        box(tx0 + .1, tx1 - .1, .719, .735, Ht * .6, Ht * .6 + .14, M['iron'], 'seteira')
+        if age == 1:
+            box(tx0 - .03, tx1 + .03, .25, .75, Ht, Ht + .05, M['stone_dk'], 'cornija')
+            merlons(tx0 - .03, tx1 + .03, .25, .75, Ht + .05, M['stone'], 3, size=.08, h=.1)
+        else:
+            for k in range(5):  # mata-cães
+                t = (k + .5) / 5
+                box(tx0 + (tx1 - tx0) * t - .025, tx0 + (tx1 - tx0) * t + .025, .72, .78, Ht - .1, Ht - .02, M['stone_dk'], 'corbel')
+            box(tx0 - .04, tx1 + .04, .24, .78, Ht - .02, Ht + .1, M['stone'], 'parapeito')
+            cone((tx0 + tx1) / 2, .51, Ht + .1, .42, .29, M['slate'], seg=16)
+            flag((tx0 + tx1) / 2, .51, Ht + .48, .2, M['banner'], M)
+    # aduelas do arco
+    for k in range(9):
+        a = math.pi * k / 8; x = .5 + .25 * math.cos(a); z = dz + .25 * math.sin(a)
+        b = box(x - .035, x + .035, .655, .675, z - .035, z + .035, M['stone_dk'], 'aduela')
+    doors(.27, .73, .5, dz, M, iron=True, arch=True, open_=open_)
+    if age == 2:  # grade levadiça meio subida
+        for k in range(6):
+            x = .3 + k * .4 / 5; cyl(x, .6, dz - .1, dz + .18, .01, M['iron'], seg=6)
+        for zz in (dz - .05, dz + .1): box(.29, .71, .595, .605, zz - .008, zz + .008, M['iron'], 'grade')
+        banner(.5, .675, Hm - .06, .22, .42, M['banner'])
+    else:
+        banner(.5, .675, Hm - .08, .2, .32, M['banner'])
+
+# ---------- cena: câmara isométrica e luz ----------
+def scene():
+    sc = SCN(); sc.render.engine = 'CYCLES'; sc.cycles.device = 'GPU' if os.environ.get('GPU') else 'CPU'; sc.cycles.samples = SAMPLES; sc.cycles.use_denoising = True
+    sc.render.film_transparent = True; sc.render.resolution_x, sc.render.resolution_y = RES; sc.view_settings.view_transform = 'Standard'
+    sc.view_settings.look = 'None'
+    if not sc.world: sc.world = bpy.data.worlds.new('w')
+    sc.world.use_nodes = True; bg = sc.world.node_tree.nodes['Background']; bg.inputs[0].default_value = (.95, .9, .82, 1); bg.inputs[1].default_value = .4
+    cam = bpy.data.objects.new('cam', bpy.data.cameras.new('cam')); cam.data.type = 'ORTHO'; cam.data.ortho_scale = RES[0] / PXU
+    sc.collection.objects.link(cam); sc.camera = cam
+    c = Vector((.5, -.5, 0)); d = Vector((1, -1, 0)).normalized() * math.cos(R(30)) + Vector((0, 0, math.sin(R(30))))
+    cam.rotation_euler = (R(60), 0, R(45)); cam.location = c + d * 20
+    # a vista sobe um pouco: o portão é alto (centro de enquadramento a 0,75 de altura)
+    up = cam.matrix_world.to_3x3() @ Vector((0, 1, 0)); cam.location += up * 0.0
+    cam.data.shift_y = .18
+    sun = bpy.data.objects.new('sun', bpy.data.lights.new('sun', 'SUN')); sun.data.energy = 4.2; sun.data.angle = R(4); sun.data.color = (1, .95, .85)
+    sun.rotation_euler = Vector((0, 0, -1)).rotation_difference(-Vector((-.5, -1, 2.1)).normalized()).to_euler(); sc.collection.objects.link(sun)
+    # apanha-sombras no chão (sombra neutra e semitransparente)
+    bm = bmesh.new(); bmesh.ops.create_grid(bm, x_segments=1, y_segments=1, size=2.5)
+    for v in bm.verts: v.co += Vector((.5, -.5, 0))
+    me = bpy.data.meshes.new('g'); bm.to_mesh(me); bm.free(); g = bpy.data.objects.new('g', me); chao = bpy.data.collections.new('chao'); sc.collection.children.link(chao); chao.objects.link(g); g.is_shadow_catcher = True
+    # contorno escuro fino (estilo pintado dos edifícios do jogo)
+    sc.render.use_freestyle = True; sc.render.line_thickness_mode = 'ABSOLUTE'; sc.render.line_thickness = 1.1
+    ls = sc.view_layers[0].freestyle_settings.linesets[0] if sc.view_layers[0].freestyle_settings.linesets else sc.view_layers[0].freestyle_settings.linesets.new('l')
+    ls.linestyle.color = (.09, .05, .025); ls.linestyle.alpha = .75; ls.select_by_visibility = True; ls.select_by_collection = True; ls.collection = bpy.data.collections['chao']; ls.collection_negation = 'EXCLUSIVE'; ls.select_crease = False; ls.select_border = True; ls.select_silhouette = True
+    sc.view_layers[0].freestyle_settings.crease_angle = R(120)
+    return cam
+
+def build(var, M, dirn, open_):
+    global G
+    for o in G: bpy.data.objects.remove(o, do_unlink=True)
+    G = []
+    kind, age = var[:-1], int(var[-1])
+    (madeira if kind == 'madeira' else pedra)(age, M, open_)
+    if dirn == 'y':  # roda 90° em torno do centro da casa: a frente (+y do jogo) passa a olhar para +x
+        rot = Matrix.Translation((.5, -.5, 0)) @ Matrix.Rotation(R(90), 4, 'Z') @ Matrix.Translation((-.5, .5, 0))
+        for o in G: o.matrix_world = rot @ o.matrix_world
+
+reset(); M = mats(); cam = scene()
+info = {}
+sc = SCN()
+for var in VARS:
+    for dirn in ('x', 'y'):
+        for k, op in enumerate((0, .5, 1)):
+            build(var, M, dirn, op)
+            name = f'{var}_{dirn}_{k}'; sc.render.filepath = f'{OUT}/{name}.png'
+            with bpy.context.temp_override(scene=sc, view_layer=sc.view_layers[0]): bpy.ops.render.render(write_still=True)
+            a = world_to_camera_view(sc, cam, Vector((0, 0, 0)))  # canto de cima da casa (tx,ty) no ecrã
+            info[name] = [a.x * RES[0], (1 - a.y) * RES[1]]
+            print('REN', name, flush=True)
+af = f'{OUT}/anchors.json'; old = json.load(open(af))['anchor'] if os.path.exists(af) else {}
+old.update(info); json.dump({'pxPerUnit': PXU, 'res': RES, 'anchor': old}, open(af, 'w'), indent=1)
+print('FEITO')

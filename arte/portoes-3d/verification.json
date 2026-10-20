@@ -1,0 +1,43 @@
+{
+ "versao": 2,
+ "creditosAdicionais": 0,
+ "ferramentas": [
+  "Blender 5.2 (GPL) no PC do utilizador, Cycles CUDA numa Quadro P5000",
+  "Texturas Poly Haven (CC0)"
+ ],
+ "texturasCC0": {
+  "large_sandstone_blocks_01": "https://polyhaven.com/a/large_sandstone_blocks_01",
+  "medieval_blocks_02": "https://polyhaven.com/a/medieval_blocks_02",
+  "weathered_brown_planks": "https://polyhaven.com/a/weathered_brown_planks",
+  "brown_planks_05": "https://polyhaven.com/a/brown_planks_05",
+  "bark_brown_02": "https://polyhaven.com/a/bark_brown_02",
+  "thatch_roof_angled": "https://polyhaven.com/a/thatch_roof_angled",
+  "clay_roof_tiles_02": "https://polyhaven.com/a/clay_roof_tiles_02",
+  "roof_slates_02": "https://polyhaven.com/a/roof_slates_02"
+ },
+ "variantes": [
+  "madeira0",
+  "madeira1",
+  "madeira2",
+  "pedra1",
+  "pedra2"
+ ],
+ "direcoes": [
+  "x",
+  "y"
+ ],
+ "portas": [
+  "fechada",
+  "meio",
+  "aberta"
+ ],
+ "atlas": {
+  "ficheiro": "www/assets/edificios-extra/portoes-3d.webp",
+  "sha256": "610336882917dbdce812f4ad75e214dc35950090dfe2501577bd935ab690da40",
+  "tamanho": [
+   2048,
+   2012
+  ]
+ },
+ "regenerar": "Blender: TEX_DIR=<texturas> OUT=<render> VARS=madeira0,... GPU=1 -> scripts/montar_portao2.py; depois python3 scripts/integrar_portao.py <render> <repo>"
+}
