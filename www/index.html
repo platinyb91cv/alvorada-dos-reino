@@ -346,6 +346,7 @@ input{font-family:inherit;-webkit-user-select:text;user-select:text;touch-action
     <button id="bBox" title="Seleção em caixa (arrasta para selecionar)"><i data-ic="box"></i></button>
     <button id="bIdle" title="Aldeão ocioso (.)"><i data-ic="idle"></i><small id="idleN" class="badge"></small></button>
     <button id="bStuck" title="Localizar aldeão bloqueado" aria-label="Localizar aldeão bloqueado" hidden>⚠<small id="stuckN" class="badge"></small></button>
+    <button id="bIdleB" title="Edifício de produção parado" aria-label="Edifício de produção parado" hidden>🏭<small id="idleBN" class="badge"></small></button>
     <button id="bArmy" title="Selecionar exército"><i data-ic="army"></i><small id="armyN" class="badge n"></small></button>
     <button id="bHome" title="Centro da Vila (H)"><i data-ic="home"></i></button>
     <button id="bChat" title="Conversar" hidden><i data-ic="chat"></i></button>
@@ -562,6 +563,10 @@ input{font-family:inherit;-webkit-user-select:text;user-select:text;touch-action
         <b>Economia:</b> aldeões levam recursos ao Centro ou a um Armazém. Casas aumentam a população. Quando os arbustos acabarem, constrói Quintas.<br>
         <b>Idades:</b> avança no Centro da Vila. Bronze desbloqueia Arquearia, Estábulo e Torre; Ferro desbloqueia Catapultas e dá mais ataque e armadura.<br>
         <b>Alimentação:</b> as quintas produzem comida ilimitada. Seleciona um aldeão e dá uma ordem sobre uma ovelha para a pastorear: recolhe leite como comida sem a matar. Gazelas fogem (150); javalis contra-atacam (300); elefantes são muito fortes mas dão 600. Cuidado com os lobos nas florestas: atacam aldeões e não dão carne.<br>
+        <b>Profissões:</b> cada aldeão mostra a profissão (🪓 lenhador, ⛏️ mineiro, 🪨 pedreiro, 🌾 agricultor, 🐑 pastor, 🏹 caçador, 🫐 coletor, 🔨 construtor). 💤 marca os ociosos. O botão 🏭 encontra edifícios de produção parados.<br>
+        <b>Formações:</b> um lanceiro a menos de 2 casas protege arqueiros e besteiros (+2 armadura corpo a corpo); infantaria em linha com 2+ companheiros ganha +1 armadura e +1 contra flechas; a cavalaria que ataca um inimigo ocupado a lutar com outro faz +3 de dano (flanco).<br>
+        <b>Vilas neutras:</b> há vilas entre os reinos. Leva 2+ soldados para perto, sem inimigos, durante 20 s e ela junta-se a ti: tributo de ouro e comida, +5 população e parceira de comércio para as carroças. O rival pode tomá-la da mesma forma (30 s). Atacar uma vila é saqueá-la.<br>
+        <b>Caravanas:</b> carroças com soldados por perto à chegada ganham +25% de ouro; destruir a caravana do rival dá parte do ouro da viagem (emboscada).<br>
         <b>Vida da aldeia:</b> constrói um Curral e manda um aldeão para lá: conduz até 8 ovelhas próximas e depois pastoreia. Traça Estradas pelo menu Construir: 2 pedra por segmento e +20% velocidade em terra. O botão ⚠ localiza aldeões bloqueados; o botão de ociosos continua a procurar trabalhadores parados.<br>
         <b>Tecnologias:</b> no Armazém (machado, picareta), no Centro (arado, roda) e no Ferreiro (forja, pontas de ferro, cota de malha).<br>
         <b>Templo:</b> sacerdotes curam aliados por perto e convertem inimigos para o teu lado. Depois de converter, precisam de recuperar a fé.<br>
@@ -703,6 +708,7 @@ const BLDS={
   casa:{name:'Casa',icon:'🏠',w:2,h:2,hp:160,cost:{wood:30},time:14,age:0,pop:5,sight:3},
   quinta:{name:'Quinta',icon:'🌾',w:3,h:3,hp:90,cost:{wood:60},time:12,age:0,walk:1,sight:2,farm:260},
   curral:{name:'Curral',icon:'🐑',w:3,h:3,hp:160,cost:{wood:80},time:15,age:0,walk:1,sight:3,pasture:8},
+  vila:{name:'Vila neutra',icon:'🏘️',w:3,h:3,hp:600,cost:{},time:0,age:9,sight:5,garr:5,pop:5,neutral:1},
   estrada:{name:'Estrada',icon:'🛤️',w:1,h:1,hp:1,cost:{stone:2},time:0,age:0,walk:1,road:1},
   armazem:{name:'Armazém',icon:'📦',w:2,h:2,hp:220,cost:{wood:100},time:20,age:0,drop:1,techs:['machado','picareta'],sight:4},
   quartel:{name:'Quartel',icon:'⚔️',w:3,h:3,hp:380,cost:{wood:125},time:30,age:0,train:['guerreiro','lanceiro','espadachim'],sight:4},
@@ -1008,7 +1014,8 @@ function faceTo(u,x,y,min){if(u.d&&(u.d.king||UNIT3D_TYPES.includes(u.type)))u.k
 function kill(e,src){
   if(e.dead)return;e.dead=true;byId.delete(e.id);sndDeath(e);
   const i=ents.indexOf(e);if(i>=0)ents.splice(i,1);
-  if(e.kind==='b'){if(e.garr&&e.garr.length){const keep=e.garr.slice();e.garr=[];for(const u of keep){const p=freeNear(e.tx,e.ty,e.w,e.h)||{x:e.tx,y:e.ty};u.x=p.x+.5;u.y=p.y+.5;u.inBoat=null;u.inBld=0;u.state='idle';u.path=null;u.hp=Math.max(1,u.hp*.7);ents.push(u);byId.set(u.id,u)}}chunkDirtyBld(e);
+  if(e.kind==='b'){if(e.type==='vila'&&src&&src.o!=null&&src.o<2&&src.o!==e.o&&P[src.o]){P[src.o].res.gold+=150;P[src.o].res.food+=100;if(src.o===ME){resDirty=true;toast('Vila saqueada: +150 ouro e +100 comida')}else if(e.o===ME)toast('O rival saqueou uma vila nossa!',true)}
+    if(e.garr&&e.garr.length){const keep=e.garr.slice();e.garr=[];for(const u of keep){const p=freeNear(e.tx,e.ty,e.w,e.h)||{x:e.tx,y:e.ty};u.x=p.x+.5;u.y=p.y+.5;u.inBoat=null;u.inBld=0;u.state='idle';u.path=null;u.hp=Math.max(1,u.hp*.7);ents.push(u);byId.set(u.id,u)}}chunkDirtyBld(e);
     for(let y=e.ty;y<e.ty+e.h;y++)for(let x=e.tx;x<e.tx+e.w;x++){const j=idx(x,y);bldAt[j]=0;if(blk[j]===3||blk[j]===4)blk[j]=0}
     fx.push({t:0,life:BLDART.ready&&!e.d.wall?16:2.5,type:'rubble',x:e.tx+e.w/2,y:e.ty+e.h/2,w:e.w,h:e.h});
     {const n=Math.min(22,6+e.w*e.h*2),stone=P[e.o]&&P[e.o].age>0&&!(e.type==='muralhaMadeira'||e.type==='portaoMadeira');fx.push({t:0,life:2.4,type:'debris',x:e.tx+e.w/2,y:e.ty+e.h/2,n,pw:1+e.w*.25,h0:BHEIGHT[e.type]*.5||20,col:stone?['#cfc6b4','#a69d8a','#7d5a3a','#8f877a']:['#8a6236','#6b4626','#b08a58','#5a3d22'],sd:debrisSeeds(n,1+e.w*.25)})}
@@ -1017,6 +1024,7 @@ function kill(e,src){
     if(e.o!==2&&!e.d.naval)spawnFx('dust',e.x,e.y,.8,{k:1});
     if(e.cargo&&e.cargo.length){for(const cu of e.cargo)cu.dead=true;P[e.o].stats.lost+=e.cargo.length;if(e.o===ME)toast(e.cargo.length+' unidades afundaram com o transporte',true);e.cargo=[]}
     if(e.o===2&&e.d.meat)spawnCarcass(e);
+    if(e.d.trade&&src&&src.o!=null&&src.o<2&&src.o!==e.o&&P[src.o]){const g=caravanLoot(e);P[src.o].res.gold+=g;if(src.o===ME){resDirty=true;toast('Emboscada! Saqueámos '+g+' de ouro da caravana')}else if(e.o===ME)toast('A nossa caravana foi emboscada!',true)}
   }
   if(G.hero)heroXP(e,src);
   P[e.o].stats.lost++; if(src&&src.o!=null&&src.o!==e.o&&e.o!==2&&P[src.o])P[src.o].stats.killed++;
@@ -1304,8 +1312,9 @@ function applyDmg(t,dmg,src,ranged){
   if(!alive(t))return;
   let m=1;if(t.kind==='b'&&src)m=src.kind==='u'?(src.d.bld||1):.35;
   if(t.kind==='u'&&src&&src.d&&src.d.bonus&&t.d.cls)dmg+=src.d.bonus[t.d.cls]||0;
+  dmg+=flankBonus(src,t);
   if(t.kind==='u'&&src&&src.d&&src.d.siege==='ram')dmg=1;
-  const d=Math.max(1,(dmg-armOf(t)-(ranged&&t.kind==='u'?(t.d.parm||0):0)))*m;
+  const d=Math.max(1,(dmg-armOf(t)-formArm(t,ranged)-(ranged&&t.kind==='u'?(t.d.parm||0):0)))*m;
   if(t.o===ME&&t.kind==='b'&&(t.type==='centro'||t.type==='maravilha'))importantHit(t);
   t.hp-=d;t.hitT=.25;t.hurtAt=G.time;
   if(t.kind==='u'&&!t.d.naval&&src&&src.kind==='u'){const metal=!ranged&&src.d&&src.d.mil&&src.d.cls!=='priest'&&P[src.o]&&P[src.o].age>0;spawnFx(metal?'spark':'hit',t.x+(Math.random()-.5)*.2,t.y,.3)}
@@ -1402,6 +1411,82 @@ function orderTrade(u,dest){const own=ents.filter(e=>e.kind==='b'&&e.o===u.o&&e.
   own.sort((a,b)=>hyp(a.tx-u.x,a.ty-u.y)-hyp(b.tx-u.x,b.ty-u.y));stopUnit(u);u.state='trade';u.tradeA=own[0].id;u.tradeB=dest.id;u.target=dest;u.fails=0;u.rp=0;
   if(u.o===ME){const c1=centerOf(own[0]),c2=centerOf(dest);toast('Rota de comércio: cerca de '+tradeGain(hyp(c1.x-c2.x,c1.y-c2.y))+' de ouro por viagem')}}
 function tradeGain(d){return Math.min(260,Math.round(d*d/45+d*.3))}
+/* ---------------- vida da aldeia 2: profissões, formações, caravanas, vilas neutras ---------------- */
+const JOBS={lenhador:{n:'Lenhador',i:'🪓'},mineiro:{n:'Mineiro',i:'⛏️'},pedreiro:{n:'Pedreiro',i:'🪨'},agricultor:{n:'Agricultor',i:'🌾'},pastor:{n:'Pastor',i:'🐑'},cacador:{n:'Caçador',i:'🏹'},pescador:{n:'Pescador',i:'🎣'},coletor:{n:'Coletor',i:'🫐'},construtor:{n:'Construtor',i:'🔨'},ocioso:{n:'Ocioso',i:'💤'}};
+// Profissão atual do aldeão, deduzida da tarefa (não muda as regras do jogo).
+function villJob(u){if(!u||u.type!=='aldeao')return null;const s=u.state,r=u.gres;
+  if(s==='build')return 'construtor';if(s==='herd'||isPasture(r))return 'pastor';
+  if((s==='gather'||s==='return'||s==='move')&&u.gkind){const k=u.gkind;
+    if(k==='wood')return 'lenhador';if(k==='gold')return 'mineiro';if(k==='stone')return 'pedreiro';
+    if(k==='food'){if(r&&r.kind==='b'&&r.d&&r.d.farm)return 'agricultor';if(r&&r.carcass)return 'cacador';if(r&&r.fish)return 'pescador';return 'coletor'}}
+  if(s==='idle')return 'ocioso';return null}
+function jobCounts(o){const n={};for(const e of ents)if(e.kind==='u'&&e.o===o&&e.type==='aldeao'){const j=villJob(e);if(j)n[j]=(n[j]||0)+1}return n}
+function jobSummary(n){return Object.keys(JOBS).filter(k=>n[k]).map(k=>`<span title="${JOBS[k].n}">${JOBS[k].i} ${n[k]}</span>`).join('')}
+const JOBICON=new Map();
+function jobIcon(j){let cv=JOBICON.get(j);if(cv)return cv;const S=2,R=8;cv=mkCanvas((R*2+2)*S,(R*2+2)*S);const c=cv.getContext('2d');c.scale(S,S);
+  c.fillStyle=j==='ocioso'?'rgba(120,40,30,.85)':'rgba(24,20,14,.78)';c.strokeStyle='#f3dfb0';c.lineWidth=1.2;c.beginPath();c.arc(R+1,R+1,R,0,7);c.fill();c.stroke();
+  c.font='10px "Segoe UI Emoji","Apple Color Emoji","Noto Color Emoji",sans-serif';c.textAlign='center';c.textBaseline='middle';c.fillText(JOBS[j].i,R+1,R+1.5);JOBICON.set(j,cv);return cv}
+
+// Formações com vantagens reais (recalculadas 2×/s, deterministas: mesma ordem de ents em todos os clientes).
+// bit 1: atirador protegido por lanceiro (≤2,2 casas) → +2 armadura corpo a corpo
+// bit 2: infantaria em linha (≥2 aliados de infantaria a ≤2 casas, parada ou a combater) → +1 armadura e +1 contra flechas
+const FORM_BONUS={1:'🛡 Protegido por lanceiros: +2 armadura corpo a corpo',2:'🧱 Linha da frente: +1 armadura e +1 contra flechas'};
+function isSpear(u){return !!(u.d.bonus&&u.d.bonus.cav)&&u.d.cls==='inf'}
+function isShooter(u){return u.d.range>0&&u.d.cls==='arch'}
+function formTick(){const q=Math.floor(G.time*2);if(G.formQ===q)return;G.formQ=q;
+  const mil=[];for(const e of ents)if(e.kind==='u'&&e.o<2&&e.d.mil&&!e.d.naval&&!e.d.siege){e.fb=0;mil.push(e)}
+  for(const u of mil){
+    if(isShooter(u)){for(const v of mil)if(v.o===u.o&&v!==u&&isSpear(v)&&Math.abs(v.x-u.x)<2.2&&Math.abs(v.y-u.y)<2.2&&hyp(v.x-u.x,v.y-u.y)<2.2){u.fb|=1;break}}
+    else if(u.d.cls==='inf'&&!(u.path&&u.pi<u.path.length&&u.state!=='attack')){let n=0;for(const v of mil)if(v!==u&&v.o===u.o&&v.d.cls==='inf'&&Math.abs(v.x-u.x)<2&&Math.abs(v.y-u.y)<2&&hyp(v.x-u.x,v.y-u.y)<2&&++n>=2)break;if(n>=2)u.fb|=2}
+  }}
+function formArm(t,ranged){if(t.kind!=='u'||!t.fb)return 0;let a=0;if(t.fb&1&&!ranged)a+=2;if(t.fb&2)a+=1;return a}
+// Cavalaria que ataca um inimigo ocupado a combater outra unidade = carga pelo flanco.
+function flankBonus(src,t){return src&&src.kind==='u'&&src.d&&src.d.cls==='cav'&&t.kind==='u'&&t.d.mil&&t.state==='attack'&&alive(t.target)&&t.target!==src?3:0}
+
+// Caravanas: escolta e emboscadas.
+function escorted(u){for(const m of ents)if(m.kind==='u'&&m.o===u.o&&m.d.mil&&!m.d.naval&&Math.abs(m.x-u.x)<4&&Math.abs(m.y-u.y)<4&&hyp(m.x-u.x,m.y-u.y)<4)return true;return false}
+function caravanLoot(e){const A=byId.get(e.tradeA),B=byId.get(e.tradeB);if(!A||!B)return 40;const c1=centerOf(A),c2=centerOf(B);return Math.max(40,Math.round(tradeGain(hyp(c1.x-c2.x,c1.y-c2.y))*.6))}
+
+// Vilas neutras: proteger (soldados por perto, sem inimigos) → aliada com tributo e comércio; atacar → saque.
+const VILA_CLAIM=20,VILA_SWAP=30,VILA_R=4.5;
+function spawnVillages(){if(G.camp!=null||G.reino||G.vic==='sobrevivencia'||G.mode==='build'||!G.starts||G.starts.length<2)return;
+  const a=G.starts[0],b=G.starts[1],mx=(a.x+b.x)/2,my=(a.y+b.y)/2;let px=-(b.y-a.y),py=b.x-a.x;const l=hyp(px,py)||1;px/=l;py/=l;
+  for(const k of [-1,1]){const cx=mx+px*k*W*.2,cy=my+py*k*W*.2;let done=false;
+    for(let r=0;r<16&&!done;r++)for(let s=0;s<Math.max(1,r*8)&&!done;s++){const ang=s/Math.max(1,r*8)*Math.PI*2,tx=Math.round(cx+Math.cos(ang)*r)-1,ty=Math.round(cy+Math.sin(ang)*r)-1;
+      if(tx<3||ty<3||tx>W-6||ty>H-6||!canPlace('vila',tx,ty,2,1,true))continue;
+      if(hyp(tx-a.x,ty-a.y)<14||hyp(tx-b.x,ty-b.y)<14)continue;
+      const v=mkBld(2,'vila',tx,ty,true);v.claim=[0,0];done=true}}}
+function vilaCenter(v){return{x:v.tx+v.w/2,y:v.ty+v.h/2}}
+function villageTick(dt){for(const v of ents){if(v.kind!=='b'||v.type!=='vila'||!v.done)continue;v.claim=v.claim||[0,0];
+    const c=vilaCenter(v),n=[0,0];
+    for(const u of ents)if(u.kind==='u'&&u.o<2&&u.d.mil&&!u.d.naval&&Math.abs(u.x-c.x)<VILA_R&&Math.abs(u.y-c.y)<VILA_R)n[u.o]++;
+    for(let p=0;p<2;p++){const want=v.o===2?n[p]>=2&&n[1-p]===0:v.o!==p&&n[p]>=2&&n[v.o]===0;
+      v.claim[p]=want?v.claim[p]+dt:Math.max(0,v.claim[p]-dt*.5);
+      const need=v.o===2?VILA_CLAIM:VILA_SWAP;
+      if(v.claim[p]>=need){const was=v.o;v.o=p;v.claim=[0,0];v.hp=v.max;v.trib=0;chunkDirtyBld(v);
+        if(v.garr&&v.garr.length)ungarrison(v,true);
+        if(p===ME)toast(was===2?'A vila juntou-se ao reino: tributo e comércio':'Reconquistámos a vila!');else if(was===ME)toast('Perdemos uma vila para o rival',true);else if(was===2&&ME<2)toast('O rival ganhou a lealdade de uma vila',true);
+        if(p<2)trackEv(p,'Vila '+(was===2?'aliada':'conquistada'));break}}
+    if(v.o<2){v.trib=(v.trib||0)+dt;while(v.trib>=5){v.trib-=5;P[v.o].res.gold+=2;P[v.o].res.food+=2;if(v.o===ME)resDirty=true}}}}
+function vilaSprite(age,o){const key='vila|'+age+'|'+o+'|'+(P&&P[o]?P[o].col:'');if(BCACHE[key])return BCACHE[key];
+  const w=3,h=3,pad=34,top=90,CW=(w+h)*HW+pad*2,CH=(w+h)*HH+top+pad,cv=mkCanvas(CW*SS,CH*SS),c=cv.getContext('2d');c.scale(SS,SS);
+  const ox=h*HW+pad,oy=top,L=(x,y)=>[ox+(x-y)*HW,oy+(x+y)*HH];
+  // praça de terra batida
+  const g=[L(.25,.25),L(w-.25,.25),L(w-.25,h-.25),L(.25,h-.25)];c.fillStyle='rgba(146,112,72,.55)';c.beginPath();g.forEach((p,i)=>i?c.lineTo(p[0],p[1]):c.moveTo(p[0],p[1]));c.closePath();c.fill();
+  const hs=bldSprite('casa',age,o,''),f=.6;
+  const houses=[[.15,.2],[1.75,.25],[.3,1.75]].sort((p,q)=>p[0]+p[1]-q[0]-q[1]);
+  for(const [x,y] of houses){const [X,Y]=L(x,y);c.drawImage(hs.cv,X-hs.ox*f,Y-hs.oy*f,hs.CW*f,hs.CH*f)}
+  // poço e estandarte
+  const [wx,wy]=L(2.15,2.05);c.fillStyle='#6d6a62';c.beginPath();c.ellipse(wx,wy,9,4.5,0,0,7);c.fill();c.fillStyle='#2c4a5e';c.beginPath();c.ellipse(wx,wy-1,6,3,0,0,7);c.fill();
+  c.strokeStyle='#5a3d22';c.lineWidth=2;c.beginPath();c.moveTo(wx-7,wy);c.lineTo(wx-7,wy-14);c.lineTo(wx+7,wy-14);c.lineTo(wx+7,wy);c.stroke();
+  const [bx,by]=L(2.6,1.2);c.strokeStyle='#4a321c';c.lineWidth=1.8;c.beginPath();c.moveTo(bx,by);c.lineTo(bx,by-34);c.stroke();
+  c.fillStyle=o===2?'#d8c9a6':P[o].col;c.beginPath();c.moveTo(bx,by-33);c.lineTo(bx+13,by-29);c.lineTo(bx,by-24);c.closePath();c.fill();
+  return BCACHE[key]={cv,ox,oy,CW,CH}}
+function vilaInfo(e){const c=e.claim||[0,0],k=c[0]>c[1]?0:1,need=e.o===2?VILA_CLAIM:VILA_SWAP,pr=c[k]>0?` · ${k===ME?'a ganhar':'o rival está a ganhar'} a lealdade: ${Math.floor(c[k]/need*100)}%`:'';
+  if(e.o===2)return `<div class="muted">Vila neutra. Leva 2+ soldados para perto, sem inimigos, durante ${VILA_CLAIM} s: junta-se a ti (tributo 2 ${ri('gold')} + 2 ${ri('food')} a cada 5 s, +5 população, as carroças comerciam com ela). Atacá-la é saqueá-la.${pr}</div>`;
+  return `<div class="muted">${e.o===ME?'Vila aliada':'Vila do rival'} · tributo 2 ${ri('gold')} + 2 ${ri('food')} a cada 5 s · as carroças comerciam com ela. ${e.o===ME?'Protege-a: 2+ soldados inimigos sozinhos aqui durante '+VILA_SWAP+' s tomam-na.':'Mantém 2+ soldados aqui, sem defensores, durante '+VILA_SWAP+' s para a conquistar.'}${pr}</div>`}
+// Edifícios de produção parados (gestão no telemóvel).
+function idleProducers(o){return ents.filter(e=>e.kind==='b'&&e.o===o&&e.done&&e.d.train&&e.d.train.length&&!e.queue.length&&e.type!=='vila')}
 // relíquias: só os sacerdotes as levam; num templo dão ouro
 function relicNear(x,y,r){if(!G.relics)return -1;let best=-1,bd=r;for(let i=0;i<G.relics.length;i++){const q=G.relics[i];if(q.c||q.t)continue;const d=hyp(q.x-x,q.y-y);if(d<bd){bd=d;best=i}}return best}
 function orderRelic(u,i){stopUnit(u);u.state='relic';u.relicGo=i;u.fails=0;u.rp=0}
@@ -1507,8 +1592,8 @@ function updUnit(u,dt){
     }
     break}
   case 'trade':{
-    const A=byId.get(u.tradeA),B=byId.get(u.tradeB);if(!A||!B||A.dead||B.dead||A.o!==u.o&&B.o!==u.o){u.state='idle';break}
-    const tgt=u.target===A?A:B;if(approach(u,tgt,.6,dt)){const other=tgt===A?B:A;const c1=centerOf(A),c2=centerOf(B);const g=tradeGain(hyp(c1.x-c2.x,c1.y-c2.y));if(u.tripFrom===other.id){P[u.o].res.gold+=g;P[u.o].stats.gathered+=g;if(u.o===ME)G.tradeGold=(G.tradeGold||0)+g;if(u.o===ME){resDirty=true;if(vis[idx(clamp(u.x|0,0,W-1),clamp(u.y|0,0,H-1))]===2)fx.push({t:0,life:1.4,type:'ping',x:u.x,y:u.y,col:'#ffd447'})}}
+    const A=byId.get(u.tradeA),B=byId.get(u.tradeB);if(!A||!B||A.dead||B.dead||A.o!==u.o&&B.o!==u.o||B.type==='vila'&&B.o!==u.o&&B.o!==2){u.state='idle';break}
+    const tgt=u.target===A?A:B;if(approach(u,tgt,.6,dt)){const other=tgt===A?B:A;const c1=centerOf(A),c2=centerOf(B);let g=tradeGain(hyp(c1.x-c2.x,c1.y-c2.y));if(u.tripFrom===other.id){if(escorted(u)){g=Math.round(g*1.25);if(u.o===ME&&!G.escTip){G.escTip=1;toast('Caravana escoltada: +25% de ouro por viagem')}}P[u.o].res.gold+=g;P[u.o].stats.gathered+=g;if(u.o===ME)G.tradeGold=(G.tradeGold||0)+g;if(u.o===ME){resDirty=true;if(vis[idx(clamp(u.x|0,0,W-1),clamp(u.y|0,0,H-1))]===2)fx.push({t:0,life:1.4,type:'ping',x:u.x,y:u.y,col:'#ffd447'})}}
       u.tripFrom=tgt.id;u.target=other;u.path=null;u.rp=0}
     else if(u.fails>8){u.state='idle'}
     break}
@@ -1906,6 +1991,11 @@ function aiRun(AI,dt){
   // sacerdotes livres vão buscar relíquias para o templo
   if(G.relics&&blds.some(b=>b.done&&b.type==='templo')){for(const u of army)if(u.d.convert&&u.state==='idle'&&u.relic!=null&&G.relics[u.relic]&&G.relics[u.relic].c===u.id)orderRelic(u,u.relic);const pr=army.filter(a=>a.d.convert&&a.state==='idle'&&a.relic==null);
     for(const u of pr){if(G.relics.some(q=>q.c===u.id))continue;let bi=-1,bd=40;G.relics.forEach((q,i)=>{if(q.c||q.t)return;if(G.map==='arquipelago'&&landOf(q.x,q.y)!==landOf(home.x,home.y))return;const d=hyp(q.x-u.x,q.y-u.y);if(d<bd&&!ents.some(e=>e.o===me&&e.relicGo===i&&e.state==='relic')){bd=d;bi=i}});if(bi>=0)orderRelic(u,bi)}}
+  // vilas neutras: a IA manda uma pequena guarda ganhar a lealdade (ou tomar a do rival quando tem exército grande)
+  {const vs=ents.filter(e=>e.type==='vila'&&e.done&&e.o!==me);for(const u of army)if(u.vilaGo){const v=byId.get(u.vilaGo);if(!v||v.o===me)u.vilaGo=null}
+   const idle=army.filter(a=>!a.d.convert&&!a.d.siege&&!a.d.king&&a.state==='idle');
+   if(vs.length&&idle.length>=4&&!army.some(a=>a.vilaGo)){vs.sort((x,y)=>hyp(x.tx-home.x,x.ty-home.y)-hyp(y.tx-home.x,y.ty-home.y));const v=vs[0];
+     if((v.o===2||army.length>=10)&&(G.map!=='arquipelago'||landOf(v.tx,v.ty)===landOf(home.x,home.y))){const q=vilaCenter(v),grp=idle.slice(0,3);for(const u of grp)u.vilaGo=v.id;groupMove(grp,q.x,q.y+2,true,'livre')}}}
   // armazém perto de recursos distantes
   if(count('armazem')<3&&p.res.wood>=140&&vills.length>=Math.min(12,D.vills[p.age])&&!blds.some(b=>b.type==='armazem'&&!b.done)){
     const far=vills.filter(v=>v.state==='gather'&&v.gres&&v.gres.kind==='r'&&hyp(v.gres.tx-home.x,v.gres.ty-home.y)>10);
@@ -2470,7 +2560,7 @@ const MATS=[
   {wall:{l:'#d2b27f',r:'#a8875a',t:'#e0c594',k:'brick'},roof:{c:'#b5653c',d:'#874629',k:'tile'},found:'#a08d6c',trim:'#7c5d3b'},
   {wall:{l:'#e6e0d1',r:'#b9b1a1',t:'#f1ece0',k:'stone'},roof:{c:'#ad452c',d:'#7c2e1d',k:'tile'},found:'#ada597',trim:'#8d8676'},
 ];
-const BHEIGHT={curral:28,estrada:2,muralhaMadeira:26,muralhaPedra:30,muralhaFort:38,portaoMadeira:46,portaoPedra:52,doca:28,ferreiro:52,templo:66,maravilha:118,centro:78,casa:50,quinta:6,armazem:46,quartel:56,arquearia:52,estabulo:48,torre:96,oficina:58};
+const BHEIGHT={vila:46,curral:28,estrada:2,muralhaMadeira:26,muralhaPedra:30,muralhaFort:38,portaoMadeira:46,portaoPedra:52,doca:28,ferreiro:52,templo:66,maravilha:118,centro:78,casa:50,quinta:6,armazem:46,quartel:56,arquearia:52,estabulo:48,torre:96,oficina:58};
 function bldVariant(e){
   if(e.type==='torre')return e.lvl||1;
   if(e.d.wall||e.d.gate){let m=0;const nb=(x,y)=>{if(!inb(x,y))return false;const n=byId.get(bldAt[idx(x,y)]);return !!n&&n.o===e.o&&(n.d.wall||n.d.gate)};
@@ -2558,6 +2648,7 @@ function pastureSprite(age,o){
   return BCACHE[key]={cv,ox,oy,CW,CH};
 }
 function bldSprite(type,age,o,vr){
+  if(type==='vila')return vilaSprite(age,o);
   if(type==='curral'&&CURRAL_ART.ready)return pastureSprite(age,o);
   if(type==='mercado'&&!(BLDART.ready&&bldArtKey(type,age)))return marketSprite(age,o); // mercado pintado (Gemini) quando existe; senão o desenhado
   if(BLDART.ready){const k0='art|'+type+'|'+age+'|'+o+'|'+(vr??'')+'|'+(P&&P[o]?P[o].col:'');if(BCACHE[k0])return BCACHE[k0];const r=bldArt(type,age,o,vr);if(r){BCACHE[k0]=r;return r}}
@@ -3727,6 +3818,11 @@ function render(){UCFM=0;
       }
     }else{const v=e.d.art?Object.assign(Object.create(e),{type:e.d.art}):e;if(e.d.trade)drawCart(c,e,p.x,p.y);else if(e.d.naval)drawShip(c,v,p.x,p.y);else if(e.d.king)drawKing(c,e,v,p.x,p.y);else drawUnit(c,v,p.x,p.y);if(e.relic!=null)drawRelic(c,p.x+6,p.y-30,t,true,.6)}
   }
+  // aldeia viva: fumo das chaminés (só visual)
+  if(GFX!=='baixo')for(const [,k,e] of draw){if(k!==1||!e.done||!visibleTo0(e))continue;const T=e.type;if(T!=='casa'&&T!=='centro'&&T!=='ferreiro'&&T!=='vila')continue;
+    const q=proj(e.tx+e.w*.62,e.ty+e.h*.38),z=BHEIGHT[T]*(T==='centro'?.95:T==='vila'?.55:.9),sd=(e.id*37%100)/100;
+    for(let j=0;j<5;j++){const ph=(t*.2+sd+j/5)%1;c.globalAlpha=.45*(1-ph)*Math.min(1,ph*5);circ(c,q.x+ph*14*(WIND_SX||1)+Math.sin(t*1.3+j+sd*6)*1.5,q.y-z-ph*46,2.5+ph*8,'#f1ece4')}
+    c.globalAlpha=1}
   // partículas de conversão (sacerdote → alvo)
   for(const [,k,e,p] of draw){if(k!==2||e.type!=='sacerdote'||e.state!=='attack'||!(e.conv>0)||!alive(e.target)||!visibleTo0(e.target))continue;const q=proj(e.target.x,e.target.y);
     for(let i=0;i<6;i++){const ph=((t*.7+i/6)%1);const x=p.x+(q.x-p.x)*ph,y=p.y-20+(q.y-14-(p.y-20))*ph-Math.sin(ph*Math.PI)*10;c.globalAlpha=.8*(1-Math.abs(ph-.5)*1.4);circ(c,x,y,1.4,i%2?'#fff2a8':'#ffd36a')}
@@ -3739,6 +3835,9 @@ function render(){UCFM=0;
   tutArrow(c,t);
   if(GFX==='alto')drawClouds(c,t);
   atmosWorld(c,t,draw);
+  // luzes nas janelas à noite (depois do escurecimento)
+  {const na=nightAmt();if(na>.12)for(const [,k,e] of draw){if(k!==1||!e.done||!visibleTo0(e)||e.o===2&&e.type!=='vila')continue;const T=e.type;if(T!=='casa'&&T!=='centro'&&T!=='vila'&&T!=='ferreiro'&&T!=='templo')continue;
+    const fl=.85+.15*Math.sin(t*3+e.id);for(const [fx0,fy0,zz] of [[e.tx+e.w*.62,e.ty+e.h*.85,BHEIGHT[T]*.32],[e.tx+e.w*.85,e.ty+e.h*.55,BHEIGHT[T]*.36]]){const q=proj(fx0,fy0);const gr=c.createRadialGradient(q.x,q.y-zz,0,q.x,q.y-zz,9);gr.addColorStop(0,`rgba(255,196,96,${(na*.75*fl).toFixed(3)})`);gr.addColorStop(1,'rgba(255,160,60,0)');c.fillStyle=gr;c.fillRect(q.x-9,q.y-zz-9,18,18);c.fillStyle=`rgba(255,214,130,${(na*.95*fl).toFixed(3)})`;c.fillRect(q.x-1.5,q.y-zz-2,3,4)}}}
   // barras de vida
   for(const [,k,e,p] of draw){
     if(k===0)continue;
@@ -3751,6 +3850,16 @@ function render(){UCFM=0;
   for(const [,k,e] of draw){if(k!==1||!e.garr||!e.garr.length||!visibleTo0(e))continue;const q=proj(e.tx+e.w/2,e.ty+e.h/2);const y=q.y-BHEIGHT[e.type]-(sel.includes(e)||e.hp<e.max?34:20);
     c.fillStyle=P[e.o].col;c.strokeStyle='#fff3d6';c.lineWidth=1.5;c.beginPath();c.moveTo(q.x-8,y-8);c.lineTo(q.x+8,y-8);c.lineTo(q.x+8,y+1);c.quadraticCurveTo(q.x+8,y+7,q.x,y+10);c.quadraticCurveTo(q.x-8,y+7,q.x-8,y+1);c.closePath();c.fill();c.stroke();
     c.fillStyle='#fff';c.font='bold 10px sans-serif';c.textAlign='center';c.fillText(e.garr.length,q.x,y+3.5)}
+  // sentinelas: as unidades abrigadas aparecem no topo das torres, centros e vilas
+  for(const [,k,e] of draw){if(k!==1||!e.garr||!e.garr.length||!visibleTo0(e)||!(e.type==='torre'||e.type==='centro'||e.type==='vila'))continue;
+    const mil=e.garr.filter(u=>u.d.mil);if(!mil.length)continue;const q=proj(e.tx+e.w/2,e.ty+e.h/2),n=Math.min(3,mil.length),top=q.y-BHEIGHT[e.type]*(e.type==='torre'?.9:e.type==='vila'?.5:.78);
+    for(let i=0;i<n;i++){const u=mil[i],src=UNIT3D[u.type];if(!src||!src.ready)continue;const fi=src.meta.states.idle[0],dir=Math.floor(t/3+i*3+e.id)%8;
+      c.save();c.translate(q.x+(i-(n-1)/2)*11,top);c.scale(.72,.72);drawUnit3dFrame(c,src,fi,dir,P[e.o].col,0,0,null,false,false);c.restore()}}
+  // lealdade das vilas neutras
+  for(const [,k,e] of draw){if(k!==1||e.type!=='vila'||!e.claim||!visibleTo0(e))continue;const p0=e.claim[0]>=e.claim[1]?0:1,v=e.claim[p0];if(v<=0)continue;const need=e.o===2?VILA_CLAIM:VILA_SWAP;
+    const q=proj(e.tx+e.w/2,e.ty+e.h/2),y=q.y-BHEIGHT.vila-30;c.fillStyle='rgba(0,0,0,.75)';c.fillRect(q.x-25,y-1,50,6);c.fillStyle=P[p0].col;c.fillRect(q.x-24,y,48*clamp(v/need,0,1),4);c.fillStyle='#fff';c.font='bold 9px sans-serif';c.textAlign='center';c.fillText('🏘️',q.x,y-4)}
+  // profissões: ícone por cima dos aldeões (selecionados, ociosos ou com zoom aproximado)
+  for(const [,k,e,p] of draw){if(k!==2||e.type!=='aldeao'||e.o!==ME)continue;const j=villJob(e);if(!j||!(sel.includes(e)||j==='ocioso'||cam.z>=1.7))continue;c.drawImage(jobIcon(j),p.x-8,p.y-38*UNIT_SCALE-22,16,16)}
   // projéteis
   for(const p of projs){
     const k=p.t/p.dur;const x=p.x+(p.tx-p.x)*k,y=p.y+(p.ty-p.y)*k;
@@ -4819,7 +4928,7 @@ function updateTop(){
   modeHud();if(G.lastAttack&&G.alertAt!=null){const on=G.time-G.alertAt<12;if($('bAlert').hidden===on)$('bAlert').hidden=!on}if((G.time|0)%2===0)grpRender();
   const wt=$('wonderT');if(G.wonder){wt.hidden=false;const s2=Math.max(0,Math.ceil(G.wonder.t));wt.lastChild.textContent=Math.floor(s2/60)+':'+String(s2%60).padStart(2,'0');wt.style.color=G.wonder.o===ME?'var(--good)':'var(--bad)'}else wt.hidden=true;
   const s=Math.floor(G.time);$('clock').textContent=Math.floor(s/60)+':'+String(s%60).padStart(2,'0');
-  $('idleN').textContent=idle||'';$('bIdle').classList.toggle('alert',idle>0&&G.time>20);$('armyN').textContent=army||'';const stuck=ents.filter(u=>u.o===ME&&workerBlocked(u)).length;$('bStuck').hidden=!stuck;$('stuckN').textContent=stuck||'';
+  $('idleN').textContent=idle||'';$('bIdle').classList.toggle('alert',idle>0&&G.time>20);$('armyN').textContent=army||'';const stuck=ents.filter(u=>u.o===ME&&workerBlocked(u)).length;$('bStuck').hidden=!stuck;$('stuckN').textContent=stuck||'';{const ib=G.time>60?idleProducers(ME).length:0;$('bIdleB').hidden=!ib;$('idleBN').textContent=ib||''}
   netHud();
 }
 function mkCmd(icon,label,fn,cls,title){const b=document.createElement('button');b.className='cmd '+(cls||'');b.innerHTML=iconHTML(icon)+(label?'<small'+((label.match(/class="ri"/g)||[]).length>1?' class="c2"':'')+'>'+label+'</small>':'');if(title)b.title=title;b.addEventListener('pointerdown',e=>e.stopPropagation());b.onclick=e=>{e.stopPropagation();sfx('click');fn()};return b}
@@ -4927,13 +5036,13 @@ function infoHTML(){
   if(placing){const d=BLDS[placing.type];
     if(placing.line){const n=placing.a?lineTiles(placing.a,placing.b||placing.a).filter(([x,y])=>canPlace(placing.type,x,y,ME)).length:0;return `<img class="port" src="${portrait('b',placing.type,ME)}" alt=""><div class="txt"><h3>${d.name}</h3><div class="muted">${costHTML(d.cost)} por segmento${n?' · '+n+' segmentos':''}</div><div class="muted">${!placing.a?'Toca no ponto inicial.':'Toca no ponto final e depois em ✔️.'}</div></div>`}
     return `<img class="port" src="${portrait('b',placing.type,ME)}" alt=""><div class="txt"><h3>${d.name}</h3><div class="muted">${costHTML(d.cost)}</div><div class="muted">${placing.tx==null?(d.dock?'Toca perto da água: a Doca encaixa sozinha na margem.':'Toca no mapa para escolher o local.'):'Toca em ✔️ para confirmar ou toca noutro sítio.'}</div></div>`}
-  if(!sel.length){return `<div class="txt"><h3>${AGES[P[ME].age]}</h3><div class="muted">Toca numa unidade ou edifício.</div><div class="stats2"><span>${ri('pop')} Aldeões ${ents.filter(e=>e.kind==='u'&&e.o===ME&&e.type==='aldeao').length}</span><span><i class="ic">${IC.army}</i> Exército ${ents.filter(e=>e.kind==='u'&&e.o===ME&&e.d.mil).length}</span></div></div>`}
+  if(!sel.length){return `<div class="txt"><h3>${AGES[P[ME].age]}</h3><div class="muted">Toca numa unidade ou edifício.</div><div class="stats2"><span>${ri('pop')} Aldeões ${ents.filter(e=>e.kind==='u'&&e.o===ME&&e.type==='aldeao').length}</span><span><i class="ic">${IC.army}</i> Exército ${ents.filter(e=>e.kind==='u'&&e.o===ME&&e.d.mil).length}</span></div><div class="stats2 jobs">${jobSummary(jobCounts(ME))}</div></div>`}
   if(sel.length>1){const g={};for(const e of sel)g[e.type]=(g[e.type]||0)+1;
     const hold=sel.filter(u=>u.stance==='hold').length,def=sel.filter(u=>u.stance==='defend').length,pat=sel.filter(u=>u.patrol).length;
-    const o0=sel[0].o;return `<div class="txt"><h3>${sel.length} unidades</h3><div class="group">${Object.entries(g).map(([t,n])=>`<span title="${UNITS[t]?UNITS[t].name:''}">${UNITS[t]&&portrait('u',t,o0)?`<img src="${portrait('u',t,o0)}" alt="">`:(UNITS[t]?UNITS[t].icon:'')}<em>${n}</em></span>`).join('')}</div><div class="muted">Formação: ${FORMS[G.form||'livre']}${hold?' · '+hold+' a manter':''}${def?' · '+def+' a defender':''}${pat?' · '+pat+' a patrulhar':''}</div></div>`}
+    const o0=sel[0].o;return `<div class="txt"><h3>${sel.length} unidades</h3><div class="group">${Object.entries(g).map(([t,n])=>`<span title="${UNITS[t]?UNITS[t].name:''}">${UNITS[t]&&portrait('u',t,o0)?`<img src="${portrait('u',t,o0)}" alt="">`:(UNITS[t]?UNITS[t].icon:'')}<em>${n}</em></span>`).join('')}</div><div class="muted">Formação: ${FORMS[G.form||'livre']}${hold?' · '+hold+' a manter':''}${def?' · '+def+' a defender':''}${pat?' · '+pat+' a patrulhar':''}${(()=>{const p1=sel.filter(u=>u.fb&1).length,p2=sel.filter(u=>u.fb&2).length;return (p1?' · 🛡 '+p1+' protegidos':'')+(p2?' · 🧱 '+p2+' em linha':'')})()}</div>${(()=>{const n={};for(const u of sel){const j=villJob(u);if(j)n[j]=(n[j]||0)+1}const h=jobSummary(n);return h?'<div class="stats2 jobs">'+h+'</div>':''})()}</div>`}
   const e=sel[0];
   if(e.kind==='r')return `<div class="txt"><h3>${e.carcass?'Carcaça de '+(['gazela','javali','lobo','ovelha','elefante'][e.var]||'animal'):({wood:'Árvore',food:e.fish?'Cardume':'Arbusto de bagas',gold:'Mina de ouro',stone:'Pedreira'})[e.rk]}</h3><div class="stats2"><span>${ri(e.rk)} ${RNAME[e.rk]}: ${Math.ceil(e.amt)}</span></div></div>`;
-  const own=e.o===ME;const tag=own?'':e.o===2?' <span class="muted">(animal)</span>':' <span style="color:var(--bad)">(inimigo)</span>';
+  const own=e.o===ME;const tag=own?'':e.o===2?(e.kind==='b'?' <span class="muted">(neutra)</span>':' <span class="muted">(animal)</span>'):' <span style="color:var(--bad)">(inimigo)</span>';
   const fr=clamp(e.hp/e.max,0,1);const hp=`<div class="hpbar ${fr<.3?'low':fr<.6?'mid':''}"><b style="width:${fr*100}%"></b><span>${Math.ceil(e.hp)} / ${e.max}</span></div>`;
   const pimg=e.o===2?faunaPortrait(e.type):portrait(e.kind,e.type,e.o);const port=pimg?`<img class="port ${own?'':e.o===2?'g':'e'}" src="${pimg}" alt="">`:'';
   if(e.kind==='u'){
@@ -4945,11 +5054,17 @@ function infoHTML(){
     if(e.o===2)extra+=`<div class="muted">${e.type==='lobo'?'Perigoso: ataca quem se aproxima. Não dá carne.':e.type==='elefante'?'Muito perigoso: contra-ataca e a manada ajuda.':e.type==='javali'?'Perigoso: contra-ataca.':e.type==='ovelha'?'Pastoreio: um aldeão recolhe leite como comida, sem matar a ovelha.':'Foge quando atacada.'}${e.d.meat?' Dá '+e.d.meat+' de comida.':''}</div>`;
     if(own&&workerBlocked(e))extra+='<div style="color:var(--bad)">Caminho bloqueado: escolhe um destino ou outra tarefa.</div>';
     if(e.d.convert)extra+=`<div class="muted">Fé ${Math.floor(e.faith*100)}%${e.state==='attack'?' · a converter…':alive(e.healT)?' · a curar':''}</div>`;
+    if(e.type==='aldeao'&&own){const j=villJob(e);if(j)extra+=`<div class="muted">Profissão: ${JOBS[j].i} ${JOBS[j].n}</div>`}
+    if(own&&e.fb)extra+=[1,2].filter(b=>e.fb&b).map(b=>`<div class="muted" style="color:var(--brass)">${FORM_BONUS[b]}</div>`).join('');
+    if(own&&e.d.cls==='cav'&&e.d.mil)extra+='<div class="muted">Carga pelo flanco: +3 de dano contra inimigos ocupados a combater outra unidade.</div>';
+    if(own&&isShooter(e)&&!(e.fb&1))extra+='<div class="muted">Dica: um lanceiro a menos de 2 casas protege-o (+2 armadura corpo a corpo).</div>';
+    if(own&&e.d.trade)extra+='<div class="muted">Escolta: com soldados por perto à chegada ganha +25%. Se for destruída, o inimigo saqueia o ouro.</div>';
     if(e.type==='aldeao'&&own){const st={trade:'A comerciar',relic:'A levar a relíquia',enter:'A abrigar-se',idle:'Ocioso',move:'A andar',herd:'A conduzir ovelhas ao curral',gather:isPasture(e.gres)?'A pastorear ovelhas (leite)':'A recolher '+(RNAME[e.gkind]||'').toLowerCase(),return:'A entregar',build:'A construir',attack:'A atacar'}[e.state];extra+=`<div class="muted">${st}${e.carry?' · leva '+e.carry+' '+ri(e.ctype):''}</div>`}
     return `${port}<div class="txt"><h3>${e.d.name}${tag}</h3>${hp}${extra}</div>`;
   }
   let extra='';
   if(!e.done)extra=`<div class="muted">Em construção: ${Math.floor(e.prog*100)}%</div>`;
+  else if(e.type==='vila')extra=vilaInfo(e);
   else if(e.d.pasture)extra='<div class="muted">Ovelhas: '+penSheep(e).filter(s=>insidePen(s,e)).length+' / '+e.d.pasture+' · Seleciona um aldeão e toca no curral para reunir o rebanho e pastorear.</div>';
   else if(e.d.farm)extra='<div class="muted">Comida ilimitada ∞ · Trabalhadores: '+farmWorkers(e)+'</div>';
   if(own&&e.queue.length){
@@ -5045,7 +5160,7 @@ function doCommand(o,units,e,w,mode,form){
   {const pr=units.filter(u=>u.d.convert);const ri=relicNear(w.x,w.y,pr.length?2.8:1.6);
     if(ri>=0){if(pr.length){orderRelic(pr[0],ri);units=units.filter(u=>u!==pr[0]);if(o===ME)toast('O sacerdote vai buscar a relíquia');if(!units.length)return}
       else if(o===ME)toast('Precisas de um Sacerdote para apanhar o baú/relíquia (treina-o no Templo).',true)}}
-  if(e&&e.kind==='b'&&e.o===o&&e.d.market&&e.done&&units.some(u=>u.d.trade)){for(const u of units.filter(u=>u.d.trade))orderTrade(u,e);units=units.filter(u=>!u.d.trade);if(!units.length)return}
+  if(e&&e.kind==='b'&&(e.o===o&&e.d.market||e.type==='vila'&&(e.o===o||e.o===2))&&e.done&&units.some(u=>u.d.trade)){for(const u of units.filter(u=>u.d.trade))orderTrade(u,e);units=units.filter(u=>!u.d.trade);if(!units.length)return}
   if(mode==='patrol'){const mil=units.filter(u=>u.d.mil);groupMove(mil,w.x,w.y,true,form);for(const u of mil)u.patrol={a:{x:u.x,y:u.y},b:{x:u.dest?u.dest.x:w.x,y:u.dest?u.dest.y:w.y}};ping();return}
   if(mode==='defend'){groupMove(units,w.x,w.y,false,form);for(const u of units){u.stance='defend';u.guard=u.dest?{x:u.dest.x,y:u.dest.y}:{x:w.x,y:w.y}}ping();return}
   const boat=e&&e.kind==='u'&&e.o===o&&e.d.cap?e:null;
@@ -5186,6 +5301,7 @@ $('bBox').onclick=()=>{boxMode=!boxMode;$('bBox').classList.toggle('on',boxMode)
 let idleIdx=0;
 $('bIdle').onclick=()=>{const l=ents.filter(e=>e.kind==='u'&&e.o===ME&&e.type==='aldeao'&&e.state==='idle');if(!l.length){toast('Sem aldeões ociosos');return}const u=l[idleIdx++%l.length];setSel([u]);centerCam(u.x,u.y)};
 $('bStuck').onclick=locateBlocked;
+let idleBIdx=0;$('bIdleB').onclick=()=>{const l=idleProducers(ME);if(!l.length){toast('Todos os edifícios estão a produzir');return}const b=l[idleBIdx++%l.length];setSel([b]);const q=centerOf(b);centerCam(q.x,q.y);toast(b.d.name+' parado: escolhe o que produzir')};
 $('bArmy').onclick=()=>{const l=ents.filter(e=>e.kind==='u'&&e.o===ME&&e.d.mil);if(!l.length){toast('Ainda não tens exército');return}setSel(l);const c=l[0];centerCam(c.x,c.y)};
 $('bHome').onclick=()=>{const tc=ents.find(e=>e.kind==='b'&&e.o===ME&&e.type==='centro');if(tc){setSel([tc]);centerCam(tc.tx+1.5,tc.ty+1.5)}else if(G.lastAttack)centerCam(G.lastAttack.x,G.lastAttack.y)};
 $('bChat').onclick=()=>{const b=$('chatBox');b.hidden=!b.hidden;if(!b.hidden)setTimeout(()=>$('chatIn').focus(),50)};
@@ -5289,6 +5405,7 @@ function startGame(seed,opts){
   }
   kingLooksInit();
   spawnFauna();spawnFish();if(G.vic!=='sobrevivencia'&&mode!=='build')placeRelics();
+  spawnVillages();
   aiInit();recount();
   if(!SPR.oak)makeSprites();buildTerrain();resetChunks();FCACHE.clear();CLOUDS=null;setTimeout(bldWarm,0);
   cam={x:0,y:0,z:vw<700?.85:1};
@@ -6280,7 +6397,7 @@ function step(dt){
   if(G.tut)tutTick(dt);
   trackTick();if((G.time|0)!==((G.time-dt)|0))achvTick(1);
   if(G.vic==='sobrevivencia'&&!G.over)survTick(dt);
-  relicTick(dt);natureTick(dt);
+  relicTick(dt);natureTick(dt);formTick();villageTick(dt);
   if(G.camp!=null&&!G.over)campTick(dt);
   if(G.hero)heroTick(dt);
   if(G.reino&&!G.over)reinoTick(dt);
