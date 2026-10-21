@@ -1,0 +1,246 @@
+{
+ "campanha": [
+  {
+   "ms": 1609,
+   "passos": 3600,
+   "piorPassoMs": 16.6,
+   "errs": [],
+   "t": 361,
+   "over": false,
+   "eu": 5,
+   "inimigos": 5,
+   "edif": 1,
+   "ents": 123,
+   "missao": 1
+  },
+  {
+   "ms": 1145,
+   "passos": 3600,
+   "piorPassoMs": 6,
+   "errs": [],
+   "t": 361,
+   "over": false,
+   "eu": 5,
+   "inimigos": 5,
+   "edif": 1,
+   "ents": 133,
+   "missao": 2
+  },
+  {
+   "ms": 1633,
+   "passos": 3600,
+   "piorPassoMs": 26.7,
+   "errs": [],
+   "t": 361,
+   "over": false,
+   "eu": 4,
+   "inimigos": 6,
+   "edif": 1,
+   "ents": 121,
+   "missao": 3
+  },
+  {
+   "ms": 1371,
+   "passos": 3600,
+   "piorPassoMs": 27.5,
+   "errs": [],
+   "t": 362,
+   "over": false,
+   "eu": 5,
+   "inimigos": 12,
+   "edif": 1,
+   "ents": 105,
+   "missao": 4
+  },
+  {
+   "ms": 1739,
+   "passos": 3600,
+   "piorPassoMs": 16.2,
+   "errs": [],
+   "t": 361,
+   "over": false,
+   "eu": 5,
+   "inimigos": 16,
+   "edif": 1,
+   "ents": 145,
+   "missao": 5
+  },
+  {
+   "ms": 1690,
+   "passos": 3600,
+   "piorPassoMs": 5.5,
+   "errs": [],
+   "t": 361,
+   "over": false,
+   "eu": 5,
+   "inimigos": 13,
+   "edif": 1,
+   "ents": 137,
+   "missao": 6
+  }
+ ],
+ "reino": [
+  {
+   "ms": 881,
+   "passos": 1500,
+   "piorPassoMs": 12,
+   "errs": [],
+   "t": 151,
+   "over": false,
+   "eu": 1,
+   "inimigos": 2,
+   "edif": 1,
+   "ents": 199,
+   "cap": 3,
+   "tipo": "raids",
+   "objs": [
+    {
+     "d": "Aguentar 4 vagas (1/4)",
+     "ok": false
+    }
+   ]
+  },
+  {
+   "ms": 1036,
+   "passos": 1500,
+   "piorPassoMs": 24.1,
+   "errs": [],
+   "t": 301,
+   "over": false,
+   "eu": 2,
+   "inimigos": 12,
+   "edif": 1,
+   "ents": 218,
+   "cap": 4,
+   "tipo": "rival",
+   "objs": [
+    {
+     "d": "Destruir o Centro da Vila do reino vizinho",
+     "ok": false
+    }
+   ]
+  },
+  {
+   "ms": 1057,
+   "passos": 1500,
+   "piorPassoMs": 10.1,
+   "errs": [],
+   "t": 452,
+   "over": false,
+   "eu": 2,
+   "inimigos": 19,
+   "edif": 1,
+   "ents": 231,
+   "cap": 5,
+   "tipo": "rei",
+   "objs": [
+    {
+     "d": "Manter o teu Rei vivo",
+     "ok": true
+    },
+    {
+     "d": "Derrotar o Senhor da Guerra",
+     "ok": false
+    }
+   ]
+  },
+  {
+   "ms": 1143,
+   "passos": 1500,
+   "piorPassoMs": 7.9,
+   "errs": [],
+   "t": 568,
+   "over": true,
+   "eu": 1,
+   "inimigos": 30,
+   "edif": 0,
+   "ents": 245,
+   "cap": 7,
+   "tipo": "raids",
+   "objs": [
+    {
+     "d": "Aguentar 3 vagas (1/3)",
+     "ok": false
+    }
+   ]
+  },
+  {
+   "ms": 722,
+   "passos": 1500,
+   "piorPassoMs": 4.3,
+   "errs": [],
+   "t": 151,
+   "over": false,
+   "eu": 5,
+   "inimigos": 9,
+   "edif": 1,
+   "ents": 204,
+   "cap": 8,
+   "tipo": "fort",
+   "objs": [
+    {
+     "d": "Arrasar o forte inimigo (0/4)",
+     "ok": false
+    }
+   ]
+  },
+  {
+   "ms": 362,
+   "passos": 1500,
+   "piorPassoMs": 6.2,
+   "errs": [],
+   "t": 197,
+   "over": true,
+   "eu": 2,
+   "inimigos": 22,
+   "edif": 0,
+   "ents": 214,
+   "cap": 10,
+   "tipo": "boss",
+   "objs": [
+    {
+     "d": "Derrotar o Tirano do Leste",
+     "ok": false
+    }
+   ]
+  },
+  {
+   "ms": 469,
+   "passos": 1500,
+   "piorPassoMs": 6.1,
+   "errs": [],
+   "t": 78,
+   "over": true,
+   "eu": 1,
+   "inimigos": 24,
+   "edif": 0,
+   "ents": 212,
+   "cap": 11,
+   "tipo": "cerco",
+   "objs": [
+    {
+     "d": "Resistir 5:30 (faltam 4:11)",
+     "ok": false
+    },
+    {
+     "d": "Manter o Centro da Vila de pé",
+     "ok": false
+    }
+   ]
+  }
+ ],
+ "escaramuca": {
+  "ms": 3690,
+  "passos": 6000,
+  "piorPassoMs": 10.8,
+  "errs": [],
+  "t": 603,
+  "over": false,
+  "eu": 4,
+  "inimigos": 33,
+  "edif": 1,
+  "ents": 171
+ },
+ "pageerrors": [],
+ "fpsHeadless": 59
+}
