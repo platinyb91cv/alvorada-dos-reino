@@ -1,0 +1,46 @@
+{
+ "fonte": "Cavalo CC0 do Quaternius (Farm Animals Pack) + soldados Meshy já existentes (arte/unidades-armadas); nada gerado de novo",
+ "creditosAdicionais": 0,
+ "cavalo": {
+  "ficheiro": "arte/cavalaria-3d/fontes/Horse.blend",
+  "sha256": "decc922bd8d1c1a57d58b7cb3fcfa5a6138bebaab522b8dbc3ca750f7e9790ed",
+  "licenca": "CC0 1.0",
+  "url": "https://opengameart.org/content/lowpoly-animated-farm-animal-pack"
+ },
+ "cavaleiros": {
+  "cavaleiro": "arte/unidades-armadas/espadachim.glb",
+  "cavPesada": "arte/unidades-armadas/lanceiro.glb",
+  "cavArqueira": "arte/unidades-armadas/arqueiro.glb"
+ },
+ "riggados": {
+  "cavaleiro": {
+   "sha256": "25f3fae5526e86b27e55b51d16072c0a27cb7a69d596ea49d26e57575a85e855",
+   "noRepositorio": false
+  },
+  "cavPesada": {
+   "sha256": "1f2e0f18db7b0ceb7514ee0bfab56465cf8e2c20c928a7682e318f76a98ebf17",
+   "noRepositorio": false
+  },
+  "cavArqueira": {
+   "sha256": "98c60efb79aa2e8ef9bca7dca8b042505e7d9178fbd00246369ca5870342a917",
+   "noRepositorio": false
+  }
+ },
+ "escala": {
+  "cavaloM": 2.25,
+  "cavaleiroM": 1.7,
+  "conjuntoM": 2.47
+ },
+ "clips": {
+  "Idle": 40,
+  "Walk": 20,
+  "Attack": 36,
+  "Hit": 24,
+  "Death": 40
+ },
+ "atlas": {
+  "cavaleiro": "172fb5c5d007467e33fc971e9c80f4164083abb7d168aae3cdae580a49e825e2",
+  "cavPesada": "b9baf8ad0e9d8ebc3fe95e4d068dec9fbc762768cc4f5ac6f151c929ea4df8ae",
+  "cavArqueira": "912d51cc620b07090993dbdcfb04cec81122627618a6820c2fd20a03ba673525"
+ }
+}
