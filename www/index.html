@@ -2599,7 +2599,7 @@ const MATS=[
 const BHEIGHT={vila:46,curral:28,estrada:2,muralhaMadeira:26,muralhaPedra:30,muralhaFort:38,portaoMadeira:56,portaoPedra:64,doca:28,ferreiro:52,templo:66,maravilha:118,centro:78,casa:50,quinta:6,armazem:46,quartel:56,arquearia:52,estabulo:48,torre:96,oficina:58};
 function bldVariant(e){
   if(e.type==='torre')return e.lvl||1;
-  if(e.d.wall||e.d.gate){let m=0;const nb=(x,y)=>{if(!inb(x,y))return false;const n=byId.get(bldAt[idx(x,y)]);return !!n&&n.o===e.o&&(n.d.wall||n.d.gate)};
+  if(e.d.wall||e.d.gate){let m=0;const nb=(x,y)=>{if(!inb(x,y))return false;const n=byId.get(bldAt[idx(x,y)]);return !!n&&n.o===e.o&&(n.d.wall||n.d.gate||(n.type==='torre'&&n.done))};
     if(nb(e.tx+1,e.ty))m|=1;if(nb(e.tx,e.ty+1))m|=2;if(nb(e.tx-1,e.ty))m|=4;if(nb(e.tx,e.ty-1))m|=8;
     if(e.d.gate)return (m&5)?'x':(m&10)?'y':(e.gdir||'x');return m}
   return '';
@@ -3036,6 +3036,14 @@ function bld3dSprite(type,age,o,vr){if(!BLD3D.ready)return null;const v=bld3dKey
   const [sx,sy,w,h,ax,ay]=BLD3D.meta.frames[v],k=1/BLD3D.meta.scale,CW=Math.ceil(w*k)+2,CH=Math.ceil(h*k)+2;
   const cv=mkCanvas(CW*SS,CH*SS),c=cv.getContext('2d');c.scale(SS,SS);c.imageSmoothingEnabled=true;c.imageSmoothingQuality='high';c.drawImage(tintCrop(BLD3D,team,sx,sy,w,h),0,0,w,h,1,1,w*k,h*k);
   const r={cv,ox:ax*k+1,oy:ay*k+1,CW,CH};BCACHE[key]=r;return r}
+// muralhas que chegam a uma torre entram nela: as de trás atravessam a casa por trás da torre; as da frente só chegam à base (meia casa)
+function towerWallStubs(c,e,near,lit){if(!WALL3D.ready)return;
+  const at=(x,y)=>{if(!inb(x,y))return null;const n=byId.get(bldAt[idx(x,y)]);return n&&n.o===e.o&&n.d.wall&&n.done?n:null};
+  const put=(n,x,y,m)=>{const s=wall3dSprite(n.type,e.o,m);if(!s)return;const p=proj(x,y);c.drawImage(lit?s.cv:darkOf(s.cv),p.x-s.ox,p.y-s.oy,s.CW,s.CH)};
+  for(let k=0;k<e.h;k++){const y=e.ty+k;
+    if(!near){const n=at(e.tx-1,y);if(n)put(n,e.tx,y,5)}else{const n=at(e.tx+e.w,y);if(n)put(n,e.tx+e.w-1,y,1)}}
+  for(let k=0;k<e.w;k++){const x=e.tx+k;
+    if(!near){const n=at(x,e.ty-1);if(n)put(n,x,e.ty,10)}else{const n=at(x,e.ty+e.h);if(n)put(n,x,e.ty+e.h-1,2)}}}
 function drawGateDoor(c,e,p){
   const ax=bldVariant(e);const o=e.open||0;const wood=e.type==='portaoMadeira';const Hh=(wood?30:36)-6;
   const col=wood?'#7a5530':'#6a6a70',dk=wood?'#4a3018':'#3a3a40';
@@ -3896,7 +3904,9 @@ function render(){UCFM=0;
         const a=proj(e.tx+.1,e.ty+e.h-.1),b=proj(e.tx+e.w-.1,e.ty+e.h-.1),d2=proj(e.tx+e.w-.1,e.ty+.1);
         for(let zz=10;zz<hgt;zz+=14){c.beginPath();c.moveTo(a.x,a.y-zz);c.lineTo(b.x,b.y-zz);c.lineTo(d2.x,d2.y-zz);c.stroke()}
       }else{
+        if(e.type==='torre')towerWallStubs(c,e,false,lit);
         c.drawImage(lit?s.cv:darkOf(s.cv),dx,dy,s.CW,s.CH);
+        if(e.type==='torre')towerWallStubs(c,e,true,lit);
         {const fr=bldFringe(e);if(fr)c.drawImage(lit?fr.cv:darkOf(fr.cv),p.x-fr.ox,p.y-fr.oy,fr.CW,fr.CH)}
         if(e.d.gate&&!BLDART.ready&&!GATE3D.ready)drawGateDoor(c,e,p);
         if(e.hp<e.max*.6&&lit&&!(e.d.wall&&e.type!=='muralhaMadeira')){ // fogo
