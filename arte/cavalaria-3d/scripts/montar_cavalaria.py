@@ -65,6 +65,40 @@ bs.inputs['Base Color'].default_value = (.02, .1, .58, 1); bs.inputs['Roughness'
 for p in me.polygons: p.use_smooth = True
 vg = manta.vertex_groups.new(name='Torso'); vg.add(list(range(len(me.vertices))), 1.0, 'REPLACE')
 manta.parent = H; am = manta.modifiers.new('Armature', 'ARMATURE'); am.object = H
+if os.environ.get('ARMOR'):
+    bones_w = ['Neck', 'Shoulders', 'Torso', 'Hips', 'Back']
+    bpos = {b: H.matrix_world @ H.data.bones[b].head_local for b in bones_w}
+    bm = bmesh.new(); NT, NY = 18, 16; vs = {}
+    for i in range(NT + 1):
+        th = math.radians(-118 + 236 * i / NT)
+        for j in range(NY + 1):
+            y = -3.0 + 6.0 * j / NY; zc = 4.3 if y < -2.0 else 3.85; d = Vector((math.sin(th), 0, math.cos(th)))
+            if y < -2.0: d = Vector((math.sin(th), -.35, math.cos(th))).normalized()
+            o = Vector((0, y, zc)) + d * 6; hit = bvh.ray_cast(o, -d)
+            p = (hit[0] + d * .09) if hit[0] else Vector((0, y, zc)) + d * 1.3
+            vs[i, j] = bm.verts.new(p)
+    for i in range(NT):
+        for j in range(NY): bm.faces.new((vs[i, j], vs[i, j + 1], vs[i + 1, j + 1], vs[i + 1, j]))
+    me2 = bpy.data.meshes.new('barda'); bm.to_mesh(me2); bm.free()
+    barda = bpy.data.objects.new('barda', me2); bpy.context.scene.collection.objects.link(barda)
+    barda.modifiers.new('esp', 'SOLIDIFY').thickness = .06
+    mt2 = bpy.data.materials.new('barda'); mt2.use_nodes = True; b2 = mt2.node_tree.nodes['Principled BSDF']
+    b2.inputs['Base Color'].default_value = (.32, .31, .3, 1); b2.inputs['Metallic'].default_value = .85; b2.inputs['Roughness'].default_value = .38; me2.materials.append(mt2)
+    for pl in me2.polygons: pl.use_smooth = True
+    groups = {b: barda.vertex_groups.new(name=b) for b in bones_w}
+    for v in me2.vertices:
+        ds = sorted(((v.co - bpos[b]).length, b) for b in bones_w); w = [(1 / max(d, .3) ** 3, b) for d, b in ds[:2]]; t = sum(x for x, _ in w)
+        for x, b in w: groups[b].add([v.index], x / t, 'REPLACE')
+    barda.parent = H; ab = barda.modifiers.new('Armature', 'ARMATURE'); ab.object = H
+    # testeira (placa na cara)
+    hb = H.matrix_world @ H.data.bones['Head'].head_local
+    bpy.ops.mesh.primitive_cube_add(size=1, location=(0, hb.y - .55, hb.z + .05)); tst = bpy.context.active_object; tst.name = 'testeira'
+    tst.scale = (.55, .9, .3); tst.rotation_euler = (math.radians(-35), 0, 0); bpy.ops.object.transform_apply(location=False, rotation=True, scale=True)
+    tst.data.materials.append(mt2); gh = tst.vertex_groups.new(name='Head'); gh.add(list(range(len(tst.data.vertices))), 1.0, 'REPLACE')
+    tst.parent = H; at = tst.modifiers.new('Armature', 'ARMATURE'); at.object = H
+    # a manta da equipa fica por cima da armadura
+    for v in manta.data.vertices: v.co = v.co + (v.co - Vector((0, v.co.y, 3.75))).normalized() * .07
+    print('ARMADURA', len(me2.vertices))
 # ---------- juntar esqueletos (ossos do cavaleiro com prefixo R_) ----------
 rmap = {}
 for b in RA.data.bones: rmap[b.name] = 'R_' + b.name
@@ -140,7 +174,7 @@ def horse_capture(act, t):
     f0, f1 = act.frame_range; bpy.context.scene.frame_set(int(round(f0 + (f1 - f0) * t)))
     return {pb.name: (pb.location.copy(), pb.rotation_quaternion.copy(), pb.scale.copy()) for pb in PB if not pb.name.startswith('R_')}
 import re; ra = {re.sub(r'\.\d+$', '', n.split('|')[-1]): a for n, a in rider_acts.items()}; print('RIDER_ACTS', list(ra))
-CLIPS = [('Idle', 'Idle', 'Idle', 40), ('Walk', 'Run', 'Idle', 20), ('Attack', 'Idle', 'Attack', 36), ('Hit', 'Idle', 'Hit', 24), ('Death', 'Death', 'Death', 40)]
+CLIPS = [('Idle', 'Idle', 'Idle', 40), ('Walk', 'Run', 'Idle', 20), ('Trot', 'Walk', 'Idle', 32), ('Attack', 'Idle', 'Attack', 36), ('Hit', 'Idle', 'Hit', 24), ('Death', 'Death', 'Death', 40)]
 for name, hn, rn, n in CLIPS:
     act = bpy.data.actions.new(name); frames = []
     for f in range(n + 1):
@@ -166,7 +200,7 @@ for img in bpy.data.images:
 bpy.context.scene.render.fps = 24
 for pb in H.pose.bones: pb.custom_shape = None
 for t in list(H.animation_data.nla_tracks):
-    if t.name not in ('Idle', 'Walk', 'Attack', 'Hit', 'Death'): H.animation_data.nla_tracks.remove(t)
+    if t.name not in ('Idle', 'Walk', 'Trot', 'Attack', 'Hit', 'Death'): H.animation_data.nla_tracks.remove(t)
 used = {st.action for t in H.animation_data.nla_tracks for st in t.strips}
 for a_ in list(bpy.data.actions):
     if a_ not in used: bpy.data.actions.remove(a_)

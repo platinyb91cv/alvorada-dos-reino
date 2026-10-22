@@ -8,13 +8,14 @@ const types=JSON.parse(html.match(/const UNIT3D_TYPES=(\[[^\]]+\]);/)[1].replace
 for(const t of ['cavaleiro','cavPesada','cavArqueira']){
  assert.ok(types.includes(t),'8-direction heading for '+t);const meta=data[t];assert.ok(meta,t);
  assert.equal(meta.directions,8);assert.equal(meta.f.length,8*meta.framesPerDirection);assert.deepEqual(meta.directionLabels,['SE','S','SW','W','NW','N','NE','E']);
- for(const [s,n] of [['idle',2],['walk',8],['attack',6],['hit',2],['death',4]])assert.equal(meta.states[s].length,n,t+' '+s);
+ for(const [s,n] of [['idle',2],['walk',8],['trot',8],['attack',6],['hit',2],['death',4]])assert.equal(meta.states[s].length,n,t+' '+s);
  assert.deepEqual(meta,JSON.parse(fs.readFileSync(path.join(root,'www/assets/units3d',t+'.json'),'utf8')));
  const webp=fs.readFileSync(path.join(root,'www/assets/units3d',t+'.webp'));const sha=crypto.createHash('sha256').update(webp).digest('hex');
  assert.equal(sha,meta.atlasSha256);assert.equal(proof.atlas[t],sha);assert.equal(webp.toString('ascii',8,16),'WEBPVP8L');
  const bits=webp.readUInt32LE(21),w=(bits&16383)+1,h=((bits>>>14)&16383)+1;assert.ok(w*h<4.5e6,'atlas memory budget');
  for(const [x,y,fw,fh] of meta.f)assert.ok(x>=0&&y>=0&&x+fw<=w&&y+fh<=h,'frame inside atlas');
- const L=meta.locomotion.walk;assert.ok(Math.abs(L.phaseScale*L.strideTiles-2*Math.PI/5)<1e-5,'gallop cadence matches movement');
+ for(const g of ['walk','trot']){const L=meta.locomotion[g];assert.ok(Math.abs(L.phaseScale*L.strideTiles-2*Math.PI/5)<1e-5,g+' cadence matches movement')}
 }
 assert.match(html,/for\(const type of Object\.keys\(UNIT3D_CAV_DATA\)\)\{const source=\{ready:false,img:null,wide:true/);
+assert.match(html,/function cavGait\(u\)\{/);assert.match(html,/u\.d\.cls==='cav'&&UNIT3D\[u\.type\]&&UNIT3D\[u\.type\]\.meta\.states\.trot\)return cavGait\(u\)/);
 console.log('PASS: 3D cavalry atlases (cavaleiro, cavPesada, cavArqueira)');

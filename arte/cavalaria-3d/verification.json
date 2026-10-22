@@ -14,16 +14,21 @@
  },
  "riggados": {
   "cavaleiro": {
-   "sha256": "25f3fae5526e86b27e55b51d16072c0a27cb7a69d596ea49d26e57575a85e855",
+   "sha256": "506de39993a26a7a2dab3ddc80f3cb164a0d670e0f5a38c4fe9148b3ee496c68",
    "noRepositorio": false
   },
   "cavPesada": {
-   "sha256": "1f2e0f18db7b0ceb7514ee0bfab56465cf8e2c20c928a7682e318f76a98ebf17",
+   "sha256": "95f10aa61acab75c34ad55505cd2bd20683ef062df8e4b225eee4526fab9e6c1",
    "noRepositorio": false
   },
   "cavArqueira": {
-   "sha256": "98c60efb79aa2e8ef9bca7dca8b042505e7d9178fbd00246369ca5870342a917",
+   "sha256": "2d9f618932943ac8c5e42312e531ce0ae6ef14c1e0a9a61820c55b569d59d6aa",
    "noRepositorio": false
+  },
+  "carroca": {
+   "ficheiro": "arte/cavalaria-3d/carroca-rig.glb",
+   "sha256": "6644865bba0b3ee40120845adb9615fc87ad28bc658703633840decd519c3095",
+   "noRepositorio": true
   }
  },
  "escala": {
@@ -36,11 +41,18 @@
   "Walk": 20,
   "Attack": 36,
   "Hit": 24,
-  "Death": 40
+  "Death": 40,
+  "Trot": 32
  },
  "atlas": {
-  "cavaleiro": "172fb5c5d007467e33fc971e9c80f4164083abb7d168aae3cdae580a49e825e2",
-  "cavPesada": "b9baf8ad0e9d8ebc3fe95e4d068dec9fbc762768cc4f5ac6f151c929ea4df8ae",
-  "cavArqueira": "912d51cc620b07090993dbdcfb04cec81122627618a6820c2fd20a03ba673525"
- }
+  "cavaleiro": "5edb308d852cd13f447d0faf76ffea117143cd785a503654cd7680df50a135c3",
+  "cavPesada": "32e1aefde9561ca82fca45af0b9194a0850e0ad69ba75138be78f14c527814f2",
+  "cavArqueira": "2bc46b99a5eb8e55e4fab5ce910d1ba12a6f9555bf3af42329f0efa1efa8ac8b",
+  "carroca": "32028540892c4036a325c493a6676596240949b496712e188f0b27280f31dd9e"
+ },
+ "armadura": {
+  "cavPesada": "barda de placas (pescoço, flancos, garupa) + testeira; manta da equipa por cima (ARMOR=1)"
+ },
+ "trote": "Trot = Walk do cavalo; no jogo usa-se quando a velocidade real é < 55% da máxima (volta ao galope acima de 72%)",
+ "carroca": "cavalo CC0 + carroça modelada por código (toldo azul = cor da equipa); usada pela Carroça de Comércio e pela Carroça de Carga"
 }

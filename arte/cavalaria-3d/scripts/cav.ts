@@ -13,7 +13,7 @@ async function main() {
   for (const n of (process.argv[2] ?? Object.keys(units).join(',')).split(',')) {
     const u = units[n]; const t = Date.now();
     const config = { version: 1, modelForward: u.forward, referenceHeightPx: u.href, samples: 8, atlasWidth: 4096, webpQuality: 100,
-      states: [s('idle', 'Idle', 2), s('walk', 'Walk', 8), s('attack', 'Attack', 6), s('hit', 'Hit', 2), s('death', 'Death', 4, false)] };
+      states: [s('idle', 'Idle', 2), s('walk', 'Walk', 8), s('trot', 'Trot', 8), s('attack', 'Attack', 6), s('hit', 'Hit', 2), s('death', 'Death', 4, false)] };
     const b = await runSpriteAtlas({ type: 'RENDER_SPRITE_ATLAS', assetId: 'cavalo000000', name: n, config }, u.glb, `${out}/work-${n}`, AbortSignal.timeout(2400000));
     const r = await unpackAtlasBundle(b);
     await writeFile(`${out}/${n}.webp`, r.webp); await writeFile(`${out}/${n}.json`, JSON.stringify(r.meta)); await writeFile(`${out}/${n}.report.json`, JSON.stringify(r.report)); await writeFile(`${out}/${n}.preview.png`, r.preview); await writeFile(`${out}/${n}.config.json`, JSON.stringify(config, null, 1));

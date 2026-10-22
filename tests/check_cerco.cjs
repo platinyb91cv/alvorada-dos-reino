@@ -1,8 +1,8 @@
 // Máquinas de cerco Meshy (aríete, trebuchet): atlas de 8 direções, metadados embutidos e ligação ao renderer de unidades 3D.
 const fs=require('node:fs'),path=require('node:path'),crypto=require('node:crypto'),assert=require('node:assert/strict');
 const root=path.resolve(__dirname,'..'),html=fs.readFileSync(path.join(root,'www/index.html'),'utf8');
-const data=JSON.parse(html.match(/const UNIT3D_SIEGE_DATA=(\{[^\n]+\});/)[1]);assert.deepEqual(Object.keys(data),['ariete','trebuchet']);
-const types=JSON.parse(html.match(/const UNIT3D_TYPES=(\[[^\]]+\]);/)[1].replace(/'/g,'"'));for(const t of ['ariete','trebuchet'])assert.ok(types.includes(t),'8-direction heading for '+t);
+const data=JSON.parse(html.match(/const UNIT3D_SIEGE_DATA=(\{[^\n]+\});/)[1]);assert.deepEqual(Object.keys(data),['ariete','trebuchet','catapulta']);
+const types=JSON.parse(html.match(/const UNIT3D_TYPES=(\[[^\]]+\]);/)[1].replace(/'/g,'"'));for(const t of ['ariete','trebuchet','catapulta'])assert.ok(types.includes(t),'8-direction heading for '+t);
 const proof=JSON.parse(fs.readFileSync(path.join(root,'arte/cerco-meshy/verification.json'),'utf8'));assert.equal(proof.creditosAdicionais,0);
 let pixels=0;
 for(const [type,meta] of Object.entries(data)){
@@ -16,6 +16,6 @@ for(const [type,meta] of Object.entries(data)){
  assert.ok(meta.h>40&&meta.h<64,'downscaled atlas keeps real on-screen size');
  const rig=fs.readFileSync(path.join(root,proof.riggados[type].ficheiro));assert.equal(crypto.createHash('sha256').update(rig).digest('hex'),proof.riggados[type].sha256);assert.ok(rig.length<20*1024*1024);
 }
-assert.ok(pixels<4e6,'siege atlases stay within a small memory budget');
+assert.ok(pixels<5.5e6,'siege atlases stay within a small memory budget');
 assert.match(html,/for\(const type of Object\.keys\(UNIT3D_SIEGE_DATA\)\)\{const source=/);
 console.log('PASS: ram and trebuchet 8-direction atlases, rigs and wheel cadence');

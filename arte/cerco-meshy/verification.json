@@ -24,6 +24,11 @@
   "ariete": {
    "ficheiro": "arte/cerco-meshy/modelos/ariete-rig.glb",
    "sha256": "7e3b7f14ddf095e3b5a771e20034253c9ac9063d65d2ebcdb10bcc5d5985c9b5"
+  },
+  "catapulta": {
+   "ficheiro": "arte/cerco-meshy/modelos/catapulta-rig.glb",
+   "sha256": "09a9dc8364c2eb570cae70282d155d88990d796e6500af436b6c3fa0d2f204ee",
+   "fonte": "modelada por código no Blender (scripts/montar_catapulta.py), 0 créditos"
   }
  },
  "escalaReal": {
@@ -34,6 +39,11 @@
   "trebuchet": {
    "fator": 2.37,
    "comprimentoM": 4.5
+  },
+  "catapulta": {
+   "comprimentoM": 3.3,
+   "alturaM": 1.95,
+   "raioRodaM": 0.4
   }
  },
  "clips": {
@@ -48,11 +58,12 @@
  },
  "atlas": {
   "trebuchet": "048096bd9f997f96c000f2a5d308c9b694fe15cb77d355119e08eb1d555205a3",
-  "ariete": "355e3adbfd1bb60eab8befc44089f64ff01837a10b2054d5657c754fb604bb46"
+  "ariete": "355e3adbfd1bb60eab8befc44089f64ff01837a10b2054d5657c754fb604bb46",
+  "catapulta": "47b7981d9985b7930fae049bb2ea76e6ffdd50df292a37fed8f8a3036e780cc2"
  },
  "limites": [
   "Partes rígidas separadas por região e malha cortada nas fronteiras entre peças",
-  "A catapulta continua com o desenho antigo (não houve modelo)"
+  "A catapulta usa materiais de cor lisa (sem textura de imagem); a pedra desaparece da colher ao disparar e o projétil do jogo continua o voo"
  ],
  "reducao": {
   "script": "arte/cerco-meshy/scripts/reduzir.py",

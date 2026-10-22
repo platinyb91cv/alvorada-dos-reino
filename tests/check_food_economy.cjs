@@ -18,7 +18,7 @@ const ctx = vm.createContext({
   inb: (x, y) => x >= 0 && y >= 0 && x < 32 && y < 32,
   idx: (x, y) => y * 32 + x, hyp: Math.hypot,
   approach: () => true, capOf: () => 12, civOf: () => 'none', faceTo() {}, snd() {},
-  nearestDrop: () => ({ kind: 'b', o: 0, done: true }),
+  nearestDrop: () => ({ kind: 'b', o: 0, done: true }), nearCart: () => null,
   removeRes: r => { r.dead = true; }, kill: e => { e.dead = true; },
   relicNear: () => -1, groupMove: units => { for (const u of units) u.state = 'move'; }, toast() {},
 });

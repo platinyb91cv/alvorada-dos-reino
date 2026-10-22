@@ -5,10 +5,10 @@ from pathlib import Path
 from PIL import Image
 src, repo = Path(sys.argv[1]), Path(sys.argv[2]); out = repo / 'www/assets/units3d'
 SC = 0.7; TILE = 32 * math.sqrt(2)  # px de ecrã por casa ao longo de x; ecrã = metros × 30/64 × (href/H)
-WHEEL = {'ariete': 0.16 * 1.68, 'trebuchet': 0.16 * 2.37}  # raio real das rodas (m)
-H = {'ariete': 1.051 * 1.68, 'trebuchet': 1.113 * 2.37}
+WHEEL = {'ariete': 0.16 * 1.68, 'trebuchet': 0.16 * 2.37, 'catapulta': 0.4}  # raio real das rodas (m)
+H = {'ariete': 1.051 * 1.68, 'trebuchet': 1.113 * 2.37, 'catapulta': 1.95}
 data = {}
-for n in ['ariete', 'trebuchet']:
+for n in ['ariete', 'trebuchet', 'catapulta']:
     m = json.loads((src / f'{n}.json').read_text()); cfg = json.loads((src / f'{n}.config.json').read_text()); A = Image.open(src / f'{n}.webp').convert('RGBA')
     tiles = []
     for (x, y, w, h, ax, ay) in m['f']:
