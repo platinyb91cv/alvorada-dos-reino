@@ -34,7 +34,7 @@
  ],
  "atlas": {
   "ficheiro": "www/assets/edificios-extra/portoes-3d.webp",
-  "sha256": "f8c4a14f903a283f32fed9805bdd699894e15fd40736300acad7b8c951791b02",
+  "sha256": "12fa8bc5e36d2f6bd3dcca309b5e6e129d853a93b61ab4c1e772b0192f6a006d",
   "tamanho": [
    2048,
    2012
@@ -48,5 +48,6 @@
   "telhados com espessura",
   "arco de pedra até ao chão (pilares + arco semicircular)",
   "estandartes da pedra nas torres"
- ]
+ ],
+ "portasAbertas": "118 graus; abrem a 2,6 casas e fecham devagar"
 }

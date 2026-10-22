@@ -10,6 +10,7 @@
  "amostras": 32,
  "quadros": 34,
  "escalaAtlas": 1.5,
- "atlasSha256": "206b716d4d5bed13786fa1b3366025991676cb222158a03e7aecef82ea3c9e82",
- "detalhe": "enxaimel, sobrado em balanço, cumeeira, caibros, portadas, lenha, carroça, chão de terra batida"
+ "atlasSha256": "15e0f782ca6e234a6cba52481cc1e67d8e05a03f34c1045231ce939338a20a6c",
+ "detalhe": "enxaimel, sobrado em balanço, cumeeira, caibros, portadas, lenha, carroça, chão de terra batida",
+ "pintura": "Gemini (texto -> imagem, sem créditos): casas, torres, armazém, ferreiro, Centro da Vila, quartel, arquearia, estábulo (Pedra); o resto continua 3D do Blender"
 }

@@ -198,7 +198,7 @@ def arch_cut(o, x0, x1, z_spring, y0, y1, only_round=False):  # recorta uma port
 
 # ---------- portas (folhas com dobradiças nas pontas da abertura; abrem para trás, −y) ----------
 def doors(x0, x1, y, h, M, iron=False, arch=False, open_=0):
-    w = (x1 - x0) / 2; ang = R(100) * open_
+    w = (x1 - x0) / 2; ang = R(118) * open_  # bem aberto (118°), as folhas encostam às torres
     for side in (0, 1):
         pivot = Vector((x0 if side == 0 else x1, -y, 0))
         parts = []
