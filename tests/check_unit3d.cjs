@@ -15,7 +15,7 @@ function fn(name){const start=html.indexOf('function '+name+'(');assert.ok(start
 const drawCalls=[],scaleCalls=[],sources=Object.fromEntries(types.map(type=>[type,{ready:true,img:{type},teams:new Map(),meta:data[type]}]));
 sources.besteiroPesado=sources.besteiro;
 const ctx={Math,Number,UNIT3D_HEIGHT:30,UNIT3D_TYPES:types,UNIT3D:sources,P:[{col:'#3366cc'}],performance:{now:()=>1000},atkPhase:()=>.5,distTo:(u,t)=>Math.hypot(t.x-u.x,t.y-u.y),rectOf:t=>t.kind==='u'?{x:t.x-.5,y:t.y-.5,w:1,h:1}:{x:t.tx,y:t.ty,w:t.w||1,h:t.h||1},recolorImg:(source,team)=>{if(!source.teams.has(team))source.teams.set(team,{...source.img,team});return source.teams.get(team)}};
-for(const name of ['kingDirFromDelta','kingDirection','unit3dHeading','unit3dDeathDirection','unit3dState','unit3dFrame','unit3dTint','drawUnit3dFrame','drawUnit3D','drawUnit3DCorpse'])ctx[name]=vm.runInNewContext('('+fn(name)+'\n)',ctx);
+for(const name of ['u3ready','kingDirFromDelta','kingDirection','unit3dHeading','unit3dDeathDirection','unit3dState','unit3dFrame','unit3dTint','drawUnit3dFrame','drawUnit3D','drawUnit3DCorpse'])ctx[name]=vm.runInNewContext('('+fn(name)+'\n)',ctx);
 const canvas={save(){},restore(){},translate(){},scale(...a){scaleCalls.push(a)},beginPath(){},ellipse(){},fill(){},drawImage(...a){drawCalls.push(a)}};
 const vectors=[[1,0],[1,1],[0,1],[-1,1],[-1,0],[-1,-1],[0,-1],[1,-1]];
 for(const type of types)for(const [direction,[dx,dy]]of vectors.entries()){
