@@ -3,10 +3,12 @@
   "Blender 5.2 (bpy, GPL)",
   "arte/portoes-3d/scripts/montar_portao2.py (primitivas e materiais dos portões)"
  ],
- "texturas": "procedurais (node_mat); TEX_DIR com Poly Haven CC0 opcional",
+ "texturas": [
+  "Poly Haven CC0: bark_brown_02, brown_planks_05, weathered_brown_planks, large_sandstone_blocks_01, medieval_blocks_02, thatch_roof_angled, clay_roof_tiles_02, roof_slates_02 (as mesmas dos portões, TEX_DIR)"
+ ],
  "creditosMeshy": 0,
  "amostras": 32,
  "quadros": 34,
  "escalaAtlas": 1.5,
- "atlasSha256": "4bdeddf2804a2078d351d047c38c3d175cc8e56c8fcfe54fe66f1b19b5263878"
+ "atlasSha256": "82b2c0c4a2dd432d20ec90b562df810b111c69c83e9d046c2a0fb2e6497e42da"
 }
