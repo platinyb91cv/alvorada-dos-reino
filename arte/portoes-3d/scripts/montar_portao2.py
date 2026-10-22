@@ -238,83 +238,77 @@ def path(M, y0=.2, y1=.8):  # chão de terra batida sob a passagem
         a = 2 * math.pi * k / n; vs.append(bm.verts.new((.5 + .3 * math.cos(a), -(.5 + .22 * math.sin(a)), .004)))
     bm.faces.new(vs); mesh_obj('path', bm, M['dirt'])
 
-def madeira(age, M, open_):
-    Ht = (1.35, 1.5, 1.68)[age]; dz = .86  # altura das torres; altura da porta
+def madeira(age, M, open_):  # portão de madeira: duas torres atarracadas + casa da guarda por cima da passagem (largura de 0,5)
+    Ht = (1.0, 1.08, 1.16)[age]; dz = .8
     path(M)
-    for tx0, tx1 in ((-.06, .24), (.76, 1.06)):
-        if age == 0:  # torre de troncos: 3×2 troncos aguçados
+    for tx0, tx1 in ((-.12, .25), (.75, 1.12)):
+        if age == 0:  # torre de troncos aguçados 3×3 com plataforma e colmo
             for i in range(3):
-                for j in range(2):
-                    x = tx0 + .05 + i * (tx1 - tx0 - .1) / 2; y = .36 + j * .28
-                    cyl(x, y, 0, Ht - .12 + (.05 if (i + j) % 2 else 0), .055, M['wood'], tip=.12)
-            box(tx0 - .01, tx1 + .01, .33, .67, .95, 1.0, M['plank'], 'plat')
-            pyramid(tx0, tx1, .33, .67, Ht + .02, .26, M['thatch'], over=.07)
+                for j in range(3):
+                    x = tx0 + .05 + i * (tx1 - tx0 - .1) / 2; y = .24 + j * .26
+                    cyl(x, y, 0, Ht - .2 + (.05 if (i + j) % 2 else 0), .06, M['wood'], tip=.12)
+            box(tx0 - .02, tx1 + .02, .2, .8, Ht - .3, Ht - .25, M['plank'], 'plat')
+            pyramid(tx0 - .02, tx1 + .02, .2, .8, Ht - .02, .28, M['thatch'], over=.08)
             for x in (tx0 + .02, tx1 - .02):
-                for y in (.36, .64): cyl(x, y, 1.0, Ht + .04, .02, M['wood'], seg=6)
-        else:  # torre de tábuas sobre base de pedra, telhado
-            box(tx0 - .02, tx1 + .02, .3, .7, 0, .26, M['stone'], 'base')
-            box(tx0, tx1, .32, .68, .26, Ht - .12, M['plank'], 'torre')
+                for y in (.22, .78): cyl(x, y, Ht - .25, Ht, .025, M['wood'], seg=6)
+        else:  # torre de tábuas sobre base de pedra
+            box(tx0 - .02, tx1 + .02, .18, .82, 0, .3, M['stone'], 'base')
+            box(tx0, tx1, .2, .8, .3, Ht - .1, M['plank'], 'torre')
             for x in (tx0, tx1):
-                for y in (.32, .68): box(x - .025, x + .025, y - .025, y + .025, .26, Ht - .1, M['wood'], 'canto')
-            box(tx0 + .08, tx1 - .08, .675, .69, Ht * .62, Ht * .62 + .1, M['wood'], 'janela')  # seteira
-            box(tx0 + .12, tx1 - .12, .676, .695, Ht * .62 + .015, Ht * .62 + .085, M['vao'], 'vao')
-            if age == 1: pyramid(tx0, tx1, .32, .68, Ht - .12, .3, M['shingle'], over=.07)
-            else:
-                box(tx0 - .03, tx1 + .03, .29, .71, Ht - .14, Ht - .1, M['wood'], 'beiral')
-                cone((tx0 + tx1) / 2, .5, Ht - .1, .42, .26, M['shingle'])
-                cyl((tx0 + tx1) / 2, .5, Ht + .3, Ht + .36, .02, M['gold'], seg=6)
-    # passagem: verga e parapeito por cima da porta
+                for y in (.2, .8): box(x - .03, x + .03, y - .03, y + .03, .3, Ht - .08, M['wood'], 'canto')
+            box(tx0 + .1, tx1 - .1, .8, .815, Ht * .55, Ht * .55 + .12, M['vao'], 'seteira')
+            box(tx0 - .04, tx1 + .04, .16, .84, Ht - .1, Ht - .05, M['wood'], 'beiral')
+            if age == 1: pyramid(tx0 - .03, tx1 + .03, .17, .83, Ht - .05, .3, M['shingle'], over=.06)
+            else: pyramid(tx0 - .03, tx1 + .03, .17, .83, Ht - .05, .36, M['slate'], over=.06); cyl((tx0 + tx1) / 2, .5, Ht + .3, Ht + .38, .02, M['gold'], seg=6)
+    # casa da guarda por cima da passagem
+    box(.22, .78, .3, .7, dz, dz + .07, M['wood'], 'verga')
     if age == 0:
-        hlog(.2, .8, .5, dz + .03, .05, M['wood'])
         for i in range(9):
-            x = .25 + i * .5 / 8; cyl(x, .58, dz + .06, 1.08 + (.04 if i % 2 else 0), .032, M['wood'], tip=.07, seg=7)
-        box(.24, .76, .4, .6, .95, 1.0, M['plank'], 'passadico')
+            x = .26 + i * .48 / 8; cyl(x, .62, dz + .07, Ht - .12 + (.04 if i % 2 else 0), .035, M['wood'], tip=.07, seg=7)
     else:
-        box(.22, .78, .38, .62, dz, dz + .1, M['wood'], 'verga')
-        box(.24, .76, .36, .64, dz + .1, 1.1 + .08 * age, M['plank'], 'casa_guarda')
-        gable(.2, .8, .34, .66, 1.1 + .08 * age, .2, M['shingle'], over=.06)
+        box(.24, .76, .3, .7, dz + .07, Ht - .12, M['plank'], 'casa_guarda')
+        gable(.22, .78, .28, .72, Ht - .12, .18, M['shingle' if age == 1 else 'slate'], over=.05)
         if age == 2:
-            for x in (.2, .8): cyl(x, .72, .6, .66, .025, M['fire']); cyl(x, .7, .5, .6, .012, M['iron'], seg=6)  # lanternas
-    doors(.24, .76, .5, dz, M, iron=age == 2, open_=open_)
-    # estandartes da equipa
-    if age == 0: banner(.5, .62, 1.02, .18, .3, M['banner'])
-    else:
-        banner(.5, .645, 1.08 + .08 * age, .2, .34, M['banner'])
-        for x in (.09, .91): flag(x, .5, Ht + (.16 if age == 1 else .3), .3, M['banner'], M) if age == 1 else None
+            for x in (.2, .8): cyl(x, .86, .55, .61, .025, M['fire']); cyl(x, .84, .45, .55, .012, M['iron'], seg=6)
+    doors(.25, .75, .5, dz, M, iron=age == 2, open_=open_)
+    banner(.5, .72, dz + (.0 if age == 0 else .2), .2, .3, M['banner'])
 
-def pedra(age, M, open_):
-    Ht = (0, 1.42, 1.6)[age]; Hm = (0, 1.08, 1.2)[age]; dz = .8
+def pedra(age, M, open_):  # portão de pedra: torres quadradas largas, arco largo e adarve com ameias por cima
+    Ht = (0, 1.12, 1.25)[age]; Hm = (0, .98, 1.05)[age]; dz = .8
     path(M)
-    # passagem em arco: dois pilares até ao chão e um bloco por cima com o arco semicircular recortado
-    box(.2, .27, .34, .66, 0, Hm, M['stone'], 'meio'); box(.73, .8, .34, .66, 0, Hm, M['stone'], 'meio')
-    top = box(.27, .73, .34, .66, dz, Hm, M['stone'], 'meio'); arch_cut(top, .27, .73, dz, .34, .66, only_round=True)
-    merlons(.2, .8, .34, .66, Hm, M['stone'], 4, size=.08, h=.1, sides='front')
-    for tx0, tx1 in ((-.08, .28), (.72, 1.08)):
-        box(tx0 - .02, tx1 + .02, .26, .74, 0, .12, M['stone_dk'], 'sapata')
-        box(tx0, tx1, .28, .72, .12, Ht, M['stone'], 'torre')
-        box(tx0 + .1, tx1 - .1, .719, .735, Ht * .6, Ht * .6 + .14, M['vao'], 'seteira')
+    box(.2, .27, .2, .8, 0, Hm, M['stone'], 'meio'); box(.73, .8, .2, .8, 0, Hm, M['stone'], 'meio')
+    top = box(.27, .73, .2, .8, dz, Hm, M['stone'], 'meio'); arch_cut(top, .27, .73, dz, .2, .8, only_round=True)
+    box(.18, .82, .18, .82, Hm, Hm + .04, M['stone_dk'], 'cornija')
+    merlons(.18, .82, .18, .82, Hm + .04, M['stone'], 4, size=.08, h=.1, sides='front')
+    for tx0, tx1 in ((-.14, .26), (.74, 1.14)):
+        box(tx0 - .03, tx1 + .03, .14, .86, 0, .14, M['stone_dk'], 'sapata')
+        box(tx0, tx1, .16, .84, .14, Ht, M['stone'], 'torre')
+        box(tx0 + .17, tx1 - .17, .838, .85, Ht * .45, Ht * .45 + .16, M['vao'], 'seteira')
+        box(tx0 + .17, tx1 - .17, .838, .85, Ht * .72, Ht * .72 + .12, M['vao'], 'seteira')
         if age == 1:
-            box(tx0 - .03, tx1 + .03, .25, .75, Ht, Ht + .05, M['stone_dk'], 'cornija')
-            merlons(tx0 - .03, tx1 + .03, .25, .75, Ht + .05, M['stone'], 3, size=.08, h=.1)
+            box(tx0 - .03, tx1 + .03, .13, .87, Ht, Ht + .05, M['stone_dk'], 'cornija')
+            merlons(tx0 - .03, tx1 + .03, .13, .87, Ht + .05, M['stone'], 3, size=.08, h=.1)
         else:
             for k in range(5):  # mata-cães
                 t = (k + .5) / 5
-                box(tx0 + (tx1 - tx0) * t - .025, tx0 + (tx1 - tx0) * t + .025, .72, .78, Ht - .1, Ht - .02, M['stone_dk'], 'corbel')
-            box(tx0 - .04, tx1 + .04, .24, .78, Ht - .02, Ht + .1, M['stone'], 'parapeito')
-            cone((tx0 + tx1) / 2, .51, Ht + .1, .42, .29, M['slate'], seg=16)
-            flag((tx0 + tx1) / 2, .51, Ht + .48, .2, M['banner'], M)
-    # aduelas do arco
-    for k in range(9):
+                box(tx0 + (tx1 - tx0) * t - .025, tx0 + (tx1 - tx0) * t + .025, .84, .9, Ht - .1, Ht - .02, M['stone_dk'], 'corbel')
+            box(tx0 - .04, tx1 + .04, .12, .9, Ht - .02, Ht + .1, M['stone'], 'parapeito')
+            pyramid(tx0 - .03, tx1 + .03, .13, .89, Ht + .1, .34, M['slate'], over=.04)
+            flag((tx0 + tx1) / 2, .51, Ht + .44, .2, M['banner'], M)
+    for k in range(9):  # aduelas
         a = math.pi * k / 8; x = .5 + .25 * math.cos(a); z = dz + .25 * math.sin(a)
-        b = box(x - .035, x + .035, .655, .675, z - .035, z + .035, M['stone_dk'], 'aduela')
+        box(x - .035, x + .035, .795, .815, z - .035, z + .035, M['stone_dk'], 'aduela')
     doors(.27, .73, .5, dz, M, iron=True, arch=True, open_=open_)
-    if age == 2:  # grade levadiça meio subida
+    if age == 2:
         for k in range(6):
-            x = .3 + k * .4 / 5; cyl(x, .6, dz - .1, dz + .18, .01, M['iron'], seg=6)
-        for zz in (dz - .05, dz + .1): box(.29, .71, .595, .605, zz - .008, zz + .008, M['iron'], 'grade')
-        for xc in (.1, .9): banner(xc, .742, Ht * .5, .2, .34, M['banner'])
-    else:
-        for xc in (.1, .9): banner(xc, .722, Ht * .5, .2, .3, M['banner'])
+            x = .3 + k * .4 / 5; cyl(x, .72, dz - .05, dz + .2, .01, M['iron'], seg=6)
+    banner(.5, .83, Hm - .02, .22, .3, M['banner'])
+
+def tons(M):  # mesma pedra/madeira (menos saturadas) das muralhas
+    tm = tex_mat
+    M['stone'] = tm('t_stone_m', 'large_sandstone_blocks_01', 1.3, tint=(.96, .9, .8), sat=.85, val=1.0, normal=1.6) or M['stone']
+    M['stone_dk'] = tm('t_stone_dk_m', 'medieval_blocks_02', 1.6, tint=(.82, .8, .76), sat=.45, val=.8, normal=1.6) or M['stone_dk']
+    M['wood'] = tm('t_wood_m', 'bark_brown_02', 3.2, tint=(.92, .8, .66), sat=1.0, val=1.0) or M['wood']
 
 # ---------- cena: câmara isométrica e luz ----------
 def scene():
@@ -364,7 +358,7 @@ def build(var, M, dirn, open_):
         rot = Matrix.Translation((.5, -.5, 0)) @ Matrix.Rotation(R(90), 4, 'Z') @ Matrix.Translation((-.5, .5, 0))
         for o in G: o.matrix_world = rot @ o.matrix_world
 
-reset(); M = mats(); cam = scene()
+reset(); M = mats(); tons(M); cam = scene()
 info = {}
 sc = SCN()
 for var in VARS:

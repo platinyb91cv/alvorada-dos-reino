@@ -13,6 +13,6 @@
  "metodo": "cada braço é modelado prolongado e o render é recortado à coluna de ecrã da casa (|x| < 16 px do jogo), por isso as casas vizinhas encaixam sem costura",
  "atlas": {
   "ficheiro": "www/assets/edificios-extra/muralhas-3d.webp",
-  "sha256": "676525724971ce22c8d83165318d8827882383b96dd2bb15fdb5b0f81c755737"
+  "sha256": "11f3adead056c1ddfe5f1eaac0f7391c5d1b5192f47b7bd0d400cbe75c257623"
  }
 }
