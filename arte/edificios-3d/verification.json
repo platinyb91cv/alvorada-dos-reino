@@ -1,0 +1,12 @@
+{
+ "ferramentas": [
+  "Blender 5.2 (bpy, GPL)",
+  "arte/portoes-3d/scripts/montar_portao2.py (primitivas e materiais dos portões)"
+ ],
+ "texturas": "procedurais (node_mat); TEX_DIR com Poly Haven CC0 opcional",
+ "creditosMeshy": 0,
+ "amostras": 32,
+ "quadros": 34,
+ "escalaAtlas": 1.5,
+ "atlasSha256": "4bdeddf2804a2078d351d047c38c3d175cc8e56c8fcfe54fe66f1b19b5263878"
+}

@@ -2679,6 +2679,7 @@ function bldSprite(type,age,o,vr){
   if(type==='vila')return vilaSprite(age,o);
   if(BLDS[type].gate){const g3=gate3dSprite(type,age,o,vr,0);if(g3)return g3}
   if(BLDS[type].wall){const w3=wall3dSprite(type,o,vr);if(w3)return w3}
+  {const b3=bld3dSprite(type,age,o,vr);if(b3)return b3}
   if(type==='curral'&&CURRAL_ART.ready)return pastureSprite(age,o);
   if(type==='mercado'&&!(BLDART.ready&&bldArtKey(type,age)))return marketSprite(age,o); // mercado pintado (Gemini) quando existe; senão o desenhado
   if(BLDART.ready){const k0='art|'+type+'|'+age+'|'+o+'|'+(vr??'')+'|'+(P&&P[o]?P[o].col:'');if(BCACHE[k0])return BCACHE[k0];const r=bldArt(type,age,o,vr);if(r){BCACHE[k0]=r;return r}}
@@ -3012,6 +3013,20 @@ function wall3dSprite(type,o,m){if(!WALL3D.ready||!WALL3D_KIND[type])return null
   const team=P[o]?P[o].col:'#3f86e0',key='w3|'+type+'|'+((m|0)&15)+'|'+team;if(BCACHE[key])return BCACHE[key];
   const [sx,sy,w,h,ax,ay]=f,k=1/WALL3D.meta.scale,CW=Math.ceil(w*k)+2,CH=Math.ceil(h*k)+2;
   const cv=mkCanvas(CW*SS,CH*SS),c=cv.getContext('2d');c.scale(SS,SS);c.imageSmoothingEnabled=true;c.imageSmoothingQuality='high';c.drawImage(recolorImg(WALL3D,team),sx,sy,w,h,1,1,w*k,h*k);
+  const r={cv,ox:ax*k+1,oy:ay*k+1,CW,CH};BCACHE[key]=r;return r}
+// edifícios 3D (Blender, arte/edificios-3d): casas, quartel, Centro da Vila… por idade (torre: por nível), mesma câmara e luz dos portões
+const BLD3D_DATA={"file":"edificios-3d.webp","scale":1.5,"atlasSha256":"4bdeddf2804a2078d351d047c38c3d175cc8e56c8fcfe54fe66f1b19b5263878","frames":{"armazem_0":[1546,1534,241,236,135.0,136.71],"armazem_1":[1512,1194,270,242,135.0,136.71],"armazem_2":[2,1534,270,242,135.0,136.71],"arquearia_0":[670,1194,305,321,195.0,194.67],"arquearia_1":[363,1194,305,322,195.0,194.67],"arquearia_2":[977,1194,305,321,195.0,194.67],"casa_0":[1320,1534,224,238,135.0,136.71],"casa_1":[1284,1194,226,242,135.0,136.71],"casa_2":[1090,1534,228,239,135.0,136.71],"centro_0":[1298,2,344,350,195.0,194.67],"centro_1":[906,2,390,354,195.0,194.67],"centro_2":[514,2,390,356,195.0,194.67],"doca_0":[1789,1534,214,236,135.0,136.71],"doca_1":[2,1778,214,236,135.0,136.71],"doca_2":[218,1778,214,236,135.0,136.71],"estabulo_0":[786,854,354,338,195.0,194.67],"estabulo_1":[1142,854,357,338,195.0,194.67],"estabulo_2":[1501,854,358,338,195.0,194.67],"ferreiro_0":[434,1778,236,236,135.0,136.71],"ferreiro_1":[818,1534,270,241,135.0,136.71],"ferreiro_2":[546,1534,270,242,135.0,136.71],"maravilha_2":[2,2,510,505,255.0,252.63],"mercado_1":[2,509,338,343,195.0,194.67],"mercado_2":[342,509,338,343,195.0,194.67],"oficina_1":[2,1194,359,338,195.0,194.67],"oficina_2":[1016,509,390,339,195.0,194.67],"quartel_0":[1408,509,353,338,195.0,194.67],"quartel_1":[2,854,390,338,195.0,194.67],"quartel_2":[394,854,390,338,195.0,194.67],"templo_1":[1644,2,332,346,195.0,194.67],"templo_2":[682,509,332,340,195.0,194.67],"torre_1":[944,1778,270,227,135.0,136.71],"torre_2":[274,1534,270,242,135.0,136.71],"torre_3":[672,1778,270,234,135.0,136.71]}};
+const BLD3D={ready:false,img:null,wide:true,teams:new Map(),meta:BLD3D_DATA};
+(()=>{if(!BLD3D_DATA.file)return;const im=new Image();im.onload=()=>{BLD3D.img=im;BLD3D.ready=true;for(const k in BCACHE)delete BCACHE[k];try{PORTS.clear()}catch(e){}};im.src='assets/edificios-extra/'+BLD3D_DATA.file})();
+function bld3dKey(type,age,vr){const F=BLD3D.meta.frames;if(!F)return null;
+  if(type==='torre'){const l=Math.max(1,Math.min(3,vr|0||1));return F['torre_'+l]?'torre_'+l:null}
+  for(let a=age;a>=0;a--)if(F[type+'_'+a])return type+'_'+a;
+  for(let a=age+1;a<=2;a++)if(F[type+'_'+a])return type+'_'+a;
+  return null}
+function bld3dSprite(type,age,o,vr){if(!BLD3D.ready)return null;const v=bld3dKey(type,age,vr);if(!v)return null;
+  const team=P[o]?P[o].col:'#3f86e0',key='b3|'+v+'|'+team;if(BCACHE[key])return BCACHE[key];
+  const [sx,sy,w,h,ax,ay]=BLD3D.meta.frames[v],k=1/BLD3D.meta.scale,CW=Math.ceil(w*k)+2,CH=Math.ceil(h*k)+2;
+  const cv=mkCanvas(CW*SS,CH*SS),c=cv.getContext('2d');c.scale(SS,SS);c.imageSmoothingEnabled=true;c.imageSmoothingQuality='high';c.drawImage(recolorImg(BLD3D,team),sx,sy,w,h,1,1,w*k,h*k);
   const r={cv,ox:ax*k+1,oy:ay*k+1,CW,CH};BCACHE[key]=r;return r}
 function drawGateDoor(c,e,p){
   const ax=bldVariant(e);const o=e.open||0;const wood=e.type==='portaoMadeira';const Hh=(wood?30:36)-6;
