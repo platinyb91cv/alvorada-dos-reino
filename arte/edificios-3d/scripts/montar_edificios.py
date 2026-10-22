@@ -10,7 +10,7 @@ box, cyl, hlog, pyramid, gable, cone, banner, flag, merlons, finish, G = (g[k] f
 mesh_obj = g['mesh_obj']; R = math.radians
 OUT = os.environ['ED_OUT']; os.makedirs(OUT, exist_ok=True); SAMPLES = int(os.environ.get('SAMPLES', '48'))
 PXU = 2 * 64 / math.sqrt(2)
-def gableY(x0, x1, y0, y1, z0, h, mat, over=.05):  # duas águas com cumeeira ao longo de y
+def gableY(x0, x1, y0, y1, z0, h, mat, over=.05):  # devolve o objeto  # duas águas com cumeeira ao longo de y
     bm = bmesh.new(); xm = (x0 + x1) / 2
     p = [bm.verts.new(v) for v in ((x0 - over, -(y0 - over), z0), (x0 - over, -(y1 + over), z0), (xm, -(y1 + over), z0 + h), (xm, -(y0 - over), z0 + h),
                                     (x1 + over, -(y0 - over), z0), (x1 + over, -(y1 + over), z0))]
@@ -21,13 +21,34 @@ def gable_end(x0, x1, y, z0, h, mat, axis='x'):  # empena triangular (fecha o te
     if axis == 'x':  # empena no plano x=const, triângulo em y
         pass
     return None
+def beam(p, q, t, mat, name='enxaimel'):  # viga quadrada entre dois pontos (coordenadas do jogo)
+    a = Vector((p[0], -p[1], p[2])); b = Vector((q[0], -q[1], q[2])); d = b - a; L = d.length
+    bm = bmesh.new(); bmesh.ops.create_cube(bm, size=1)
+    bmesh.ops.scale(bm, vec=(t, t, L), verts=bm.verts)
+    rot = Vector((0, 0, 1)).rotation_difference(d.normalized()).to_matrix().to_4x4()
+    bmesh.ops.transform(bm, matrix=Matrix.Translation((a + b) / 2) @ rot, verts=bm.verts)
+    return mesh_obj(name, bm, mat)
+def timber(x0, x1, y0, y1, z0, z1, M, step=.36):
+    """Enxaimel nas duas faces visíveis (+y e +x): prumos, travessa a meio e escoras em X nos painéis das pontas."""
+    t = .028; W = M['wood']
+    for face in ('y', 'x'):
+        a0, a1 = (x0, x1) if face == 'y' else (y0, y1); at = (y1 + .012) if face == 'y' else (x1 + .012)
+        P = (lambda u, z: (u, at, z)) if face == 'y' else (lambda u, z: (at, u, z))
+        n = max(2, round((a1 - a0) / step)); us = [a0 + (a1 - a0) * k / n for k in range(n + 1)]
+        for u in us: beam(P(u, z0), P(u, z1), t, W)
+        zm = z0 + (z1 - z0) * .55
+        for z in (z0 + t / 2, zm, z1 - t / 2): beam(P(a0, z), P(a1, z), t, W)
+        for (ua, ub) in ((us[0], us[1]), (us[-1], us[-2])):
+            beam(P(ua, z0), P(ub, zm), t * .85, W); beam(P(ua, zm), P(ub, z1), t * .85, W)
 def walls(x0, x1, y0, y1, h, age, M, frame=True):
     """Paredes por idade: 0 tábuas/pau-a-pique, 1 base de pedra + madeira, 2 pedra; com cunhais de madeira nas 0/1."""
     FRONT['y'] = y1; FRONT['x'] = x1
     box(x0 - .03, x1 + .03, y0 - .03, y1 + .03, 0, .08, M['stone_dk'], 'base')
     if age == 0: box(x0, x1, y0, y1, .08, h, M['plank'], 'parede')
-    elif age == 1: box(x0, x1, y0, y1, .08, h * .42, M['stone'], 'parede'); box(x0 + .01, x1 - .01, y0 + .01, y1 - .01, h * .42, h, M['plank'], 'parede')
+    elif age == 1: box(x0, x1, y0, y1, .08, h * .42, M['stone'], 'parede'); box(x0 + .01, x1 - .01, y0 + .01, y1 - .01, h * .42, h, M['reboco'], 'parede')
     else: box(x0, x1, y0, y1, .08, h, M['stone'], 'parede')
+    if frame and age == 0: timber(x0, x1, y0, y1, .08, h, M, .3)
+    if frame and age == 1: timber(x0 + .01, x1 - .01, y0 + .01, y1 - .01, h * .42, h, M)
     if frame and age < 2:
         for x in (x0, x1):
             for y in (y0, y1): box(x - .03, x + .03, y - .03, y + .03, .08, h, M['wood'], 'cunhal')
@@ -43,15 +64,27 @@ def roof(x0, x1, y0, y1, z, h, age, M, ridge='x', over=.08):
     else:
         xm = (x0 + x1) / 2
         for y in (y0, y1): bm.faces.new((bm.verts.new((x0, -y, z)), bm.verts.new((x1, -y, z)), bm.verts.new((xm, -y, z + h))))
-    o = mesh_obj('empena', bm, M['plank'] if age < 2 else M['stone']); o.modifiers.new('s', 'SOLIDIFY').thickness = .02
+    o = mesh_obj('empena', bm, M['plank'] if age == 0 else M['reboco'] if age == 1 else M['stone']); o.modifiers.new('s', 'SOLIDIFY').thickness = .02
+    if age == 0:  # colmo grosso: segunda camada por cima
+        r2 = (gable if ridge == 'x' else gableY)(x0, x1, y0, y1, z + .03, h, mat, over=over + .04); r2.modifiers.new('g', 'SOLIDIFY').thickness = .05
+    if ridge == 'x':
+        box(x0 - over, x1 + over, (y0 + y1) / 2 - .035, (y0 + y1) / 2 + .035, z + h - .01, z + h + .045, M['thatch_dk'] if age == 0 else mat, 'cumeeira')
+        for k in range(int((x1 - x0) / .2) + 1): xx = x0 + k * .2; box(xx - .015, xx + .015, y1 + over - .02, y1 + over + .03, z - .045, z - .005, M['wood'], 'caibro')
+    else:
+        box((x0 + x1) / 2 - .035, (x0 + x1) / 2 + .035, y0 - over, y1 + over, z + h - .01, z + h + .045, M['thatch_dk'] if age == 0 else mat, 'cumeeira')
+        for k in range(int((y1 - y0) / .2) + 1): yy = y0 + k * .2; box(x1 + over - .02, x1 + over + .03, yy - .015, yy + .015, z - .045, z - .005, M['wood'], 'caibro')
 def door(x0, x1, y, h, M, face='y'):  # porta na face +y (ou +x)
     if face == 'y': box(x0 - .03, x1 + .03, y - .005, y + .02, .08, h + .04, M['wood'], 'aro'); box(x0, x1, y, y + .025, .08, h, M['plank'], 'porta')
     else: box(y - .005, y + .02, x0 - .03, x1 + .03, .08, h + .04, M['wood'], 'aro'); box(y, y + .025, x0, x1, .08, h, M['plank'], 'porta')
 FRONT = {'x': 0, 'y': 0}
 def window(c, z, M, face='y', w=.12, h=.12, at=None):
     if at is None: at = FRONT[face]
-    if face == 'y': box(c - w / 2 - .02, c + w / 2 + .02, at - .005, at + .015, z - .02, z + h + .02, M['wood'], 'moldura'); box(c - w / 2, c + w / 2, at, at + .02, z, z + h, M['vao'], 'janela')
-    else: box(at - .005, at + .015, c - w / 2 - .02, c + w / 2 + .02, z - .02, z + h + .02, M['wood'], 'moldura'); box(at, at + .02, c - w / 2, c + w / 2, z, z + h, M['vao'], 'janela')
+    if face == 'y':
+        box(c - w / 2 - .02, c + w / 2 + .02, at - .005, at + .015, z - .02, z + h + .02, M['wood'], 'moldura'); box(c - w / 2, c + w / 2, at, at + .02, z, z + h, M['vao'], 'janela')
+        if h < .2: box(c - w / 2 - .02 - w * .5, c - w / 2 - .02, at, at + .022, z, z + h, M['plank'], 'portada'); box(c + w / 2 + .02, c + w / 2 + .02 + w * .5, at, at + .022, z, z + h, M['plank'], 'portada')
+    else:
+        box(at - .005, at + .015, c - w / 2 - .02, c + w / 2 + .02, z - .02, z + h + .02, M['wood'], 'moldura'); box(at, at + .02, c - w / 2, c + w / 2, z, z + h, M['vao'], 'janela')
+        if h < .2: box(at, at + .022, c - w / 2 - .02 - w * .5, c - w / 2 - .02, z, z + h, M['plank'], 'portada'); box(at, at + .022, c + w / 2 + .02, c + w / 2 + .02 + w * .5, z, z + h, M['plank'], 'portada')
 def barrel(x, y, M, s=1.0): cyl(x, y, 0, .16 * s, .07 * s, M['wood_lt'], seg=10); cyl(x, y, .05 * s, .07 * s, .073 * s, M['iron'], seg=10)
 def crate(x, y, M, s=.14, z=0): box(x - s / 2, x + s / 2, y - s / 2, y + s / 2, z, z + s, M['plank'], 'caixa')
 def sack(x, y, M): cyl(x, y, 0, .12, .06, M['cloth'], seg=8)
@@ -60,16 +93,49 @@ def fence(pts, M, h=.18):
         n = max(2, int(math.hypot(bx - ax, by - ay) / .22))
         for k in range(n + 1): t = k / n; cyl(ax + (bx - ax) * t, ay + (by - ay) * t, 0, h, .018, M['wood'], seg=6)
         for zz in (h * .45, h * .8): box(min(ax, bx) - .01, max(ax, bx) + .01, min(ay, by) - .01, max(ay, by) + .01, zz - .012, zz + .012, M['wood_lt'], 'travessa')
+def woodpile(x, y, M, n=3, axis='x'):
+    for r in range(n):
+        for k in range(n - r):
+            o = .065 * k + .0325 * r
+            if axis == 'x': hlog(x - .14, x + .14, y + o - .06, .03 + r * .055, .03, M['wood_lt'], 'x')
+            else: box(x + o - .09, x + o - .03, y - .14, y + .14, r * .055, r * .055 + .055, M['wood_lt'], 'lenha')
+def hay(x, y, M): box(x - .1, x + .1, y - .07, y + .07, 0, .1, M['thatch'], 'feno')
+def cart(x, y, M):
+    box(x - .2, x + .2, y - .1, y + .1, .1, .14, M['plank'], 'carroca'); box(x - .2, x + .2, y + .08, y + .1, .14, .22, M['plank'], 'carroca'); box(x - .2, x + .2, y - .1, y - .08, .14, .22, M['plank'], 'carroca')
+    for yy in (y - .12, y + .12):
+        bm = bmesh.new(); bmesh.ops.create_cone(bm, cap_ends=True, segments=12, radius1=.1, radius2=.1, depth=.025)
+        bmesh.ops.transform(bm, matrix=Matrix.Translation((x, -yy, .1)) @ Matrix.Rotation(R(90), 4, 'X'), verts=bm.verts); mesh_obj('roda', bm, M['wood'])
+    beam((x + .2, y, .12), (x + .45, y, .04), .025, M['wood'])
+def pad(w, h, M, m=.06):  # chão de terra batida à volta do edifício, de contorno irregular
+    import random; rnd = random.Random(w * 31 + h); bm = bmesh.new(); cx, cy = w / 2, h / 2; vs = []
+    for k in range(28):
+        a = k / 28 * 2 * math.pi; ca, sa = math.cos(a), math.sin(a)
+        sx = (w / 2 - m) / max(abs(ca), abs(sa), 1e-6) * abs(ca) if abs(ca) > 1e-6 else 0
+        rx = (w / 2 - m) * (1 if abs(ca) >= abs(sa) else abs(ca) / abs(sa)); ry = (h / 2 - m) * (1 if abs(sa) >= abs(ca) else abs(sa) / abs(ca))
+        f = 1 - rnd.random() * .08 - (.06 if abs(abs(ca) - abs(sa)) < .25 else 0)
+        vs.append(bm.verts.new((cx + math.copysign(rx, ca) * f, -(cy + math.copysign(ry, sa) * f), .004)))
+    bm.faces.new(vs); o = mesh_obj('path', bm, M['dirt'])
+    for k in range(int(w * h * 3)):  # pedrinhas
+        x, y = rnd.uniform(m, w - m), rnd.uniform(m, h - m); box(x - .02, x + .02, y - .015, y + .015, 0, .02, M['stone_dk'], 'pedrinha')
+    return o
 def chimney(x, y, z0, z1, M): box(x - .06, x + .06, y - .06, y + .06, z0, z1, M['stone_dk'], 'chamine')
 # ---------------- edifícios ----------------
 def casa(age, M):
-    h = (.5, .55, .62)[age]; x0, x1, y0, y1 = .35, 1.65, .45, 1.55
-    walls(x0, x1, y0, y1, h, age, M); roof(x0, x1, y0, y1, h, (.42, .4, .45)[age], age, M, 'x')
+    h = (.5, .55, .42)[age]; x0, x1, y0, y1 = .35, 1.65, .45, 1.55
+    walls(x0, x1, y0, y1, h, age, M)
+    if age == 2:  # sobrado de enxaimel em balanço sobre o rés-do-chão de pedra
+        j = .05; box(x0 - j, x1 + j, y0 - j, y1 + j, h, h + .04, M['wood'], 'soalho'); box(x0 - j, x1 + j, y0 - j, y1 + j, h + .04, h + .36, M['reboco'], 'sobrado')
+        timber(x0 - j, x1 + j, y0 - j, y1 + j, h + .04, h + .36, M, .3)
+        for k in range(7): xx = x0 + k * (x1 - x0) / 6; box(xx - .015, xx + .015, y1 - .02, y1 + j, h - .05, h, M['wood'], 'consola')
+        window(1.0, h + .14, M, 'y', at=y1 + j); window(1.0, h + .14, M, 'x', at=x1 + j)
+        roof(x0 - j, x1 + j, y0 - j, y1 + j, h + .36, .42, 1, M, 'x')
+    else: roof(x0, x1, y0, y1, h, (.42, .4)[age], age, M, 'x')
     door(.75, .97, y1, .3, M); window(1.35, .25, M); window(.95, .27, M, 'x', at=x1)
-    if age >= 1: chimney(1.35, .8, h, h + .55, M)
-    if age == 0: barrel(1.8, 1.75, M, .8); sack(.25, 1.75, M)
-    else: box(.3, 1.7, 1.62, 1.66, .08, .08 + .14, M['wood'], 'banco')
-    if age == 2: banner(1.65 + .02, 1.0, h - .05, .16, .26, M['banner'], face='x')
+    if age >= 1: chimney(1.35, .8, h, h + (.55 if age == 1 else .9), M)
+    woodpile(.2, 1.0, M, 3, 'y'); barrel(1.8, 1.78, M, .8); sack(1.85, 1.6, M)
+    if age >= 1: box(1.1, 1.5, 1.66, 1.72, 0, .12, M['wood'], 'banco')
+    if age == 2: cart(.55, 1.82, M)
+    if age == 2: banner(1.65 + .02, .7, h - .04, .14, .22, M['banner'], face='x')
 def armazem(age, M):
     h = (.55, .6, .68)[age]; x0, x1, y0, y1 = .25, 1.75, .25, 1.05
     walls(x0, x1, y0, y1, h, age, M); roof(x0, x1, y0, y1, h, .35, age, M, 'x')
@@ -232,6 +298,13 @@ def maravilha(age, M):
     for k in range(5): box(1.2 + k * .4 - .07, 1.2 + k * .4 + .07, 3.3, 3.42, .24, 1.15, M['stone'], 'coluna')
     door(1.75, 2.25, 3.3, .7, M); for_y = [banner(3.33, y, 1.2, .25, .7, M['banner'], face='x') for y in (1.4, 2.6)]
     banner(2.0, 3.43, 1.25, .35, .7, M['banner'])
+def extra_mats(M):
+    M['reboco'] = g['node_mat']('reboco', (.62, .5, .34), noise=18, var=.14, bump=.25)
+    M['dirt'] = g['node_mat']('terra', (.3, .25, .17), noise=25, var=.22, bump=.3)
+    M['thatch_dk'] = g['node_mat']('thatch_dk', (.22, .14, .06), noise=30, var=.3, bump=.6)
+    if g['TEX']:  # telhas e colmo menos saturados, como na referência
+        M['shingle'] = g['tex_mat']('t_shingle_n', 'clay_roof_tiles_02', 2.4, tint=(.92, .7, .6), sat=.95, val=.88) or M['shingle']
+        M['thatch'] = g['tex_mat']('t_thatch_n', 'thatch_roof_angled', 1.6, tint=(1.0, .86, .6), sat=1.05, val=1.15) or M['thatch']
 B = {'casa': ((2, 2), (0, 1, 2), casa), 'armazem': ((2, 2), (0, 1, 2), armazem), 'quartel': ((3, 3), (0, 1, 2), quartel), 'arquearia': ((3, 3), (0, 1, 2), arquearia),
      'estabulo': ((3, 3), (0, 1, 2), estabulo), 'doca': ((2, 2), (0, 1, 2), doca), 'torre': ((2, 2), (1, 2, 3), torre), 'ferreiro': ((2, 2), (0, 1, 2), ferreiro),
      'templo': ((3, 3), (1, 2), templo), 'mercado': ((3, 3), (1, 2), mercado), 'oficina': ((3, 3), (1, 2), oficina), 'centro': ((3, 3), (0, 1, 2), centro), 'maravilha': ((4, 4), (2,), maravilha)}
@@ -248,8 +321,8 @@ only = os.environ.get('ONLY', '')
 for name, ((w, h), ages, fn) in B.items():
     if only and name not in only.split(','): continue
     for age in ages:
-        g['reset'](); G.clear(); M = g['mats'](); sc, cam = scene_for(w, h)
-        fn(age, M); finish(list(G))
+        g['reset'](); G.clear(); M = g['mats'](); extra_mats(M); sc, cam = scene_for(w, h)
+        pad(w, h, M); fn(age, M); finish(list(G))
         key = f'{name}|{age}'; sc.render.filepath = os.path.join(OUT, f'{name}_{age}.png')
         with bpy.context.temp_override(scene=sc, view_layer=sc.view_layers[0]): bpy.ops.render.render(write_still=True)
         a = world_to_camera_view(sc, cam, Vector((0, 0, 0))); info[key] = [a.x * sc.render.resolution_x, (1 - a.y) * sc.render.resolution_y, w, h]
