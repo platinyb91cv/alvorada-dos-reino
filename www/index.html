@@ -3047,6 +3047,19 @@ function bld3dSprite(type,age,o,vr){if(!BLD3D.ready)return null;const v=bld3dKey
   const cv=mkCanvas(CW*SS,CH*SS),c=cv.getContext('2d');c.scale(SS,SS);c.imageSmoothingEnabled=true;c.imageSmoothingQuality='high';c.drawImage(tintCrop(BLD3D,team,sx,sy,w,h),0,0,w,h,1,1,w*k,h*k);
   const r={cv,ox:ax*k+1,oy:ay*k+1,CW,CH};BCACHE[key]=r;return r}
 // muralhas que chegam a uma torre entram nela: as de trás atravessam a casa por trás da torre; as da frente só chegam à base (meia casa)
+function drawGarrTop(c,e,t){const mil=e.garr.filter(u=>u.d.mil);if(!mil.length)return;const top3=TOPZ(e);if(!top3)return; // em cima do adarve/terraço: pés à altura do caminho de ronda, pernas escondidas atrás das ameias, viram-se para o alvo e disparam
+  const ZP=HW*2/Math.SQRT2*Math.cos(Math.PI/6)*(e.type==='torre'?1.05:400/360); // píxeis do ecrã por unidade de altura (render dos muros/portões a 400 px de altura: ×1,11)
+  const v=bldVariant(e),ax=e.type==='torre'?'q':e.d.gate?(v==='y'?'y':'x'):((v&10)&&!(v&5)?'y':'x');
+  const n=Math.min(e.type==='torre'?4:e.d.gate?3:2,mil.length),tg=alive(e.target)?centerOf(e.target):null;
+  const slots=ax==='q'?[[-.35,-.35],[.35,-.35],[-.35,.35],[.35,.35]]:[[-.27,0],[.27,0],[0,0]];
+  const drawOrder=[...Array(n).keys()].sort((a,b)=>(slots[a][0]+slots[a][1])-(slots[b][0]+slots[b][1]));
+  for(const i of drawOrder){const u=mil[i],src=UNIT3D[u.type];if(!u3ready(src))continue;
+    const [a,b]=slots[i],gx=e.tx+e.w/2+(ax==='y'?0:a)+(ax==='q'?0:0),gy=e.ty+e.h/2+(ax==='y'?a:ax==='q'?b:0),g=proj(gx,gy),fy=g.y-top3*ZP;
+    const firing=tg&&u.d.proj&&hyp(tg.x-gx,tg.y-gy)<(u.d.range||5)+1.5,st=src.meta.states;
+    const dir=tg?kingDirFromDelta(tg.x-gx,tg.y-gy):Math.floor(t/3+i*3+e.id)%8;
+    const fr=firing&&st.attack?st.attack[Math.floor((t*4+i*.7)%st.attack.length)]:st.idle[0];
+    c.save();c.beginPath();c.rect(g.x-40,fy-80,80,80-3);c.clip();c.translate(g.x,fy);c.scale(.72,.72);drawUnit3dFrame(c,src,fr,dir,P[e.o].col,0,0,null,false,false);c.restore()}
+}
 function towerWallStubs(c,e,near,lit){if(!WALL3D.ready)return;
   const at=(x,y)=>{if(!inb(x,y))return null;const n=byId.get(bldAt[idx(x,y)]);return n&&n.o===e.o&&n.d.wall&&n.done?n:null};
   const put=(n,x,y,m)=>{const s=wall3dSprite(n.type,e.o,m);if(!s)return;const p=proj(x,y);c.drawImage(lit?s.cv:darkOf(s.cv),p.x-s.ox,p.y-s.oy,s.CW,s.CH)};
@@ -3915,6 +3928,7 @@ function render(){UCFM=0;
         for(let zz=10;zz<hgt;zz+=14){c.beginPath();c.moveTo(a.x,a.y-zz);c.lineTo(b.x,b.y-zz);c.lineTo(d2.x,d2.y-zz);c.stroke()}
       }else{
         c.drawImage(lit?s.cv:darkOf(s.cv),dx,dy,s.CW,s.CH);
+        if(lit&&e.garr&&e.garr.length)drawGarrTop(c,e,performance.now()/1000);
         {const fr=bldFringe(e);if(fr)c.drawImage(lit?fr.cv:darkOf(fr.cv),p.x-fr.ox,p.y-fr.oy,fr.CW,fr.CH)}
         if(e.d.gate&&!BLDART.ready&&!GATE3D.ready)drawGateDoor(c,e,p);
         if(e.hp<e.max*.6&&lit&&!(e.d.wall&&e.type!=='muralhaMadeira')){ // fogo
@@ -3963,19 +3977,7 @@ function render(){UCFM=0;
   // sentinelas: as unidades abrigadas aparecem no topo das torres, centros e vilas
   for(const [,k,e] of draw){if(k!==1||!e.garr||!e.garr.length||!visibleTo0(e)||!(e.type==='torre'||e.type==='centro'||e.type==='vila'||onWall(e)))continue;
     const mil=e.garr.filter(u=>u.d.mil);if(!mil.length)continue;const top3=TOPZ(e);
-    if(top3){ // em cima do adarve/terraço: pés à altura do caminho de ronda, pernas escondidas atrás das ameias, viram-se para o alvo e disparam
-      const ZP=HW*2/Math.SQRT2*Math.cos(Math.PI/6)*(e.type==='torre'?1.05:400/360); // píxeis do ecrã por unidade de altura (render dos muros/portões a 400 px de altura: ×1,11)
-      const v=bldVariant(e),ax=e.type==='torre'?'q':e.d.gate?(v==='y'?'y':'x'):((v&10)&&!(v&5)?'y':'x');
-      const n=Math.min(e.type==='torre'?4:e.d.gate?3:2,mil.length),tg=alive(e.target)?centerOf(e.target):null;
-      const slots=ax==='q'?[[-.35,-.35],[.35,-.35],[-.35,.35],[.35,.35]]:[[-.27,0],[.27,0],[0,0]];
-      const drawOrder=[...Array(n).keys()].sort((a,b)=>(slots[a][0]+slots[a][1])-(slots[b][0]+slots[b][1]));
-      for(const i of drawOrder){const u=mil[i],src=UNIT3D[u.type];if(!u3ready(src))continue;
-        const [a,b]=slots[i],gx=e.tx+e.w/2+(ax==='y'?0:a)+(ax==='q'?0:0),gy=e.ty+e.h/2+(ax==='y'?a:ax==='q'?b:0),g=proj(gx,gy),fy=g.y-top3*ZP;
-        const firing=tg&&u.d.proj&&hyp(tg.x-gx,tg.y-gy)<(u.d.range||5)+1.5,st=src.meta.states;
-        const dir=tg?kingDirFromDelta(tg.x-gx,tg.y-gy):Math.floor(t/3+i*3+e.id)%8;
-        const fr=firing&&st.attack?st.attack[Math.floor((t*4+i*.7)%st.attack.length)]:st.idle[0];
-        c.save();c.beginPath();c.rect(g.x-40,fy-80,80,80-3);c.clip();c.translate(g.x,fy);c.scale(.72,.72);drawUnit3dFrame(c,src,fr,dir,P[e.o].col,0,0,null,false,false);c.restore()}
-      continue}
+    if(top3)continue; // desenhados com o próprio edifício (drawGarrTop), para a torre da frente os tapar
     const wl=false,q=proj(e.tx+e.w/2,e.ty+e.h/2),n=Math.min(3,mil.length),top=q.y-BHEIGHT[e.type]*(e.type==='vila'?.5:.78);
     for(let i=0;i<n;i++){const u=mil[i],src=UNIT3D[u.type];if(!u3ready(src))continue;const fi=src.meta.states.idle[0],dir=Math.floor(t/3+i*3+e.id)%8;
       c.save();c.translate(q.x+(i-(n-1)/2)*11,top);c.scale(.72,.72);drawUnit3dFrame(c,src,fi,dir,P[e.o].col,0,0,null,false,false);c.restore()}}
