@@ -192,27 +192,54 @@ def doca(age, M):
     crate(1.2, 1.6, M, z=.12)
     if age == 2: flag(1.85, 1.85, .12, .4, M['banner'], M)
 def torre(lvl, M):
-    if lvl == 1:
-        for x in (.6, 1.4):
-            for y in (.6, 1.4): cyl(x, y, 0, 1.3, .045, M['wood'], seg=7)
-        box(.5, 1.5, .5, 1.5, 1.05, 1.12, M['plank'], 'plataforma')
-        for k in range(8): t = k / 8; cyl(.5 + t, .5, 1.12, 1.3, .015, M['wood'], seg=5); cyl(.5, .5 + t, 1.12, 1.3, .015, M['wood'], seg=5)
-        pyramid(.5, 1.5, .5, 1.5, 1.42, .35, M['thatch'], over=.08)
-        for x in (.6, 1.4):
-            for y in (.6, 1.4): cyl(x, y, 1.12, 1.44, .025, M['wood'], seg=6)
-        box(.6, 1.4, 1.38, 1.42, .48, .52, M['wood'], 'trav'); box(1.38, 1.42, .6, 1.4, .78, .82, M['wood'], 'trav')
-    else:
-        H = 1.45 if lvl == 2 else 1.75
-        box(.45, 1.55, .45, 1.55, 0, .12, M['stone_dk'], 'base'); box(.5, 1.5, .5, 1.5, .12, H, M['stone'], 'torre')
-        for zz in (.6, 1.05): window(1.0, zz, M, 'y', w=.06, h=.18, at=1.5); window(1.0, zz, M, 'x', w=.06, h=.18, at=1.5)
-        door(.85, 1.15, 1.5, .32, M)
-        if lvl == 2:
-            box(.44, 1.56, .44, 1.56, H, H + .1, M['plank'], 'balcao'); pyramid(.44, 1.56, .44, 1.56, H + .35, .4, M['shingle'], over=.06)
-            for x in (.48, 1.52):
-                for y in (.48, 1.52): cyl(x, y, H + .1, H + .36, .025, M['wood'], seg=6)
-        else:
-            box(.44, 1.56, .44, 1.56, H, H + .06, M['stone_dk'], 'cornija'); merlons(.44, 1.56, .44, 1.56, H + .06, M['stone'], 4, size=.1, h=.12)
-            cone(1.0, 1.0, H + .06, .55, .38, M['slate'], seg=16); flag(1.0, 1.0, H + .58, .3, M['banner'], M)
+    """Torre de vigia 2x2 feita para encaixar nas muralhas: o corpo ocupa a base inteira (0..2), por isso qualquer muro que chegue
+    a uma das quatro faces (em qualquer das duas filas) bate na parede da torre. Mesmos materiais, ameias e paliçada das muralhas."""
+    def palicada(H=.66):
+        for k in range(24):
+            t = (k + .5) * 2 / 24
+            for (x, y) in ((t, .045), (t, 1.955), (.045, t), (1.955, t)):
+                cyl(x, y, 0, H - .1 + ((k * 7919 + int(x * 13 + y * 7)) % 5) * .018, .045, M['wood'], tip=.1, seg=8)
+    def ameias(x0, x1, y0, y1, z, n):
+        box(x0 - .025, x1 + .025, y0 - .025, y1 + .025, z, z + .04, M['stone_dk'], 'cornija')
+        for k in range(n):
+            t = (k + .5) / n
+            for (a, b, c, d) in ((x0 + (x1 - x0) * t - .05, x0 + (x1 - x0) * t + .05, y0 - .025, y0 + .05), (x0 + (x1 - x0) * t - .05, x0 + (x1 - x0) * t + .05, y1 - .05, y1 + .025),
+                                 (x0 - .025, x0 + .05, y0 + (y1 - y0) * t - .05, y0 + (y1 - y0) * t + .05), (x1 - .05, x1 + .025, y0 + (y1 - y0) * t - .05, y0 + (y1 - y0) * t + .05)):
+                box(a, b, c, d, z + .04, z + .14, M['stone'], 'merlon')
+    if lvl == 1:  # paliçada à volta da base inteira + posto de vigia de troncos no meio
+        palicada()
+        for x in (.55, 1.45):
+            for y in (.55, 1.45): cyl(x, y, 0, 2.55, .06, M['wood'], seg=8)
+        for z in (.8, 1.35, 1.85): box(.5, 1.5, 1.43, 1.47, z - .02, z + .02, M['wood'], 'trav'); box(1.43, 1.47, .5, 1.5, z - .02, z + .02, M['wood'], 'trav')
+        box(.4, 1.6, .4, 1.6, 2.15, 2.22, M['plank'], 'plataforma')
+        for k in range(10):
+            t = .42 + k * 1.16 / 9; cyl(t, 1.58, 2.22, 2.42, .018, M['wood'], seg=5); cyl(1.58, t, 2.22, 2.42, .018, M['wood'], seg=5)
+        box(.4, 1.6, 1.56, 1.6, 2.36, 2.4, M['wood'], 'corrimao'); box(1.56, 1.6, .4, 1.6, 2.36, 2.4, M['wood'], 'corrimao')
+        pyramid(.36, 1.64, .36, 1.64, 2.55, .45, M['thatch'], over=.08)
+        flag(1.0, 1.0, 2.98, .3, M['banner'], M)
+    elif lvl == 2:  # torre quadrada alta (estilo Stronghold), ocupa a base inteira: os muros batem-lhe na parede
+        H = 2.05
+        box(-.03, 2.03, -.03, 2.03, 0, .14, M['stone_dk'], 'base'); box(.02, 1.98, .02, 1.98, .14, H, M['stone'], 'torre')
+        for zz in (.5, 1.0, 1.5):
+            for x in (.6, 1.4): box(x - .016, x + .016, 1.975, 1.985, zz, zz + .24, M['vao'], 'seteira'); box(1.975, 1.985, x - .016, x + .016, zz, zz + .24, M['vao'], 'seteira')
+        door(.85, 1.15, 1.98, .45, M)
+        box(.02, 1.98, .02, 1.98, H - .005, H + .005, M['stone_dk'], 'terraco')
+        ameias(.02, 1.98, .02, 1.98, H, 9)
+        flag(1.75, .25, H + .18, .4, M['banner'], M)
+    else:  # torre redonda grande sobre base quadrada à altura das muralhas
+        Hb = .95; H = 2.4
+        box(-.03, 2.03, -.03, 2.03, 0, .14, M['stone_dk'], 'base'); box(.02, 1.98, .02, 1.98, .14, Hb, M['stone'], 'torre')
+        ameias(.02, 1.98, .02, 1.98, Hb, 9)
+        cyl(1.0, 1.0, Hb, H, .82, M['stone'], seg=32, name='torreao')
+        cyl(1.0, 1.0, H, H + .05, .88, M['stone_dk'], seg=32, name='cornija')
+        for k in range(16):
+            a = k / 16 * 2 * math.pi; cyl(1.0 + .82 * math.cos(a), 1.0 + .82 * math.sin(a), H + .05, H + .2, .075, M['stone'], seg=6, name='merlon')
+        cyl(1.0, 1.0, H, H + .01, .8, M['stone_dk'], seg=32, name='terraco')
+        for k in range(5):
+            a = (k / 5) * math.pi / 2 + .3; x = 1.0 + .81 * math.cos(a); y = 1.0 + .81 * math.sin(a)
+            for zz in (1.3, 1.85): box(x - .02, x + .02, y - .02, y + .02, zz, zz + .22, M['vao'], 'seteira')
+        door(.85, 1.15, 1.98, .45, M)
+        flag(1.0, 1.0, H + .2, .45, M['banner'], M)
 def ferreiro(age, M):
     h = (.55, .6, .7)[age]; x0, x1, y0, y1 = .3, 1.7, .3, 1.15
     walls(x0, x1, y0, y1, h, age, M); roof(x0, x1, y0, y1, h, .35, age, M, 'x')
@@ -305,11 +332,16 @@ def extra_mats(M):
     if g['TEX']:  # telhas e colmo menos saturados, como na referência
         M['shingle'] = g['tex_mat']('t_shingle_n', 'clay_roof_tiles_02', 2.4, tint=(.92, .7, .6), sat=.95, val=.88) or M['shingle']
         M['thatch'] = g['tex_mat']('t_thatch_n', 'thatch_roof_angled', 1.6, tint=(1.0, .86, .6), sat=1.05, val=1.15) or M['thatch']
+        if os.environ.get('MURO_TONS'):  # mesma pedra/madeira das muralhas (torres)
+            tm = g['tex_mat']
+            M['stone'] = tm('t_stone_m', 'large_sandstone_blocks_01', 1.3, tint=(.93, .92, .89), sat=.14, val=1.04, normal=1.8) or M['stone']
+            M['stone_dk'] = tm('t_stone_dk_m', 'medieval_blocks_02', 1.6, tint=(.86, .86, .84), sat=.1, val=.78, normal=1.8) or M['stone_dk']
+            M['wood'] = tm('t_wood_m', 'bark_brown_02', 3.2, tint=(.92, .8, .66), sat=1.0, val=1.0) or M['wood']
 B = {'casa': ((2, 2), (0, 1, 2), casa), 'armazem': ((2, 2), (0, 1, 2), armazem), 'quartel': ((3, 3), (0, 1, 2), quartel), 'arquearia': ((3, 3), (0, 1, 2), arquearia),
      'estabulo': ((3, 3), (0, 1, 2), estabulo), 'doca': ((2, 2), (0, 1, 2), doca), 'torre': ((2, 2), (1, 2, 3), torre), 'ferreiro': ((2, 2), (0, 1, 2), ferreiro),
      'templo': ((3, 3), (1, 2), templo), 'mercado': ((3, 3), (1, 2), mercado), 'oficina': ((3, 3), (1, 2), oficina), 'centro': ((3, 3), (0, 1, 2), centro), 'maravilha': ((4, 4), (2,), maravilha)}
-def scene_for(w, h):
-    sc = g['SCN'](); RX = int((w + h) * 64 * 1.25 + 40); RY = int(RX * 1.05)
+def scene_for(w, h, big=1.0):
+    sc = g['SCN'](); RX = int(((w + h) * 64 * 1.25 + 40) * big); RY = int(RX * 1.05)
     g['RES'] = (RX, RY); cam = g['scene']()
     cam.data.ortho_scale = RX / PXU
     c = Vector((w / 2, -h / 2, 0)); d = Vector((1, -1, 0)).normalized() * math.cos(R(30)) + Vector((0, 0, math.sin(R(30))))
@@ -321,8 +353,8 @@ only = os.environ.get('ONLY', '')
 for name, ((w, h), ages, fn) in B.items():
     if only and name not in only.split(','): continue
     for age in ages:
-        g['reset'](); G.clear(); M = g['mats'](); extra_mats(M); sc, cam = scene_for(w, h)
-        pad(w, h, M); fn(age, M); finish(list(G))
+        g['reset'](); G.clear(); M = g['mats'](); extra_mats(M); sc, cam = scene_for(w, h, 2.3 if name == 'torre' else 1.0)
+        (pad(w, h, M) if name != 'torre' else None); fn(age, M); finish(list(G))
         key = f'{name}|{age}'; sc.render.filepath = os.path.join(OUT, f'{name}_{age}.png')
         with bpy.context.temp_override(scene=sc, view_layer=sc.view_layers[0]): bpy.ops.render.render(write_still=True)
         a = world_to_camera_view(sc, cam, Vector((0, 0, 0))); info[key] = [a.x * sc.render.resolution_x, (1 - a.y) * sc.render.resolution_y, w, h]

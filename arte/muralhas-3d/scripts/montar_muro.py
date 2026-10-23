@@ -28,7 +28,7 @@ def seg(axis, a0, a1, w0, w1, z0, z1, mat, name='seg'):  # caixa ao longo de um 
 def straight(m): return m in (5, 10)
 
 def madeira(m, M):  # paliçada: troncos grossos aguçados, de alturas irregulares, com travessas e escoras por dentro
-    H = .66
+    H = .9
     for axis, a0, a1 in arms(m):
         for k in range(-24, 36):  # espaçamento global de 0,085 (encaixa entre casas)
             t = (k + .5) * .085
@@ -36,45 +36,42 @@ def madeira(m, M):  # paliçada: troncos grossos aguçados, de alturas irregular
             if (axis == 'x' and (m & 1 == 0 and t > .5 or m & 4 == 0 and t < .5)) or (axis == 'y' and (m & 2 == 0 and t > .5 or m & 8 == 0 and t < .5)): continue
             x, y = (t, .5) if axis == 'x' else (.5, t)
             hh = H - .1 + ((k * 7919) % 5) * .018
-            cyl(x, y, 0, hh, .045, M['wood'], tip=.1, seg=8)
-        for z in (.2, .46): seg(axis, a0, a1, -.075, -.045, z - .024, z + .024, M['wood_lt'], 'trav')  # travessas por dentro
+            cyl(x, y, 0, hh, .045, M['wood'], tip=.14, seg=8)
+        for z in (.25, .6): seg(axis, a0, a1, -.075, -.045, z - .024, z + .024, M['wood_lt'], 'trav')  # travessas por dentro
     if not straight(m): cyl(.5, .5, 0, H + .04, .07, M['wood'], tip=.13, seg=9)
 
-def pedra(m, M, fort=False):  # muralha: sapata escura, pano de pedra, cornija, adarve e ameias dos dois lados; contrafortes
-    T = .4 if fort else .32; H = .78 if fort else .6; hw = T / 2
+def pedra(m, M, fort=False):  # muralha alta e grossa (estilo Stronghold): adarve largo, ameias dos dois lados, pedra cinzenta
+    T = .64 if fort else .56; H = 1.12 if fort else .95; hw = T / 2
     for axis, a0, a1 in arms(m):
-        seg(axis, a0, a1, -hw - .04, hw + .04, 0, .12, M['stone_dk'], 'base')
-        seg(axis, a0, a1, -hw, hw, .12, H, M['stone'])
-        seg(axis, a0, a1, -hw - .025, hw + .025, H, H + .04, M['stone_dk'], 'cornija')
-        for k in range(-10, 16):  # ameias (global, 0,2) nos dois lados do adarve
+        seg(axis, a0, a1, -hw - .04, hw + .04, 0, .14, M['stone_dk'], 'base')
+        seg(axis, a0, a1, -hw, hw, .14, H, M['stone'])
+        seg(axis, a0, a1, -hw + .07, hw - .07, H - .005, H + .005, M['stone_dk'], 'adarve')
+        for k in range(-10, 16):  # ameias (global, 0,2) nos dois lados
             t = .1 + .2 * k
             if not (a0 - .06 <= t <= a1 + .06): continue
             for side in (-1, 1):
-                w = (hw - .05, hw + .025) if side > 0 else (-hw - .025, -hw + .05)
-                if axis == 'x': box(t - .05, t + .05, .5 + w[0], .5 + w[1], H + .04, H + .14, M['stone'], 'merlon')
-                else: box(.5 + w[0], .5 + w[1], t - .05, t + .05, H + .04, H + .14, M['stone'], 'merlon')
-        for k in range(-4, 7):  # contrafortes do lado de fora (+), a cada 0,5
-            t = .25 + .5 * k
-            if not (a0 + .08 <= t <= a1 - .08) or (abs(t - .5) < .2 and not straight(m)): continue
-            if axis == 'x': box(t - .05, t + .05, .5 + hw, .5 + hw + .06, 0, H * .7, M['stone_dk'], 'contraforte')
-            else: box(.5 + hw, .5 + hw + .06, t - .05, t + .05, 0, H * .7, M['stone_dk'], 'contraforte')
-        if fort:  # seteiras na face de fora
+                w = (hw - .07, hw) if side > 0 else (-hw, -hw + .07)
+                if axis == 'x': box(t - .055, t + .055, .5 + w[0], .5 + w[1], H, H + .15, M['stone'], 'merlon')
+                else: box(.5 + w[0], .5 + w[1], t - .055, t + .055, H, H + .15, M['stone'], 'merlon')
+            if axis == 'x': box(a0 if k == -10 else t - .1, t + .1, .5 + hw - .07, .5 + hw, H, H + .05, M['stone'], 'parapeito'); box(t - .1, t + .1, .5 - hw, .5 - hw + .07, H, H + .05, M['stone'], 'parapeito')
+            else: box(.5 + hw - .07, .5 + hw, t - .1, t + .1, H, H + .05, M['stone'], 'parapeito'); box(.5 - hw, .5 - hw + .07, t - .1, t + .1, H, H + .05, M['stone'], 'parapeito')
+        if fort:
             for k in range(-4, 7):
                 t = .5 * k
                 if not (a0 + .08 <= t <= a1 - .08): continue
-                if axis == 'x': box(t - .012, t + .012, .5 + hw - .005, .5 + hw + .005, H * .45, H * .75, M['vao'], 'seteira')
-                else: box(.5 + hw - .005, .5 + hw + .005, t - .012, t + .012, H * .45, H * .75, M['vao'], 'seteira')
-    if not straight(m):  # torreão baixo nas pontas, cantos e cruzamentos (sem bandeiras)
-        p = hw + .06; Hp = H + .16
-        box(.5 - p - .03, .5 + p + .03, .5 - p - .03, .5 + p + .03, 0, .12, M['stone_dk'], 'base')
-        box(.5 - p, .5 + p, .5 - p, .5 + p, .12, Hp, M['stone'], 'pilar')
-        box(.5 - p - .025, .5 + p + .025, .5 - p - .025, .5 + p + .025, Hp, Hp + .04, M['stone_dk'], 'cornija')
-        merlons(.5 - p - .025, .5 + p + .025, .5 - p - .025, .5 + p + .025, Hp + .04, M['stone'], 3, size=.07, h=.1)
+                if axis == 'x': box(t - .012, t + .012, .5 + hw - .005, .5 + hw + .005, H * .5, H * .8, M['vao'], 'seteira')
+                else: box(.5 + hw - .005, .5 + hw + .005, t - .012, t + .012, H * .5, H * .8, M['vao'], 'seteira')
+    if not straight(m):  # torreão quadrado nas pontas, cantos e cruzamentos
+        p = hw + .08; Hp = H + .4
+        box(.5 - p - .03, .5 + p + .03, .5 - p - .03, .5 + p + .03, 0, .14, M['stone_dk'], 'base')
+        box(.5 - p, .5 + p, .5 - p, .5 + p, .14, Hp, M['stone'], 'pilar')
+        box(.5 - p - .02, .5 + p + .02, .5 - p - .02, .5 + p + .02, Hp, Hp + .04, M['stone_dk'], 'cornija')
+        merlons(.5 - p - .02, .5 + p + .02, .5 - p - .02, .5 + p + .02, Hp + .04, M['stone'], 4, size=.09, h=.13)
 
 def tons(M):  # pedra e madeira menos saturadas, como a arte pintada dos edifícios
     tm = g['tex_mat']
-    M['stone'] = tm('t_stone_m', 'large_sandstone_blocks_01', 1.3, tint=(.96, .9, .8), sat=.85, val=1.0, normal=1.6) or M['stone']
-    M['stone_dk'] = tm('t_stone_dk_m', 'medieval_blocks_02', 1.6, tint=(.82, .8, .76), sat=.45, val=.8, normal=1.6) or M['stone_dk']
+    M['stone'] = tm('t_stone_m', 'large_sandstone_blocks_01', 1.3, tint=(.93, .92, .89), sat=.14, val=1.04, normal=1.8) or M['stone']
+    M['stone_dk'] = tm('t_stone_dk_m', 'medieval_blocks_02', 1.6, tint=(.86, .86, .84), sat=.1, val=.78, normal=1.8) or M['stone_dk']
     M['wood'] = tm('t_wood_m', 'bark_brown_02', 3.2, tint=(.92, .8, .66), sat=1.0, val=1.0) or M['wood']
     M['dirt'] = g['node_mat']('terra_m', (.26, .2, .13), noise=25, var=.2, bump=.3)
 
@@ -89,7 +86,7 @@ for tp in TYPES:
         for o in list(G): bpy.data.objects.remove(o, do_unlink=True)
         G.clear()
         madeira(m, M) if tp == 'madeira' else pedra(m, M, fort=(tp == 'fort'))
-        finish([o for o in G if o.name.split('.')[0] not in ('seg', 'base', 'cornija', 'centro', 'trav', 'contraforte', 'seteira')])
+        finish([o for o in G if o.name.split('.')[0] not in ('seg', 'base', 'cornija', 'centro', 'trav', 'contraforte', 'seteira', 'adarve', 'parapeito')])
         name = f'{tp}_{m}'; sc.render.filepath = os.path.join(OUT, name + '.png')
         with bpy.context.temp_override(scene=sc, view_layer=sc.view_layers[0]): bpy.ops.render.render(write_still=True)
         info[name] = [ax, (1 - a.y) * RY]; print('REN', name, flush=True)

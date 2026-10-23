@@ -273,41 +273,32 @@ def madeira(age, M, open_):  # portão de madeira: duas torres atarracadas + cas
     doors(.25, .75, .5, dz, M, iron=age == 2, open_=open_)
     banner(.5, .72, dz + (.0 if age == 0 else .2), .2, .3, M['banner'])
 
-def pedra(age, M, open_):  # portão de pedra: torres quadradas largas, arco largo e adarve com ameias por cima
-    Ht = (0, 1.12, 1.25)[age]; Hm = (0, .98, 1.05)[age]; dz = .8
+def pedra(age, M, open_):  # casa do portão (estilo Stronghold): um bloco largo de pedra cinzenta, arco no meio, ameias e terraço
+    Hb = (0, 1.4, 1.6)[age]; dz = .82; x0, x1, y0, y1 = -.28, 1.28, .04, .96
     path(M)
-    box(.2, .27, .2, .8, 0, Hm, M['stone'], 'meio'); box(.73, .8, .2, .8, 0, Hm, M['stone'], 'meio')
-    top = box(.27, .73, .2, .8, dz, Hm, M['stone'], 'meio'); arch_cut(top, .27, .73, dz, .2, .8, only_round=True)
-    box(.18, .82, .18, .82, Hm, Hm + .04, M['stone_dk'], 'cornija')
-    merlons(.18, .82, .18, .82, Hm + .04, M['stone'], 4, size=.08, h=.1, sides='front')
-    for tx0, tx1 in ((-.14, .26), (.74, 1.14)):
-        box(tx0 - .03, tx1 + .03, .14, .86, 0, .14, M['stone_dk'], 'sapata')
-        box(tx0, tx1, .16, .84, .14, Ht, M['stone'], 'torre')
-        box(tx0 + .17, tx1 - .17, .838, .85, Ht * .45, Ht * .45 + .16, M['vao'], 'seteira')
-        box(tx0 + .17, tx1 - .17, .838, .85, Ht * .72, Ht * .72 + .12, M['vao'], 'seteira')
-        if age == 1:
-            box(tx0 - .03, tx1 + .03, .13, .87, Ht, Ht + .05, M['stone_dk'], 'cornija')
-            merlons(tx0 - .03, tx1 + .03, .13, .87, Ht + .05, M['stone'], 3, size=.08, h=.1)
-        else:
-            for k in range(5):  # mata-cães
-                t = (k + .5) / 5
-                box(tx0 + (tx1 - tx0) * t - .025, tx0 + (tx1 - tx0) * t + .025, .84, .9, Ht - .1, Ht - .02, M['stone_dk'], 'corbel')
-            box(tx0 - .04, tx1 + .04, .12, .9, Ht - .02, Ht + .1, M['stone'], 'parapeito')
-            pyramid(tx0 - .03, tx1 + .03, .13, .89, Ht + .1, .34, M['slate'], over=.04)
-            flag((tx0 + tx1) / 2, .51, Ht + .44, .2, M['banner'], M)
+    box(x0 - .03, x1 + .03, y0 - .03, y1 + .03, 0, .14, M['stone_dk'], 'sapata')
+    for a, b in ((x0, .25), (.75, x1)): box(a, b, y0, y1, .14, Hb, M['stone'], 'torre')
+    top = box(.25, .75, y0, y1, dz, Hb, M['stone'], 'meio'); arch_cut(top, .25, .75, dz, y0, y1, only_round=True)
+    box(x0 - .03, x1 + .03, y0 - .03, y1 + .03, Hb, Hb + .05, M['stone_dk'], 'cornija')
+    merlons(x0 - .03, x1 + .03, y0 - .03, y1 + .03, Hb + .05, M['stone'], 7, size=.1, h=.15)
     for k in range(9):  # aduelas
         a = math.pi * k / 8; x = .5 + .25 * math.cos(a); z = dz + .25 * math.sin(a)
-        box(x - .035, x + .035, .795, .815, z - .035, z + .035, M['stone_dk'], 'aduela')
-    doors(.27, .73, .5, dz, M, iron=True, arch=True, open_=open_)
-    if age == 2:
+        box(x - .035, x + .035, y1 - .005, y1 + .015, z - .035, z + .035, M['stone_dk'], 'aduela')
+    for xc in (-.02, 1.02):
+        for zz in (.5, .95): box(xc - .015, xc + .015, y1 - .005, y1 + .005, zz, zz + .22, M['vao'], 'seteira')
+    if age == 2:  # mata-cães sobre o arco e grade levadiça
         for k in range(6):
-            x = .3 + k * .4 / 5; cyl(x, .72, dz - .05, dz + .2, .01, M['iron'], seg=6)
-    banner(.5, .83, Hm - .02, .22, .3, M['banner'])
+            t = .2 + k * .12; box(t - .03, t + .03, y1, y1 + .06, Hb - .14, Hb - .03, M['stone_dk'], 'corbel')
+        for k in range(6):
+            x = .3 + k * .4 / 5; cyl(x, y1 - .1, dz - .05, dz + .2, .01, M['iron'], seg=6)
+    doors(.25, .75, .5, dz, M, iron=True, arch=True, open_=open_)
+    flag(x1 - .12, y0 + .12, Hb + .2, .35, M['banner'], M)
+    banner(.5, y1 + .02, Hb - .05, .22, .32, M['banner'])
 
 def tons(M):  # mesma pedra/madeira (menos saturadas) das muralhas
     tm = tex_mat
-    M['stone'] = tm('t_stone_m', 'large_sandstone_blocks_01', 1.3, tint=(.96, .9, .8), sat=.85, val=1.0, normal=1.6) or M['stone']
-    M['stone_dk'] = tm('t_stone_dk_m', 'medieval_blocks_02', 1.6, tint=(.82, .8, .76), sat=.45, val=.8, normal=1.6) or M['stone_dk']
+    M['stone'] = tm('t_stone_m', 'large_sandstone_blocks_01', 1.3, tint=(.93, .92, .89), sat=.14, val=1.04, normal=1.8) or M['stone']
+    M['stone_dk'] = tm('t_stone_dk_m', 'medieval_blocks_02', 1.6, tint=(.86, .86, .84), sat=.1, val=.78, normal=1.8) or M['stone_dk']
     M['wood'] = tm('t_wood_m', 'bark_brown_02', 3.2, tint=(.92, .8, .66), sat=1.0, val=1.0) or M['wood']
 
 # ---------- cena: câmara isométrica e luz ----------

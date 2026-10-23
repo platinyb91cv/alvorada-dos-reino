@@ -13,9 +13,9 @@ async def main():
           let q=null;for(let r=4;r<60&&!q;r++)for(let a=0;a<64&&!q;a++){const x=Math.round(q0.x+Math.cos(a/64*6.283)*r),y=Math.round(q0.y+Math.sin(a/64*6.283)*r);if(ok(x,y,14,10))q={x,y}}
           const W=(t,x,y)=>mkBld(ME,t,x,y,true);
           // linha em x: muro - portão - muro - torre - muro ; e uma linha em y com portão e canto
-          for(let i=0;i<12;i++){const x=q.x+i,y=q.y+2;if(i===3)W('portaoPedra',x,y);else if(i===7||i===8){if(i===7)W('torre',x,y-1)}else W('muralhaPedra',x,y)}
+          for(let i=0;i<12;i++){const x=q.x+i,y=q.y+2;if(i===3)W('portaoPedra',x,y);else if(i===7||i===8){if(i===7){const t=W('torre',x,y-1);t.lvl=3}}else W('muralhaPedra',x,y)}
           for(let j=3;j<10;j++){const x=q.x,y=q.y+j;if(j===6)W('portaoMadeira',x,y);else W('muralhaPedra',x,y)}
-          for(let i=1;i<6;i++)W('muralhaMadeira',q.x+i,q.y+9);
+          for(let i=1;i<6;i++)W('muralhaMadeira',q.x+i,q.y+9);{const t2=W('torre',q.x+12,q.y+1);t2.lvl=2;for(let j=3;j<9;j++)W('muralhaPedra',q.x+12,q.y+j);W('portaoPedra',q.x+12,q.y+5)}
           cam.z=2;centerCam(q.x+5,q.y+5);for(const k in BCACHE)delete BCACHE[k];return q}""")
         await pg.wait_for_timeout(2000); await pg.screenshot(path=OUT)
         print(json.dumps({'q':r,'errs':errs})); await br.close()
