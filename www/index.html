@@ -755,6 +755,9 @@ BLDS.centro.garr=10;BLDS.torre.garr=5;BLDS.casa.garr=3;
 // soldados em cima das muralhas de pedra e dos portões (adarve): só infantaria e atiradores; os atiradores disparam lá de cima
 BLDS.muralhaPedra.garr=2;BLDS.muralhaFort.garr=3;BLDS.portaoPedra.garr=4;BLDS.portaoMadeira.garr=2;
 const onWall=b=>!!(b&&(b.d.wall||b.d.gate));
+function TOPZ(e){if(e.d.wall&&e.type!=='muralhaMadeira'){const m=bldVariant(e),tw=!(m===5||m===10);return (e.type==='muralhaFort'?1.12:.95)+(tw?.44:0)} // pontas/cantos têm torreão mais alto
+  if(e.type==='muralhaPedra')return .95;if(e.type==='muralhaFort')return 1.12;if(e.type==='portaoPedra')return (P[e.o]&&P[e.o].age>=2)?1.6:1.4;if(e.type==='portaoMadeira')return 1.0;
+  if(e.type==='torre')return [0,2.22,2.05,2.4][e.lvl||1];return 0}
 const BUILD_MENU=['casa','quinta','curral','estrada','armazem','quartel','arquearia','estabulo','doca','mercado','ferreiro','templo','torre','oficina','centro','maravilha'];
 const DEF_MENU=['muralhaMadeira','muralhaPedra','muralhaFort','portaoMadeira','portaoPedra','torre'];
 const TECHS={
@@ -3959,9 +3962,23 @@ function render(){UCFM=0;
     c.fillStyle='#fff';c.font='bold 10px sans-serif';c.textAlign='center';c.fillText(e.garr.length,q.x,y+3.5)}
   // sentinelas: as unidades abrigadas aparecem no topo das torres, centros e vilas
   for(const [,k,e] of draw){if(k!==1||!e.garr||!e.garr.length||!visibleTo0(e)||!(e.type==='torre'||e.type==='centro'||e.type==='vila'||onWall(e)))continue;
-    const mil=e.garr.filter(u=>u.d.mil);if(!mil.length)continue;const wl=onWall(e),q=proj(e.tx+e.w/2,e.ty+e.h/2),n=Math.min(wl?2:3,mil.length),top=q.y-BHEIGHT[e.type]*(e.type==='torre'?.9:e.type==='vila'?.5:wl?.8:.78);
+    const mil=e.garr.filter(u=>u.d.mil);if(!mil.length)continue;const top3=TOPZ(e);
+    if(top3){ // em cima do adarve/terraço: pés à altura do caminho de ronda, pernas escondidas atrás das ameias, viram-se para o alvo e disparam
+      const ZP=HW*2/Math.SQRT2*Math.cos(Math.PI/6); // píxeis do ecrã por unidade de altura (≈39)
+      const v=bldVariant(e),ax=e.type==='torre'?'q':e.d.gate?(v==='y'?'y':'x'):((v&10)&&!(v&5)?'y':'x');
+      const n=Math.min(e.type==='torre'?4:e.d.gate?3:2,mil.length),tg=alive(e.target)?centerOf(e.target):null;
+      const slots=ax==='q'?[[-.35,-.35],[.35,-.35],[-.35,.35],[.35,.35]]:[[-.27,0],[.27,0],[0,0]];
+      const drawOrder=[...Array(n).keys()].sort((a,b)=>(slots[a][0]+slots[a][1])-(slots[b][0]+slots[b][1]));
+      for(const i of drawOrder){const u=mil[i],src=UNIT3D[u.type];if(!u3ready(src))continue;
+        const [a,b]=slots[i],gx=e.tx+e.w/2+(ax==='y'?0:a)+(ax==='q'?0:0),gy=e.ty+e.h/2+(ax==='y'?a:ax==='q'?b:0),g=proj(gx,gy),fy=g.y-top3*ZP;
+        const firing=tg&&u.d.proj&&hyp(tg.x-gx,tg.y-gy)<(u.d.range||5)+1.5,st=src.meta.states;
+        const dir=tg?kingDirFromDelta(tg.x-gx,tg.y-gy):Math.floor(t/3+i*3+e.id)%8;
+        const fr=firing&&st.attack?st.attack[Math.floor((t*4+i*.7)%st.attack.length)]:st.idle[0];
+        c.save();c.beginPath();c.rect(g.x-40,fy-80,80,80-3);c.clip();c.translate(g.x,fy);c.scale(.72,.72);drawUnit3dFrame(c,src,fr,dir,P[e.o].col,0,0,null,false,false);c.restore()}
+      continue}
+    const wl=false,q=proj(e.tx+e.w/2,e.ty+e.h/2),n=Math.min(3,mil.length),top=q.y-BHEIGHT[e.type]*(e.type==='vila'?.5:.78);
     for(let i=0;i<n;i++){const u=mil[i],src=UNIT3D[u.type];if(!u3ready(src))continue;const fi=src.meta.states.idle[0],dir=Math.floor(t/3+i*3+e.id)%8;
-      c.save();c.translate(q.x+(i-(n-1)/2)*(wl?8:11),top+(wl?(i-(n-1)/2)*(bldVariant(e)==='y'||(e.d.wall&&(bldVariant(e)&10)&&!(bldVariant(e)&5))?-4:4):0));c.scale(.72,.72);drawUnit3dFrame(c,src,fi,dir,P[e.o].col,0,0,null,false,false);c.restore()}}
+      c.save();c.translate(q.x+(i-(n-1)/2)*11,top);c.scale(.72,.72);drawUnit3dFrame(c,src,fi,dir,P[e.o].col,0,0,null,false,false);c.restore()}}
   // lealdade das vilas neutras
   for(const [,k,e] of draw){if(k!==1||e.type!=='vila'||!e.claim||!visibleTo0(e))continue;const p0=e.claim[0]>=e.claim[1]?0:1,v=e.claim[p0];if(v<=0)continue;const need=e.o===2?VILA_CLAIM:VILA_SWAP;
     const q=proj(e.tx+e.w/2,e.ty+e.h/2),y=q.y-BHEIGHT.vila-30;c.fillStyle='rgba(0,0,0,.75)';c.fillRect(q.x-25,y-1,50,6);c.fillStyle=P[p0].col;c.fillRect(q.x-24,y,48*clamp(v/need,0,1),4);c.fillStyle='#fff';c.font='bold 9px sans-serif';c.textAlign='center';c.fillText('🏘️',q.x,y-4)}
