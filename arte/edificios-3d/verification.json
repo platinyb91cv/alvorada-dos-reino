@@ -10,7 +10,16 @@
  "amostras": 32,
  "quadros": 34,
  "escalaAtlas": 1.5,
- "atlasSha256": "cceaa4654bee5908430b6cc0fdcee44de5a0cba1f1d032741aa4674e2a6ae0af",
+ "atlasSha256": "909a98692c94fbc1fcae1abc371fe71012212d7c47f1218c9deafb220c275a63",
  "detalhe": "enxaimel, sobrado em balanço, cumeeira, caibros, portadas, lenha, carroça, chão de terra batida",
- "pintura": "Gemini (texto -> imagem, sem créditos): casas, torres, armazém, ferreiro, Centro da Vila, quartel, arquearia, estábulo (Pedra); o resto continua 3D do Blender"
+ "pintura": "Gemini (texto -> imagem, sem créditos): casas, torres, armazém, ferreiro, Centro da Vila, quartel, arquearia, estábulo (Pedra); o resto continua 3D do Blender",
+ "mercadoModelo": {
+  "origem": "modelo GLB gerado no Tripo pelo Fabis (tripo_pbr_model_9db151f2…glb), importado no Blender e encaixado na pegada 3×3",
+  "altura": 1.5,
+  "idades": [
+   1,
+   2
+  ],
+  "nota": "telhado de ardósia dessaturado para não levar a cor da equipa; os toldos azuis levam a cor da equipa"
+ }
 }

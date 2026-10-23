@@ -25,3 +25,15 @@ O integrador recorta cada imagem e empacota tudo em `www/assets/edificios-extra/
 A Vila, o curral e a quinta continuam com a arte pintada.
 
 O teste está em `tests/check_edificios3d.cjs`.
+
+## Modelos GLB (Tripo, Meshy…)
+O mercado vem de um modelo GLB gerado no Tripo. O `montar_edificios.py` importa-o, encaixa-o na pegada do edifício (3×3) com escala uniforme, assenta-o no chão e renderiza-o com a mesma câmara e luz dos outros:
+```
+GLB_MAP="mercado=/caminho/mercado.glb" ONLY=mercado ED_OUT=/tmp/merc TEX_DIR=<texturas> blender -b --python arte/edificios-3d/scripts/montar_edificios.py
+DESSAT_TELHADO=1 python3 arte/edificios-3d/scripts/trocar_no_atlas.py /tmp/merc . mercado_1 mercado_2
+```
+- `GLB_ROT="mercado=90"` roda o modelo se a frente ficar virada para o lado errado.
+- O `trocar_no_atlas.py` substitui só esses quadros no atlas, sem renderizar os outros edifícios de novo.
+- `DESSAT_TELHADO=1` tira o azul acinzentado do telhado, para que só os toldos levem a cor da equipa.
+
+O GLB original (56 MB) não está no repositório; só o render entra no atlas.

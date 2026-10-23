@@ -340,6 +340,28 @@ def extra_mats(M):
 B = {'casa': ((2, 2), (0, 1, 2), casa), 'armazem': ((2, 2), (0, 1, 2), armazem), 'quartel': ((3, 3), (0, 1, 2), quartel), 'arquearia': ((3, 3), (0, 1, 2), arquearia),
      'estabulo': ((3, 3), (0, 1, 2), estabulo), 'doca': ((2, 2), (0, 1, 2), doca), 'torre': ((2, 2), (1, 2, 3), torre), 'ferreiro': ((2, 2), (0, 1, 2), ferreiro),
      'templo': ((3, 3), (1, 2), templo), 'mercado': ((3, 3), (1, 2), mercado), 'oficina': ((3, 3), (1, 2), oficina), 'centro': ((3, 3), (0, 1, 2), centro), 'maravilha': ((4, 4), (2,), maravilha)}
+GLB = dict(kv.split('=', 1) for kv in os.environ.get('GLB_MAP', '').split(';') if '=' in kv)  # ex.: GLB_MAP="mercado=/caminho/mercado.glb"
+GLB_ROT = {k: float(v) for k, v in (kv.split('=', 1) for kv in os.environ.get('GLB_ROT', '').split(';') if '=' in kv)}  # rotação em graus à volta de z
+def glb_model(name, w, h, margin=.05):
+    """Importa um modelo GLB (Tripo/Meshy) e encaixa-o na pegada w×h do jogo: escala uniforme, centrado, assente em z=0."""
+    before = set(bpy.data.objects); bpy.ops.import_scene.gltf(filepath=GLB[name])
+    objs = [o for o in bpy.data.objects if o not in before]; ms = [o for o in objs if o.type == 'MESH']
+    rot = Matrix.Rotation(R(GLB_ROT.get(name, 0)), 4, 'Z')
+    for o in objs:
+        if o.parent is None: o.matrix_world = rot @ o.matrix_world
+    bpy.context.view_layer.update()
+    pts = [o.matrix_world @ Vector(c) for o in ms for c in o.bound_box]
+    lo = Vector([min(p[i] for p in pts) for i in range(3)]); hi = Vector([max(p[i] for p in pts) for i in range(3)])
+    s = min((w - 2 * margin) / (hi.x - lo.x), (h - 2 * margin) / (hi.y - lo.y))
+    c = (lo + hi) / 2; T = Matrix.Translation((w / 2, -h / 2, 0)) @ Matrix.Scale(s, 4) @ Matrix.Translation((-c.x, -c.y, -lo.z))
+    for o in objs:
+        if o.parent is None: o.matrix_world = T @ o.matrix_world
+    for o in ms:
+        for sl in o.material_slots:
+            if sl.material and sl.material.use_nodes:  # sem brilho de plástico: o resto do jogo é mate
+                b = sl.material.node_tree.nodes.get('Principled BSDF')
+                if b: b.inputs['Roughness'].default_value = max(b.inputs['Roughness'].default_value, .6)
+    print('GLB', name, 'altura', round((hi.z - lo.z) * s, 3), 'escala', round(s, 3), flush=True)
 def scene_for(w, h, big=1.0):
     sc = g['SCN'](); RX = int(((w + h) * 64 * 1.25 + 40) * big); RY = int(RX * 1.05)
     g['RES'] = (RX, RY); cam = g['scene']()
@@ -354,7 +376,8 @@ for name, ((w, h), ages, fn) in B.items():
     if only and name not in only.split(','): continue
     for age in ages:
         g['reset'](); G.clear(); M = g['mats'](); extra_mats(M); sc, cam = scene_for(w, h, 2.3 if name == 'torre' else 1.0)
-        (pad(w, h, M) if name != 'torre' else None); fn(age, M); finish(list(G))
+        if name in GLB: glb_model(name, w, h)
+        else: (pad(w, h, M) if name != 'torre' else None); fn(age, M); finish(list(G))
         key = f'{name}|{age}'; sc.render.filepath = os.path.join(OUT, f'{name}_{age}.png')
         with bpy.context.temp_override(scene=sc, view_layer=sc.view_layers[0]): bpy.ops.render.render(write_still=True)
         a = world_to_camera_view(sc, cam, Vector((0, 0, 0))); info[key] = [a.x * sc.render.resolution_x, (1 - a.y) * sc.render.resolution_y, w, h]
