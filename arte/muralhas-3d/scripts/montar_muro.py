@@ -14,7 +14,12 @@ TYPES = os.environ.get('TYPES', 'madeira,pedra,fort').split(',')
 MASKS = [int(v) for v in os.environ.get('MASKS', ','.join(map(str, range(16)))).split(',')]
 EXT = 1.4  # quanto o braço se prolonga para lá do centro (corta-se no ecrã)
 
-def arms(m):  # braços: retas numa só peça; nos outros casos os braços sobrepõem-se no centro (sem juntas coplanares)
+GB = 0  # portão vizinho do lado −x (4) / −y (8): o braço pára na face da casa do portão (que ocupa até 0,28 desta casa)
+GCUT = .3
+def arms(m):
+    A = arms0(m)
+    return [(ax, max(a0, GCUT) if (ax == 'x' and GB & 4 or ax == 'y' and GB & 8) else a0, a1) for ax, a0, a1 in A]
+def arms0(m):  # braços: retas numa só peça; nos outros casos os braços sobrepõem-se no centro (sem juntas coplanares)
     if m == 5: return [('x', .5 - EXT, .5 + EXT)]
     if m == 10: return [('y', .5 - EXT, .5 + EXT)]
     A = []; ov = .2
@@ -63,10 +68,11 @@ def pedra(m, M, fort=False):  # muralha alta e grossa (estilo Stronghold): adarv
                 else: box(.5 + hw - .005, .5 + hw + .005, t - .012, t + .012, H * .5, H * .8, M['vao'], 'seteira')
     if not straight(m):  # torreão quadrado nas pontas, cantos e cruzamentos
         p = hw + .08; Hp = H + .4
-        box(.5 - p - .03, .5 + p + .03, .5 - p - .03, .5 + p + .03, 0, .14, M['stone_dk'], 'base')
-        box(.5 - p, .5 + p, .5 - p, .5 + p, .14, Hp, M['stone'], 'pilar')
-        box(.5 - p - .02, .5 + p + .02, .5 - p - .02, .5 + p + .02, Hp, Hp + .04, M['stone_dk'], 'cornija')
-        merlons(.5 - p - .02, .5 + p + .02, .5 - p - .02, .5 + p + .02, Hp + .04, M['stone'], 4, size=.09, h=.13)
+        X0 = max(.5 - p, GCUT) if GB & 4 else .5 - p; Y0 = max(.5 - p, GCUT) if GB & 8 else .5 - p; X1 = Y1 = .5 + p  # o torreão não entra na casa do portão
+        box(X0 - .03, X1 + .03, Y0 - .03, Y1 + .03, 0, .14, M['stone_dk'], 'base')
+        box(X0, X1, Y0, Y1, .14, Hp, M['stone'], 'pilar')
+        box(X0 - .02, X1 + .02, Y0 - .02, Y1 + .02, Hp, Hp + .04, M['stone_dk'], 'cornija')
+        merlons(X0 - .02, X1 + .02, Y0 - .02, Y1 + .02, Hp + .04, M['stone'], 4, size=.09, h=.13)
 
 def tons(M):  # pedra e madeira menos saturadas, como a arte pintada dos edifícios
     tm = g['tex_mat']
@@ -82,13 +88,16 @@ half = 16 * 2  # 16 px do jogo, a 2×
 sc.render.use_border = True; sc.render.use_crop_to_border = False
 sc.render.border_min_x = (ax - half - 10) / RX; sc.render.border_max_x = (ax + half + 10) / RX; sc.render.border_min_y = 0; sc.render.border_max_y = 1
 info = {}
+GATES = os.environ.get('GATES', '1') == '1'
 for tp in TYPES:
-    for m in MASKS:
+  for m in MASKS:
+    for gb in ([0] + ([4] if GATES and m & 4 else []) + ([8] if GATES and m & 8 else []) + ([12] if GATES and m & 12 == 12 else [])):
+        GB = gb
         for o in list(G): bpy.data.objects.remove(o, do_unlink=True)
         G.clear()
         madeira(m, M) if tp == 'madeira' else pedra(m, M, fort=(tp == 'fort'))
         finish([o for o in G if o.name.split('.')[0] not in ('seg', 'base', 'cornija', 'centro', 'trav', 'contraforte', 'seteira', 'adarve', 'parapeito')])
-        name = f'{tp}_{m}'; sc.render.filepath = os.path.join(OUT, name + '.png')
+        name = f'{tp}_{m}' + (f'_g{gb}' if gb else ''); sc.render.filepath = os.path.join(OUT, name + '.png')
         with bpy.context.temp_override(scene=sc, view_layer=sc.view_layers[0]): bpy.ops.render.render(write_still=True)
         info[name] = [ax, (1 - a.y) * RY]; print('REN', name, flush=True)
 af = os.path.join(OUT, 'anchors.json'); old = json.load(open(af))['anchor'] if os.path.exists(af) else {}

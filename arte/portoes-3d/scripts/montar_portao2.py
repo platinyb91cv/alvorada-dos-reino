@@ -310,7 +310,7 @@ def scene():
     sc.view_settings.look = 'None'
     if not sc.world: sc.world = bpy.data.worlds.new('w')
     sc.world.use_nodes = True; bg = sc.world.node_tree.nodes['Background']; bg.inputs[0].default_value = (.95, .9, .82, 1); bg.inputs[1].default_value = .4
-    cam = bpy.data.objects.new('cam', bpy.data.cameras.new('cam')); cam.data.type = 'ORTHO'; cam.data.ortho_scale = RES[0] / PXU
+    cam = bpy.data.objects.new('cam', bpy.data.cameras.new('cam')); cam.data.type = 'ORTHO'; cam.data.sensor_fit = 'HORIZONTAL'; cam.data.ortho_scale = RES[0] / PXU  # 'AUTO' aplicava a escala à altura (maior): tudo saía 5-11% maior que as casas
     sc.collection.objects.link(cam); sc.camera = cam
     c = Vector((.5, -.5, 0)); d = Vector((1, -1, 0)).normalized() * math.cos(R(30)) + Vector((0, 0, math.sin(R(30))))
     cam.rotation_euler = (R(60), 0, R(45)); cam.location = c + d * 20

@@ -1,0 +1,94 @@
+{
+ "isoladas": {
+  "muralhaPedra": {
+   "altura": 1.56,
+   "esperado": [
+    1.35,
+    1.45
+   ],
+   "altura_ok": false,
+   "base_casas": 0.8,
+   "base_esperada": 0.64,
+   "assente_ok": false
+  },
+  "muralhaFort": {
+   "altura": 1.76,
+   "esperado": [
+    1.55,
+    1.65
+   ],
+   "altura_ok": false,
+   "base_casas": 0.89,
+   "base_esperada": 0.72,
+   "assente_ok": false
+  },
+  "muralhaMadeira": {
+   "altura": 1.11,
+   "esperado": [
+    0.95,
+    1.15
+   ],
+   "altura_ok": true,
+   "base_casas": 0.21,
+   "base_esperada": 0.11,
+   "assente_ok": true
+  },
+  "portaoPedra": {
+   "altura": 2.46,
+   "esperado": [
+    2,
+    2.25
+   ],
+   "altura_ok": false,
+   "base_casas": 1.17,
+   "base_esperada": 0.98,
+   "assente_ok": false
+  },
+  "portaoMadeira": {
+   "altura": 2.16,
+   "esperado": [
+    1.8,
+    2.1
+   ],
+   "altura_ok": true,
+   "base_casas": 1.11,
+   "base_esperada": 0.94,
+   "assente_ok": false
+  },
+  "torre1": {
+   "topo": 3.4,
+   "topo_esperado": 3.28,
+   "topo_ok": false,
+   "fundo_casas": 4.13,
+   "assente_ok": false
+  },
+  "torre2": {
+   "topo": 3.47,
+   "topo_esperado": 3.39,
+   "topo_ok": true,
+   "fundo_casas": 4.23,
+   "assente_ok": false
+  },
+  "torre3": {
+   "topo": 3.7,
+   "topo_esperado": 3.53,
+   "topo_ok": false,
+   "fundo_casas": 4.23,
+   "assente_ok": false
+  }
+ },
+ "combinacoes": {
+  "pecas": 35,
+  "variantes_portao_lado": 0
+ },
+ "passagem": {
+  "dono_entrou": true,
+  "inimigo_entrou": false,
+  "inimigo_vivo": true,
+  "trancado_dono_entrou": false,
+  "aberto_dono_entrou": true,
+  "porta_abriu": 1,
+  "porta_fechou_sem_ninguem": true
+ },
+ "erros": []
+}
