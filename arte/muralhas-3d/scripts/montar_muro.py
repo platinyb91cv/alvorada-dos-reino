@@ -76,6 +76,7 @@ def tons(M):  # pedra e madeira menos saturadas, como a arte pintada dos edifíc
     M['dirt'] = g['node_mat']('terra_m', (.26, .2, .13), noise=25, var=.2, bump=.3)
 
 g['reset'](); sc = g['SCN'](); M = g['mats'](); tons(M); cam = g['scene']()
+sc.view_layers[0].update()  # sem isto a câmara ainda não está rodada e a âncora saía no centro da casa (muro 16 px acima)
 a = world_to_camera_view(sc, cam, Vector((0, 0, 0))); RX, RY = g['RES']; ax = a.x * RX
 half = 16 * 2  # 16 px do jogo, a 2×
 sc.render.use_border = True; sc.render.use_crop_to_border = False
