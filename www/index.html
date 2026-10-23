@@ -738,11 +738,11 @@ const BLDS={
   arquearia:{name:'Arquearia',icon:'🏹',w:3,h:3,hp:360,cost:{wood:150},time:30,age:0,train:['arqueiro','besteiro','besteiroPesado'],sight:4},
   estabulo:{name:'Estábulo',icon:'🐴',w:3,h:3,hp:360,cost:{wood:150},time:30,age:1,train:['cavaleiro','cavArqueira','cavPesada','cavLanca'],sight:4},
   doca:{name:'Doca',icon:'⚓',w:2,h:2,hp:320,cost:{wood:100},time:25,age:0,dock:1,train:['barcoPesca','transporte','gale','incendiario','navioPesado','corsario'],sight:6},
-  muralhaMadeira:{name:'Paliçada',icon:'🪵',w:1,h:1,hp:160,cost:{wood:4},time:4,age:0,wall:1,sight:1},
-  muralhaPedra:{name:'Muralha de Pedra',icon:'🧱',w:1,h:1,hp:520,cost:{stone:6},time:7,age:1,wall:1,sight:1},
-  muralhaFort:{name:'Muralha Fortificada',icon:'🏰',w:1,h:1,hp:950,cost:{stone:10},time:9,age:2,wall:1,sight:2},
-  portaoMadeira:{name:'Portão de Madeira',icon:'🚪',w:1,h:1,hp:280,cost:{wood:30},time:12,age:0,gate:1,sight:2},
-  portaoPedra:{name:'Portão de Pedra',icon:'⛩️',w:1,h:1,hp:780,cost:{stone:40},time:20,age:1,gate:1,sight:2},
+  muralhaMadeira:{name:'Paliçada',icon:'🪵',w:1,h:1,hp:220,cost:{wood:4},time:4,age:0,wall:1,sight:1},
+  muralhaPedra:{name:'Muralha de Pedra',icon:'🧱',w:1,h:1,hp:850,cost:{stone:6},time:7,age:1,wall:1,sight:1},
+  muralhaFort:{name:'Muralha Fortificada',icon:'🏰',w:1,h:1,hp:1500,cost:{stone:10},time:9,age:2,wall:1,sight:2},
+  portaoMadeira:{name:'Portão de Madeira',icon:'🚪',w:1,h:1,hp:400,cost:{wood:30},time:12,age:0,gate:1,sight:2},
+  portaoPedra:{name:'Portão de Pedra',icon:'⛩️',w:1,h:1,hp:1250,cost:{stone:40},time:20,age:1,gate:1,sight:2},
   torre:{name:'Torre de Vigia',icon:'🗼',w:2,h:2,hp:320,cost:{stone:100,wood:25},time:35,age:1,atk:5,range:6.5,rate:1.6,sight:8,proj:'arrow'},
   ferreiro:{name:'Ferreiro',icon:'⚒️',w:2,h:2,hp:300,cost:{wood:130},time:30,age:1,techs:['forja','flechas','cota'],sight:4},
   templo:{name:'Templo',icon:'🛕',w:3,h:3,hp:420,cost:{wood:200},time:40,age:1,train:['sacerdote'],sight:5},
@@ -752,6 +752,9 @@ const BLDS={
 };
 // guarnição: quantas unidades cabem lá dentro
 BLDS.centro.garr=10;BLDS.torre.garr=5;BLDS.casa.garr=3;
+// soldados em cima das muralhas de pedra e dos portões (adarve): só infantaria e atiradores; os atiradores disparam lá de cima
+BLDS.muralhaPedra.garr=2;BLDS.muralhaFort.garr=3;BLDS.portaoPedra.garr=4;BLDS.portaoMadeira.garr=2;
+const onWall=b=>!!(b&&(b.d.wall||b.d.gate));
 const BUILD_MENU=['casa','quinta','curral','estrada','armazem','quartel','arquearia','estabulo','doca','mercado','ferreiro','templo','torre','oficina','centro','maravilha'];
 const DEF_MENU=['muralhaMadeira','muralhaPedra','muralhaFort','portaoMadeira','portaoPedra','torre'];
 const TECHS={
@@ -1553,6 +1556,7 @@ function wallUpgrade(o,list){let n=0,miss=false;for(const b of list){const nt=WA
 // ---------- guarnição e sino da vila ----------
 function garrSpace(b){return b&&b.d.garr?b.d.garr-b.garr.length:0}
 function garrisonIn(u,b){if(!alive(b)||!b.done||!b.d.garr||b.o!==u.o||b.garr.length>=b.d.garr||u.d.naval||u.d.siege||u.d.trade||u.d.cls==='cav'&&b.type==='casa')return false;
+  if(onWall(b)&&(!u.d.mil||u.d.cls==='cav'||u.d.king))return false;
   const i=ents.indexOf(u);if(i>=0)ents.splice(i,1);byId.delete(u.id);const keep=u.type==='aldeao'&&u.gres?{id:u.gres.id}:null;
   stopUnit(u);u.inBoat=b.id;u.inBld=1;u.prevG=keep;b.garr.push(u);if(sel.includes(u)){sel=sel.filter(x=>x!==u);uiDirty=true}if(b.o===ME)uiDirty=true;return true}
 function ungarrison(b,quiet,onlyV){if(!b.garr||!b.garr.length)return 0;let n=0;const left=[];
@@ -1562,7 +1566,7 @@ function ungarrison(b,quiet,onlyV){if(!b.garr||!b.garr.length)return 0;let n=0;c
   b.garr=left;if(b.o===ME){uiDirty=true;if(!quiet&&n)toast(n+(n>1?' unidades saíram':' unidade saiu'))}return n}
 function orderEnter(u,b){stopUnit(u);u.state='enter';u.target=b;u.fails=0;u.rp=0}
 function ringBell(o,on){if(o===ME&&!!(G.bell&&G.bell[o])!==!!on)voz(on?'sino':'paz');if(o===ME&&on&&G.time-(G.alertAt??-99)<30)setTimeout(()=>achv('sino'),0);G.bell=G.bell||[false,false];G.bell[o]=on;
-  if(on){const homes=ents.filter(e=>e.kind==='b'&&e.o===o&&e.done&&e.d.garr);const free=new Map(homes.map(b=>[b,garrSpace(b)]));let n=0;
+  if(on){const homes=ents.filter(e=>e.kind==='b'&&e.o===o&&e.done&&e.d.garr&&!onWall(e));const free=new Map(homes.map(b=>[b,garrSpace(b)]));let n=0;
     for(const u of ents.slice()){if(u.kind!=='u'||u.o!==o||u.type!=='aldeao')continue;let best=null,bd=1e9;for(const b of homes){if(free.get(b)<=0)continue;const c=centerOf(b);const d=hyp(c.x-u.x,c.y-u.y);if(d<bd){bd=d;best=b}}
       if(!best)continue;free.set(best,free.get(best)-1);const keep=u.gres?{id:u.gres.id}:null;orderEnter(u,best);u.prevG=keep;n++}
     if(o===ME){toast(n?'🔔 Sino da vila! Os aldeões correm para dentro.':'Não há espaço para abrigar os aldeões',!n);snd('alarm',null,null,{force:1})}}
@@ -1786,6 +1790,9 @@ function updBld(b,dt){
       if(b.garr&&b.garr.length){const n=Math.min(6,Math.ceil(b.garr.reduce((a,u)=>a+(u.d.proj==='arrow'?2:1),0)/2));for(let k=0;k<n;k++){const t2=k===0?b.target:scanEnemy(b,rg,false)||b.target;if(tv(t2))fire(b,t2)}}
       snd('bow',b.tx+b.w/2,b.ty+b.h/2)}
   }
+  if(onWall(b)&&b.garr&&b.garr.length){const sh=b.garr.filter(u=>u.d.proj);if(sh.length){b.scan=(b.scan||0)-dt;const rg=Math.max(...sh.map(u=>u.d.range||5))+1;
+    const tv=t=>alive(t)&&t.o!==b.o&&t.o!==2;if(b.scan<=0){b.scan=.4;if(!tv(b.target)||distTo({x:b.tx+.5,y:b.ty+.5,d:{r:0}},b.target)>rg)b.target=scanEnemy(b,rg,false)}
+    let shot=false;for(const u of sh){u.wcd=(u.wcd||0)-dt;if(u.wcd<=0&&tv(b.target)){u.wcd=u.d.rate||1.6;fire(b,b.target,u,u.d.proj,atkOf(u));shot=true}}if(shot)snd('bow',b.tx+.5,b.ty+.5)}}
   if(b.garr&&b.garr.length)for(const u of b.garr)if(u.hp<u.max)u.hp=Math.min(u.max,u.hp+dt*(u.d.king?3:.8));
   // produção
   if(b.queue.length){
@@ -3947,14 +3954,14 @@ function render(){UCFM=0;
     else{bar(c,p.x-10,p.y-(e.d.naval?34:e.d.king&&KART.ready?KING_H+8:(e.d.siege?(e.type==='trebuchet'?54:40):e.d.cls==='cav'?46:e.type==='lanceiro'?44:38)*UNIT_SCALE),20,e.hp/e.max,e.o);if(e.cargo&&e.cargo.length&&e.o===ME){c.fillStyle='#fff';c.font='bold 9px sans-serif';c.textAlign='center';c.fillText(e.cargo.length+'/'+e.d.cap,p.x,p.y-38)}}
   }
   // guarnição: escudo com o número de unidades lá dentro
-  for(const [,k,e] of draw){if(k!==1||!e.garr||!e.garr.length||!visibleTo0(e))continue;const q=proj(e.tx+e.w/2,e.ty+e.h/2);const y=q.y-BHEIGHT[e.type]-(sel.includes(e)||e.hp<e.max?34:20);
+  for(const [,k,e] of draw){if(k!==1||!e.garr||!e.garr.length||!visibleTo0(e)||onWall(e)&&!sel.includes(e))continue;const q=proj(e.tx+e.w/2,e.ty+e.h/2);const y=q.y-BHEIGHT[e.type]-(sel.includes(e)||e.hp<e.max?34:20);
     c.fillStyle=P[e.o].col;c.strokeStyle='#fff3d6';c.lineWidth=1.5;c.beginPath();c.moveTo(q.x-8,y-8);c.lineTo(q.x+8,y-8);c.lineTo(q.x+8,y+1);c.quadraticCurveTo(q.x+8,y+7,q.x,y+10);c.quadraticCurveTo(q.x-8,y+7,q.x-8,y+1);c.closePath();c.fill();c.stroke();
     c.fillStyle='#fff';c.font='bold 10px sans-serif';c.textAlign='center';c.fillText(e.garr.length,q.x,y+3.5)}
   // sentinelas: as unidades abrigadas aparecem no topo das torres, centros e vilas
-  for(const [,k,e] of draw){if(k!==1||!e.garr||!e.garr.length||!visibleTo0(e)||!(e.type==='torre'||e.type==='centro'||e.type==='vila'))continue;
-    const mil=e.garr.filter(u=>u.d.mil);if(!mil.length)continue;const q=proj(e.tx+e.w/2,e.ty+e.h/2),n=Math.min(3,mil.length),top=q.y-BHEIGHT[e.type]*(e.type==='torre'?.9:e.type==='vila'?.5:.78);
+  for(const [,k,e] of draw){if(k!==1||!e.garr||!e.garr.length||!visibleTo0(e)||!(e.type==='torre'||e.type==='centro'||e.type==='vila'||onWall(e)))continue;
+    const mil=e.garr.filter(u=>u.d.mil);if(!mil.length)continue;const wl=onWall(e),q=proj(e.tx+e.w/2,e.ty+e.h/2),n=Math.min(wl?2:3,mil.length),top=q.y-BHEIGHT[e.type]*(e.type==='torre'?.9:e.type==='vila'?.5:wl?.8:.78);
     for(let i=0;i<n;i++){const u=mil[i],src=UNIT3D[u.type];if(!u3ready(src))continue;const fi=src.meta.states.idle[0],dir=Math.floor(t/3+i*3+e.id)%8;
-      c.save();c.translate(q.x+(i-(n-1)/2)*11,top);c.scale(.72,.72);drawUnit3dFrame(c,src,fi,dir,P[e.o].col,0,0,null,false,false);c.restore()}}
+      c.save();c.translate(q.x+(i-(n-1)/2)*(wl?8:11),top+(wl?(i-(n-1)/2)*(bldVariant(e)==='y'||(e.d.wall&&(bldVariant(e)&10)&&!(bldVariant(e)&5))?-4:4):0));c.scale(.72,.72);drawUnit3dFrame(c,src,fi,dir,P[e.o].col,0,0,null,false,false);c.restore()}}
   // lealdade das vilas neutras
   for(const [,k,e] of draw){if(k!==1||e.type!=='vila'||!e.claim||!visibleTo0(e))continue;const p0=e.claim[0]>=e.claim[1]?0:1,v=e.claim[p0];if(v<=0)continue;const need=e.o===2?VILA_CLAIM:VILA_SWAP;
     const q=proj(e.tx+e.w/2,e.ty+e.h/2),y=q.y-BHEIGHT.vila-30;c.fillStyle='rgba(0,0,0,.75)';c.fillRect(q.x-25,y-1,50,6);c.fillStyle=P[p0].col;c.fillRect(q.x-24,y,48*clamp(v/need,0,1),4);c.fillStyle='#fff';c.font='bold 9px sans-serif';c.textAlign='center';c.fillText('🏘️',q.x,y-4)}
@@ -5080,7 +5087,7 @@ function buildCmds0(){
       box.appendChild(mkCmd('🏳️','Recuar',()=>cmdRetreat(units),'','Recuar para o Centro (R)'));
       if(army.length>1||units.length>1)box.appendChild(mkCmd(FORM_ICON[G.form||'livre'],'Formação',()=>{menuMode='form';uiDirty=true},'','Formação (F)'));
     }
-    if(units.some(u=>!u.d.naval&&!u.d.siege))box.appendChild(mkCmd('🏰','Abrigar',()=>{G.cmdMode='garrison';uiDirty=true;toast('Toca num Centro da Vila, torre ou casa')},G.cmdMode==='garrison'?'on':'','Entrar num edifício (abrigo e mais flechas)'));
+    if(units.some(u=>!u.d.naval&&!u.d.siege))box.appendChild(mkCmd('🏰','Abrigar',()=>{G.cmdMode='garrison';uiDirty=true;toast('Toca num Centro da Vila, torre, casa, muralha de pedra ou portão')},G.cmdMode==='garrison'?'on':'','Entrar num edifício ou subir à muralha (abrigo e mais flechas)'));
     box.appendChild(mkCmd('✋','Parar',()=>act('stop',{u:ids(units)}),'','Parar (E)'));
     box.appendChild(mkCmd('🗑️','Eliminar',()=>{const u=sel.filter(e=>e.o===ME&&e.kind==='u');if(G.delArm&&G.time-G.delArm<2){act('del',{u:ids(u)});G.delArm=0}else{G.delArm=G.time;toast('Toca outra vez para eliminar')}}));
     return;
