@@ -239,7 +239,7 @@ def path(M, y0=.2, y1=.8):  # chão de terra batida sob a passagem
     bm.faces.new(vs); mesh_obj('path', bm, M['dirt'])
 
 def madeira(age, M, open_):  # casa do portão de madeira (estilo Stronghold): bloco largo, arco/porta ao meio, parapeito com ameias de tábuas
-    Hb = (1.15, 1.3, 1.42)[age]; dz = .82; x0, x1, y0, y1 = -.28, 1.28, .06, .94
+    Hb = (1.35, 1.65, 1.8)[age]; dz = .82; x0, x1, y0, y1 = -.28, 1.28, .06, .94
     path(M)
     if age == 0:  # paredes de troncos aguçados à volta de um núcleo de tábuas
         box(x0 + .05, .25, y0 + .05, y1 - .05, 0, Hb - .15, M['plank'], 'torre'); box(.75, x1 - .05, y0 + .05, y1 - .05, 0, Hb - .15, M['plank'], 'torre')
@@ -276,7 +276,7 @@ def madeira(age, M, open_):  # casa do portão de madeira (estilo Stronghold): b
     flag(x1 - .12, y0 + .12, Hb + .14, .32, M['banner'], M)
 
 def pedra(age, M, open_):  # casa do portão (estilo Stronghold): um bloco largo de pedra cinzenta, arco no meio, ameias e terraço
-    Hb = (0, 1.4, 1.6)[age]; dz = .82; x0, x1, y0, y1 = -.28, 1.28, .04, .96
+    Hb = (0, 1.8, 2.0)[age]; dz = .82; x0, x1, y0, y1 = -.28, 1.28, .04, .96
     path(M)
     box(x0 - .03, x1 + .03, y0 - .03, y1 + .03, 0, .14, M['stone_dk'], 'sapata')
     for a, b in ((x0, .25), (.75, x1)): box(a, b, y0, y1, .14, Hb, M['stone'], 'torre')

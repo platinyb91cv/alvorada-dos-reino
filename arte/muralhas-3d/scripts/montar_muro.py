@@ -41,7 +41,7 @@ def madeira(m, M):  # paliçada: troncos grossos aguçados, de alturas irregular
     if not straight(m): cyl(.5, .5, 0, H + .04, .07, M['wood'], tip=.13, seg=9)
 
 def pedra(m, M, fort=False):  # muralha alta e grossa (estilo Stronghold): adarve largo, ameias dos dois lados, pedra cinzenta
-    T = .64 if fort else .56; H = 1.12 if fort else .95; hw = T / 2
+    T = .64 if fort else .56; H = 1.5 if fort else 1.3; hw = T / 2
     for axis, a0, a1 in arms(m):
         seg(axis, a0, a1, -hw - .04, hw + .04, 0, .14, M['stone_dk'], 'base')
         seg(axis, a0, a1, -hw, hw, .14, H, M['stone'])

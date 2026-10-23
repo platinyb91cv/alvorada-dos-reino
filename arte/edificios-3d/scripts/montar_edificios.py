@@ -218,7 +218,7 @@ def torre(lvl, M):
         pyramid(.36, 1.64, .36, 1.64, 2.55, .45, M['thatch'], over=.08)
         flag(1.0, 1.0, 2.98, .3, M['banner'], M)
     elif lvl == 2:  # torre quadrada alta (estilo Stronghold), ocupa a base inteira: os muros batem-lhe na parede
-        H = 2.05
+        H = 2.45
         box(-.03, 2.03, -.03, 2.03, 0, .14, M['stone_dk'], 'base'); box(.02, 1.98, .02, 1.98, .14, H, M['stone'], 'torre')
         for zz in (.5, 1.0, 1.5):
             for x in (.6, 1.4): box(x - .016, x + .016, 1.975, 1.985, zz, zz + .24, M['vao'], 'seteira'); box(1.975, 1.985, x - .016, x + .016, zz, zz + .24, M['vao'], 'seteira')
@@ -227,7 +227,7 @@ def torre(lvl, M):
         ameias(.02, 1.98, .02, 1.98, H, 9)
         flag(1.75, .25, H + .18, .4, M['banner'], M)
     else:  # torre redonda grande sobre base quadrada à altura das muralhas
-        Hb = .95; H = 2.4
+        Hb = 1.3; H = 2.85
         box(-.03, 2.03, -.03, 2.03, 0, .14, M['stone_dk'], 'base'); box(.02, 1.98, .02, 1.98, .14, Hb, M['stone'], 'torre')
         ameias(.02, 1.98, .02, 1.98, Hb, 9)
         cyl(1.0, 1.0, Hb, H, .82, M['stone'], seg=32, name='torreao')
