@@ -238,40 +238,42 @@ def path(M, y0=.2, y1=.8):  # chão de terra batida sob a passagem
         a = 2 * math.pi * k / n; vs.append(bm.verts.new((.5 + .3 * math.cos(a), -(.5 + .22 * math.sin(a)), .004)))
     bm.faces.new(vs); mesh_obj('path', bm, M['dirt'])
 
-def madeira(age, M, open_):  # portão de madeira: duas torres atarracadas + casa da guarda por cima da passagem (largura de 0,5)
-    Ht = (1.0, 1.08, 1.16)[age]; dz = .8
+def madeira(age, M, open_):  # casa do portão de madeira (estilo Stronghold): bloco largo, arco/porta ao meio, parapeito com ameias de tábuas
+    Hb = (1.15, 1.3, 1.42)[age]; dz = .82; x0, x1, y0, y1 = -.28, 1.28, .06, .94
     path(M)
-    for tx0, tx1 in ((-.12, .25), (.75, 1.12)):
-        if age == 0:  # torre de troncos aguçados 3×3 com plataforma e colmo
-            for i in range(3):
-                for j in range(3):
-                    x = tx0 + .05 + i * (tx1 - tx0 - .1) / 2; y = .24 + j * .26
-                    cyl(x, y, 0, Ht - .2 + (.05 if (i + j) % 2 else 0), .06, M['wood'], tip=.12)
-            box(tx0 - .02, tx1 + .02, .2, .8, Ht - .3, Ht - .25, M['plank'], 'plat')
-            pyramid(tx0 - .02, tx1 + .02, .2, .8, Ht - .02, .28, M['thatch'], over=.08)
-            for x in (tx0 + .02, tx1 - .02):
-                for y in (.22, .78): cyl(x, y, Ht - .25, Ht, .025, M['wood'], seg=6)
-        else:  # torre de tábuas sobre base de pedra
-            box(tx0 - .02, tx1 + .02, .18, .82, 0, .3, M['stone'], 'base')
-            box(tx0, tx1, .2, .8, .3, Ht - .1, M['plank'], 'torre')
-            for x in (tx0, tx1):
-                for y in (.2, .8): box(x - .03, x + .03, y - .03, y + .03, .3, Ht - .08, M['wood'], 'canto')
-            box(tx0 + .1, tx1 - .1, .8, .815, Ht * .55, Ht * .55 + .12, M['vao'], 'seteira')
-            box(tx0 - .04, tx1 + .04, .16, .84, Ht - .1, Ht - .05, M['wood'], 'beiral')
-            if age == 1: pyramid(tx0 - .03, tx1 + .03, .17, .83, Ht - .05, .3, M['shingle'], over=.06)
-            else: pyramid(tx0 - .03, tx1 + .03, .17, .83, Ht - .05, .36, M['slate'], over=.06); cyl((tx0 + tx1) / 2, .5, Ht + .3, Ht + .38, .02, M['gold'], seg=6)
-    # casa da guarda por cima da passagem
-    box(.22, .78, .3, .7, dz, dz + .07, M['wood'], 'verga')
-    if age == 0:
-        for i in range(9):
-            x = .26 + i * .48 / 8; cyl(x, .62, dz + .07, Ht - .12 + (.04 if i % 2 else 0), .035, M['wood'], tip=.07, seg=7)
-    else:
-        box(.24, .76, .3, .7, dz + .07, Ht - .12, M['plank'], 'casa_guarda')
-        gable(.22, .78, .28, .72, Ht - .12, .18, M['shingle' if age == 1 else 'slate'], over=.05)
-        if age == 2:
-            for x in (.2, .8): cyl(x, .86, .55, .61, .025, M['fire']); cyl(x, .84, .45, .55, .012, M['iron'], seg=6)
+    if age == 0:  # paredes de troncos aguçados à volta de um núcleo de tábuas
+        box(x0 + .05, .25, y0 + .05, y1 - .05, 0, Hb - .15, M['plank'], 'torre'); box(.75, x1 - .05, y0 + .05, y1 - .05, 0, Hb - .15, M['plank'], 'torre')
+        for (a, b) in ((x0, .25), (.75, x1)):
+            n = 5
+            for k in range(n):
+                t = a + (k + .5) * (b - a) / n
+                for yy in (y0, y1): cyl(t, yy, 0, Hb + (.06 if k % 2 else 0), .055, M['wood'], tip=.13, seg=8)
+            for yy in (y0 + .2, y0 + .45, y0 + .7):
+                for xx in (a, b): cyl(xx, yy, 0, Hb + (.04 if int(yy * 10) % 2 else 0), .055, M['wood'], tip=.13, seg=8)
+        box(.22, .78, y0 + .05, y1 - .05, dz, dz + .1, M['wood'], 'verga')
+        for k in range(7):
+            t = .27 + k * .46 / 6
+            for yy in (y0 + .02, y1 - .02): cyl(t, yy, dz + .1, Hb + (.05 if k % 2 else 0), .045, M['wood'], tip=.11, seg=8)
+        box(x0 + .05, .25, y0 + .05, y1 - .05, Hb - .12, Hb - .07, M['plank'], 'adarve'); box(.75, x1 - .05, y0 + .05, y1 - .05, Hb - .12, Hb - .07, M['plank'], 'adarve'); box(.25, .75, y0 + .05, y1 - .05, Hb - .12, Hb - .07, M['plank'], 'adarve')
+    else:  # base de pedra cinzenta + andar de madeira com parapeito e ameias de tábuas
+        Hs = .55
+        for (a, b) in ((x0, .25), (.75, x1)):
+            box(a - .03, b + .03, y0 - .03, y1 + .03, 0, .14, M['stone_dk'], 'sapata'); box(a, b, y0, y1, .14, Hs, M['stone'], 'torre')
+        box(x0 - .02, x1 + .02, y0 - .02, y1 + .02, Hs, Hs + .05, M['wood'], 'viga')
+        box(x0, .25, y0, y1, Hs + .05, Hb, M['plank'], 'torre'); box(.75, x1, y0, y1, Hs + .05, Hb, M['plank'], 'torre')
+        top = box(.25, .75, y0, y1, dz, Hb, M['plank'], 'meio')
+        for a in (x0, .25, .75, x1):
+            for b in (y0, y1): box(a - .03, a + .03, b - .03, b + .03, Hs, Hb + .02, M['wood'], 'canto')
+        for k in range(8):  # ameias de tábuas
+            t = x0 + (k + .5) * (x1 - x0) / 8
+            for b in (y0, y1): box(t - .06, t + .06, b - .02, b + .02, Hb, Hb + .14, M['plank'], 'merlon')
+        for xc in (0.0, 1.0): box(xc - .05, xc + .05, y1 - .005, y1 + .005, Hs + .25, Hs + .45, M['vao'], 'seteira')
+        if age == 2:  # telhado de duas águas sobre a passagem e lanternas
+            gable(.2, .8, y0 - .02, y1 + .02, Hb + .02, .25, M['shingle'], over=.05)
+            for x in (.2, .8): cyl(x, y1 + .08, .55, .61, .025, M['fire']); cyl(x, y1 + .06, .45, .55, .012, M['iron'], seg=6)
     doors(.25, .75, .5, dz, M, iron=age == 2, open_=open_)
-    banner(.5, .72, dz + (.0 if age == 0 else .2), .2, .3, M['banner'])
+    banner(.5, y1 + .02, dz + (.0 if age == 0 else .3), .2, .3, M['banner'])
+    flag(x1 - .12, y0 + .12, Hb + .14, .32, M['banner'], M)
 
 def pedra(age, M, open_):  # casa do portão (estilo Stronghold): um bloco largo de pedra cinzenta, arco no meio, ameias e terraço
     Hb = (0, 1.4, 1.6)[age]; dz = .82; x0, x1, y0, y1 = -.28, 1.28, .04, .96

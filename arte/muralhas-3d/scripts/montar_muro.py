@@ -28,7 +28,7 @@ def seg(axis, a0, a1, w0, w1, z0, z1, mat, name='seg'):  # caixa ao longo de um 
 def straight(m): return m in (5, 10)
 
 def madeira(m, M):  # paliçada: troncos grossos aguçados, de alturas irregulares, com travessas e escoras por dentro
-    H = .9
+    H = 1.05
     for axis, a0, a1 in arms(m):
         for k in range(-24, 36):  # espaçamento global de 0,085 (encaixa entre casas)
             t = (k + .5) * .085
@@ -36,8 +36,8 @@ def madeira(m, M):  # paliçada: troncos grossos aguçados, de alturas irregular
             if (axis == 'x' and (m & 1 == 0 and t > .5 or m & 4 == 0 and t < .5)) or (axis == 'y' and (m & 2 == 0 and t > .5 or m & 8 == 0 and t < .5)): continue
             x, y = (t, .5) if axis == 'x' else (.5, t)
             hh = H - .1 + ((k * 7919) % 5) * .018
-            cyl(x, y, 0, hh, .045, M['wood'], tip=.14, seg=8)
-        for z in (.25, .6): seg(axis, a0, a1, -.075, -.045, z - .024, z + .024, M['wood_lt'], 'trav')  # travessas por dentro
+            cyl(x, y, 0, hh, .055, M['wood'], tip=.16, seg=8)
+        for z in (.3, .7): seg(axis, a0, a1, -.075, -.045, z - .024, z + .024, M['wood_lt'], 'trav')  # travessas por dentro
     if not straight(m): cyl(.5, .5, 0, H + .04, .07, M['wood'], tip=.13, seg=9)
 
 def pedra(m, M, fort=False):  # muralha alta e grossa (estilo Stronghold): adarve largo, ameias dos dois lados, pedra cinzenta
