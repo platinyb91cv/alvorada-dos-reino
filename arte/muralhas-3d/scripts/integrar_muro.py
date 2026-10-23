@@ -6,7 +6,7 @@ from PIL import Image
 src, repo = Path(sys.argv[1]), Path(sys.argv[2]); J = json.loads((src / 'anchors.json').read_text()); A = J['anchor']; half = J['clipHalfPx']
 tiles = {}
 for name, (ax, ay) in A.items():
-    im = Image.open(src / f'{name}.png').convert('RGBA'); x0c, x1c = round(ax - half), round(ax + half)
+    im = Image.open(src / f'{name}.png').convert('RGBA'); x0c, x1c = round(ax - half - 3), round(ax + half + 3)  # 3 px de sobreposição: sem a linha clara nas juntas (bordas suavizadas)
     a = im.getchannel('A'); px = a.load()
     for y in range(im.height):
         for x in list(range(0, max(0, x0c))) + list(range(min(im.width, x1c), im.width)): px[x, y] = 0
