@@ -184,6 +184,14 @@ body.nosel #info{flex:0 0 auto;min-width:0;padding:4px 9px}body.nosel #info h3,b
 .cmd{background:linear-gradient(rgba(74,54,36,.92),rgba(43,31,21,.92))}
 #side button{background:var(--hud-glass);border-color:var(--hud-rim)}
 #grp button{background:var(--hud-glass);border-color:var(--hud-rim)}
+/* interface escondida: só fica o botão do olho; minimapa recolhido: só a pega */
+body.hudoff #top,body.hudoff #bottom,body.hudoff #grp,body.hudoff #objBox,body.hudoff #side>button:not(#bHud){display:none!important}
+body.hudoff #bHud{opacity:.7}
+.mmap{position:relative}
+#bMini{position:absolute;right:-7px;top:-9px;width:22px;height:22px;border-radius:50%;border:1px solid var(--hud-rim);background:#1a120c;color:var(--trim-hi);padding:0;display:flex;align-items:center;justify-content:center;font-size:14px;cursor:pointer;box-shadow:0 1px 4px rgba(0,0,0,.6)}
+body.mmoff #mini{display:none}body.mmoff .mmap{padding:0;background:none;box-shadow:none;width:26px;height:22px}body.mmoff #bMini{position:static}
+#toast div{font-size:13px;padding:3px 10px;background:rgba(16,11,7,.8)}
+@media (max-height:430px){#toast div{font-size:12px;padding:2px 9px}}
 @media (max-height:430px){
   #top{height:calc(env(safe-area-inset-top,0px) + 32px);gap:5px}.res{height:25px;min-width:52px;padding-right:6px}.res i{width:19px;height:19px;font-size:14px}.res b{font-size:12.5px}
   #agePlate{height:25px}.emb{width:20px;height:20px;font-size:10px}#btnMenu{width:32px;height:32px;font-size:16px}
@@ -372,6 +380,7 @@ input{font-family:inherit;-webkit-user-select:text;user-select:text;touch-action
     </div>
   </div>
   <div id="side">
+    <button id="bHud" title="Esconder a interface (ver só o jogo)" aria-label="Esconder a interface"><i data-ic="eye"></i></button>
     <button id="bBox" title="Seleção em caixa (arrasta para selecionar)"><i data-ic="box"></i></button>
     <button id="bIdle" title="Aldeão ocioso (.)"><i data-ic="idle"></i><small id="idleN" class="badge"></small></button>
     <button id="bStuck" title="Localizar aldeão bloqueado" aria-label="Localizar aldeão bloqueado" hidden>⚠<small id="stuckN" class="badge"></small></button>
@@ -392,7 +401,7 @@ input{font-family:inherit;-webkit-user-select:text;user-select:text;touch-action
     <form id="chatForm"><input id="chatIn" maxlength="120" placeholder="Escreve uma mensagem…" autocomplete="off"><button>Enviar</button></form>
   </div>
   <div id="bottom">
-    <div class="mmap"><canvas id="mini" width="320" height="160"></canvas></div>
+    <div class="mmap"><canvas id="mini" width="320" height="160"></canvas><button id="bMini" title="Esconder o minimapa" aria-label="Esconder o minimapa"><i data-ic="mapdn"></i></button></div>
     <div id="info"></div>
     <div id="cmds"></div>
   </div>
@@ -3066,7 +3075,7 @@ function wall3dSprite(type,o,m){if(!WALL3D.ready||!WALL3D_KIND[type])return null
 // edifícios 3D (Blender, arte/edificios-3d): casas, quartel, Centro da Vila… por idade (torre: por nível), mesma câmara e luz dos portões
 const BLD3D_DATA={"file":"edificios-3d.webp","scale":1.5,"atlasSha256":"909a98692c94fbc1fcae1abc371fe71012212d7c47f1218c9deafb220c275a63","frames":{"armazem_0":[2,1803,188,142,93.66,40.3],"armazem_1":[382,1803,186,135,93.1,30.94],"armazem_2":[192,1803,188,140,93.49,34.96],"arquearia_0":[284,1571,280,220,139.93,46.97],"arquearia_1":[566,1571,280,215,140.21,54.73],"arquearia_2":[2,1325,280,244,140.03,73.81],"casa_0":[1417,1571,187,163,93.31,61.7],"casa_1":[1795,1571,187,153,93.25,51.59],"casa_2":[848,1571,187,186,93.2,83.66],"centro_0":[284,1325,280,243,139.85,77.97],"centro_1":[1308,991,280,256,140.32,104.5],"centro_2":[1026,991,280,257,140.48,103.25],"doca_0":[848,1325,213,232,135.0,136.95],"doca_1":[1063,1325,213,232,135.0,136.95],"doca_2":[1278,1325,213,232,135.0,136.95],"estabulo_0":[1493,1325,280,232,140.32,61.36],"estabulo_1":[338,655,348,333,195.0,195.15],"estabulo_2":[688,655,351,333,195.0,195.15],"ferreiro_0":[1606,1571,187,160,93.55,52.3],"ferreiro_1":[1227,1571,188,178,93.29,76.9],"ferreiro_2":[1037,1571,188,186,93.86,75.04],"maravilha_2":[1467,2,510,452,255.0,253.35],"mercado_1":[338,991,342,329,195.0,195.15],"mercado_2":[682,991,342,329,195.0,195.15],"oficina_1":[1433,655,352,332,195.0,195.15],"oficina_2":[1041,655,390,333,195.0,195.15],"quartel_0":[2,1571,280,230,140.03,59.97],"quartel_1":[566,1325,280,236,140.12,75.2],"quartel_2":[1590,991,280,256,139.86,95.5],"templo_1":[2,991,334,332,195.0,195.15],"templo_2":[2,655,334,334,195.0,195.15],"torre_1":[2,2,473,651,310.12,376.74],"torre_2":[477,2,502,651,310.12,376.74],"torre_3":[981,2,484,651,310.12,376.74]}};
 const BLD3D={ready:false,img:null,wide:true,teams:new Map(),meta:BLD3D_DATA};
-(()=>{if(!BLD3D_DATA.file)return;const im=new Image();im.onload=()=>{BLD3D.img=im;BLD3D.ready=true;for(const k in BCACHE)delete BCACHE[k];try{PORTS.clear()}catch(e){}};im.src='assets/edificios-extra/'+BLD3D_DATA.file})();
+(()=>{if(!BLD3D_DATA.file)return;const im=new Image();im.onload=()=>{BLD3D.img=im;BLD3D.ready=true;for(const k in BCACHE)delete BCACHE[k];try{PORTS.clear()}catch(e){}try{if(typeof MBG!=='undefined'&&MBG.L&&!document.body.classList.contains('ingame')){MBG.L=null;menuBgStart()}}catch(e){}};im.src='assets/edificios-extra/'+BLD3D_DATA.file})();
 function bld3dKey(type,age,vr){const F=BLD3D.meta.frames;if(!F)return null;
   if(type==='torre'){const l=Math.max(1,Math.min(3,vr|0||1));return F['torre_'+l]?'torre_'+l:null}
   for(let a=age;a>=0;a--)if(F[type+'_'+a])return type+'_'+a;
@@ -4016,7 +4025,7 @@ function render(){UCFM=0;
   for(const [,k,e] of draw){if(k!==1||e.type!=='vila'||!e.claim||!visibleTo0(e))continue;const p0=e.claim[0]>=e.claim[1]?0:1,v=e.claim[p0];if(v<=0)continue;const need=e.o===2?VILA_CLAIM:VILA_SWAP;
     const q=proj(e.tx+e.w/2,e.ty+e.h/2),y=q.y-BHEIGHT.vila-30;c.fillStyle='rgba(0,0,0,.75)';c.fillRect(q.x-25,y-1,50,6);c.fillStyle=P[p0].col;c.fillRect(q.x-24,y,48*clamp(v/need,0,1),4);c.fillStyle='#fff';c.font='bold 9px sans-serif';c.textAlign='center';c.fillText('🏘️',q.x,y-4)}
   // profissões: ícone por cima dos aldeões (selecionados, ociosos ou com zoom aproximado)
-  for(const [,k,e,p] of draw){if(k!==2||e.type!=='aldeao'||e.o!==ME)continue;const j=villJob(e);if(!j||!(sel.includes(e)||j==='ocioso'||cam.z>=1.7))continue;c.drawImage(jobIcon(j),p.x-8,p.y-38*UNIT_SCALE-22,16,16)}
+  for(const [,k,e,p] of draw){if(k!==2||e.type!=='aldeao'||e.o!==ME)continue;const j=villJob(e);if(!j||!(sel.includes(e)||j==='ocioso'||cam.z>=1.7))continue;{const on=sel.includes(e),z=on?16:12;if(!on)c.globalAlpha=.72;c.drawImage(jobIcon(j),p.x-z/2,p.y-38*UNIT_SCALE-22+(16-z),z,z);c.globalAlpha=1}}
   // projéteis
   for(const p of projs){
     const k=p.t/p.dur;const x=p.x+(p.tx-p.x)*k,y=p.y+(p.ty-p.y)*k;
@@ -4548,6 +4557,8 @@ const IC={
   pop:SVG('<g stroke="none" fill="#d9c49a"><circle cx="9" cy="7.5" r="3.3"/><path d="M2.8 19.5c0-3.8 2.8-6.6 6.2-6.6s6.2 2.8 6.2 6.6z"/><circle cx="16.4" cy="8.6" r="2.7" opacity=".7"/><path d="M14.6 13.4c3.4-.6 6.6 1.8 6.6 6.1h-4.8" opacity=".7"/></g>'),
   star:SVG('<path d="M12 3l2.7 5.6 6.1.8-4.5 4.2 1.1 6-5.4-2.9-5.4 2.9 1.1-6-4.5-4.2 6.1-.8z" fill="#f3d488" stroke="none"/>'),
   menu:SVG('<path d="M5 7h14M5 12h14M5 17h14"/>'),
+  eye:SVG('<path d="M2.5 12S6 5.5 12 5.5 21.5 12 21.5 12 18 18.5 12 18.5 2.5 12 2.5 12z"/><circle cx="12" cy="12" r="3"/>'),eyeoff:SVG('<path d="M4 4l16 16"/><path d="M9.5 6A9.6 9.6 0 0 1 12 5.5c6 0 9.5 6.5 9.5 6.5a17 17 0 0 1-2.6 3.4M6.3 7.6C3.9 9.4 2.5 12 2.5 12S6 18.5 12 18.5c1.6 0 3-.4 4.2-1"/>'),
+  mapup:SVG('<path d="M6 15l6-6 6 6"/>'),mapdn:SVG('<path d="M6 9l6 6 6-6"/>'),
   play:SVG('<path d="M7 4.5v15l12.5-7.5z" fill="currentColor" stroke-width="1.5"/>'),
   resume:SVG('<path d="M4 12a8 8 0 1 0 2.4-5.7"/><path d="M4 4.5v4h4"/><path d="M10.5 9v6l4.5-3z" fill="currentColor" stroke-width="1.4"/>'),
   friends:SVG('<circle cx="9" cy="8" r="3.2"/><path d="M3 20c0-3.7 2.7-6.4 6-6.4s6 2.7 6 6.4"/><circle cx="17" cy="9" r="2.6"/><path d="M16.5 13.7c2.7.2 4.5 2.6 4.5 5.8"/>'),
@@ -4585,6 +4596,13 @@ const IC={
   f_cerco:SVG('<path d="M3.5 18a8.5 8.5 0 0 1 17 0" stroke-dasharray="2.5 3"/><circle cx="12" cy="14" r="2.2" fill="currentColor"/>'),
 };
 document.querySelectorAll('i[data-ic]').forEach(el=>{el.innerHTML=IC[el.dataset.ic]||''});
+{const ls=(k,v)=>{try{if(v===undefined)return localStorage.getItem(k);localStorage.setItem(k,v)}catch(e){return null}};
+  const setHud=off=>{document.body.classList.toggle('hudoff',off);$('bHud').innerHTML='<i data-ic="'+(off?'eyeoff':'eye')+'">'+IC[off?'eyeoff':'eye']+'</i>';$('bHud').title=off?'Mostrar a interface':'Esconder a interface (ver só o jogo)';if(typeof clampCam==='function'&&cam)clampCam()};
+  const setMini=off=>{document.body.classList.toggle('mmoff',off);$('bMini').innerHTML=IC[off?'mapup':'mapdn'];$('bMini').title=off?'Mostrar o minimapa':'Esconder o minimapa';ls('alv_mmoff',off?'1':'0')};
+  $('bHud').onclick=e=>{e.stopPropagation();setHud(!document.body.classList.contains('hudoff'))};
+  $('bMini').addEventListener('pointerdown',e=>e.stopPropagation());$('bMini').onclick=e=>{e.stopPropagation();setMini(!document.body.classList.contains('mmoff'))};
+  setMini(ls('alv_mmoff')==='1')}
+
 const ri=k=>`<i class="ri">${IC[k]}</i>`;
 const EMOJI_IC={'✔️':'ok','✖️':'x','🛡️':'shield','↩️':'back','🔨':'build','📥':'deliver','⬇️':'unload','🎯':'amove','🔁':'patrol','⚓':'hold','🏳️':'retreat','✋':'stop','🗑️':'trash','⏫':'ageup','⬆️':'up','🔓':'unlock','🔒':'lock','🚩':'flag','✳️':'f_livre','➖':'f_linha','⏸️':'f_coluna','🏰':'f_cerco'};
 // retratos gerados com os próprios sprites do jogo (cache por tipo, idade e cor)
@@ -5724,7 +5742,7 @@ function menuBgBuild(){
       ['t','palm',1,9.6,0],['t','palm',10.3,7,1],['t','palm',9.6,2.4,0],['t','palm',3.4,10.6,1],['t','oak',6.6,1.4,2],['t','pine',2.1,1.4,1],['t','oak',10.6,5,4],['t','oak',0.6,5.6,3]];
     objs.sort((a,b)=>(a[2]+a[3]+(a[0]==='b'?BLDS[a[1]].w:1))-(b[2]+b[3]+(b[0]==='b'?BLDS[b[1]].w:1)));
     for(const [kd,t,x,y,v] of objs){
-      if(kd==='b'){const sp=bldSprite(t,v,0,t==='torre'?1:0);const [sx,sy]=at(x,y);const top=sy-HH*k;
+      if(kd==='b'){const sp=bldSprite(t,v,0,t==='torre'?2:0);const [sx,sy]=at(x,y);const top=sy-HH*k;
         g.drawImage(sp.cv,sx-sp.ox*k,top-sp.oy*k,sp.CW*k,sp.CH*k);
         if(t==='centro'||t==='casa')smoke.push({x:sx+(t==='centro'?HW*k*.9:HW*k*.55),y:top-(t==='centro'?58:30)*k,k})}
       else{const a=SPR[t]&&SPR[t][v%SPR[t].length];if(!a)continue;const [sx,sy]=at(x,y);g.drawImage(a.cv,sx-a.ax*k,sy-a.ay*k,a.w*k,a.h*k)}}
