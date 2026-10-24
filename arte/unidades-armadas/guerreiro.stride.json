@@ -1,0 +1,23 @@
+{
+  "unit": "guerreiro",
+  "method": "Median backwards foot velocity during low ground stance, per normalized clip cycle; both feet; orthographic game projection at 30px.",
+  "screenPixelsPerMeter": 20.700308248509543,
+  "metersPerTile": 2.1861913094553778,
+  "foot": {
+    "LeftFoot": {
+      "stanceTravelPerCycleMeters": 1.273338720202446,
+      "stanceSampleCount": 60,
+      "swingRangeMeters": 0.6345907747745514
+    },
+    "RightFoot": {
+      "stanceTravelPerCycleMeters": 1.2838518619537354,
+      "stanceSampleCount": 51,
+      "swingRangeMeters": 0.6445263922214508
+    }
+  },
+  "strideMeters": 1.2785952910780907,
+  "strideTiles": 0.5848505963536252,
+  "recommendedAnimFactor": 10.74323142757045,
+  "visualPhaseMultiplier": 2.14864628551409,
+  "durationSeconds": 1.3333333333333333
+}

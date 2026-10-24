@@ -1,0 +1,1476 @@
+{
+  "approvedAssets": 37,
+  "meshyCredits": 0,
+  "entries": [
+    {
+      "key": "centro|0",
+      "type": "centro",
+      "ageOrVariant": 0,
+      "tiles": [
+        3,
+        3
+      ],
+      "artFactor": 1.2,
+      "thin": false,
+      "path": "sprites/centro-0.png",
+      "meta": {
+        "xl": 0.0,
+        "xr": 474.57703,
+        "yb": 371.57679,
+        "yl": 242.28669,
+        "f": [
+          0,
+          0,
+          475,
+          372
+        ]
+      },
+      "flagBounds": [
+        58,
+        136,
+        86,
+        197
+      ],
+      "sha256": "46f6eb229f7ed478505631b985df77388d6c7f01a9021e6d5dc9b90514bcd32c",
+      "approvedPreviewSha256": "4a864c4ae590b1f8682636f637bd33619cd3c3216db905b4a811e5d8d8e431d0",
+      "expectedLogicalSprite": {
+        "k": 0.2115080213903743,
+        "CW": 242,
+        "CH": 190,
+        "ox": 121,
+        "oy": 82
+      },
+      "resamplingTintFlecksNeutralized": 18
+    },
+    {
+      "key": "centro|1",
+      "type": "centro",
+      "ageOrVariant": 1,
+      "tiles": [
+        3,
+        3
+      ],
+      "artFactor": 1.2,
+      "thin": false,
+      "path": "sprites/centro-1.png",
+      "meta": {
+        "xl": 0.0,
+        "xr": 474.65901,
+        "yb": 364.6592,
+        "yl": 232.93884,
+        "f": [
+          0,
+          0,
+          475,
+          365
+        ]
+      },
+      "flagBounds": [
+        53,
+        120,
+        82,
+        179
+      ],
+      "sha256": "54223b2efd5a5a71034f83c2b300ace4b9ef50e46d78abb076081353c6b8abb6",
+      "approvedPreviewSha256": "bb300ef4379ba1eef16cbb56611ad925349c836ef48eb532233c645a03f53acb",
+      "expectedLogicalSprite": {
+        "k": 0.17048275862068965,
+        "CW": 242,
+        "CH": 187,
+        "ox": 121,
+        "oy": 79
+      },
+      "resamplingTintFlecksNeutralized": 16
+    },
+    {
+      "key": "centro|2",
+      "type": "centro",
+      "ageOrVariant": 2,
+      "tiles": [
+        3,
+        3
+      ],
+      "artFactor": 1.2,
+      "thin": false,
+      "path": "sprites/centro-2.png",
+      "meta": {
+        "xl": 0.0,
+        "xr": 474.60417,
+        "yb": 487.60422,
+        "yl": 342.54988,
+        "f": [
+          0,
+          0,
+          475,
+          488
+        ]
+      },
+      "flagBounds": [
+        26,
+        272,
+        50,
+        319
+      ],
+      "sha256": "24371e101ac55375d51aa2d0b8afbb3691e60904305930ed8da4b0551fddf3ca",
+      "approvedPreviewSha256": "7c7a6c7ecf924e2841cc9497d50b9d87f232479137d9da1a5f7c487eeebf9947",
+      "expectedLogicalSprite": {
+        "k": 0.1979249374478732,
+        "CW": 242,
+        "CH": 249,
+        "ox": 121,
+        "oy": 140
+      },
+      "resamplingTintFlecksNeutralized": 26
+    },
+    {
+      "key": "casa|0",
+      "type": "casa",
+      "ageOrVariant": 0,
+      "tiles": [
+        2,
+        2
+      ],
+      "artFactor": 1,
+      "thin": false,
+      "path": "sprites/casa-0.png",
+      "meta": {
+        "xl": 0.0,
+        "xr": 263.77684,
+        "yb": 171.77749,
+        "yl": 100.07374,
+        "f": [
+          0,
+          0,
+          264,
+          172
+        ]
+      },
+      "flagBounds": [
+        31,
+        29,
+        51,
+        68
+      ],
+      "sha256": "57c5a635aa362989c95ce65390bc4e5389f207610189e31a7dd9d4c6379ae2db",
+      "approvedPreviewSha256": "96c9fc4860e892c2c382e9d257873b01b5784abaf00edded8aab30d77421363a",
+      "expectedLogicalSprite": {
+        "k": 0.11153976311336718,
+        "CW": 136,
+        "CH": 91,
+        "ox": 68,
+        "oy": 24
+      },
+      "resamplingTintFlecksNeutralized": 9
+    },
+    {
+      "key": "casa|1",
+      "type": "casa",
+      "ageOrVariant": 1,
+      "tiles": [
+        2,
+        2
+      ],
+      "artFactor": 1,
+      "thin": false,
+      "path": "sprites/casa-1.png",
+      "meta": {
+        "xl": 0.0,
+        "xr": 263.82902,
+        "yb": 170.82866,
+        "yl": 99.80711,
+        "f": [
+          0,
+          0,
+          264,
+          171
+        ]
+      },
+      "flagBounds": [
+        32,
+        29,
+        51,
+        66
+      ],
+      "sha256": "e196758fb395ef43ac2cf5d5f7520de08a84f13eb73801fb518a16ae3e2e2a29",
+      "approvedPreviewSha256": "4e970b3500265dfb7cadcaf8d0a2eba49442c3cb748e314fba52342dee516b83",
+      "expectedLogicalSprite": {
+        "k": 0.08544394037589112,
+        "CW": 136,
+        "CH": 90,
+        "ox": 68,
+        "oy": 23
+      },
+      "resamplingTintFlecksNeutralized": 6
+    },
+    {
+      "key": "casa|2",
+      "type": "casa",
+      "ageOrVariant": 2,
+      "tiles": [
+        2,
+        2
+      ],
+      "artFactor": 1,
+      "thin": false,
+      "path": "sprites/casa-2.png",
+      "meta": {
+        "xl": 0.0,
+        "xr": 263.82879,
+        "yb": 170.82866,
+        "yl": 99.80711,
+        "f": [
+          0,
+          0,
+          264,
+          171
+        ]
+      },
+      "flagBounds": [
+        32,
+        28,
+        50,
+        65
+      ],
+      "sha256": "035f3bec75e9bf09b1b8c9ba341dd83052263e88c3747970c6d60497008a4898",
+      "approvedPreviewSha256": "6de371e5172932876475583e5b711f5b7c17b8420a8dded1d818739b93a8ab8e",
+      "expectedLogicalSprite": {
+        "k": 0.08555483452303698,
+        "CW": 136,
+        "CH": 90,
+        "ox": 68,
+        "oy": 23
+      },
+      "resamplingTintFlecksNeutralized": 4
+    },
+    {
+      "key": "armazem|0",
+      "type": "armazem",
+      "ageOrVariant": 0,
+      "tiles": [
+        2,
+        2
+      ],
+      "artFactor": 1,
+      "thin": false,
+      "path": "sprites/armazem-0.png",
+      "meta": {
+        "xl": 0.0,
+        "xr": 263.77143,
+        "yb": 194.77166,
+        "yl": 127.64052,
+        "f": [
+          0,
+          0,
+          264,
+          195
+        ]
+      },
+      "flagBounds": [
+        27,
+        52,
+        47,
+        92
+      ],
+      "sha256": "808a9bce4509c1d2d97fdea0d470146da899514648c69adc4ba916f356ab4af1",
+      "approvedPreviewSha256": "703936869c6da2642628d37467487d6a8b45b05e795c9d052fbe3673584eebc8",
+      "expectedLogicalSprite": {
+        "k": 0.11424610051993069,
+        "CW": 136,
+        "CH": 102,
+        "ox": 68,
+        "oy": 35
+      },
+      "resamplingTintFlecksNeutralized": 16
+    },
+    {
+      "key": "armazem|1",
+      "type": "armazem",
+      "ageOrVariant": 1,
+      "tiles": [
+        2,
+        2
+      ],
+      "artFactor": 1,
+      "thin": false,
+      "path": "sprites/armazem-1.png",
+      "meta": {
+        "xl": 0.0,
+        "xr": 263.81343,
+        "yb": 193.814,
+        "yl": 122.20326,
+        "f": [
+          0,
+          0,
+          264,
+          194
+        ]
+      },
+      "flagBounds": [
+        24,
+        47,
+        44,
+        87
+      ],
+      "sha256": "dc93fe674368eee54d47ef72b27f9d810d70f6aac24175f32f725f9623ac1d75",
+      "approvedPreviewSha256": "bd40e30e53eb113fbad9ef74cfa6d63ec19bfb240e3133083efbddc4be668799",
+      "expectedLogicalSprite": {
+        "k": 0.09323903818953325,
+        "CW": 136,
+        "CH": 102,
+        "ox": 68,
+        "oy": 35
+      },
+      "resamplingTintFlecksNeutralized": 7
+    },
+    {
+      "key": "armazem|2",
+      "type": "armazem",
+      "ageOrVariant": 2,
+      "tiles": [
+        2,
+        2
+      ],
+      "artFactor": 1,
+      "thin": false,
+      "path": "sprites/armazem-2.png",
+      "meta": {
+        "xl": 0.0,
+        "xr": 263.8159,
+        "yb": 193.81611,
+        "yl": 124.85877,
+        "f": [
+          0,
+          0,
+          264,
+          194
+        ]
+      },
+      "flagBounds": [
+        25,
+        50,
+        45,
+        90
+      ],
+      "sha256": "550610f78789e0aca5d6ad43348048a3ad75664c4241a9b9ec630f39def9b7c7",
+      "approvedPreviewSha256": "9b7cbca6aaae98b7cdbbff820e1896a4d5122d31002e242a83421ef08105b10c",
+      "expectedLogicalSprite": {
+        "k": 0.09200279134682485,
+        "CW": 136,
+        "CH": 102,
+        "ox": 68,
+        "oy": 35
+      },
+      "resamplingTintFlecksNeutralized": 10
+    },
+    {
+      "key": "quartel|0",
+      "type": "quartel",
+      "ageOrVariant": 0,
+      "tiles": [
+        3,
+        3
+      ],
+      "artFactor": 1,
+      "thin": false,
+      "path": "sprites/quartel-0.png",
+      "meta": {
+        "xl": 0.0,
+        "xr": 395.67164,
+        "yb": 311.67227,
+        "yl": 193.85294,
+        "f": [
+          0,
+          0,
+          396,
+          312
+        ]
+      },
+      "flagBounds": [
+        44,
+        97,
+        68,
+        147
+      ],
+      "sha256": "2a7439e059578782e5a4df1d61625460f39dc0622b4172515a36b58f5027eb9b",
+      "approvedPreviewSha256": "568abf96f4989a4e48cb9f92d33e766dc527247eebf207add93573b8fa8b3941",
+      "expectedLogicalSprite": {
+        "k": 0.1641161825726141,
+        "CW": 202,
+        "CH": 161,
+        "ox": 101,
+        "oy": 62
+      },
+      "resamplingTintFlecksNeutralized": 42
+    },
+    {
+      "key": "quartel|1",
+      "type": "quartel",
+      "ageOrVariant": 1,
+      "tiles": [
+        3,
+        3
+      ],
+      "artFactor": 1,
+      "thin": false,
+      "path": "sprites/quartel-1.png",
+      "meta": {
+        "xl": 0.0,
+        "xr": 395.71815,
+        "yb": 312.71827,
+        "yl": 193.12466,
+        "f": [
+          0,
+          0,
+          396,
+          313
+        ]
+      },
+      "flagBounds": [
+        44,
+        96,
+        67,
+        145
+      ],
+      "sha256": "65a27d2c995a06ddb28f0329ba7f37fb1a92682e9099b33ff58ae96a185ef0d5",
+      "approvedPreviewSha256": "6d2793d5d370008e8cf43c8988362f940e7bb53d08a475fe18a2153f80326327",
+      "expectedLogicalSprite": {
+        "k": 0.14085470085470084,
+        "CW": 202,
+        "CH": 161,
+        "ox": 101,
+        "oy": 62
+      },
+      "resamplingTintFlecksNeutralized": 34
+    },
+    {
+      "key": "quartel|2",
+      "type": "quartel",
+      "ageOrVariant": 2,
+      "tiles": [
+        3,
+        3
+      ],
+      "artFactor": 1,
+      "thin": false,
+      "path": "sprites/quartel-2.png",
+      "meta": {
+        "xl": 0.0,
+        "xr": 395.67381,
+        "yb": 322.67407,
+        "yl": 192.46367,
+        "f": [
+          0,
+          0,
+          396,
+          323
+        ]
+      },
+      "flagBounds": [
+        40,
+        98,
+        66,
+        151
+      ],
+      "sha256": "9cbd1fd82a608ce16a2077611fb4196503d3d06893c828d46d5dff26a692bab5",
+      "approvedPreviewSha256": "56b2464b5484a29ab37b2a6eb767dcd3b85273f140c2b1d666e8472c72bfa455",
+      "expectedLogicalSprite": {
+        "k": 0.1630338004946414,
+        "CW": 202,
+        "CH": 166,
+        "ox": 101,
+        "oy": 67
+      },
+      "resamplingTintFlecksNeutralized": 36
+    },
+    {
+      "key": "arquearia|0",
+      "type": "arquearia",
+      "ageOrVariant": 0,
+      "tiles": [
+        3,
+        3
+      ],
+      "artFactor": 1,
+      "thin": false,
+      "path": "sprites/arquearia-0.png",
+      "meta": {
+        "xl": 0.0,
+        "xr": 395.67461,
+        "yb": 288.67528,
+        "yl": 170.63989,
+        "f": [
+          0,
+          0,
+          396,
+          289
+        ]
+      },
+      "flagBounds": [
+        26,
+        100,
+        46,
+        141
+      ],
+      "sha256": "bc798e65c3af4bf231f71085e91be6aee1e77d83099ec767033ea6e7fdc5625d",
+      "approvedPreviewSha256": "4576b7770358f9b6e8f0f7cd02e45da194860143dce62c3efa6926a6977171ce",
+      "expectedLogicalSprite": {
+        "k": 0.1626315789473684,
+        "CW": 202,
+        "CH": 149,
+        "ox": 101,
+        "oy": 51
+      },
+      "resamplingTintFlecksNeutralized": 30
+    },
+    {
+      "key": "arquearia|1",
+      "type": "arquearia",
+      "ageOrVariant": 1,
+      "tiles": [
+        3,
+        3
+      ],
+      "artFactor": 1,
+      "thin": false,
+      "path": "sprites/arquearia-1.png",
+      "meta": {
+        "xl": 0.0,
+        "xr": 395.72633,
+        "yb": 285.72684,
+        "yl": 167.99427,
+        "f": [
+          0,
+          0,
+          396,
+          286
+        ]
+      },
+      "flagBounds": [
+        24,
+        96,
+        44,
+        137
+      ],
+      "sha256": "04948381272607f35ddfc0b062c79e4be9087492bfc1ba973192f4d1fa0141cb",
+      "approvedPreviewSha256": "60c8a42501a22d7e66fd5467816ad8cafcb12a30cafc4b204bea715b5ae6f09e",
+      "expectedLogicalSprite": {
+        "k": 0.13676348547717843,
+        "CW": 202,
+        "CH": 148,
+        "ox": 101,
+        "oy": 49
+      },
+      "resamplingTintFlecksNeutralized": 16
+    },
+    {
+      "key": "arquearia|2",
+      "type": "arquearia",
+      "ageOrVariant": 2,
+      "tiles": [
+        3,
+        3
+      ],
+      "artFactor": 1,
+      "thin": false,
+      "path": "sprites/arquearia-2.png",
+      "meta": {
+        "xl": 0.0,
+        "xr": 395.67461,
+        "yb": 296.67505,
+        "yl": 174.98304,
+        "f": [
+          0,
+          0,
+          396,
+          297
+        ]
+      },
+      "flagBounds": [
+        19,
+        106,
+        39,
+        147
+      ],
+      "sha256": "d68bd37a6b6b5e3fe534ef74ee4d8bb1a1ad79d17d45e38e69d99a5d2fe63cb3",
+      "approvedPreviewSha256": "007fe56f079e70f6c8514df50e63026fad8a938bcb601dd2d32cd53e3263c972",
+      "expectedLogicalSprite": {
+        "k": 0.1626315789473684,
+        "CW": 202,
+        "CH": 153,
+        "ox": 101,
+        "oy": 54
+      },
+      "resamplingTintFlecksNeutralized": 13
+    },
+    {
+      "key": "estabulo|0",
+      "type": "estabulo",
+      "ageOrVariant": 0,
+      "tiles": [
+        3,
+        3
+      ],
+      "artFactor": 1,
+      "thin": false,
+      "path": "sprites/estabulo-0.png",
+      "meta": {
+        "xl": 0.0,
+        "xr": 395.67137,
+        "yb": 296.67182,
+        "yl": 181.80994,
+        "f": [
+          0,
+          0,
+          396,
+          297
+        ]
+      },
+      "flagBounds": [
+        26,
+        143,
+        47,
+        186
+      ],
+      "sha256": "fe6bcc9a19953372c5491a187cffbdafe2a9eec467641639c915722137029ca4",
+      "approvedPreviewSha256": "8348e9788392d82ef68aa676631091175f11bd0a00fad65966c10baaa29a83c3",
+      "expectedLogicalSprite": {
+        "k": 0.16425249169435216,
+        "CW": 202,
+        "CH": 153,
+        "ox": 101,
+        "oy": 54
+      },
+      "resamplingTintFlecksNeutralized": 23
+    },
+    {
+      "key": "estabulo|1",
+      "type": "estabulo",
+      "ageOrVariant": 1,
+      "tiles": [
+        3,
+        3
+      ],
+      "artFactor": 1,
+      "thin": false,
+      "path": "sprites/estabulo-1.png",
+      "meta": {
+        "xl": 0.0,
+        "xr": 395.72073,
+        "yb": 299.72041,
+        "yl": 183.13141,
+        "f": [
+          0,
+          0,
+          396,
+          300
+        ]
+      },
+      "flagBounds": [
+        22,
+        142,
+        43,
+        191
+      ],
+      "sha256": "028e18cfab2d8d363a563d127aec2ec8b93f07b4d3f5b77d955eae6b496cc391",
+      "approvedPreviewSha256": "e362e6d4982d7a2b76a89d7f4e7f2a57f88f18e66a2701c3a1ba4e82315d259a",
+      "expectedLogicalSprite": {
+        "k": 0.1395624558927311,
+        "CW": 202,
+        "CH": 154,
+        "ox": 101,
+        "oy": 56
+      },
+      "resamplingTintFlecksNeutralized": 15
+    },
+    {
+      "key": "estabulo|2",
+      "type": "estabulo",
+      "ageOrVariant": 2,
+      "tiles": [
+        3,
+        3
+      ],
+      "artFactor": 1,
+      "thin": false,
+      "path": "sprites/estabulo-2.png",
+      "meta": {
+        "xl": 0.0,
+        "xr": 395.67082,
+        "yb": 306.67095,
+        "yl": 186.89818,
+        "f": [
+          0,
+          0,
+          396,
+          307
+        ]
+      },
+      "flagBounds": [
+        19,
+        141,
+        40,
+        184
+      ],
+      "sha256": "f29e9f3adeacb06090cee153248740eb9b78d6fa85a489b5aa45e1ee98e15d18",
+      "approvedPreviewSha256": "e1dae36f900843ce22775b2d046f120ca0aaf0e7af39cf061af82e6e885c6f1c",
+      "expectedLogicalSprite": {
+        "k": 0.16452579034941764,
+        "CW": 202,
+        "CH": 158,
+        "ox": 101,
+        "oy": 59
+      },
+      "resamplingTintFlecksNeutralized": 13
+    },
+    {
+      "key": "ferreiro|0",
+      "type": "ferreiro",
+      "ageOrVariant": 0,
+      "tiles": [
+        2,
+        2
+      ],
+      "artFactor": 1,
+      "thin": false,
+      "path": "sprites/ferreiro-0.png",
+      "meta": {
+        "xl": 0.0,
+        "xr": 263.76429,
+        "yb": 222.76402,
+        "yl": 151.97037,
+        "f": [
+          0,
+          0,
+          264,
+          223
+        ]
+      },
+      "flagBounds": [
+        3,
+        97,
+        21,
+        131
+      ],
+      "sha256": "681b3568f72acb19e8dbd8366e5df4bf21d4a2ede8f6b5b70d3b4c5d1fe54534",
+      "approvedPreviewSha256": "9ac73ccc59667195d438c6378df75226878a2980c0a0b92181d7c3436ede6670",
+      "expectedLogicalSprite": {
+        "k": 0.11781948168007149,
+        "CW": 136,
+        "CH": 116,
+        "ox": 68,
+        "oy": 49
+      },
+      "resamplingTintFlecksNeutralized": 7
+    },
+    {
+      "key": "ferreiro|1",
+      "type": "ferreiro",
+      "ageOrVariant": 1,
+      "tiles": [
+        2,
+        2
+      ],
+      "artFactor": 1,
+      "thin": false,
+      "path": "sprites/ferreiro-1.png",
+      "meta": {
+        "xl": 0.0,
+        "xr": 263.77222,
+        "yb": 219.77226,
+        "yl": 149.62733,
+        "f": [
+          0,
+          0,
+          264,
+          220
+        ]
+      },
+      "flagBounds": [
+        2,
+        94,
+        19,
+        127
+      ],
+      "sha256": "ecc9298391a9a00bc31d8093bd3c1451234f13be23c9a65e84eb042a6dc57e47",
+      "approvedPreviewSha256": "1761e4b76649c027abb1f4a9b9a131ea2e202b337fb07ad100ee40cb7e5653d7",
+      "expectedLogicalSprite": {
+        "k": 0.11385146804835924,
+        "CW": 136,
+        "CH": 114,
+        "ox": 68,
+        "oy": 48
+      },
+      "resamplingTintFlecksNeutralized": 20
+    },
+    {
+      "key": "ferreiro|2",
+      "type": "ferreiro",
+      "ageOrVariant": 2,
+      "tiles": [
+        2,
+        2
+      ],
+      "artFactor": 1,
+      "thin": false,
+      "path": "sprites/ferreiro-2.png",
+      "meta": {
+        "xl": 0.0,
+        "xr": 263.80617,
+        "yb": 219.80617,
+        "yl": 149.15419,
+        "f": [
+          0,
+          0,
+          264,
+          220
+        ]
+      },
+      "flagBounds": [
+        3,
+        94,
+        20,
+        125
+      ],
+      "sha256": "bc7c6ed7d693b3e350ffd3acefb34abece46892e32454b84d4d0c8858483de4e",
+      "approvedPreviewSha256": "03ef5806f0c6bc891948953415ede282b347143d185f332720770e69e80428ce",
+      "expectedLogicalSprite": {
+        "k": 0.09686994856722998,
+        "CW": 136,
+        "CH": 114,
+        "ox": 68,
+        "oy": 48
+      },
+      "resamplingTintFlecksNeutralized": 4
+    },
+    {
+      "key": "quinta|0",
+      "type": "quinta",
+      "ageOrVariant": 0,
+      "tiles": [
+        3,
+        3
+      ],
+      "artFactor": 1,
+      "thin": false,
+      "path": "sprites/quinta-0.png",
+      "meta": {
+        "xl": 0.0,
+        "xr": 395.67,
+        "yb": 266.66996,
+        "yl": 142.08096,
+        "f": [
+          0,
+          0,
+          396,
+          267
+        ]
+      },
+      "flagBounds": [
+        35,
+        79,
+        58,
+        126
+      ],
+      "sha256": "48230d24584da3fa0891988c52347b6e7f4fa224f51881f735122ef005c98a78",
+      "approvedPreviewSha256": "9178f5b5638b6ef1c0e9455768bfc82527369de891bff781ac2711f5d3e0604c",
+      "expectedLogicalSprite": {
+        "k": 0.16493744787322767,
+        "CW": 202,
+        "CH": 138,
+        "ox": 101,
+        "oy": 39
+      },
+      "resamplingTintFlecksNeutralized": 11
+    },
+    {
+      "key": "quinta|1",
+      "type": "quinta",
+      "ageOrVariant": 1,
+      "tiles": [
+        3,
+        3
+      ],
+      "artFactor": 1,
+      "thin": false,
+      "path": "sprites/quinta-1.png",
+      "meta": {
+        "xl": 0.0,
+        "xr": 395.73913,
+        "yb": 261.73878,
+        "yl": 136.61615,
+        "f": [
+          0,
+          0,
+          396,
+          262
+        ]
+      },
+      "flagBounds": [
+        35,
+        77,
+        56,
+        124
+      ],
+      "sha256": "90da21a864f52fa53e8b08990b8b658c44c9478c1c64dd71e5fd0bca0877b477",
+      "approvedPreviewSha256": "4c80d6df12284ccc7ce089286f002d6fc9b013891b171692f51765c785da3c1f",
+      "expectedLogicalSprite": {
+        "k": 0.13036255767963084,
+        "CW": 202,
+        "CH": 135,
+        "ox": 101,
+        "oy": 37
+      },
+      "resamplingTintFlecksNeutralized": 20
+    },
+    {
+      "key": "templo|1",
+      "type": "templo",
+      "ageOrVariant": 1,
+      "tiles": [
+        3,
+        3
+      ],
+      "artFactor": 1,
+      "thin": false,
+      "path": "sprites/templo-1.png",
+      "meta": {
+        "xl": 0.0,
+        "xr": 395.72538,
+        "yb": 275.7251,
+        "yl": 176.21116,
+        "f": [
+          0,
+          0,
+          396,
+          276
+        ]
+      },
+      "flagBounds": [
+        50,
+        90,
+        73,
+        137
+      ],
+      "sha256": "00157b22bdf4d8a604d1dff6d25e92f664ebe2d489a8367a798b3be066bc9e36",
+      "approvedPreviewSha256": "0560791ac3d821ca1274bb268d7cb054bf511558174580a75a5ccd522553b522",
+      "expectedLogicalSprite": {
+        "k": 0.13723802914642608,
+        "CW": 202,
+        "CH": 142,
+        "ox": 101,
+        "oy": 44
+      },
+      "resamplingTintFlecksNeutralized": 24
+    },
+    {
+      "key": "templo|2",
+      "type": "templo",
+      "ageOrVariant": 2,
+      "tiles": [
+        3,
+        3
+      ],
+      "artFactor": 1,
+      "thin": false,
+      "path": "sprites/templo-2.png",
+      "meta": {
+        "xl": 0.0,
+        "xr": 395.66212,
+        "yb": 429.66222,
+        "yl": 317.85546,
+        "f": [
+          0,
+          0,
+          396,
+          430
+        ]
+      },
+      "flagBounds": [
+        25,
+        247,
+        47,
+        288
+      ],
+      "sha256": "0b985aa7638449e46e8f8efa0725fa042f4b2c0195b1ab49e18d8ab8e746e829",
+      "approvedPreviewSha256": "632b241cd749c187c4bf8023595d9f2181b7531ac5213eff467519c05b6d81cf",
+      "expectedLogicalSprite": {
+        "k": 0.16888129803586677,
+        "CW": 202,
+        "CH": 219,
+        "ox": 101,
+        "oy": 121
+      },
+      "resamplingTintFlecksNeutralized": 8
+    },
+    {
+      "key": "doca|0",
+      "type": "doca",
+      "ageOrVariant": 0,
+      "tiles": [
+        2,
+        2
+      ],
+      "artFactor": 1,
+      "thin": false,
+      "path": "sprites/doca-0.png",
+      "meta": {
+        "xl": 0.0,
+        "xr": 263.78146,
+        "yb": 179.78155,
+        "yl": 106.71117,
+        "f": [
+          0,
+          0,
+          264,
+          180
+        ]
+      },
+      "flagBounds": [
+        26,
+        64,
+        43,
+        101
+      ],
+      "sha256": "b18683f490dc5c15d26abe4a52b4546be340242df752293f46071dfd85f3b07a",
+      "approvedPreviewSha256": "c09e7b6c832db762c6e806fbd40612cbe85d7bf964a78be8a9cd7983b07904ac",
+      "expectedLogicalSprite": {
+        "k": 0.1092294946147473,
+        "CW": 136,
+        "CH": 95,
+        "ox": 68,
+        "oy": 28
+      },
+      "resamplingTintFlecksNeutralized": 7
+    },
+    {
+      "key": "torre|1",
+      "type": "torre",
+      "ageOrVariant": 1,
+      "tiles": [
+        2,
+        2
+      ],
+      "artFactor": 1,
+      "thin": false,
+      "path": "sprites/torre-1.png",
+      "meta": {
+        "xl": 0.0,
+        "xr": 263.70957,
+        "yb": 460.70933,
+        "yl": 384.40889,
+        "f": [
+          0,
+          0,
+          264,
+          461
+        ]
+      },
+      "flagBounds": [
+        13,
+        326,
+        54,
+        351
+      ],
+      "sha256": "22f341eaaa2a54affdba46bb06011fcbb6331c4771f805b317cea067d2fd6767",
+      "approvedPreviewSha256": "8d6057fa1aeff00eb83025273f13b5f140d5b9f92f0c3f9b51146c5a05577e19",
+      "expectedLogicalSprite": {
+        "k": 0.14519823788546257,
+        "CW": 136,
+        "CH": 235,
+        "ox": 68,
+        "oy": 168
+      },
+      "resamplingTintFlecksNeutralized": 13
+    },
+    {
+      "key": "torre|2",
+      "type": "torre",
+      "ageOrVariant": 2,
+      "tiles": [
+        2,
+        2
+      ],
+      "artFactor": 1,
+      "thin": false,
+      "path": "sprites/torre-2.png",
+      "meta": {
+        "xl": 0.0,
+        "xr": 263.68831,
+        "yb": 486.68822,
+        "yl": 417.78489,
+        "f": [
+          0,
+          0,
+          264,
+          487
+        ]
+      },
+      "flagBounds": [
+        3,
+        379,
+        42,
+        402
+      ],
+      "sha256": "777f49cac5b141549dfd3a61403685931db5de78417c7233892cecce1baade94",
+      "approvedPreviewSha256": "5bd88e36bdabca0bd45666cfbf7bf7e2e2a5ab015b29ca3f8c26b09562b82876",
+      "expectedLogicalSprite": {
+        "k": 0.15583924349881798,
+        "CW": 136,
+        "CH": 248,
+        "ox": 68,
+        "oy": 181
+      },
+      "resamplingTintFlecksNeutralized": 29
+    },
+    {
+      "key": "torre|3",
+      "type": "torre",
+      "ageOrVariant": 3,
+      "tiles": [
+        2,
+        2
+      ],
+      "artFactor": 1,
+      "thin": false,
+      "path": "sprites/torre-3.png",
+      "meta": {
+        "xl": 0.0,
+        "xr": 263.68757,
+        "yb": 492.68738,
+        "yl": 422.66075,
+        "f": [
+          0,
+          0,
+          264,
+          493
+        ]
+      },
+      "flagBounds": [
+        25,
+        383,
+        48,
+        419
+      ],
+      "sha256": "dd855e23c0521edb1ce2fecd94f7251e0c491d6005ca408a921cf7e4ce6e1406",
+      "approvedPreviewSha256": "b9ab551be4e0cc036a3780476b2f2dfddefa998fd0e52c18720e020803fd3173",
+      "expectedLogicalSprite": {
+        "k": 0.1562085308056872,
+        "CW": 136,
+        "CH": 251,
+        "ox": 68,
+        "oy": 184
+      },
+      "resamplingTintFlecksNeutralized": 25
+    },
+    {
+      "key": "oficina|1",
+      "type": "oficina",
+      "ageOrVariant": 1,
+      "tiles": [
+        3,
+        3
+      ],
+      "artFactor": 1,
+      "thin": false,
+      "path": "sprites/oficina-1.png",
+      "meta": {
+        "xl": 0.0,
+        "xr": 395.7374,
+        "yb": 257.73727,
+        "yl": 164.07434,
+        "f": [
+          0,
+          0,
+          396,
+          258
+        ]
+      },
+      "flagBounds": [
+        62,
+        84,
+        83,
+        127
+      ],
+      "sha256": "61984d9edfe60dc2f7be9dcf481618d7e2f18f1a475bce01806a8049057a6dac",
+      "approvedPreviewSha256": "9d51ecacfe284d0b6c45f8094221b82c7cb7a1bc2fdec2c5286a9b5e436f79ac",
+      "expectedLogicalSprite": {
+        "k": 0.13122760451227605,
+        "CW": 202,
+        "CH": 133,
+        "ox": 101,
+        "oy": 35
+      },
+      "resamplingTintFlecksNeutralized": 31
+    },
+    {
+      "key": "maravilha|2",
+      "type": "maravilha",
+      "ageOrVariant": 2,
+      "tiles": [
+        4,
+        4
+      ],
+      "artFactor": 1,
+      "thin": false,
+      "path": "sprites/maravilha-2.png",
+      "meta": {
+        "xl": 0.0,
+        "xr": 527.60626,
+        "yb": 430.60603,
+        "yl": 284.24726,
+        "f": [
+          0,
+          0,
+          528,
+          431
+        ]
+      },
+      "flagBounds": [
+        35,
+        201,
+        60,
+        251
+      ],
+      "sha256": "72b25c15a8e4d4df48eb32e96b81941bc49e55645429c1144adad49188472a62",
+      "approvedPreviewSha256": "e6d3900de9e5e908a258f6caf541930461d87aa502edd33996f717f24bf82634",
+      "expectedLogicalSprite": {
+        "k": 0.1967761194029851,
+        "CW": 268,
+        "CH": 220,
+        "ox": 134,
+        "oy": 89
+      },
+      "resamplingTintFlecksNeutralized": 21
+    },
+    {
+      "key": "portaoMadeira|0",
+      "type": "portaoMadeira",
+      "ageOrVariant": 0,
+      "tiles": [
+        1,
+        1
+      ],
+      "artFactor": 1,
+      "thin": true,
+      "path": "sprites/portaoMadeira-0.png",
+      "meta": {
+        "xl": 0.0,
+        "xr": 223.79104,
+        "yb": 202.79115,
+        "yl": 168.54012,
+        "f": [
+          0,
+          0,
+          224,
+          203
+        ]
+      },
+      "flagBounds": [
+        62,
+        65,
+        80,
+        102
+      ],
+      "sha256": "5a53d2b5d77a233bc52036b342d9ce351e6cdfd560b6c388f70ba83d5cf6e148",
+      "approvedPreviewSha256": "299591e4f415df1ebc8c7c8ec7ca7f320324848a9a77939d14a5881feff8f6ac",
+      "expectedLogicalSprite": {
+        "k": 0.1044776119402985,
+        "CW": 116,
+        "CH": 106,
+        "ox": 58,
+        "oy": 71
+      },
+      "resamplingTintFlecksNeutralized": 7
+    },
+    {
+      "key": "portaoPedra|0",
+      "type": "portaoPedra",
+      "ageOrVariant": 0,
+      "tiles": [
+        1,
+        1
+      ],
+      "artFactor": 1,
+      "thin": true,
+      "path": "sprites/portaoPedra-0.png",
+      "meta": {
+        "xl": 0.0,
+        "xr": 187.20578,
+        "yb": 154.79791,
+        "yl": 123.27249,
+        "f": [
+          0,
+          0,
+          224,
+          155
+        ]
+      },
+      "flagBounds": [
+        27,
+        64,
+        46,
+        101
+      ],
+      "sha256": "f7380810a8658133ce649139d094498e58cbb8a40f8b22160a72b1fee85e217b",
+      "approvedPreviewSha256": "92335d668661138d911c7cb6a2d7516b83f50b95475ac604f563f4bba86f7d36",
+      "expectedLogicalSprite": {
+        "k": 0.10108303249097472,
+        "CW": 116,
+        "CH": 82,
+        "ox": 58,
+        "oy": 47
+      },
+      "resamplingTintFlecksNeutralized": 13
+    },
+    {
+      "key": "muralhaMadeira|0",
+      "type": "muralhaMadeira",
+      "ageOrVariant": 0,
+      "tiles": [
+        1,
+        1
+      ],
+      "artFactor": 1,
+      "thin": true,
+      "path": "sprites/muralhaMadeira-0.png",
+      "meta": {
+        "xl": 0.0,
+        "xr": 130.88198,
+        "yb": 107.88197,
+        "yl": 87.04918,
+        "f": [
+          0,
+          0,
+          131,
+          108
+        ]
+      },
+      "flagBounds": [
+        15,
+        49,
+        28,
+        75
+      ],
+      "sha256": "65282b39d157275fb12695bf8b9dc03b4538db705a2eebce8f8031e9ab2d2262",
+      "approvedPreviewSha256": "3fccad75fb6b770c0be6c580434af9921c50afe0530654b7a2c05ba21c953d8a",
+      "expectedLogicalSprite": {
+        "k": 0.05881081081081081,
+        "CW": 70,
+        "CH": 58,
+        "ox": 35,
+        "oy": 23
+      },
+      "resamplingTintFlecksNeutralized": 1
+    },
+    {
+      "key": "muralhaPedra|0",
+      "type": "muralhaPedra",
+      "ageOrVariant": 0,
+      "tiles": [
+        1,
+        1
+      ],
+      "artFactor": 1,
+      "thin": true,
+      "path": "sprites/muralhaPedra-0.png",
+      "meta": {
+        "xl": 0.0,
+        "xr": 130.88145,
+        "yb": 103.88128,
+        "yl": 79.42466,
+        "f": [
+          0,
+          0,
+          131,
+          104
+        ]
+      },
+      "flagBounds": [
+        10,
+        47,
+        22,
+        71
+      ],
+      "sha256": "86995f56136f528671359fd915e3926a934d05890065dd273260b972e3b93520",
+      "approvedPreviewSha256": "f3ac98330b52f3910ed8a50953e12645f947ad27bfc41b21868d4b3ae1af139b",
+      "expectedLogicalSprite": {
+        "k": 0.059076923076923075,
+        "CW": 70,
+        "CH": 56,
+        "ox": 35,
+        "oy": 21
+      },
+      "resamplingTintFlecksNeutralized": 2
+    },
+    {
+      "key": "ruina|0",
+      "type": "ruina",
+      "ageOrVariant": 0,
+      "tiles": [
+        2,
+        2
+      ],
+      "artFactor": 1,
+      "thin": false,
+      "path": "sprites/ruina-0.png",
+      "meta": {
+        "xl": 0.0,
+        "xr": 263.77759,
+        "yb": 160.77762,
+        "yl": 90.06215,
+        "f": [
+          0,
+          0,
+          264,
+          161
+        ]
+      },
+      "flagBounds": null,
+      "sha256": "056aa30a85359b2e99406cb279b9f850edca0a062b4350f331bb23a5a38395bb",
+      "approvedPreviewSha256": "94ad6cd1cfaafe8556d953e302b5c4b348b690664cb471bf16be8c64fd980d16",
+      "expectedLogicalSprite": {
+        "k": 0.11116357504215851,
+        "CW": 136,
+        "CH": 85,
+        "ox": 68,
+        "oy": 18
+      },
+      "resamplingTintFlecksNeutralized": 5
+    },
+    {
+      "key": "ruina|1",
+      "type": "ruina",
+      "ageOrVariant": 1,
+      "tiles": [
+        3,
+        3
+      ],
+      "artFactor": 1,
+      "thin": false,
+      "path": "sprites/ruina-1.png",
+      "meta": {
+        "xl": 0.0,
+        "xr": 395.74809,
+        "yb": 238.74816,
+        "yl": 130.83298,
+        "f": [
+          0,
+          0,
+          396,
+          239
+        ]
+      },
+      "flagBounds": null,
+      "sha256": "bce9502d53969f55f9c90004dd4c2d30dc465949c691971e86936d43903a96fc",
+      "approvedPreviewSha256": "0dde7255636ad99954851322e2a18c2d1bd233a7a2878dc0b518596108637214",
+      "expectedLogicalSprite": {
+        "k": 0.1258816040738383,
+        "CW": 202,
+        "CH": 124,
+        "ox": 101,
+        "oy": 25
+      },
+      "resamplingTintFlecksNeutralized": 9
+    }
+  ]
+}

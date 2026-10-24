@@ -1,0 +1,131 @@
+{
+  "unit": "aldeao",
+  "body": "char1",
+  "bodyMeshes": [
+    "char1",
+    "Icosphere"
+  ],
+  "rig": "Armature",
+  "clips": {
+    "Idle": {
+      "source": "existing Meshy clip/local approved offsets",
+      "frames": 33.0
+    },
+    "Walk": {
+      "source": "existing Meshy clip/local approved offsets",
+      "frames": 33.0
+    },
+    "Attack": {
+      "source": "existing Meshy clip/local approved offsets",
+      "frames": 33.0
+    },
+    "Hit": {
+      "source": "existing Meshy clip/local approved offsets",
+      "frames": 33.0
+    },
+    "Death": {
+      "source": "existing Meshy clip/local approved offsets",
+      "frames": 33.0
+    },
+    "Chop": {
+      "source": "existing Meshy clip/local approved offsets",
+      "frames": 33.0
+    },
+    "Mine": {
+      "source": "existing Meshy clip/local approved offsets",
+      "frames": 33.0
+    },
+    "Harvest": {
+      "source": "existing Meshy clip/local approved offsets",
+      "frames": 33.0
+    },
+    "Carry": {
+      "source": "existing Meshy clip/local approved offsets",
+      "frames": 33.0
+    },
+    "Farm": {
+      "source": "existing Meshy clip/local approved offsets",
+      "frames": 33.0
+    },
+    "Build": {
+      "source": "existing Meshy clip/local approved offsets",
+      "frames": 33.0
+    },
+    "Butcher": {
+      "source": "existing Meshy clip/local approved offsets",
+      "frames": 33.0
+    }
+  },
+  "props": {
+    "axe": [
+      "Meshy_axe"
+    ],
+    "pick": [
+      "Existente_pick_shaft",
+      "Existente_pick_head"
+    ],
+    "hammer": [
+      "Existente_hammer_shaft",
+      "Existente_hammer_head"
+    ],
+    "hoe": [
+      "Existente_hoe_shaft",
+      "Existente_hoe_blade"
+    ],
+    "knife": [
+      "Existente_knife_shaft",
+      "Existente_knife_blade"
+    ],
+    "spear": [
+      "Existente_spear_shaft",
+      "Existente_spear_blade"
+    ],
+    "cargo": [
+      "Existente_resource_crate"
+    ],
+    "basket": [
+      "Existente_forage_basket"
+    ],
+    "build_hammer": [
+      "Existente_build_hammer_shaft",
+      "Existente_build_hammer_head"
+    ]
+  },
+  "defaultProp": null,
+  "bones": 24,
+  "triangles": 100080,
+  "sourceSha256": "be2fea0a7c3134d31ec8b1701512fc52b4a600317866d12196b6fe3fa1289fa0",
+  "newMeshyCredits": 0,
+  "localRetargetedClips": [
+    "Idle",
+    "Walk",
+    "Attack",
+    "Hit",
+    "Death",
+    "Chop",
+    "Mine",
+    "Harvest",
+    "Carry",
+    "Farm",
+    "Build",
+    "Butcher"
+  ],
+  "supportHandMaximumResidualMetres": 0,
+  "rigidPropsFollowDirectionPivot": [
+    "Meshy_axe",
+    "Existente_pick_shaft",
+    "Existente_pick_head",
+    "Existente_hammer_shaft",
+    "Existente_hammer_head",
+    "Existente_hoe_shaft",
+    "Existente_hoe_blade",
+    "Existente_knife_shaft",
+    "Existente_knife_blade",
+    "Existente_spear_shaft",
+    "Existente_spear_blade",
+    "Existente_resource_crate",
+    "Existente_forage_basket",
+    "Existente_build_hammer_shaft",
+    "Existente_build_hammer_head"
+  ]
+}

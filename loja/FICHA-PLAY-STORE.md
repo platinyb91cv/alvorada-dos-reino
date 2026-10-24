@@ -8,7 +8,7 @@ Tudo o que é preciso para publicar na Google Play Console. Copia e cola cada pa
 |---|---|
 | `icone-512.png` | Presença na loja → Ícone da app (512×512) |
 | `grafico-destaque-1024x500.png` | Presença na loja → Gráfico de destaque |
-| `captura-1-menu.png` … `captura-5-tutorial.png` | Presença na loja → Capturas de ecrã do telemóvel (1920×1080) |
+| `captura-1-menu.png`, `captura-2-aldeia.png`, `captura-3-batalha.png`, `captura-4-mercado.png`, `captura-5-tutorial.png` | Presença na loja → Capturas de ecrã do telemóvel (1920×1080) |
 | `app-release.aab` (sai do GitHub Actions, artefacto **alvorada-play-store**) | Testes / Produção → Criar versão |
 
 ## 2. Textos da ficha (português)

@@ -1,0 +1,72 @@
+{
+ "montar": {
+  "p1": "muralhaPedra cabe 2",
+  "gm": "portaoMadeira cabe 2",
+  "p2": "muralhaPedra cabe 2",
+  "gp": "portaoPedra cabe 4",
+  "f1": "muralhaFort cabe 3",
+  "f2": "muralhaFort cabe 3",
+  "t1": "torre cabe 5",
+  "p3": "muralhaPedra cabe 2",
+  "t2": "torre cabe 5",
+  "p4": "muralhaPedra cabe 2",
+  "t3": "torre cabe 5",
+  "pal": "muralhaMadeira cabe 0"
+ },
+ "subir": {
+  "p1": 3,
+  "gm": 3,
+  "p2": 3,
+  "gp": 5,
+  "f1": 4,
+  "f2": 4,
+  "t1": 6,
+  "p3": 3,
+  "t2": 6,
+  "p4": 3,
+  "t3": 6
+ },
+ "em_cima": {
+  "p1": "2/2",
+  "gm": "2/2",
+  "p2": "2/2",
+  "gp": "4/4",
+  "f1": "3/3",
+  "f2": "3/3",
+  "t1": "5/5",
+  "p3": "2/2",
+  "t2": "5/5",
+  "p4": "2/2",
+  "t3": "5/5",
+  "pal": "-",
+  "aldeao_no_muro": false,
+  "cavalo_no_muro": false,
+  "paliçada_sem_guarnicao": true
+ },
+ "ataque_inicio": 12,
+ "ataque_fim": {
+  "mortos": 11,
+  "feridos": 0,
+  "de": 12,
+  "soldados_mortos_em_cima": 0
+ },
+ "guardar": {
+  "antes": 35,
+  "depois": 35,
+  "ok": true
+ },
+ "sair": {
+  "saíram": 4,
+  "ficaram": 0
+ },
+ "muro_cai": {
+  "tinham": 3,
+  "desceram_vivos": 3,
+  "vida": [
+   "70%",
+   "70%",
+   "70%"
+  ]
+ },
+ "erros": []
+}

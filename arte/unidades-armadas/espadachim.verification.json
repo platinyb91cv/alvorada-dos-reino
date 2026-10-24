@@ -1,0 +1,2235 @@
+{
+  "unit": "espadachim",
+  "reimported": true,
+  "reimportedClipsDistinct": true,
+  "bones": 24,
+  "boneNames": [
+    "Hips",
+    "LeftUpLeg",
+    "LeftLeg",
+    "LeftFoot",
+    "LeftToeBase",
+    "RightUpLeg",
+    "RightLeg",
+    "RightFoot",
+    "RightToeBase",
+    "Spine02",
+    "Spine01",
+    "Spine",
+    "LeftShoulder",
+    "LeftArm",
+    "LeftForeArm",
+    "LeftHand",
+    "neck",
+    "Head",
+    "head_end",
+    "headfront",
+    "RightShoulder",
+    "RightArm",
+    "RightForeArm",
+    "RightHand"
+  ],
+  "clips": [
+    "Idle",
+    "Walk",
+    "Attack",
+    "Hit",
+    "Death"
+  ],
+  "horizontalRootDriftMetresByClip": {
+    "Idle": 3.548571839928627e-08,
+    "Walk": 6.506988938781433e-09,
+    "Attack": 6.632530130445957e-08,
+    "Hit": 1.7937272787094118e-08,
+    "Death": 0.8068436431884766
+  },
+  "sha256": "953120943370d33a6c4d416ef253e417f123d5d4ffc19108936c013077234aa2",
+  "sourceSha256": "d8394e71b5c9b7714c0ff596ffe3c310b05ac0b2b127f37c9ccb69488850057c",
+  "bodyTriangles": 99999,
+  "bytes": 24877388,
+  "additionalMeshyCredits": 0,
+  "supportHandMaximumResidualMetres": null,
+  "source": "Existing Meshy models and motions; local posture/hand layers and villager retarget; no paid requests",
+  "clipDurationsSeconds": {
+    "Idle": 1.7083333730697632,
+    "Walk": 1.0833333730697632,
+    "Attack": 1.5416666269302368,
+    "Hit": 1.6666666269302368,
+    "Death": 2.2083332538604736
+  },
+  "atlasSha256": "f0aceaf1746fdd5a4e4d90855028a43a0edc3abe0a24454b0afe5999d079862e",
+  "locomotion": {
+    "walk": {
+      "phaseScale": 2.2372573717507684,
+      "strideTiles": 0.5616864100228819,
+      "animFactor": 11.186286858753842
+    }
+  },
+  "render": {
+    "sourceModelSha256": "953120943370d33a6c4d416ef253e417f123d5d4ffc19108936c013077234aa2",
+    "bodyReferencePixels": 36.03378097713797,
+    "unit": "espadachim",
+    "directions": 8,
+    "framesPerDirection": 22,
+    "states": {
+      "idle": [
+        0,
+        1
+      ],
+      "walk": [
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9
+      ],
+      "attack": [
+        10,
+        11,
+        12,
+        13,
+        14,
+        15
+      ],
+      "hit": [
+        16,
+        17
+      ],
+      "death": [
+        18,
+        19,
+        20,
+        21
+      ]
+    },
+    "labels": [
+      "SE",
+      "S",
+      "SW",
+      "W",
+      "NW",
+      "N",
+      "NE",
+      "E"
+    ],
+    "frames": [
+      {
+        "i": 0,
+        "state": "idle",
+        "clip": "Idle",
+        "phase": 0.2,
+        "tool": "sword",
+        "direction": 0,
+        "anchor": [
+          63.99999237060547,
+          76.0107421875
+        ]
+      },
+      {
+        "i": 1,
+        "state": "idle",
+        "clip": "Idle",
+        "phase": 0.7,
+        "tool": "sword",
+        "direction": 0,
+        "anchor": [
+          63.99999237060547,
+          76.0107421875
+        ]
+      },
+      {
+        "i": 2,
+        "state": "walk",
+        "clip": "Walk",
+        "phase": 0.0,
+        "tool": "sword",
+        "direction": 0,
+        "anchor": [
+          63.99999237060547,
+          76.0107421875
+        ]
+      },
+      {
+        "i": 3,
+        "state": "walk",
+        "clip": "Walk",
+        "phase": 0.125,
+        "tool": "sword",
+        "direction": 0,
+        "anchor": [
+          63.99999237060547,
+          76.0107421875
+        ]
+      },
+      {
+        "i": 4,
+        "state": "walk",
+        "clip": "Walk",
+        "phase": 0.25,
+        "tool": "sword",
+        "direction": 0,
+        "anchor": [
+          63.99999237060547,
+          76.0107421875
+        ]
+      },
+      {
+        "i": 5,
+        "state": "walk",
+        "clip": "Walk",
+        "phase": 0.375,
+        "tool": "sword",
+        "direction": 0,
+        "anchor": [
+          63.99999237060547,
+          76.0107421875
+        ]
+      },
+      {
+        "i": 6,
+        "state": "walk",
+        "clip": "Walk",
+        "phase": 0.5,
+        "tool": "sword",
+        "direction": 0,
+        "anchor": [
+          63.99999237060547,
+          76.0107421875
+        ]
+      },
+      {
+        "i": 7,
+        "state": "walk",
+        "clip": "Walk",
+        "phase": 0.625,
+        "tool": "sword",
+        "direction": 0,
+        "anchor": [
+          63.99999237060547,
+          76.0107421875
+        ]
+      },
+      {
+        "i": 8,
+        "state": "walk",
+        "clip": "Walk",
+        "phase": 0.75,
+        "tool": "sword",
+        "direction": 0,
+        "anchor": [
+          63.99999237060547,
+          76.0107421875
+        ]
+      },
+      {
+        "i": 9,
+        "state": "walk",
+        "clip": "Walk",
+        "phase": 0.875,
+        "tool": "sword",
+        "direction": 0,
+        "anchor": [
+          63.99999237060547,
+          76.0107421875
+        ]
+      },
+      {
+        "i": 10,
+        "state": "attack",
+        "clip": "Attack",
+        "phase": 0,
+        "tool": "sword",
+        "direction": 0,
+        "anchor": [
+          63.99999237060547,
+          76.0107421875
+        ]
+      },
+      {
+        "i": 11,
+        "state": "attack",
+        "clip": "Attack",
+        "phase": 0.15,
+        "tool": "sword",
+        "direction": 0,
+        "anchor": [
+          63.99999237060547,
+          76.0107421875
+        ]
+      },
+      {
+        "i": 12,
+        "state": "attack",
+        "clip": "Attack",
+        "phase": 0.3,
+        "tool": "sword",
+        "direction": 0,
+        "anchor": [
+          63.99999237060547,
+          76.0107421875
+        ]
+      },
+      {
+        "i": 13,
+        "state": "attack",
+        "clip": "Attack",
+        "phase": 0.5,
+        "tool": "sword",
+        "direction": 0,
+        "anchor": [
+          63.99999237060547,
+          76.0107421875
+        ]
+      },
+      {
+        "i": 14,
+        "state": "attack",
+        "clip": "Attack",
+        "phase": 0.7,
+        "tool": "sword",
+        "direction": 0,
+        "anchor": [
+          63.99999237060547,
+          76.0107421875
+        ]
+      },
+      {
+        "i": 15,
+        "state": "attack",
+        "clip": "Attack",
+        "phase": 0.9,
+        "tool": "sword",
+        "direction": 0,
+        "anchor": [
+          63.99999237060547,
+          76.0107421875
+        ]
+      },
+      {
+        "i": 16,
+        "state": "hit",
+        "clip": "Hit",
+        "phase": 0.2,
+        "tool": "sword",
+        "direction": 0,
+        "anchor": [
+          63.99999237060547,
+          76.0107421875
+        ]
+      },
+      {
+        "i": 17,
+        "state": "hit",
+        "clip": "Hit",
+        "phase": 0.55,
+        "tool": "sword",
+        "direction": 0,
+        "anchor": [
+          63.99999237060547,
+          76.0107421875
+        ]
+      },
+      {
+        "i": 18,
+        "state": "death",
+        "clip": "Death",
+        "phase": 0.1,
+        "tool": "sword",
+        "direction": 0,
+        "anchor": [
+          63.99999237060547,
+          76.0107421875
+        ]
+      },
+      {
+        "i": 19,
+        "state": "death",
+        "clip": "Death",
+        "phase": 0.35,
+        "tool": "sword",
+        "direction": 0,
+        "anchor": [
+          63.99999237060547,
+          76.0107421875
+        ]
+      },
+      {
+        "i": 20,
+        "state": "death",
+        "clip": "Death",
+        "phase": 0.65,
+        "tool": "sword",
+        "direction": 0,
+        "anchor": [
+          63.99999237060547,
+          76.0107421875
+        ]
+      },
+      {
+        "i": 21,
+        "state": "death",
+        "clip": "Death",
+        "phase": 1,
+        "tool": "sword",
+        "direction": 0,
+        "anchor": [
+          63.99999237060547,
+          76.0107421875
+        ]
+      },
+      {
+        "i": 0,
+        "state": "idle",
+        "clip": "Idle",
+        "phase": 0.2,
+        "tool": "sword",
+        "direction": 1,
+        "anchor": [
+          63.99999237060547,
+          76.0107421875
+        ]
+      },
+      {
+        "i": 1,
+        "state": "idle",
+        "clip": "Idle",
+        "phase": 0.7,
+        "tool": "sword",
+        "direction": 1,
+        "anchor": [
+          63.99999237060547,
+          76.0107421875
+        ]
+      },
+      {
+        "i": 2,
+        "state": "walk",
+        "clip": "Walk",
+        "phase": 0.0,
+        "tool": "sword",
+        "direction": 1,
+        "anchor": [
+          63.99999237060547,
+          76.0107421875
+        ]
+      },
+      {
+        "i": 3,
+        "state": "walk",
+        "clip": "Walk",
+        "phase": 0.125,
+        "tool": "sword",
+        "direction": 1,
+        "anchor": [
+          63.99999237060547,
+          76.0107421875
+        ]
+      },
+      {
+        "i": 4,
+        "state": "walk",
+        "clip": "Walk",
+        "phase": 0.25,
+        "tool": "sword",
+        "direction": 1,
+        "anchor": [
+          63.99999237060547,
+          76.0107421875
+        ]
+      },
+      {
+        "i": 5,
+        "state": "walk",
+        "clip": "Walk",
+        "phase": 0.375,
+        "tool": "sword",
+        "direction": 1,
+        "anchor": [
+          63.99999237060547,
+          76.0107421875
+        ]
+      },
+      {
+        "i": 6,
+        "state": "walk",
+        "clip": "Walk",
+        "phase": 0.5,
+        "tool": "sword",
+        "direction": 1,
+        "anchor": [
+          63.99999237060547,
+          76.0107421875
+        ]
+      },
+      {
+        "i": 7,
+        "state": "walk",
+        "clip": "Walk",
+        "phase": 0.625,
+        "tool": "sword",
+        "direction": 1,
+        "anchor": [
+          63.99999237060547,
+          76.0107421875
+        ]
+      },
+      {
+        "i": 8,
+        "state": "walk",
+        "clip": "Walk",
+        "phase": 0.75,
+        "tool": "sword",
+        "direction": 1,
+        "anchor": [
+          63.99999237060547,
+          76.0107421875
+        ]
+      },
+      {
+        "i": 9,
+        "state": "walk",
+        "clip": "Walk",
+        "phase": 0.875,
+        "tool": "sword",
+        "direction": 1,
+        "anchor": [
+          63.99999237060547,
+          76.0107421875
+        ]
+      },
+      {
+        "i": 10,
+        "state": "attack",
+        "clip": "Attack",
+        "phase": 0,
+        "tool": "sword",
+        "direction": 1,
+        "anchor": [
+          63.99999237060547,
+          76.0107421875
+        ]
+      },
+      {
+        "i": 11,
+        "state": "attack",
+        "clip": "Attack",
+        "phase": 0.15,
+        "tool": "sword",
+        "direction": 1,
+        "anchor": [
+          63.99999237060547,
+          76.0107421875
+        ]
+      },
+      {
+        "i": 12,
+        "state": "attack",
+        "clip": "Attack",
+        "phase": 0.3,
+        "tool": "sword",
+        "direction": 1,
+        "anchor": [
+          63.99999237060547,
+          76.0107421875
+        ]
+      },
+      {
+        "i": 13,
+        "state": "attack",
+        "clip": "Attack",
+        "phase": 0.5,
+        "tool": "sword",
+        "direction": 1,
+        "anchor": [
+          63.99999237060547,
+          76.0107421875
+        ]
+      },
+      {
+        "i": 14,
+        "state": "attack",
+        "clip": "Attack",
+        "phase": 0.7,
+        "tool": "sword",
+        "direction": 1,
+        "anchor": [
+          63.99999237060547,
+          76.0107421875
+        ]
+      },
+      {
+        "i": 15,
+        "state": "attack",
+        "clip": "Attack",
+        "phase": 0.9,
+        "tool": "sword",
+        "direction": 1,
+        "anchor": [
+          63.99999237060547,
+          76.0107421875
+        ]
+      },
+      {
+        "i": 16,
+        "state": "hit",
+        "clip": "Hit",
+        "phase": 0.2,
+        "tool": "sword",
+        "direction": 1,
+        "anchor": [
+          63.99999237060547,
+          76.0107421875
+        ]
+      },
+      {
+        "i": 17,
+        "state": "hit",
+        "clip": "Hit",
+        "phase": 0.55,
+        "tool": "sword",
+        "direction": 1,
+        "anchor": [
+          63.99999237060547,
+          76.0107421875
+        ]
+      },
+      {
+        "i": 18,
+        "state": "death",
+        "clip": "Death",
+        "phase": 0.1,
+        "tool": "sword",
+        "direction": 1,
+        "anchor": [
+          63.99999237060547,
+          76.0107421875
+        ]
+      },
+      {
+        "i": 19,
+        "state": "death",
+        "clip": "Death",
+        "phase": 0.35,
+        "tool": "sword",
+        "direction": 1,
+        "anchor": [
+          63.99999237060547,
+          76.0107421875
+        ]
+      },
+      {
+        "i": 20,
+        "state": "death",
+        "clip": "Death",
+        "phase": 0.65,
+        "tool": "sword",
+        "direction": 1,
+        "anchor": [
+          63.99999237060547,
+          76.0107421875
+        ]
+      },
+      {
+        "i": 21,
+        "state": "death",
+        "clip": "Death",
+        "phase": 1,
+        "tool": "sword",
+        "direction": 1,
+        "anchor": [
+          63.99999237060547,
+          76.0107421875
+        ]
+      },
+      {
+        "i": 0,
+        "state": "idle",
+        "clip": "Idle",
+        "phase": 0.2,
+        "tool": "sword",
+        "direction": 2,
+        "anchor": [
+          63.99999237060547,
+          76.0107421875
+        ]
+      },
+      {
+        "i": 1,
+        "state": "idle",
+        "clip": "Idle",
+        "phase": 0.7,
+        "tool": "sword",
+        "direction": 2,
+        "anchor": [
+          63.99999237060547,
+          76.0107421875
+        ]
+      },
+      {
+        "i": 2,
+        "state": "walk",
+        "clip": "Walk",
+        "phase": 0.0,
+        "tool": "sword",
+        "direction": 2,
+        "anchor": [
+          63.99999237060547,
+          76.0107421875
+        ]
+      },
+      {
+        "i": 3,
+        "state": "walk",
+        "clip": "Walk",
+        "phase": 0.125,
+        "tool": "sword",
+        "direction": 2,
+        "anchor": [
+          63.99999237060547,
+          76.0107421875
+        ]
+      },
+      {
+        "i": 4,
+        "state": "walk",
+        "clip": "Walk",
+        "phase": 0.25,
+        "tool": "sword",
+        "direction": 2,
+        "anchor": [
+          63.99999237060547,
+          76.0107421875
+        ]
+      },
+      {
+        "i": 5,
+        "state": "walk",
+        "clip": "Walk",
+        "phase": 0.375,
+        "tool": "sword",
+        "direction": 2,
+        "anchor": [
+          63.99999237060547,
+          76.0107421875
+        ]
+      },
+      {
+        "i": 6,
+        "state": "walk",
+        "clip": "Walk",
+        "phase": 0.5,
+        "tool": "sword",
+        "direction": 2,
+        "anchor": [
+          63.99999237060547,
+          76.0107421875
+        ]
+      },
+      {
+        "i": 7,
+        "state": "walk",
+        "clip": "Walk",
+        "phase": 0.625,
+        "tool": "sword",
+        "direction": 2,
+        "anchor": [
+          63.99999237060547,
+          76.0107421875
+        ]
+      },
+      {
+        "i": 8,
+        "state": "walk",
+        "clip": "Walk",
+        "phase": 0.75,
+        "tool": "sword",
+        "direction": 2,
+        "anchor": [
+          63.99999237060547,
+          76.0107421875
+        ]
+      },
+      {
+        "i": 9,
+        "state": "walk",
+        "clip": "Walk",
+        "phase": 0.875,
+        "tool": "sword",
+        "direction": 2,
+        "anchor": [
+          63.99999237060547,
+          76.0107421875
+        ]
+      },
+      {
+        "i": 10,
+        "state": "attack",
+        "clip": "Attack",
+        "phase": 0,
+        "tool": "sword",
+        "direction": 2,
+        "anchor": [
+          63.99999237060547,
+          76.0107421875
+        ]
+      },
+      {
+        "i": 11,
+        "state": "attack",
+        "clip": "Attack",
+        "phase": 0.15,
+        "tool": "sword",
+        "direction": 2,
+        "anchor": [
+          63.99999237060547,
+          76.0107421875
+        ]
+      },
+      {
+        "i": 12,
+        "state": "attack",
+        "clip": "Attack",
+        "phase": 0.3,
+        "tool": "sword",
+        "direction": 2,
+        "anchor": [
+          63.99999237060547,
+          76.0107421875
+        ]
+      },
+      {
+        "i": 13,
+        "state": "attack",
+        "clip": "Attack",
+        "phase": 0.5,
+        "tool": "sword",
+        "direction": 2,
+        "anchor": [
+          63.99999237060547,
+          76.0107421875
+        ]
+      },
+      {
+        "i": 14,
+        "state": "attack",
+        "clip": "Attack",
+        "phase": 0.7,
+        "tool": "sword",
+        "direction": 2,
+        "anchor": [
+          63.99999237060547,
+          76.0107421875
+        ]
+      },
+      {
+        "i": 15,
+        "state": "attack",
+        "clip": "Attack",
+        "phase": 0.9,
+        "tool": "sword",
+        "direction": 2,
+        "anchor": [
+          63.99999237060547,
+          76.0107421875
+        ]
+      },
+      {
+        "i": 16,
+        "state": "hit",
+        "clip": "Hit",
+        "phase": 0.2,
+        "tool": "sword",
+        "direction": 2,
+        "anchor": [
+          63.99999237060547,
+          76.0107421875
+        ]
+      },
+      {
+        "i": 17,
+        "state": "hit",
+        "clip": "Hit",
+        "phase": 0.55,
+        "tool": "sword",
+        "direction": 2,
+        "anchor": [
+          63.99999237060547,
+          76.0107421875
+        ]
+      },
+      {
+        "i": 18,
+        "state": "death",
+        "clip": "Death",
+        "phase": 0.1,
+        "tool": "sword",
+        "direction": 2,
+        "anchor": [
+          63.99999237060547,
+          76.0107421875
+        ]
+      },
+      {
+        "i": 19,
+        "state": "death",
+        "clip": "Death",
+        "phase": 0.35,
+        "tool": "sword",
+        "direction": 2,
+        "anchor": [
+          63.99999237060547,
+          76.0107421875
+        ]
+      },
+      {
+        "i": 20,
+        "state": "death",
+        "clip": "Death",
+        "phase": 0.65,
+        "tool": "sword",
+        "direction": 2,
+        "anchor": [
+          63.99999237060547,
+          76.0107421875
+        ]
+      },
+      {
+        "i": 21,
+        "state": "death",
+        "clip": "Death",
+        "phase": 1,
+        "tool": "sword",
+        "direction": 2,
+        "anchor": [
+          63.99999237060547,
+          76.0107421875
+        ]
+      },
+      {
+        "i": 0,
+        "state": "idle",
+        "clip": "Idle",
+        "phase": 0.2,
+        "tool": "sword",
+        "direction": 3,
+        "anchor": [
+          63.99999237060547,
+          76.0107421875
+        ]
+      },
+      {
+        "i": 1,
+        "state": "idle",
+        "clip": "Idle",
+        "phase": 0.7,
+        "tool": "sword",
+        "direction": 3,
+        "anchor": [
+          63.99999237060547,
+          76.0107421875
+        ]
+      },
+      {
+        "i": 2,
+        "state": "walk",
+        "clip": "Walk",
+        "phase": 0.0,
+        "tool": "sword",
+        "direction": 3,
+        "anchor": [
+          63.99999237060547,
+          76.0107421875
+        ]
+      },
+      {
+        "i": 3,
+        "state": "walk",
+        "clip": "Walk",
+        "phase": 0.125,
+        "tool": "sword",
+        "direction": 3,
+        "anchor": [
+          63.99999237060547,
+          76.0107421875
+        ]
+      },
+      {
+        "i": 4,
+        "state": "walk",
+        "clip": "Walk",
+        "phase": 0.25,
+        "tool": "sword",
+        "direction": 3,
+        "anchor": [
+          63.99999237060547,
+          76.0107421875
+        ]
+      },
+      {
+        "i": 5,
+        "state": "walk",
+        "clip": "Walk",
+        "phase": 0.375,
+        "tool": "sword",
+        "direction": 3,
+        "anchor": [
+          63.99999237060547,
+          76.0107421875
+        ]
+      },
+      {
+        "i": 6,
+        "state": "walk",
+        "clip": "Walk",
+        "phase": 0.5,
+        "tool": "sword",
+        "direction": 3,
+        "anchor": [
+          63.99999237060547,
+          76.0107421875
+        ]
+      },
+      {
+        "i": 7,
+        "state": "walk",
+        "clip": "Walk",
+        "phase": 0.625,
+        "tool": "sword",
+        "direction": 3,
+        "anchor": [
+          63.99999237060547,
+          76.0107421875
+        ]
+      },
+      {
+        "i": 8,
+        "state": "walk",
+        "clip": "Walk",
+        "phase": 0.75,
+        "tool": "sword",
+        "direction": 3,
+        "anchor": [
+          63.99999237060547,
+          76.0107421875
+        ]
+      },
+      {
+        "i": 9,
+        "state": "walk",
+        "clip": "Walk",
+        "phase": 0.875,
+        "tool": "sword",
+        "direction": 3,
+        "anchor": [
+          63.99999237060547,
+          76.0107421875
+        ]
+      },
+      {
+        "i": 10,
+        "state": "attack",
+        "clip": "Attack",
+        "phase": 0,
+        "tool": "sword",
+        "direction": 3,
+        "anchor": [
+          63.99999237060547,
+          76.0107421875
+        ]
+      },
+      {
+        "i": 11,
+        "state": "attack",
+        "clip": "Attack",
+        "phase": 0.15,
+        "tool": "sword",
+        "direction": 3,
+        "anchor": [
+          63.99999237060547,
+          76.0107421875
+        ]
+      },
+      {
+        "i": 12,
+        "state": "attack",
+        "clip": "Attack",
+        "phase": 0.3,
+        "tool": "sword",
+        "direction": 3,
+        "anchor": [
+          63.99999237060547,
+          76.0107421875
+        ]
+      },
+      {
+        "i": 13,
+        "state": "attack",
+        "clip": "Attack",
+        "phase": 0.5,
+        "tool": "sword",
+        "direction": 3,
+        "anchor": [
+          63.99999237060547,
+          76.0107421875
+        ]
+      },
+      {
+        "i": 14,
+        "state": "attack",
+        "clip": "Attack",
+        "phase": 0.7,
+        "tool": "sword",
+        "direction": 3,
+        "anchor": [
+          63.99999237060547,
+          76.0107421875
+        ]
+      },
+      {
+        "i": 15,
+        "state": "attack",
+        "clip": "Attack",
+        "phase": 0.9,
+        "tool": "sword",
+        "direction": 3,
+        "anchor": [
+          63.99999237060547,
+          76.0107421875
+        ]
+      },
+      {
+        "i": 16,
+        "state": "hit",
+        "clip": "Hit",
+        "phase": 0.2,
+        "tool": "sword",
+        "direction": 3,
+        "anchor": [
+          63.99999237060547,
+          76.0107421875
+        ]
+      },
+      {
+        "i": 17,
+        "state": "hit",
+        "clip": "Hit",
+        "phase": 0.55,
+        "tool": "sword",
+        "direction": 3,
+        "anchor": [
+          63.99999237060547,
+          76.0107421875
+        ]
+      },
+      {
+        "i": 18,
+        "state": "death",
+        "clip": "Death",
+        "phase": 0.1,
+        "tool": "sword",
+        "direction": 3,
+        "anchor": [
+          63.99999237060547,
+          76.0107421875
+        ]
+      },
+      {
+        "i": 19,
+        "state": "death",
+        "clip": "Death",
+        "phase": 0.35,
+        "tool": "sword",
+        "direction": 3,
+        "anchor": [
+          63.99999237060547,
+          76.0107421875
+        ]
+      },
+      {
+        "i": 20,
+        "state": "death",
+        "clip": "Death",
+        "phase": 0.65,
+        "tool": "sword",
+        "direction": 3,
+        "anchor": [
+          63.99999237060547,
+          76.0107421875
+        ]
+      },
+      {
+        "i": 21,
+        "state": "death",
+        "clip": "Death",
+        "phase": 1,
+        "tool": "sword",
+        "direction": 3,
+        "anchor": [
+          63.99999237060547,
+          76.0107421875
+        ]
+      },
+      {
+        "i": 0,
+        "state": "idle",
+        "clip": "Idle",
+        "phase": 0.2,
+        "tool": "sword",
+        "direction": 4,
+        "anchor": [
+          63.99999237060547,
+          76.0107421875
+        ]
+      },
+      {
+        "i": 1,
+        "state": "idle",
+        "clip": "Idle",
+        "phase": 0.7,
+        "tool": "sword",
+        "direction": 4,
+        "anchor": [
+          63.99999237060547,
+          76.0107421875
+        ]
+      },
+      {
+        "i": 2,
+        "state": "walk",
+        "clip": "Walk",
+        "phase": 0.0,
+        "tool": "sword",
+        "direction": 4,
+        "anchor": [
+          63.99999237060547,
+          76.0107421875
+        ]
+      },
+      {
+        "i": 3,
+        "state": "walk",
+        "clip": "Walk",
+        "phase": 0.125,
+        "tool": "sword",
+        "direction": 4,
+        "anchor": [
+          63.99999237060547,
+          76.0107421875
+        ]
+      },
+      {
+        "i": 4,
+        "state": "walk",
+        "clip": "Walk",
+        "phase": 0.25,
+        "tool": "sword",
+        "direction": 4,
+        "anchor": [
+          63.99999237060547,
+          76.0107421875
+        ]
+      },
+      {
+        "i": 5,
+        "state": "walk",
+        "clip": "Walk",
+        "phase": 0.375,
+        "tool": "sword",
+        "direction": 4,
+        "anchor": [
+          63.99999237060547,
+          76.0107421875
+        ]
+      },
+      {
+        "i": 6,
+        "state": "walk",
+        "clip": "Walk",
+        "phase": 0.5,
+        "tool": "sword",
+        "direction": 4,
+        "anchor": [
+          63.99999237060547,
+          76.0107421875
+        ]
+      },
+      {
+        "i": 7,
+        "state": "walk",
+        "clip": "Walk",
+        "phase": 0.625,
+        "tool": "sword",
+        "direction": 4,
+        "anchor": [
+          63.99999237060547,
+          76.0107421875
+        ]
+      },
+      {
+        "i": 8,
+        "state": "walk",
+        "clip": "Walk",
+        "phase": 0.75,
+        "tool": "sword",
+        "direction": 4,
+        "anchor": [
+          63.99999237060547,
+          76.0107421875
+        ]
+      },
+      {
+        "i": 9,
+        "state": "walk",
+        "clip": "Walk",
+        "phase": 0.875,
+        "tool": "sword",
+        "direction": 4,
+        "anchor": [
+          63.99999237060547,
+          76.0107421875
+        ]
+      },
+      {
+        "i": 10,
+        "state": "attack",
+        "clip": "Attack",
+        "phase": 0,
+        "tool": "sword",
+        "direction": 4,
+        "anchor": [
+          63.99999237060547,
+          76.0107421875
+        ]
+      },
+      {
+        "i": 11,
+        "state": "attack",
+        "clip": "Attack",
+        "phase": 0.15,
+        "tool": "sword",
+        "direction": 4,
+        "anchor": [
+          63.99999237060547,
+          76.0107421875
+        ]
+      },
+      {
+        "i": 12,
+        "state": "attack",
+        "clip": "Attack",
+        "phase": 0.3,
+        "tool": "sword",
+        "direction": 4,
+        "anchor": [
+          63.99999237060547,
+          76.0107421875
+        ]
+      },
+      {
+        "i": 13,
+        "state": "attack",
+        "clip": "Attack",
+        "phase": 0.5,
+        "tool": "sword",
+        "direction": 4,
+        "anchor": [
+          63.99999237060547,
+          76.0107421875
+        ]
+      },
+      {
+        "i": 14,
+        "state": "attack",
+        "clip": "Attack",
+        "phase": 0.7,
+        "tool": "sword",
+        "direction": 4,
+        "anchor": [
+          63.99999237060547,
+          76.0107421875
+        ]
+      },
+      {
+        "i": 15,
+        "state": "attack",
+        "clip": "Attack",
+        "phase": 0.9,
+        "tool": "sword",
+        "direction": 4,
+        "anchor": [
+          63.99999237060547,
+          76.0107421875
+        ]
+      },
+      {
+        "i": 16,
+        "state": "hit",
+        "clip": "Hit",
+        "phase": 0.2,
+        "tool": "sword",
+        "direction": 4,
+        "anchor": [
+          63.99999237060547,
+          76.0107421875
+        ]
+      },
+      {
+        "i": 17,
+        "state": "hit",
+        "clip": "Hit",
+        "phase": 0.55,
+        "tool": "sword",
+        "direction": 4,
+        "anchor": [
+          63.99999237060547,
+          76.0107421875
+        ]
+      },
+      {
+        "i": 18,
+        "state": "death",
+        "clip": "Death",
+        "phase": 0.1,
+        "tool": "sword",
+        "direction": 4,
+        "anchor": [
+          63.99999237060547,
+          76.0107421875
+        ]
+      },
+      {
+        "i": 19,
+        "state": "death",
+        "clip": "Death",
+        "phase": 0.35,
+        "tool": "sword",
+        "direction": 4,
+        "anchor": [
+          63.99999237060547,
+          76.0107421875
+        ]
+      },
+      {
+        "i": 20,
+        "state": "death",
+        "clip": "Death",
+        "phase": 0.65,
+        "tool": "sword",
+        "direction": 4,
+        "anchor": [
+          63.99999237060547,
+          76.0107421875
+        ]
+      },
+      {
+        "i": 21,
+        "state": "death",
+        "clip": "Death",
+        "phase": 1,
+        "tool": "sword",
+        "direction": 4,
+        "anchor": [
+          63.99999237060547,
+          76.0107421875
+        ]
+      },
+      {
+        "i": 0,
+        "state": "idle",
+        "clip": "Idle",
+        "phase": 0.2,
+        "tool": "sword",
+        "direction": 5,
+        "anchor": [
+          63.99999237060547,
+          76.0107421875
+        ]
+      },
+      {
+        "i": 1,
+        "state": "idle",
+        "clip": "Idle",
+        "phase": 0.7,
+        "tool": "sword",
+        "direction": 5,
+        "anchor": [
+          63.99999237060547,
+          76.0107421875
+        ]
+      },
+      {
+        "i": 2,
+        "state": "walk",
+        "clip": "Walk",
+        "phase": 0.0,
+        "tool": "sword",
+        "direction": 5,
+        "anchor": [
+          63.99999237060547,
+          76.0107421875
+        ]
+      },
+      {
+        "i": 3,
+        "state": "walk",
+        "clip": "Walk",
+        "phase": 0.125,
+        "tool": "sword",
+        "direction": 5,
+        "anchor": [
+          63.99999237060547,
+          76.0107421875
+        ]
+      },
+      {
+        "i": 4,
+        "state": "walk",
+        "clip": "Walk",
+        "phase": 0.25,
+        "tool": "sword",
+        "direction": 5,
+        "anchor": [
+          63.99999237060547,
+          76.0107421875
+        ]
+      },
+      {
+        "i": 5,
+        "state": "walk",
+        "clip": "Walk",
+        "phase": 0.375,
+        "tool": "sword",
+        "direction": 5,
+        "anchor": [
+          63.99999237060547,
+          76.0107421875
+        ]
+      },
+      {
+        "i": 6,
+        "state": "walk",
+        "clip": "Walk",
+        "phase": 0.5,
+        "tool": "sword",
+        "direction": 5,
+        "anchor": [
+          63.99999237060547,
+          76.0107421875
+        ]
+      },
+      {
+        "i": 7,
+        "state": "walk",
+        "clip": "Walk",
+        "phase": 0.625,
+        "tool": "sword",
+        "direction": 5,
+        "anchor": [
+          63.99999237060547,
+          76.0107421875
+        ]
+      },
+      {
+        "i": 8,
+        "state": "walk",
+        "clip": "Walk",
+        "phase": 0.75,
+        "tool": "sword",
+        "direction": 5,
+        "anchor": [
+          63.99999237060547,
+          76.0107421875
+        ]
+      },
+      {
+        "i": 9,
+        "state": "walk",
+        "clip": "Walk",
+        "phase": 0.875,
+        "tool": "sword",
+        "direction": 5,
+        "anchor": [
+          63.99999237060547,
+          76.0107421875
+        ]
+      },
+      {
+        "i": 10,
+        "state": "attack",
+        "clip": "Attack",
+        "phase": 0,
+        "tool": "sword",
+        "direction": 5,
+        "anchor": [
+          63.99999237060547,
+          76.0107421875
+        ]
+      },
+      {
+        "i": 11,
+        "state": "attack",
+        "clip": "Attack",
+        "phase": 0.15,
+        "tool": "sword",
+        "direction": 5,
+        "anchor": [
+          63.99999237060547,
+          76.0107421875
+        ]
+      },
+      {
+        "i": 12,
+        "state": "attack",
+        "clip": "Attack",
+        "phase": 0.3,
+        "tool": "sword",
+        "direction": 5,
+        "anchor": [
+          63.99999237060547,
+          76.0107421875
+        ]
+      },
+      {
+        "i": 13,
+        "state": "attack",
+        "clip": "Attack",
+        "phase": 0.5,
+        "tool": "sword",
+        "direction": 5,
+        "anchor": [
+          63.99999237060547,
+          76.0107421875
+        ]
+      },
+      {
+        "i": 14,
+        "state": "attack",
+        "clip": "Attack",
+        "phase": 0.7,
+        "tool": "sword",
+        "direction": 5,
+        "anchor": [
+          63.99999237060547,
+          76.0107421875
+        ]
+      },
+      {
+        "i": 15,
+        "state": "attack",
+        "clip": "Attack",
+        "phase": 0.9,
+        "tool": "sword",
+        "direction": 5,
+        "anchor": [
+          63.99999237060547,
+          76.0107421875
+        ]
+      },
+      {
+        "i": 16,
+        "state": "hit",
+        "clip": "Hit",
+        "phase": 0.2,
+        "tool": "sword",
+        "direction": 5,
+        "anchor": [
+          63.99999237060547,
+          76.0107421875
+        ]
+      },
+      {
+        "i": 17,
+        "state": "hit",
+        "clip": "Hit",
+        "phase": 0.55,
+        "tool": "sword",
+        "direction": 5,
+        "anchor": [
+          63.99999237060547,
+          76.0107421875
+        ]
+      },
+      {
+        "i": 18,
+        "state": "death",
+        "clip": "Death",
+        "phase": 0.1,
+        "tool": "sword",
+        "direction": 5,
+        "anchor": [
+          63.99999237060547,
+          76.0107421875
+        ]
+      },
+      {
+        "i": 19,
+        "state": "death",
+        "clip": "Death",
+        "phase": 0.35,
+        "tool": "sword",
+        "direction": 5,
+        "anchor": [
+          63.99999237060547,
+          76.0107421875
+        ]
+      },
+      {
+        "i": 20,
+        "state": "death",
+        "clip": "Death",
+        "phase": 0.65,
+        "tool": "sword",
+        "direction": 5,
+        "anchor": [
+          63.99999237060547,
+          76.0107421875
+        ]
+      },
+      {
+        "i": 21,
+        "state": "death",
+        "clip": "Death",
+        "phase": 1,
+        "tool": "sword",
+        "direction": 5,
+        "anchor": [
+          63.99999237060547,
+          76.0107421875
+        ]
+      },
+      {
+        "i": 0,
+        "state": "idle",
+        "clip": "Idle",
+        "phase": 0.2,
+        "tool": "sword",
+        "direction": 6,
+        "anchor": [
+          63.99999237060547,
+          76.0107421875
+        ]
+      },
+      {
+        "i": 1,
+        "state": "idle",
+        "clip": "Idle",
+        "phase": 0.7,
+        "tool": "sword",
+        "direction": 6,
+        "anchor": [
+          63.99999237060547,
+          76.0107421875
+        ]
+      },
+      {
+        "i": 2,
+        "state": "walk",
+        "clip": "Walk",
+        "phase": 0.0,
+        "tool": "sword",
+        "direction": 6,
+        "anchor": [
+          63.99999237060547,
+          76.0107421875
+        ]
+      },
+      {
+        "i": 3,
+        "state": "walk",
+        "clip": "Walk",
+        "phase": 0.125,
+        "tool": "sword",
+        "direction": 6,
+        "anchor": [
+          63.99999237060547,
+          76.0107421875
+        ]
+      },
+      {
+        "i": 4,
+        "state": "walk",
+        "clip": "Walk",
+        "phase": 0.25,
+        "tool": "sword",
+        "direction": 6,
+        "anchor": [
+          63.99999237060547,
+          76.0107421875
+        ]
+      },
+      {
+        "i": 5,
+        "state": "walk",
+        "clip": "Walk",
+        "phase": 0.375,
+        "tool": "sword",
+        "direction": 6,
+        "anchor": [
+          63.99999237060547,
+          76.0107421875
+        ]
+      },
+      {
+        "i": 6,
+        "state": "walk",
+        "clip": "Walk",
+        "phase": 0.5,
+        "tool": "sword",
+        "direction": 6,
+        "anchor": [
+          63.99999237060547,
+          76.0107421875
+        ]
+      },
+      {
+        "i": 7,
+        "state": "walk",
+        "clip": "Walk",
+        "phase": 0.625,
+        "tool": "sword",
+        "direction": 6,
+        "anchor": [
+          63.99999237060547,
+          76.0107421875
+        ]
+      },
+      {
+        "i": 8,
+        "state": "walk",
+        "clip": "Walk",
+        "phase": 0.75,
+        "tool": "sword",
+        "direction": 6,
+        "anchor": [
+          63.99999237060547,
+          76.0107421875
+        ]
+      },
+      {
+        "i": 9,
+        "state": "walk",
+        "clip": "Walk",
+        "phase": 0.875,
+        "tool": "sword",
+        "direction": 6,
+        "anchor": [
+          63.99999237060547,
+          76.0107421875
+        ]
+      },
+      {
+        "i": 10,
+        "state": "attack",
+        "clip": "Attack",
+        "phase": 0,
+        "tool": "sword",
+        "direction": 6,
+        "anchor": [
+          63.99999237060547,
+          76.0107421875
+        ]
+      },
+      {
+        "i": 11,
+        "state": "attack",
+        "clip": "Attack",
+        "phase": 0.15,
+        "tool": "sword",
+        "direction": 6,
+        "anchor": [
+          63.99999237060547,
+          76.0107421875
+        ]
+      },
+      {
+        "i": 12,
+        "state": "attack",
+        "clip": "Attack",
+        "phase": 0.3,
+        "tool": "sword",
+        "direction": 6,
+        "anchor": [
+          63.99999237060547,
+          76.0107421875
+        ]
+      },
+      {
+        "i": 13,
+        "state": "attack",
+        "clip": "Attack",
+        "phase": 0.5,
+        "tool": "sword",
+        "direction": 6,
+        "anchor": [
+          63.99999237060547,
+          76.0107421875
+        ]
+      },
+      {
+        "i": 14,
+        "state": "attack",
+        "clip": "Attack",
+        "phase": 0.7,
+        "tool": "sword",
+        "direction": 6,
+        "anchor": [
+          63.99999237060547,
+          76.0107421875
+        ]
+      },
+      {
+        "i": 15,
+        "state": "attack",
+        "clip": "Attack",
+        "phase": 0.9,
+        "tool": "sword",
+        "direction": 6,
+        "anchor": [
+          63.99999237060547,
+          76.0107421875
+        ]
+      },
+      {
+        "i": 16,
+        "state": "hit",
+        "clip": "Hit",
+        "phase": 0.2,
+        "tool": "sword",
+        "direction": 6,
+        "anchor": [
+          63.99999237060547,
+          76.0107421875
+        ]
+      },
+      {
+        "i": 17,
+        "state": "hit",
+        "clip": "Hit",
+        "phase": 0.55,
+        "tool": "sword",
+        "direction": 6,
+        "anchor": [
+          63.99999237060547,
+          76.0107421875
+        ]
+      },
+      {
+        "i": 18,
+        "state": "death",
+        "clip": "Death",
+        "phase": 0.1,
+        "tool": "sword",
+        "direction": 6,
+        "anchor": [
+          63.99999237060547,
+          76.0107421875
+        ]
+      },
+      {
+        "i": 19,
+        "state": "death",
+        "clip": "Death",
+        "phase": 0.35,
+        "tool": "sword",
+        "direction": 6,
+        "anchor": [
+          63.99999237060547,
+          76.0107421875
+        ]
+      },
+      {
+        "i": 20,
+        "state": "death",
+        "clip": "Death",
+        "phase": 0.65,
+        "tool": "sword",
+        "direction": 6,
+        "anchor": [
+          63.99999237060547,
+          76.0107421875
+        ]
+      },
+      {
+        "i": 21,
+        "state": "death",
+        "clip": "Death",
+        "phase": 1,
+        "tool": "sword",
+        "direction": 6,
+        "anchor": [
+          63.99999237060547,
+          76.0107421875
+        ]
+      },
+      {
+        "i": 0,
+        "state": "idle",
+        "clip": "Idle",
+        "phase": 0.2,
+        "tool": "sword",
+        "direction": 7,
+        "anchor": [
+          63.99999237060547,
+          76.0107421875
+        ]
+      },
+      {
+        "i": 1,
+        "state": "idle",
+        "clip": "Idle",
+        "phase": 0.7,
+        "tool": "sword",
+        "direction": 7,
+        "anchor": [
+          63.99999237060547,
+          76.0107421875
+        ]
+      },
+      {
+        "i": 2,
+        "state": "walk",
+        "clip": "Walk",
+        "phase": 0.0,
+        "tool": "sword",
+        "direction": 7,
+        "anchor": [
+          63.99999237060547,
+          76.0107421875
+        ]
+      },
+      {
+        "i": 3,
+        "state": "walk",
+        "clip": "Walk",
+        "phase": 0.125,
+        "tool": "sword",
+        "direction": 7,
+        "anchor": [
+          63.99999237060547,
+          76.0107421875
+        ]
+      },
+      {
+        "i": 4,
+        "state": "walk",
+        "clip": "Walk",
+        "phase": 0.25,
+        "tool": "sword",
+        "direction": 7,
+        "anchor": [
+          63.99999237060547,
+          76.0107421875
+        ]
+      },
+      {
+        "i": 5,
+        "state": "walk",
+        "clip": "Walk",
+        "phase": 0.375,
+        "tool": "sword",
+        "direction": 7,
+        "anchor": [
+          63.99999237060547,
+          76.0107421875
+        ]
+      },
+      {
+        "i": 6,
+        "state": "walk",
+        "clip": "Walk",
+        "phase": 0.5,
+        "tool": "sword",
+        "direction": 7,
+        "anchor": [
+          63.99999237060547,
+          76.0107421875
+        ]
+      },
+      {
+        "i": 7,
+        "state": "walk",
+        "clip": "Walk",
+        "phase": 0.625,
+        "tool": "sword",
+        "direction": 7,
+        "anchor": [
+          63.99999237060547,
+          76.0107421875
+        ]
+      },
+      {
+        "i": 8,
+        "state": "walk",
+        "clip": "Walk",
+        "phase": 0.75,
+        "tool": "sword",
+        "direction": 7,
+        "anchor": [
+          63.99999237060547,
+          76.0107421875
+        ]
+      },
+      {
+        "i": 9,
+        "state": "walk",
+        "clip": "Walk",
+        "phase": 0.875,
+        "tool": "sword",
+        "direction": 7,
+        "anchor": [
+          63.99999237060547,
+          76.0107421875
+        ]
+      },
+      {
+        "i": 10,
+        "state": "attack",
+        "clip": "Attack",
+        "phase": 0,
+        "tool": "sword",
+        "direction": 7,
+        "anchor": [
+          63.99999237060547,
+          76.0107421875
+        ]
+      },
+      {
+        "i": 11,
+        "state": "attack",
+        "clip": "Attack",
+        "phase": 0.15,
+        "tool": "sword",
+        "direction": 7,
+        "anchor": [
+          63.99999237060547,
+          76.0107421875
+        ]
+      },
+      {
+        "i": 12,
+        "state": "attack",
+        "clip": "Attack",
+        "phase": 0.3,
+        "tool": "sword",
+        "direction": 7,
+        "anchor": [
+          63.99999237060547,
+          76.0107421875
+        ]
+      },
+      {
+        "i": 13,
+        "state": "attack",
+        "clip": "Attack",
+        "phase": 0.5,
+        "tool": "sword",
+        "direction": 7,
+        "anchor": [
+          63.99999237060547,
+          76.0107421875
+        ]
+      },
+      {
+        "i": 14,
+        "state": "attack",
+        "clip": "Attack",
+        "phase": 0.7,
+        "tool": "sword",
+        "direction": 7,
+        "anchor": [
+          63.99999237060547,
+          76.0107421875
+        ]
+      },
+      {
+        "i": 15,
+        "state": "attack",
+        "clip": "Attack",
+        "phase": 0.9,
+        "tool": "sword",
+        "direction": 7,
+        "anchor": [
+          63.99999237060547,
+          76.0107421875
+        ]
+      },
+      {
+        "i": 16,
+        "state": "hit",
+        "clip": "Hit",
+        "phase": 0.2,
+        "tool": "sword",
+        "direction": 7,
+        "anchor": [
+          63.99999237060547,
+          76.0107421875
+        ]
+      },
+      {
+        "i": 17,
+        "state": "hit",
+        "clip": "Hit",
+        "phase": 0.55,
+        "tool": "sword",
+        "direction": 7,
+        "anchor": [
+          63.99999237060547,
+          76.0107421875
+        ]
+      },
+      {
+        "i": 18,
+        "state": "death",
+        "clip": "Death",
+        "phase": 0.1,
+        "tool": "sword",
+        "direction": 7,
+        "anchor": [
+          63.99999237060547,
+          76.0107421875
+        ]
+      },
+      {
+        "i": 19,
+        "state": "death",
+        "clip": "Death",
+        "phase": 0.35,
+        "tool": "sword",
+        "direction": 7,
+        "anchor": [
+          63.99999237060547,
+          76.0107421875
+        ]
+      },
+      {
+        "i": 20,
+        "state": "death",
+        "clip": "Death",
+        "phase": 0.65,
+        "tool": "sword",
+        "direction": 7,
+        "anchor": [
+          63.99999237060547,
+          76.0107421875
+        ]
+      },
+      {
+        "i": 21,
+        "state": "death",
+        "clip": "Death",
+        "phase": 1,
+        "tool": "sword",
+        "direction": 7,
+        "anchor": [
+          63.99999237060547,
+          76.0107421875
+        ]
+      }
+    ],
+    "resolution": 128,
+    "cpuSamples": 2
+  }
+}

@@ -1,0 +1,312 @@
+{
+  "status": "PASS",
+  "managedFrames": 37,
+  "preservedLegacyFrames": [
+    "oficina|2",
+    "mercado|1",
+    "mercado|2"
+  ],
+  "baseline": {
+    "indexBytes": 4119695,
+    "indexSha256": "d5d343f8144ece353203563c6e5c227860c045bd71db1b60c611c6e41d0dfc94",
+    "wwwBytes": 14787032,
+    "assetsBytes": 9867468,
+    "legacyAtlasBytes": 977972,
+    "legacyKeys": 40
+  },
+  "current": {
+    "indexBytes": 2815793,
+    "wwwBytes": 14840140,
+    "assetsBytes": 11224478
+  },
+  "growthPercent": {
+    "indexBytes": -31.65,
+    "wwwBytes": 0.359,
+    "assetsBytes": 13.752
+  },
+  "decodedAtlasRgbaBytes": 18669568,
+  "oldDecodedAtlasRgbaBytes": 18956288,
+  "anchorChecks": [
+    {
+      "key": "centro|0",
+      "maxRoundingDifferencePx": 1.0
+    },
+    {
+      "key": "centro|1",
+      "maxRoundingDifferencePx": 0.0
+    },
+    {
+      "key": "centro|2",
+      "maxRoundingDifferencePx": 0.0
+    },
+    {
+      "key": "casa|0",
+      "maxRoundingDifferencePx": 1.0
+    },
+    {
+      "key": "casa|1",
+      "maxRoundingDifferencePx": 0.0
+    },
+    {
+      "key": "casa|2",
+      "maxRoundingDifferencePx": 0.0
+    },
+    {
+      "key": "armazem|0",
+      "maxRoundingDifferencePx": 0.0
+    },
+    {
+      "key": "armazem|1",
+      "maxRoundingDifferencePx": 1.0
+    },
+    {
+      "key": "armazem|2",
+      "maxRoundingDifferencePx": 1.0
+    },
+    {
+      "key": "quartel|0",
+      "maxRoundingDifferencePx": 1.0
+    },
+    {
+      "key": "quartel|1",
+      "maxRoundingDifferencePx": 0.0
+    },
+    {
+      "key": "quartel|2",
+      "maxRoundingDifferencePx": 0.0
+    },
+    {
+      "key": "arquearia|0",
+      "maxRoundingDifferencePx": 1.0
+    },
+    {
+      "key": "arquearia|1",
+      "maxRoundingDifferencePx": 1.0
+    },
+    {
+      "key": "arquearia|2",
+      "maxRoundingDifferencePx": 0.0
+    },
+    {
+      "key": "estabulo|0",
+      "maxRoundingDifferencePx": 0.0
+    },
+    {
+      "key": "estabulo|1",
+      "maxRoundingDifferencePx": 0.0
+    },
+    {
+      "key": "estabulo|2",
+      "maxRoundingDifferencePx": 0.0
+    },
+    {
+      "key": "ferreiro|0",
+      "maxRoundingDifferencePx": 0.0
+    },
+    {
+      "key": "ferreiro|1",
+      "maxRoundingDifferencePx": 0.0
+    },
+    {
+      "key": "ferreiro|2",
+      "maxRoundingDifferencePx": 0.0
+    },
+    {
+      "key": "quinta|0",
+      "maxRoundingDifferencePx": 0.0
+    },
+    {
+      "key": "quinta|1",
+      "maxRoundingDifferencePx": 0.0
+    },
+    {
+      "key": "templo|1",
+      "maxRoundingDifferencePx": 0.0
+    },
+    {
+      "key": "templo|2",
+      "maxRoundingDifferencePx": 0.0
+    },
+    {
+      "key": "doca|0",
+      "maxRoundingDifferencePx": 1.0
+    },
+    {
+      "key": "torre|1",
+      "maxRoundingDifferencePx": 0.0
+    },
+    {
+      "key": "torre|2",
+      "maxRoundingDifferencePx": 0.0
+    },
+    {
+      "key": "torre|3",
+      "maxRoundingDifferencePx": 0.0
+    },
+    {
+      "key": "oficina|1",
+      "maxRoundingDifferencePx": 0.0
+    },
+    {
+      "key": "maravilha|2",
+      "maxRoundingDifferencePx": 0.0
+    },
+    {
+      "key": "ruina|0",
+      "maxRoundingDifferencePx": 0.0
+    },
+    {
+      "key": "ruina|1",
+      "maxRoundingDifferencePx": 0.0
+    }
+  ],
+  "flagChecks": [
+    {
+      "key": "centro|0",
+      "outsideFlagTintPixels": 0
+    },
+    {
+      "key": "centro|1",
+      "outsideFlagTintPixels": 0
+    },
+    {
+      "key": "centro|2",
+      "outsideFlagTintPixels": 0
+    },
+    {
+      "key": "casa|0",
+      "outsideFlagTintPixels": 0
+    },
+    {
+      "key": "casa|1",
+      "outsideFlagTintPixels": 0
+    },
+    {
+      "key": "casa|2",
+      "outsideFlagTintPixels": 0
+    },
+    {
+      "key": "armazem|0",
+      "outsideFlagTintPixels": 0
+    },
+    {
+      "key": "armazem|1",
+      "outsideFlagTintPixels": 0
+    },
+    {
+      "key": "armazem|2",
+      "outsideFlagTintPixels": 0
+    },
+    {
+      "key": "quartel|0",
+      "outsideFlagTintPixels": 0
+    },
+    {
+      "key": "quartel|1",
+      "outsideFlagTintPixels": 0
+    },
+    {
+      "key": "quartel|2",
+      "outsideFlagTintPixels": 0
+    },
+    {
+      "key": "arquearia|0",
+      "outsideFlagTintPixels": 0
+    },
+    {
+      "key": "arquearia|1",
+      "outsideFlagTintPixels": 0
+    },
+    {
+      "key": "arquearia|2",
+      "outsideFlagTintPixels": 0
+    },
+    {
+      "key": "estabulo|0",
+      "outsideFlagTintPixels": 0
+    },
+    {
+      "key": "estabulo|1",
+      "outsideFlagTintPixels": 0
+    },
+    {
+      "key": "estabulo|2",
+      "outsideFlagTintPixels": 0
+    },
+    {
+      "key": "ferreiro|0",
+      "outsideFlagTintPixels": 0
+    },
+    {
+      "key": "ferreiro|1",
+      "outsideFlagTintPixels": 0
+    },
+    {
+      "key": "ferreiro|2",
+      "outsideFlagTintPixels": 0
+    },
+    {
+      "key": "quinta|0",
+      "outsideFlagTintPixels": 0
+    },
+    {
+      "key": "quinta|1",
+      "outsideFlagTintPixels": 0
+    },
+    {
+      "key": "templo|1",
+      "outsideFlagTintPixels": 0
+    },
+    {
+      "key": "templo|2",
+      "outsideFlagTintPixels": 0
+    },
+    {
+      "key": "doca|0",
+      "outsideFlagTintPixels": 0
+    },
+    {
+      "key": "torre|1",
+      "outsideFlagTintPixels": 0
+    },
+    {
+      "key": "torre|2",
+      "outsideFlagTintPixels": 0
+    },
+    {
+      "key": "torre|3",
+      "outsideFlagTintPixels": 0
+    },
+    {
+      "key": "oficina|1",
+      "outsideFlagTintPixels": 0
+    },
+    {
+      "key": "maravilha|2",
+      "outsideFlagTintPixels": 0
+    },
+    {
+      "key": "portaoMadeira|0",
+      "outsideFlagTintPixels": 0
+    },
+    {
+      "key": "portaoPedra|0",
+      "outsideFlagTintPixels": 0
+    },
+    {
+      "key": "muralhaMadeira|0",
+      "outsideFlagTintPixels": 0
+    },
+    {
+      "key": "muralhaPedra|0",
+      "outsideFlagTintPixels": 0
+    }
+  ],
+  "realGameChecks": 37,
+  "agesCaptured": [
+    0,
+    1,
+    2
+  ],
+  "androidDeviceTested": false
+}

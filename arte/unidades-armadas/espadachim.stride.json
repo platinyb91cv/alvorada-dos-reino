@@ -1,0 +1,23 @@
+{
+  "unit": "espadachim",
+  "method": "Median backwards foot velocity during low ground stance, per normalized clip cycle; both feet; orthographic game projection at 30px.",
+  "screenPixelsPerMeter": 19.934569847772654,
+  "metersPerTile": 2.270168573564455,
+  "foot": {
+    "LeftFoot": {
+      "stanceTravelPerCycleMeters": 1.2427398562431335,
+      "stanceSampleCount": 62,
+      "swingRangeMeters": 0.6319333910942078
+    },
+    "RightFoot": {
+      "stanceTravelPerCycleMeters": 1.3075058162212372,
+      "stanceSampleCount": 49,
+      "swingRangeMeters": 0.6649774312973022
+    }
+  },
+  "strideMeters": 1.2751228362321854,
+  "strideTiles": 0.5616864100228819,
+  "recommendedAnimFactor": 11.186286858753842,
+  "visualPhaseMultiplier": 2.2372573717507684,
+  "durationSeconds": 1.0416666666666667
+}

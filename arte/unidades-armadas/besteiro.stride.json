@@ -1,0 +1,23 @@
+{
+  "unit": "besteiro",
+  "method": "Median backwards foot velocity during low ground stance, per normalized clip cycle; both feet; orthographic game projection at 30px.",
+  "screenPixelsPerMeter": 20.55132794989295,
+  "metersPerTile": 2.202039406226047,
+  "foot": {
+    "LeftFoot": {
+      "stanceTravelPerCycleMeters": 0.9752315282821655,
+      "stanceSampleCount": 67,
+      "swingRangeMeters": 0.5854723304510117
+    },
+    "RightFoot": {
+      "stanceTravelPerCycleMeters": 0.8450688421726227,
+      "stanceSampleCount": 68,
+      "swingRangeMeters": 0.5558932572603226
+    }
+  },
+  "strideMeters": 0.9101501852273941,
+  "strideTiles": 0.41332147946764036,
+  "recommendedAnimFactor": 15.201690740274017,
+  "visualPhaseMultiplier": 3.0403381480548033,
+  "durationSeconds": 1.3333333333333333
+}

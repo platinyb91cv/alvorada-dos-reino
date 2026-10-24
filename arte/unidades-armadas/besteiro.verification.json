@@ -1,0 +1,2235 @@
+{
+  "unit": "besteiro",
+  "reimported": true,
+  "reimportedClipsDistinct": true,
+  "bones": 24,
+  "boneNames": [
+    "Hips",
+    "LeftUpLeg",
+    "LeftLeg",
+    "LeftFoot",
+    "LeftToeBase",
+    "RightUpLeg",
+    "RightLeg",
+    "RightFoot",
+    "RightToeBase",
+    "Spine02",
+    "Spine01",
+    "Spine",
+    "LeftShoulder",
+    "LeftArm",
+    "LeftForeArm",
+    "LeftHand",
+    "neck",
+    "Head",
+    "head_end",
+    "headfront",
+    "RightShoulder",
+    "RightArm",
+    "RightForeArm",
+    "RightHand"
+  ],
+  "clips": [
+    "Death",
+    "Hit",
+    "Walk",
+    "Idle",
+    "Attack"
+  ],
+  "horizontalRootDriftMetresByClip": {
+    "Death": 0.8097624206542969,
+    "Hit": 2.658925950527191e-09,
+    "Walk": 2.4067703634500505e-07,
+    "Idle": 2.3981556296348573e-09,
+    "Attack": 2.100132405757904e-09
+  },
+  "sha256": "50a6f2230ef0247a3ea4c47633b58503294d9bcced7a1e3fc7c3e5be8ff81572",
+  "sourceSha256": "9e4504253dc1d2daef8754b8681483371953b8273e73fc67f3716a5f4232071d",
+  "bodyTriangles": 100017,
+  "bytes": 38284908,
+  "additionalMeshyCredits": 0,
+  "supportHandMaximumResidualMetres": 4.228860876624449e-07,
+  "source": "Existing Meshy models and motions; local posture/hand layers and villager retarget; no paid requests",
+  "clipDurationsSeconds": {
+    "Death": 1.375,
+    "Hit": 1.375,
+    "Walk": 1.375,
+    "Idle": 1.375,
+    "Attack": 1.375
+  },
+  "atlasSha256": "c4f2e54335893cdbeccaaefbcaff704e3912c5997db11b2d0597f60aba7973b9",
+  "locomotion": {
+    "walk": {
+      "phaseScale": 3.0403381480548033,
+      "strideTiles": 0.41332147946764036,
+      "animFactor": 15.201690740274017
+    }
+  },
+  "render": {
+    "sourceModelSha256": "50a6f2230ef0247a3ea4c47633b58503294d9bcced7a1e3fc7c3e5be8ff81572",
+    "bodyReferencePixels": 43.80019935587277,
+    "unit": "besteiro",
+    "directions": 8,
+    "framesPerDirection": 22,
+    "states": {
+      "idle": [
+        0,
+        1
+      ],
+      "walk": [
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9
+      ],
+      "attack": [
+        10,
+        11,
+        12,
+        13,
+        14,
+        15
+      ],
+      "hit": [
+        16,
+        17
+      ],
+      "death": [
+        18,
+        19,
+        20,
+        21
+      ]
+    },
+    "labels": [
+      "SE",
+      "S",
+      "SW",
+      "W",
+      "NW",
+      "N",
+      "NE",
+      "E"
+    ],
+    "frames": [
+      {
+        "i": 0,
+        "state": "idle",
+        "clip": "Idle",
+        "phase": 0.2,
+        "tool": "crossbow",
+        "direction": 0,
+        "anchor": [
+          64.0,
+          67.48246383666992
+        ]
+      },
+      {
+        "i": 1,
+        "state": "idle",
+        "clip": "Idle",
+        "phase": 0.7,
+        "tool": "crossbow",
+        "direction": 0,
+        "anchor": [
+          64.0,
+          67.48246383666992
+        ]
+      },
+      {
+        "i": 2,
+        "state": "walk",
+        "clip": "Walk",
+        "phase": 0.0,
+        "tool": "crossbow",
+        "direction": 0,
+        "anchor": [
+          64.0,
+          67.48246383666992
+        ]
+      },
+      {
+        "i": 3,
+        "state": "walk",
+        "clip": "Walk",
+        "phase": 0.125,
+        "tool": "crossbow",
+        "direction": 0,
+        "anchor": [
+          64.0,
+          67.48246383666992
+        ]
+      },
+      {
+        "i": 4,
+        "state": "walk",
+        "clip": "Walk",
+        "phase": 0.25,
+        "tool": "crossbow",
+        "direction": 0,
+        "anchor": [
+          64.0,
+          67.48246383666992
+        ]
+      },
+      {
+        "i": 5,
+        "state": "walk",
+        "clip": "Walk",
+        "phase": 0.375,
+        "tool": "crossbow",
+        "direction": 0,
+        "anchor": [
+          64.0,
+          67.48246383666992
+        ]
+      },
+      {
+        "i": 6,
+        "state": "walk",
+        "clip": "Walk",
+        "phase": 0.5,
+        "tool": "crossbow",
+        "direction": 0,
+        "anchor": [
+          64.0,
+          67.48246383666992
+        ]
+      },
+      {
+        "i": 7,
+        "state": "walk",
+        "clip": "Walk",
+        "phase": 0.625,
+        "tool": "crossbow",
+        "direction": 0,
+        "anchor": [
+          64.0,
+          67.48246383666992
+        ]
+      },
+      {
+        "i": 8,
+        "state": "walk",
+        "clip": "Walk",
+        "phase": 0.75,
+        "tool": "crossbow",
+        "direction": 0,
+        "anchor": [
+          64.0,
+          67.48246383666992
+        ]
+      },
+      {
+        "i": 9,
+        "state": "walk",
+        "clip": "Walk",
+        "phase": 0.875,
+        "tool": "crossbow",
+        "direction": 0,
+        "anchor": [
+          64.0,
+          67.48246383666992
+        ]
+      },
+      {
+        "i": 10,
+        "state": "attack",
+        "clip": "Attack",
+        "phase": 0,
+        "tool": "crossbow",
+        "direction": 0,
+        "anchor": [
+          64.0,
+          67.48246383666992
+        ]
+      },
+      {
+        "i": 11,
+        "state": "attack",
+        "clip": "Attack",
+        "phase": 0.15,
+        "tool": "crossbow",
+        "direction": 0,
+        "anchor": [
+          64.0,
+          67.48246383666992
+        ]
+      },
+      {
+        "i": 12,
+        "state": "attack",
+        "clip": "Attack",
+        "phase": 0.3,
+        "tool": "crossbow",
+        "direction": 0,
+        "anchor": [
+          64.0,
+          67.48246383666992
+        ]
+      },
+      {
+        "i": 13,
+        "state": "attack",
+        "clip": "Attack",
+        "phase": 0.5,
+        "tool": "crossbow",
+        "direction": 0,
+        "anchor": [
+          64.0,
+          67.48246383666992
+        ]
+      },
+      {
+        "i": 14,
+        "state": "attack",
+        "clip": "Attack",
+        "phase": 0.7,
+        "tool": "crossbow",
+        "direction": 0,
+        "anchor": [
+          64.0,
+          67.48246383666992
+        ]
+      },
+      {
+        "i": 15,
+        "state": "attack",
+        "clip": "Attack",
+        "phase": 0.9,
+        "tool": "crossbow",
+        "direction": 0,
+        "anchor": [
+          64.0,
+          67.48246383666992
+        ]
+      },
+      {
+        "i": 16,
+        "state": "hit",
+        "clip": "Hit",
+        "phase": 0.2,
+        "tool": "crossbow",
+        "direction": 0,
+        "anchor": [
+          64.0,
+          67.48246383666992
+        ]
+      },
+      {
+        "i": 17,
+        "state": "hit",
+        "clip": "Hit",
+        "phase": 0.55,
+        "tool": "crossbow",
+        "direction": 0,
+        "anchor": [
+          64.0,
+          67.48246383666992
+        ]
+      },
+      {
+        "i": 18,
+        "state": "death",
+        "clip": "Death",
+        "phase": 0.1,
+        "tool": "crossbow",
+        "direction": 0,
+        "anchor": [
+          64.0,
+          67.48246383666992
+        ]
+      },
+      {
+        "i": 19,
+        "state": "death",
+        "clip": "Death",
+        "phase": 0.35,
+        "tool": "crossbow",
+        "direction": 0,
+        "anchor": [
+          64.0,
+          67.48246383666992
+        ]
+      },
+      {
+        "i": 20,
+        "state": "death",
+        "clip": "Death",
+        "phase": 0.65,
+        "tool": "crossbow",
+        "direction": 0,
+        "anchor": [
+          64.0,
+          67.48246383666992
+        ]
+      },
+      {
+        "i": 21,
+        "state": "death",
+        "clip": "Death",
+        "phase": 1,
+        "tool": "crossbow",
+        "direction": 0,
+        "anchor": [
+          64.0,
+          67.48246383666992
+        ]
+      },
+      {
+        "i": 0,
+        "state": "idle",
+        "clip": "Idle",
+        "phase": 0.2,
+        "tool": "crossbow",
+        "direction": 1,
+        "anchor": [
+          64.0,
+          67.48246383666992
+        ]
+      },
+      {
+        "i": 1,
+        "state": "idle",
+        "clip": "Idle",
+        "phase": 0.7,
+        "tool": "crossbow",
+        "direction": 1,
+        "anchor": [
+          64.0,
+          67.48246383666992
+        ]
+      },
+      {
+        "i": 2,
+        "state": "walk",
+        "clip": "Walk",
+        "phase": 0.0,
+        "tool": "crossbow",
+        "direction": 1,
+        "anchor": [
+          64.0,
+          67.48246383666992
+        ]
+      },
+      {
+        "i": 3,
+        "state": "walk",
+        "clip": "Walk",
+        "phase": 0.125,
+        "tool": "crossbow",
+        "direction": 1,
+        "anchor": [
+          64.0,
+          67.48246383666992
+        ]
+      },
+      {
+        "i": 4,
+        "state": "walk",
+        "clip": "Walk",
+        "phase": 0.25,
+        "tool": "crossbow",
+        "direction": 1,
+        "anchor": [
+          64.0,
+          67.48246383666992
+        ]
+      },
+      {
+        "i": 5,
+        "state": "walk",
+        "clip": "Walk",
+        "phase": 0.375,
+        "tool": "crossbow",
+        "direction": 1,
+        "anchor": [
+          64.0,
+          67.48246383666992
+        ]
+      },
+      {
+        "i": 6,
+        "state": "walk",
+        "clip": "Walk",
+        "phase": 0.5,
+        "tool": "crossbow",
+        "direction": 1,
+        "anchor": [
+          64.0,
+          67.48246383666992
+        ]
+      },
+      {
+        "i": 7,
+        "state": "walk",
+        "clip": "Walk",
+        "phase": 0.625,
+        "tool": "crossbow",
+        "direction": 1,
+        "anchor": [
+          64.0,
+          67.48246383666992
+        ]
+      },
+      {
+        "i": 8,
+        "state": "walk",
+        "clip": "Walk",
+        "phase": 0.75,
+        "tool": "crossbow",
+        "direction": 1,
+        "anchor": [
+          64.0,
+          67.48246383666992
+        ]
+      },
+      {
+        "i": 9,
+        "state": "walk",
+        "clip": "Walk",
+        "phase": 0.875,
+        "tool": "crossbow",
+        "direction": 1,
+        "anchor": [
+          64.0,
+          67.48246383666992
+        ]
+      },
+      {
+        "i": 10,
+        "state": "attack",
+        "clip": "Attack",
+        "phase": 0,
+        "tool": "crossbow",
+        "direction": 1,
+        "anchor": [
+          64.0,
+          67.48246383666992
+        ]
+      },
+      {
+        "i": 11,
+        "state": "attack",
+        "clip": "Attack",
+        "phase": 0.15,
+        "tool": "crossbow",
+        "direction": 1,
+        "anchor": [
+          64.0,
+          67.48246383666992
+        ]
+      },
+      {
+        "i": 12,
+        "state": "attack",
+        "clip": "Attack",
+        "phase": 0.3,
+        "tool": "crossbow",
+        "direction": 1,
+        "anchor": [
+          64.0,
+          67.48246383666992
+        ]
+      },
+      {
+        "i": 13,
+        "state": "attack",
+        "clip": "Attack",
+        "phase": 0.5,
+        "tool": "crossbow",
+        "direction": 1,
+        "anchor": [
+          64.0,
+          67.48246383666992
+        ]
+      },
+      {
+        "i": 14,
+        "state": "attack",
+        "clip": "Attack",
+        "phase": 0.7,
+        "tool": "crossbow",
+        "direction": 1,
+        "anchor": [
+          64.0,
+          67.48246383666992
+        ]
+      },
+      {
+        "i": 15,
+        "state": "attack",
+        "clip": "Attack",
+        "phase": 0.9,
+        "tool": "crossbow",
+        "direction": 1,
+        "anchor": [
+          64.0,
+          67.48246383666992
+        ]
+      },
+      {
+        "i": 16,
+        "state": "hit",
+        "clip": "Hit",
+        "phase": 0.2,
+        "tool": "crossbow",
+        "direction": 1,
+        "anchor": [
+          64.0,
+          67.48246383666992
+        ]
+      },
+      {
+        "i": 17,
+        "state": "hit",
+        "clip": "Hit",
+        "phase": 0.55,
+        "tool": "crossbow",
+        "direction": 1,
+        "anchor": [
+          64.0,
+          67.48246383666992
+        ]
+      },
+      {
+        "i": 18,
+        "state": "death",
+        "clip": "Death",
+        "phase": 0.1,
+        "tool": "crossbow",
+        "direction": 1,
+        "anchor": [
+          64.0,
+          67.48246383666992
+        ]
+      },
+      {
+        "i": 19,
+        "state": "death",
+        "clip": "Death",
+        "phase": 0.35,
+        "tool": "crossbow",
+        "direction": 1,
+        "anchor": [
+          64.0,
+          67.48246383666992
+        ]
+      },
+      {
+        "i": 20,
+        "state": "death",
+        "clip": "Death",
+        "phase": 0.65,
+        "tool": "crossbow",
+        "direction": 1,
+        "anchor": [
+          64.0,
+          67.48246383666992
+        ]
+      },
+      {
+        "i": 21,
+        "state": "death",
+        "clip": "Death",
+        "phase": 1,
+        "tool": "crossbow",
+        "direction": 1,
+        "anchor": [
+          64.0,
+          67.48246383666992
+        ]
+      },
+      {
+        "i": 0,
+        "state": "idle",
+        "clip": "Idle",
+        "phase": 0.2,
+        "tool": "crossbow",
+        "direction": 2,
+        "anchor": [
+          64.0,
+          67.48246383666992
+        ]
+      },
+      {
+        "i": 1,
+        "state": "idle",
+        "clip": "Idle",
+        "phase": 0.7,
+        "tool": "crossbow",
+        "direction": 2,
+        "anchor": [
+          64.0,
+          67.48246383666992
+        ]
+      },
+      {
+        "i": 2,
+        "state": "walk",
+        "clip": "Walk",
+        "phase": 0.0,
+        "tool": "crossbow",
+        "direction": 2,
+        "anchor": [
+          64.0,
+          67.48246383666992
+        ]
+      },
+      {
+        "i": 3,
+        "state": "walk",
+        "clip": "Walk",
+        "phase": 0.125,
+        "tool": "crossbow",
+        "direction": 2,
+        "anchor": [
+          64.0,
+          67.48246383666992
+        ]
+      },
+      {
+        "i": 4,
+        "state": "walk",
+        "clip": "Walk",
+        "phase": 0.25,
+        "tool": "crossbow",
+        "direction": 2,
+        "anchor": [
+          64.0,
+          67.48246383666992
+        ]
+      },
+      {
+        "i": 5,
+        "state": "walk",
+        "clip": "Walk",
+        "phase": 0.375,
+        "tool": "crossbow",
+        "direction": 2,
+        "anchor": [
+          64.0,
+          67.48246383666992
+        ]
+      },
+      {
+        "i": 6,
+        "state": "walk",
+        "clip": "Walk",
+        "phase": 0.5,
+        "tool": "crossbow",
+        "direction": 2,
+        "anchor": [
+          64.0,
+          67.48246383666992
+        ]
+      },
+      {
+        "i": 7,
+        "state": "walk",
+        "clip": "Walk",
+        "phase": 0.625,
+        "tool": "crossbow",
+        "direction": 2,
+        "anchor": [
+          64.0,
+          67.48246383666992
+        ]
+      },
+      {
+        "i": 8,
+        "state": "walk",
+        "clip": "Walk",
+        "phase": 0.75,
+        "tool": "crossbow",
+        "direction": 2,
+        "anchor": [
+          64.0,
+          67.48246383666992
+        ]
+      },
+      {
+        "i": 9,
+        "state": "walk",
+        "clip": "Walk",
+        "phase": 0.875,
+        "tool": "crossbow",
+        "direction": 2,
+        "anchor": [
+          64.0,
+          67.48246383666992
+        ]
+      },
+      {
+        "i": 10,
+        "state": "attack",
+        "clip": "Attack",
+        "phase": 0,
+        "tool": "crossbow",
+        "direction": 2,
+        "anchor": [
+          64.0,
+          67.48246383666992
+        ]
+      },
+      {
+        "i": 11,
+        "state": "attack",
+        "clip": "Attack",
+        "phase": 0.15,
+        "tool": "crossbow",
+        "direction": 2,
+        "anchor": [
+          64.0,
+          67.48246383666992
+        ]
+      },
+      {
+        "i": 12,
+        "state": "attack",
+        "clip": "Attack",
+        "phase": 0.3,
+        "tool": "crossbow",
+        "direction": 2,
+        "anchor": [
+          64.0,
+          67.48246383666992
+        ]
+      },
+      {
+        "i": 13,
+        "state": "attack",
+        "clip": "Attack",
+        "phase": 0.5,
+        "tool": "crossbow",
+        "direction": 2,
+        "anchor": [
+          64.0,
+          67.48246383666992
+        ]
+      },
+      {
+        "i": 14,
+        "state": "attack",
+        "clip": "Attack",
+        "phase": 0.7,
+        "tool": "crossbow",
+        "direction": 2,
+        "anchor": [
+          64.0,
+          67.48246383666992
+        ]
+      },
+      {
+        "i": 15,
+        "state": "attack",
+        "clip": "Attack",
+        "phase": 0.9,
+        "tool": "crossbow",
+        "direction": 2,
+        "anchor": [
+          64.0,
+          67.48246383666992
+        ]
+      },
+      {
+        "i": 16,
+        "state": "hit",
+        "clip": "Hit",
+        "phase": 0.2,
+        "tool": "crossbow",
+        "direction": 2,
+        "anchor": [
+          64.0,
+          67.48246383666992
+        ]
+      },
+      {
+        "i": 17,
+        "state": "hit",
+        "clip": "Hit",
+        "phase": 0.55,
+        "tool": "crossbow",
+        "direction": 2,
+        "anchor": [
+          64.0,
+          67.48246383666992
+        ]
+      },
+      {
+        "i": 18,
+        "state": "death",
+        "clip": "Death",
+        "phase": 0.1,
+        "tool": "crossbow",
+        "direction": 2,
+        "anchor": [
+          64.0,
+          67.48246383666992
+        ]
+      },
+      {
+        "i": 19,
+        "state": "death",
+        "clip": "Death",
+        "phase": 0.35,
+        "tool": "crossbow",
+        "direction": 2,
+        "anchor": [
+          64.0,
+          67.48246383666992
+        ]
+      },
+      {
+        "i": 20,
+        "state": "death",
+        "clip": "Death",
+        "phase": 0.65,
+        "tool": "crossbow",
+        "direction": 2,
+        "anchor": [
+          64.0,
+          67.48246383666992
+        ]
+      },
+      {
+        "i": 21,
+        "state": "death",
+        "clip": "Death",
+        "phase": 1,
+        "tool": "crossbow",
+        "direction": 2,
+        "anchor": [
+          64.0,
+          67.48246383666992
+        ]
+      },
+      {
+        "i": 0,
+        "state": "idle",
+        "clip": "Idle",
+        "phase": 0.2,
+        "tool": "crossbow",
+        "direction": 3,
+        "anchor": [
+          64.0,
+          67.48246383666992
+        ]
+      },
+      {
+        "i": 1,
+        "state": "idle",
+        "clip": "Idle",
+        "phase": 0.7,
+        "tool": "crossbow",
+        "direction": 3,
+        "anchor": [
+          64.0,
+          67.48246383666992
+        ]
+      },
+      {
+        "i": 2,
+        "state": "walk",
+        "clip": "Walk",
+        "phase": 0.0,
+        "tool": "crossbow",
+        "direction": 3,
+        "anchor": [
+          64.0,
+          67.48246383666992
+        ]
+      },
+      {
+        "i": 3,
+        "state": "walk",
+        "clip": "Walk",
+        "phase": 0.125,
+        "tool": "crossbow",
+        "direction": 3,
+        "anchor": [
+          64.0,
+          67.48246383666992
+        ]
+      },
+      {
+        "i": 4,
+        "state": "walk",
+        "clip": "Walk",
+        "phase": 0.25,
+        "tool": "crossbow",
+        "direction": 3,
+        "anchor": [
+          64.0,
+          67.48246383666992
+        ]
+      },
+      {
+        "i": 5,
+        "state": "walk",
+        "clip": "Walk",
+        "phase": 0.375,
+        "tool": "crossbow",
+        "direction": 3,
+        "anchor": [
+          64.0,
+          67.48246383666992
+        ]
+      },
+      {
+        "i": 6,
+        "state": "walk",
+        "clip": "Walk",
+        "phase": 0.5,
+        "tool": "crossbow",
+        "direction": 3,
+        "anchor": [
+          64.0,
+          67.48246383666992
+        ]
+      },
+      {
+        "i": 7,
+        "state": "walk",
+        "clip": "Walk",
+        "phase": 0.625,
+        "tool": "crossbow",
+        "direction": 3,
+        "anchor": [
+          64.0,
+          67.48246383666992
+        ]
+      },
+      {
+        "i": 8,
+        "state": "walk",
+        "clip": "Walk",
+        "phase": 0.75,
+        "tool": "crossbow",
+        "direction": 3,
+        "anchor": [
+          64.0,
+          67.48246383666992
+        ]
+      },
+      {
+        "i": 9,
+        "state": "walk",
+        "clip": "Walk",
+        "phase": 0.875,
+        "tool": "crossbow",
+        "direction": 3,
+        "anchor": [
+          64.0,
+          67.48246383666992
+        ]
+      },
+      {
+        "i": 10,
+        "state": "attack",
+        "clip": "Attack",
+        "phase": 0,
+        "tool": "crossbow",
+        "direction": 3,
+        "anchor": [
+          64.0,
+          67.48246383666992
+        ]
+      },
+      {
+        "i": 11,
+        "state": "attack",
+        "clip": "Attack",
+        "phase": 0.15,
+        "tool": "crossbow",
+        "direction": 3,
+        "anchor": [
+          64.0,
+          67.48246383666992
+        ]
+      },
+      {
+        "i": 12,
+        "state": "attack",
+        "clip": "Attack",
+        "phase": 0.3,
+        "tool": "crossbow",
+        "direction": 3,
+        "anchor": [
+          64.0,
+          67.48246383666992
+        ]
+      },
+      {
+        "i": 13,
+        "state": "attack",
+        "clip": "Attack",
+        "phase": 0.5,
+        "tool": "crossbow",
+        "direction": 3,
+        "anchor": [
+          64.0,
+          67.48246383666992
+        ]
+      },
+      {
+        "i": 14,
+        "state": "attack",
+        "clip": "Attack",
+        "phase": 0.7,
+        "tool": "crossbow",
+        "direction": 3,
+        "anchor": [
+          64.0,
+          67.48246383666992
+        ]
+      },
+      {
+        "i": 15,
+        "state": "attack",
+        "clip": "Attack",
+        "phase": 0.9,
+        "tool": "crossbow",
+        "direction": 3,
+        "anchor": [
+          64.0,
+          67.48246383666992
+        ]
+      },
+      {
+        "i": 16,
+        "state": "hit",
+        "clip": "Hit",
+        "phase": 0.2,
+        "tool": "crossbow",
+        "direction": 3,
+        "anchor": [
+          64.0,
+          67.48246383666992
+        ]
+      },
+      {
+        "i": 17,
+        "state": "hit",
+        "clip": "Hit",
+        "phase": 0.55,
+        "tool": "crossbow",
+        "direction": 3,
+        "anchor": [
+          64.0,
+          67.48246383666992
+        ]
+      },
+      {
+        "i": 18,
+        "state": "death",
+        "clip": "Death",
+        "phase": 0.1,
+        "tool": "crossbow",
+        "direction": 3,
+        "anchor": [
+          64.0,
+          67.48246383666992
+        ]
+      },
+      {
+        "i": 19,
+        "state": "death",
+        "clip": "Death",
+        "phase": 0.35,
+        "tool": "crossbow",
+        "direction": 3,
+        "anchor": [
+          64.0,
+          67.48246383666992
+        ]
+      },
+      {
+        "i": 20,
+        "state": "death",
+        "clip": "Death",
+        "phase": 0.65,
+        "tool": "crossbow",
+        "direction": 3,
+        "anchor": [
+          64.0,
+          67.48246383666992
+        ]
+      },
+      {
+        "i": 21,
+        "state": "death",
+        "clip": "Death",
+        "phase": 1,
+        "tool": "crossbow",
+        "direction": 3,
+        "anchor": [
+          64.0,
+          67.48246383666992
+        ]
+      },
+      {
+        "i": 0,
+        "state": "idle",
+        "clip": "Idle",
+        "phase": 0.2,
+        "tool": "crossbow",
+        "direction": 4,
+        "anchor": [
+          64.0,
+          67.48246383666992
+        ]
+      },
+      {
+        "i": 1,
+        "state": "idle",
+        "clip": "Idle",
+        "phase": 0.7,
+        "tool": "crossbow",
+        "direction": 4,
+        "anchor": [
+          64.0,
+          67.48246383666992
+        ]
+      },
+      {
+        "i": 2,
+        "state": "walk",
+        "clip": "Walk",
+        "phase": 0.0,
+        "tool": "crossbow",
+        "direction": 4,
+        "anchor": [
+          64.0,
+          67.48246383666992
+        ]
+      },
+      {
+        "i": 3,
+        "state": "walk",
+        "clip": "Walk",
+        "phase": 0.125,
+        "tool": "crossbow",
+        "direction": 4,
+        "anchor": [
+          64.0,
+          67.48246383666992
+        ]
+      },
+      {
+        "i": 4,
+        "state": "walk",
+        "clip": "Walk",
+        "phase": 0.25,
+        "tool": "crossbow",
+        "direction": 4,
+        "anchor": [
+          64.0,
+          67.48246383666992
+        ]
+      },
+      {
+        "i": 5,
+        "state": "walk",
+        "clip": "Walk",
+        "phase": 0.375,
+        "tool": "crossbow",
+        "direction": 4,
+        "anchor": [
+          64.0,
+          67.48246383666992
+        ]
+      },
+      {
+        "i": 6,
+        "state": "walk",
+        "clip": "Walk",
+        "phase": 0.5,
+        "tool": "crossbow",
+        "direction": 4,
+        "anchor": [
+          64.0,
+          67.48246383666992
+        ]
+      },
+      {
+        "i": 7,
+        "state": "walk",
+        "clip": "Walk",
+        "phase": 0.625,
+        "tool": "crossbow",
+        "direction": 4,
+        "anchor": [
+          64.0,
+          67.48246383666992
+        ]
+      },
+      {
+        "i": 8,
+        "state": "walk",
+        "clip": "Walk",
+        "phase": 0.75,
+        "tool": "crossbow",
+        "direction": 4,
+        "anchor": [
+          64.0,
+          67.48246383666992
+        ]
+      },
+      {
+        "i": 9,
+        "state": "walk",
+        "clip": "Walk",
+        "phase": 0.875,
+        "tool": "crossbow",
+        "direction": 4,
+        "anchor": [
+          64.0,
+          67.48246383666992
+        ]
+      },
+      {
+        "i": 10,
+        "state": "attack",
+        "clip": "Attack",
+        "phase": 0,
+        "tool": "crossbow",
+        "direction": 4,
+        "anchor": [
+          64.0,
+          67.48246383666992
+        ]
+      },
+      {
+        "i": 11,
+        "state": "attack",
+        "clip": "Attack",
+        "phase": 0.15,
+        "tool": "crossbow",
+        "direction": 4,
+        "anchor": [
+          64.0,
+          67.48246383666992
+        ]
+      },
+      {
+        "i": 12,
+        "state": "attack",
+        "clip": "Attack",
+        "phase": 0.3,
+        "tool": "crossbow",
+        "direction": 4,
+        "anchor": [
+          64.0,
+          67.48246383666992
+        ]
+      },
+      {
+        "i": 13,
+        "state": "attack",
+        "clip": "Attack",
+        "phase": 0.5,
+        "tool": "crossbow",
+        "direction": 4,
+        "anchor": [
+          64.0,
+          67.48246383666992
+        ]
+      },
+      {
+        "i": 14,
+        "state": "attack",
+        "clip": "Attack",
+        "phase": 0.7,
+        "tool": "crossbow",
+        "direction": 4,
+        "anchor": [
+          64.0,
+          67.48246383666992
+        ]
+      },
+      {
+        "i": 15,
+        "state": "attack",
+        "clip": "Attack",
+        "phase": 0.9,
+        "tool": "crossbow",
+        "direction": 4,
+        "anchor": [
+          64.0,
+          67.48246383666992
+        ]
+      },
+      {
+        "i": 16,
+        "state": "hit",
+        "clip": "Hit",
+        "phase": 0.2,
+        "tool": "crossbow",
+        "direction": 4,
+        "anchor": [
+          64.0,
+          67.48246383666992
+        ]
+      },
+      {
+        "i": 17,
+        "state": "hit",
+        "clip": "Hit",
+        "phase": 0.55,
+        "tool": "crossbow",
+        "direction": 4,
+        "anchor": [
+          64.0,
+          67.48246383666992
+        ]
+      },
+      {
+        "i": 18,
+        "state": "death",
+        "clip": "Death",
+        "phase": 0.1,
+        "tool": "crossbow",
+        "direction": 4,
+        "anchor": [
+          64.0,
+          67.48246383666992
+        ]
+      },
+      {
+        "i": 19,
+        "state": "death",
+        "clip": "Death",
+        "phase": 0.35,
+        "tool": "crossbow",
+        "direction": 4,
+        "anchor": [
+          64.0,
+          67.48246383666992
+        ]
+      },
+      {
+        "i": 20,
+        "state": "death",
+        "clip": "Death",
+        "phase": 0.65,
+        "tool": "crossbow",
+        "direction": 4,
+        "anchor": [
+          64.0,
+          67.48246383666992
+        ]
+      },
+      {
+        "i": 21,
+        "state": "death",
+        "clip": "Death",
+        "phase": 1,
+        "tool": "crossbow",
+        "direction": 4,
+        "anchor": [
+          64.0,
+          67.48246383666992
+        ]
+      },
+      {
+        "i": 0,
+        "state": "idle",
+        "clip": "Idle",
+        "phase": 0.2,
+        "tool": "crossbow",
+        "direction": 5,
+        "anchor": [
+          64.0,
+          67.48246383666992
+        ]
+      },
+      {
+        "i": 1,
+        "state": "idle",
+        "clip": "Idle",
+        "phase": 0.7,
+        "tool": "crossbow",
+        "direction": 5,
+        "anchor": [
+          64.0,
+          67.48246383666992
+        ]
+      },
+      {
+        "i": 2,
+        "state": "walk",
+        "clip": "Walk",
+        "phase": 0.0,
+        "tool": "crossbow",
+        "direction": 5,
+        "anchor": [
+          64.0,
+          67.48246383666992
+        ]
+      },
+      {
+        "i": 3,
+        "state": "walk",
+        "clip": "Walk",
+        "phase": 0.125,
+        "tool": "crossbow",
+        "direction": 5,
+        "anchor": [
+          64.0,
+          67.48246383666992
+        ]
+      },
+      {
+        "i": 4,
+        "state": "walk",
+        "clip": "Walk",
+        "phase": 0.25,
+        "tool": "crossbow",
+        "direction": 5,
+        "anchor": [
+          64.0,
+          67.48246383666992
+        ]
+      },
+      {
+        "i": 5,
+        "state": "walk",
+        "clip": "Walk",
+        "phase": 0.375,
+        "tool": "crossbow",
+        "direction": 5,
+        "anchor": [
+          64.0,
+          67.48246383666992
+        ]
+      },
+      {
+        "i": 6,
+        "state": "walk",
+        "clip": "Walk",
+        "phase": 0.5,
+        "tool": "crossbow",
+        "direction": 5,
+        "anchor": [
+          64.0,
+          67.48246383666992
+        ]
+      },
+      {
+        "i": 7,
+        "state": "walk",
+        "clip": "Walk",
+        "phase": 0.625,
+        "tool": "crossbow",
+        "direction": 5,
+        "anchor": [
+          64.0,
+          67.48246383666992
+        ]
+      },
+      {
+        "i": 8,
+        "state": "walk",
+        "clip": "Walk",
+        "phase": 0.75,
+        "tool": "crossbow",
+        "direction": 5,
+        "anchor": [
+          64.0,
+          67.48246383666992
+        ]
+      },
+      {
+        "i": 9,
+        "state": "walk",
+        "clip": "Walk",
+        "phase": 0.875,
+        "tool": "crossbow",
+        "direction": 5,
+        "anchor": [
+          64.0,
+          67.48246383666992
+        ]
+      },
+      {
+        "i": 10,
+        "state": "attack",
+        "clip": "Attack",
+        "phase": 0,
+        "tool": "crossbow",
+        "direction": 5,
+        "anchor": [
+          64.0,
+          67.48246383666992
+        ]
+      },
+      {
+        "i": 11,
+        "state": "attack",
+        "clip": "Attack",
+        "phase": 0.15,
+        "tool": "crossbow",
+        "direction": 5,
+        "anchor": [
+          64.0,
+          67.48246383666992
+        ]
+      },
+      {
+        "i": 12,
+        "state": "attack",
+        "clip": "Attack",
+        "phase": 0.3,
+        "tool": "crossbow",
+        "direction": 5,
+        "anchor": [
+          64.0,
+          67.48246383666992
+        ]
+      },
+      {
+        "i": 13,
+        "state": "attack",
+        "clip": "Attack",
+        "phase": 0.5,
+        "tool": "crossbow",
+        "direction": 5,
+        "anchor": [
+          64.0,
+          67.48246383666992
+        ]
+      },
+      {
+        "i": 14,
+        "state": "attack",
+        "clip": "Attack",
+        "phase": 0.7,
+        "tool": "crossbow",
+        "direction": 5,
+        "anchor": [
+          64.0,
+          67.48246383666992
+        ]
+      },
+      {
+        "i": 15,
+        "state": "attack",
+        "clip": "Attack",
+        "phase": 0.9,
+        "tool": "crossbow",
+        "direction": 5,
+        "anchor": [
+          64.0,
+          67.48246383666992
+        ]
+      },
+      {
+        "i": 16,
+        "state": "hit",
+        "clip": "Hit",
+        "phase": 0.2,
+        "tool": "crossbow",
+        "direction": 5,
+        "anchor": [
+          64.0,
+          67.48246383666992
+        ]
+      },
+      {
+        "i": 17,
+        "state": "hit",
+        "clip": "Hit",
+        "phase": 0.55,
+        "tool": "crossbow",
+        "direction": 5,
+        "anchor": [
+          64.0,
+          67.48246383666992
+        ]
+      },
+      {
+        "i": 18,
+        "state": "death",
+        "clip": "Death",
+        "phase": 0.1,
+        "tool": "crossbow",
+        "direction": 5,
+        "anchor": [
+          64.0,
+          67.48246383666992
+        ]
+      },
+      {
+        "i": 19,
+        "state": "death",
+        "clip": "Death",
+        "phase": 0.35,
+        "tool": "crossbow",
+        "direction": 5,
+        "anchor": [
+          64.0,
+          67.48246383666992
+        ]
+      },
+      {
+        "i": 20,
+        "state": "death",
+        "clip": "Death",
+        "phase": 0.65,
+        "tool": "crossbow",
+        "direction": 5,
+        "anchor": [
+          64.0,
+          67.48246383666992
+        ]
+      },
+      {
+        "i": 21,
+        "state": "death",
+        "clip": "Death",
+        "phase": 1,
+        "tool": "crossbow",
+        "direction": 5,
+        "anchor": [
+          64.0,
+          67.48246383666992
+        ]
+      },
+      {
+        "i": 0,
+        "state": "idle",
+        "clip": "Idle",
+        "phase": 0.2,
+        "tool": "crossbow",
+        "direction": 6,
+        "anchor": [
+          64.0,
+          67.48246383666992
+        ]
+      },
+      {
+        "i": 1,
+        "state": "idle",
+        "clip": "Idle",
+        "phase": 0.7,
+        "tool": "crossbow",
+        "direction": 6,
+        "anchor": [
+          64.0,
+          67.48246383666992
+        ]
+      },
+      {
+        "i": 2,
+        "state": "walk",
+        "clip": "Walk",
+        "phase": 0.0,
+        "tool": "crossbow",
+        "direction": 6,
+        "anchor": [
+          64.0,
+          67.48246383666992
+        ]
+      },
+      {
+        "i": 3,
+        "state": "walk",
+        "clip": "Walk",
+        "phase": 0.125,
+        "tool": "crossbow",
+        "direction": 6,
+        "anchor": [
+          64.0,
+          67.48246383666992
+        ]
+      },
+      {
+        "i": 4,
+        "state": "walk",
+        "clip": "Walk",
+        "phase": 0.25,
+        "tool": "crossbow",
+        "direction": 6,
+        "anchor": [
+          64.0,
+          67.48246383666992
+        ]
+      },
+      {
+        "i": 5,
+        "state": "walk",
+        "clip": "Walk",
+        "phase": 0.375,
+        "tool": "crossbow",
+        "direction": 6,
+        "anchor": [
+          64.0,
+          67.48246383666992
+        ]
+      },
+      {
+        "i": 6,
+        "state": "walk",
+        "clip": "Walk",
+        "phase": 0.5,
+        "tool": "crossbow",
+        "direction": 6,
+        "anchor": [
+          64.0,
+          67.48246383666992
+        ]
+      },
+      {
+        "i": 7,
+        "state": "walk",
+        "clip": "Walk",
+        "phase": 0.625,
+        "tool": "crossbow",
+        "direction": 6,
+        "anchor": [
+          64.0,
+          67.48246383666992
+        ]
+      },
+      {
+        "i": 8,
+        "state": "walk",
+        "clip": "Walk",
+        "phase": 0.75,
+        "tool": "crossbow",
+        "direction": 6,
+        "anchor": [
+          64.0,
+          67.48246383666992
+        ]
+      },
+      {
+        "i": 9,
+        "state": "walk",
+        "clip": "Walk",
+        "phase": 0.875,
+        "tool": "crossbow",
+        "direction": 6,
+        "anchor": [
+          64.0,
+          67.48246383666992
+        ]
+      },
+      {
+        "i": 10,
+        "state": "attack",
+        "clip": "Attack",
+        "phase": 0,
+        "tool": "crossbow",
+        "direction": 6,
+        "anchor": [
+          64.0,
+          67.48246383666992
+        ]
+      },
+      {
+        "i": 11,
+        "state": "attack",
+        "clip": "Attack",
+        "phase": 0.15,
+        "tool": "crossbow",
+        "direction": 6,
+        "anchor": [
+          64.0,
+          67.48246383666992
+        ]
+      },
+      {
+        "i": 12,
+        "state": "attack",
+        "clip": "Attack",
+        "phase": 0.3,
+        "tool": "crossbow",
+        "direction": 6,
+        "anchor": [
+          64.0,
+          67.48246383666992
+        ]
+      },
+      {
+        "i": 13,
+        "state": "attack",
+        "clip": "Attack",
+        "phase": 0.5,
+        "tool": "crossbow",
+        "direction": 6,
+        "anchor": [
+          64.0,
+          67.48246383666992
+        ]
+      },
+      {
+        "i": 14,
+        "state": "attack",
+        "clip": "Attack",
+        "phase": 0.7,
+        "tool": "crossbow",
+        "direction": 6,
+        "anchor": [
+          64.0,
+          67.48246383666992
+        ]
+      },
+      {
+        "i": 15,
+        "state": "attack",
+        "clip": "Attack",
+        "phase": 0.9,
+        "tool": "crossbow",
+        "direction": 6,
+        "anchor": [
+          64.0,
+          67.48246383666992
+        ]
+      },
+      {
+        "i": 16,
+        "state": "hit",
+        "clip": "Hit",
+        "phase": 0.2,
+        "tool": "crossbow",
+        "direction": 6,
+        "anchor": [
+          64.0,
+          67.48246383666992
+        ]
+      },
+      {
+        "i": 17,
+        "state": "hit",
+        "clip": "Hit",
+        "phase": 0.55,
+        "tool": "crossbow",
+        "direction": 6,
+        "anchor": [
+          64.0,
+          67.48246383666992
+        ]
+      },
+      {
+        "i": 18,
+        "state": "death",
+        "clip": "Death",
+        "phase": 0.1,
+        "tool": "crossbow",
+        "direction": 6,
+        "anchor": [
+          64.0,
+          67.48246383666992
+        ]
+      },
+      {
+        "i": 19,
+        "state": "death",
+        "clip": "Death",
+        "phase": 0.35,
+        "tool": "crossbow",
+        "direction": 6,
+        "anchor": [
+          64.0,
+          67.48246383666992
+        ]
+      },
+      {
+        "i": 20,
+        "state": "death",
+        "clip": "Death",
+        "phase": 0.65,
+        "tool": "crossbow",
+        "direction": 6,
+        "anchor": [
+          64.0,
+          67.48246383666992
+        ]
+      },
+      {
+        "i": 21,
+        "state": "death",
+        "clip": "Death",
+        "phase": 1,
+        "tool": "crossbow",
+        "direction": 6,
+        "anchor": [
+          64.0,
+          67.48246383666992
+        ]
+      },
+      {
+        "i": 0,
+        "state": "idle",
+        "clip": "Idle",
+        "phase": 0.2,
+        "tool": "crossbow",
+        "direction": 7,
+        "anchor": [
+          64.0,
+          67.48246383666992
+        ]
+      },
+      {
+        "i": 1,
+        "state": "idle",
+        "clip": "Idle",
+        "phase": 0.7,
+        "tool": "crossbow",
+        "direction": 7,
+        "anchor": [
+          64.0,
+          67.48246383666992
+        ]
+      },
+      {
+        "i": 2,
+        "state": "walk",
+        "clip": "Walk",
+        "phase": 0.0,
+        "tool": "crossbow",
+        "direction": 7,
+        "anchor": [
+          64.0,
+          67.48246383666992
+        ]
+      },
+      {
+        "i": 3,
+        "state": "walk",
+        "clip": "Walk",
+        "phase": 0.125,
+        "tool": "crossbow",
+        "direction": 7,
+        "anchor": [
+          64.0,
+          67.48246383666992
+        ]
+      },
+      {
+        "i": 4,
+        "state": "walk",
+        "clip": "Walk",
+        "phase": 0.25,
+        "tool": "crossbow",
+        "direction": 7,
+        "anchor": [
+          64.0,
+          67.48246383666992
+        ]
+      },
+      {
+        "i": 5,
+        "state": "walk",
+        "clip": "Walk",
+        "phase": 0.375,
+        "tool": "crossbow",
+        "direction": 7,
+        "anchor": [
+          64.0,
+          67.48246383666992
+        ]
+      },
+      {
+        "i": 6,
+        "state": "walk",
+        "clip": "Walk",
+        "phase": 0.5,
+        "tool": "crossbow",
+        "direction": 7,
+        "anchor": [
+          64.0,
+          67.48246383666992
+        ]
+      },
+      {
+        "i": 7,
+        "state": "walk",
+        "clip": "Walk",
+        "phase": 0.625,
+        "tool": "crossbow",
+        "direction": 7,
+        "anchor": [
+          64.0,
+          67.48246383666992
+        ]
+      },
+      {
+        "i": 8,
+        "state": "walk",
+        "clip": "Walk",
+        "phase": 0.75,
+        "tool": "crossbow",
+        "direction": 7,
+        "anchor": [
+          64.0,
+          67.48246383666992
+        ]
+      },
+      {
+        "i": 9,
+        "state": "walk",
+        "clip": "Walk",
+        "phase": 0.875,
+        "tool": "crossbow",
+        "direction": 7,
+        "anchor": [
+          64.0,
+          67.48246383666992
+        ]
+      },
+      {
+        "i": 10,
+        "state": "attack",
+        "clip": "Attack",
+        "phase": 0,
+        "tool": "crossbow",
+        "direction": 7,
+        "anchor": [
+          64.0,
+          67.48246383666992
+        ]
+      },
+      {
+        "i": 11,
+        "state": "attack",
+        "clip": "Attack",
+        "phase": 0.15,
+        "tool": "crossbow",
+        "direction": 7,
+        "anchor": [
+          64.0,
+          67.48246383666992
+        ]
+      },
+      {
+        "i": 12,
+        "state": "attack",
+        "clip": "Attack",
+        "phase": 0.3,
+        "tool": "crossbow",
+        "direction": 7,
+        "anchor": [
+          64.0,
+          67.48246383666992
+        ]
+      },
+      {
+        "i": 13,
+        "state": "attack",
+        "clip": "Attack",
+        "phase": 0.5,
+        "tool": "crossbow",
+        "direction": 7,
+        "anchor": [
+          64.0,
+          67.48246383666992
+        ]
+      },
+      {
+        "i": 14,
+        "state": "attack",
+        "clip": "Attack",
+        "phase": 0.7,
+        "tool": "crossbow",
+        "direction": 7,
+        "anchor": [
+          64.0,
+          67.48246383666992
+        ]
+      },
+      {
+        "i": 15,
+        "state": "attack",
+        "clip": "Attack",
+        "phase": 0.9,
+        "tool": "crossbow",
+        "direction": 7,
+        "anchor": [
+          64.0,
+          67.48246383666992
+        ]
+      },
+      {
+        "i": 16,
+        "state": "hit",
+        "clip": "Hit",
+        "phase": 0.2,
+        "tool": "crossbow",
+        "direction": 7,
+        "anchor": [
+          64.0,
+          67.48246383666992
+        ]
+      },
+      {
+        "i": 17,
+        "state": "hit",
+        "clip": "Hit",
+        "phase": 0.55,
+        "tool": "crossbow",
+        "direction": 7,
+        "anchor": [
+          64.0,
+          67.48246383666992
+        ]
+      },
+      {
+        "i": 18,
+        "state": "death",
+        "clip": "Death",
+        "phase": 0.1,
+        "tool": "crossbow",
+        "direction": 7,
+        "anchor": [
+          64.0,
+          67.48246383666992
+        ]
+      },
+      {
+        "i": 19,
+        "state": "death",
+        "clip": "Death",
+        "phase": 0.35,
+        "tool": "crossbow",
+        "direction": 7,
+        "anchor": [
+          64.0,
+          67.48246383666992
+        ]
+      },
+      {
+        "i": 20,
+        "state": "death",
+        "clip": "Death",
+        "phase": 0.65,
+        "tool": "crossbow",
+        "direction": 7,
+        "anchor": [
+          64.0,
+          67.48246383666992
+        ]
+      },
+      {
+        "i": 21,
+        "state": "death",
+        "clip": "Death",
+        "phase": 1,
+        "tool": "crossbow",
+        "direction": 7,
+        "anchor": [
+          64.0,
+          67.48246383666992
+        ]
+      }
+    ],
+    "resolution": 128,
+    "cpuSamples": 2
+  }
+}

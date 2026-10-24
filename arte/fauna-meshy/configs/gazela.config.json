@@ -1,0 +1,52 @@
+{
+ "version": 1,
+ "modelForward": "-Y",
+ "referenceHeightPx": 80,
+ "samples": 8,
+ "atlasWidth": 4096,
+ "webpQuality": 100,
+ "states": [
+  {
+   "name": "idle",
+   "clip": "Idle",
+   "frames": 2,
+   "loop": true,
+   "props": []
+  },
+  {
+   "name": "graze",
+   "clip": "Graze",
+   "frames": 4,
+   "loop": true,
+   "props": []
+  },
+  {
+   "name": "walk",
+   "clip": "Walk",
+   "frames": 8,
+   "loop": true,
+   "props": []
+  },
+  {
+   "name": "attack",
+   "clip": "Attack",
+   "frames": 4,
+   "loop": true,
+   "props": []
+  },
+  {
+   "name": "hit",
+   "clip": "Hit",
+   "frames": 2,
+   "loop": true,
+   "props": []
+  },
+  {
+   "name": "death",
+   "clip": "Death",
+   "frames": 4,
+   "loop": false,
+   "props": []
+  }
+ ]
+}

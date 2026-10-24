@@ -1,0 +1,524 @@
+[
+  {
+    "unit": "aldeao",
+    "passed": true,
+    "rigidHandAndDirectionPivotVerified": true,
+    "checks": [
+      {
+        "clip": "Chop",
+        "direction": 0,
+        "closestHandWeaponSurfaceMetres": 0.015754583549706318
+      },
+      {
+        "clip": "Chop",
+        "direction": 1,
+        "closestHandWeaponSurfaceMetres": 0.015754609527687716
+      },
+      {
+        "clip": "Chop",
+        "direction": 2,
+        "closestHandWeaponSurfaceMetres": 0.015754583549706318
+      },
+      {
+        "clip": "Chop",
+        "direction": 3,
+        "closestHandWeaponSurfaceMetres": 0.015754609527687716
+      },
+      {
+        "clip": "Chop",
+        "direction": 4,
+        "closestHandWeaponSurfaceMetres": 0.015754590477172214
+      },
+      {
+        "clip": "Chop",
+        "direction": 5,
+        "closestHandWeaponSurfaceMetres": 0.015754615300566654
+      },
+      {
+        "clip": "Chop",
+        "direction": 6,
+        "closestHandWeaponSurfaceMetres": 0.015754577084068737
+      },
+      {
+        "clip": "Chop",
+        "direction": 7,
+        "closestHandWeaponSurfaceMetres": 0.015754684113120705
+      },
+      {
+        "clip": "Attack",
+        "direction": 0,
+        "closestHandWeaponSurfaceMetres": 0.015443471264536364
+      },
+      {
+        "clip": "Attack",
+        "direction": 1,
+        "closestHandWeaponSurfaceMetres": 0.015444228771915359
+      },
+      {
+        "clip": "Attack",
+        "direction": 2,
+        "closestHandWeaponSurfaceMetres": 0.015443473384643072
+      },
+      {
+        "clip": "Attack",
+        "direction": 3,
+        "closestHandWeaponSurfaceMetres": 0.015444228771915359
+      },
+      {
+        "clip": "Attack",
+        "direction": 4,
+        "closestHandWeaponSurfaceMetres": 0.015443475563641328
+      },
+      {
+        "clip": "Attack",
+        "direction": 5,
+        "closestHandWeaponSurfaceMetres": 0.015444347844950662
+      },
+      {
+        "clip": "Attack",
+        "direction": 6,
+        "closestHandWeaponSurfaceMetres": 0.015443471264536364
+      },
+      {
+        "clip": "Attack",
+        "direction": 7,
+        "closestHandWeaponSurfaceMetres": 0.015444485496239845
+      }
+    ]
+  },
+  {
+    "unit": "guerreiro",
+    "passed": true,
+    "rigidHandAndDirectionPivotVerified": true,
+    "checks": [
+      {
+        "clip": "Idle",
+        "direction": 0,
+        "closestHandWeaponSurfaceMetres": 0.015693273609565312
+      },
+      {
+        "clip": "Idle",
+        "direction": 1,
+        "closestHandWeaponSurfaceMetres": 0.01569384629028899
+      },
+      {
+        "clip": "Idle",
+        "direction": 2,
+        "closestHandWeaponSurfaceMetres": 0.015693275333709462
+      },
+      {
+        "clip": "Idle",
+        "direction": 3,
+        "closestHandWeaponSurfaceMetres": 0.01569384629028899
+      },
+      {
+        "clip": "Idle",
+        "direction": 4,
+        "closestHandWeaponSurfaceMetres": 0.015693273609565312
+      },
+      {
+        "clip": "Idle",
+        "direction": 5,
+        "closestHandWeaponSurfaceMetres": 0.01569384565281353
+      },
+      {
+        "clip": "Idle",
+        "direction": 6,
+        "closestHandWeaponSurfaceMetres": 0.015693273609565312
+      },
+      {
+        "clip": "Idle",
+        "direction": 7,
+        "closestHandWeaponSurfaceMetres": 0.015693891956645667
+      },
+      {
+        "clip": "Attack",
+        "direction": 0,
+        "closestHandWeaponSurfaceMetres": 0.01568028253765592
+      },
+      {
+        "clip": "Attack",
+        "direction": 1,
+        "closestHandWeaponSurfaceMetres": 0.015680279236954024
+      },
+      {
+        "clip": "Attack",
+        "direction": 2,
+        "closestHandWeaponSurfaceMetres": 0.01568027941096139
+      },
+      {
+        "clip": "Attack",
+        "direction": 3,
+        "closestHandWeaponSurfaceMetres": 0.015680279236954024
+      },
+      {
+        "clip": "Attack",
+        "direction": 4,
+        "closestHandWeaponSurfaceMetres": 0.01568025188695973
+      },
+      {
+        "clip": "Attack",
+        "direction": 5,
+        "closestHandWeaponSurfaceMetres": 0.01568022239444441
+      },
+      {
+        "clip": "Attack",
+        "direction": 6,
+        "closestHandWeaponSurfaceMetres": 0.01568028253765592
+      },
+      {
+        "clip": "Attack",
+        "direction": 7,
+        "closestHandWeaponSurfaceMetres": 0.01568023399497331
+      }
+    ]
+  },
+  {
+    "unit": "lanceiro",
+    "passed": true,
+    "rigidHandAndDirectionPivotVerified": true,
+    "checks": [
+      {
+        "clip": "Idle",
+        "direction": 0,
+        "closestHandWeaponSurfaceMetres": 0.01629786068523822
+      },
+      {
+        "clip": "Idle",
+        "direction": 1,
+        "closestHandWeaponSurfaceMetres": 0.01629762684442377
+      },
+      {
+        "clip": "Idle",
+        "direction": 2,
+        "closestHandWeaponSurfaceMetres": 0.01629786068523822
+      },
+      {
+        "clip": "Idle",
+        "direction": 3,
+        "closestHandWeaponSurfaceMetres": 0.01629762684442377
+      },
+      {
+        "clip": "Idle",
+        "direction": 4,
+        "closestHandWeaponSurfaceMetres": 0.01629786068523822
+      },
+      {
+        "clip": "Idle",
+        "direction": 5,
+        "closestHandWeaponSurfaceMetres": 0.016297746044206488
+      },
+      {
+        "clip": "Idle",
+        "direction": 6,
+        "closestHandWeaponSurfaceMetres": 0.01629786068523822
+      },
+      {
+        "clip": "Idle",
+        "direction": 7,
+        "closestHandWeaponSurfaceMetres": 0.01629780115148925
+      },
+      {
+        "clip": "Attack",
+        "direction": 0,
+        "closestHandWeaponSurfaceMetres": 0.015801554489171466
+      },
+      {
+        "clip": "Attack",
+        "direction": 1,
+        "closestHandWeaponSurfaceMetres": 0.01580172245574841
+      },
+      {
+        "clip": "Attack",
+        "direction": 2,
+        "closestHandWeaponSurfaceMetres": 0.015801559093754237
+      },
+      {
+        "clip": "Attack",
+        "direction": 3,
+        "closestHandWeaponSurfaceMetres": 0.01580172245574841
+      },
+      {
+        "clip": "Attack",
+        "direction": 4,
+        "closestHandWeaponSurfaceMetres": 0.015801556331004735
+      },
+      {
+        "clip": "Attack",
+        "direction": 5,
+        "closestHandWeaponSurfaceMetres": 0.01580167019419546
+      },
+      {
+        "clip": "Attack",
+        "direction": 6,
+        "closestHandWeaponSurfaceMetres": 0.01580155725192129
+      },
+      {
+        "clip": "Attack",
+        "direction": 7,
+        "closestHandWeaponSurfaceMetres": 0.015801627976173772
+      }
+    ]
+  },
+  {
+    "unit": "espadachim",
+    "passed": true,
+    "rigidHandAndDirectionPivotVerified": true,
+    "checks": [
+      {
+        "clip": "Idle",
+        "direction": 0,
+        "closestHandWeaponSurfaceMetres": 0.00975594800720572
+      },
+      {
+        "clip": "Idle",
+        "direction": 1,
+        "closestHandWeaponSurfaceMetres": 0.00975584084198479
+      },
+      {
+        "clip": "Idle",
+        "direction": 2,
+        "closestHandWeaponSurfaceMetres": 0.009756007297894049
+      },
+      {
+        "clip": "Idle",
+        "direction": 3,
+        "closestHandWeaponSurfaceMetres": 0.00975584084198479
+      },
+      {
+        "clip": "Idle",
+        "direction": 4,
+        "closestHandWeaponSurfaceMetres": 0.009756004139928186
+      },
+      {
+        "clip": "Idle",
+        "direction": 5,
+        "closestHandWeaponSurfaceMetres": 0.009755816416831282
+      },
+      {
+        "clip": "Idle",
+        "direction": 6,
+        "closestHandWeaponSurfaceMetres": 0.00975594800720572
+      },
+      {
+        "clip": "Idle",
+        "direction": 7,
+        "closestHandWeaponSurfaceMetres": 0.009755831615553384
+      },
+      {
+        "clip": "Attack",
+        "direction": 0,
+        "closestHandWeaponSurfaceMetres": 0.008572610099021886
+      },
+      {
+        "clip": "Attack",
+        "direction": 1,
+        "closestHandWeaponSurfaceMetres": 0.008572503932334663
+      },
+      {
+        "clip": "Attack",
+        "direction": 2,
+        "closestHandWeaponSurfaceMetres": 0.008572616146325929
+      },
+      {
+        "clip": "Attack",
+        "direction": 3,
+        "closestHandWeaponSurfaceMetres": 0.008572503932334663
+      },
+      {
+        "clip": "Attack",
+        "direction": 4,
+        "closestHandWeaponSurfaceMetres": 0.00857259577644266
+      },
+      {
+        "clip": "Attack",
+        "direction": 5,
+        "closestHandWeaponSurfaceMetres": 0.008572361921311071
+      },
+      {
+        "clip": "Attack",
+        "direction": 6,
+        "closestHandWeaponSurfaceMetres": 0.008572610099021886
+      },
+      {
+        "clip": "Attack",
+        "direction": 7,
+        "closestHandWeaponSurfaceMetres": 0.00857235725307866
+      }
+    ]
+  },
+  {
+    "unit": "arqueiro",
+    "passed": true,
+    "rigidHandAndDirectionPivotVerified": true,
+    "checks": [
+      {
+        "clip": "Idle",
+        "direction": 0,
+        "closestHandWeaponSurfaceMetres": 0.004491860578948863
+      },
+      {
+        "clip": "Idle",
+        "direction": 1,
+        "closestHandWeaponSurfaceMetres": 0.0044915087375237825
+      },
+      {
+        "clip": "Idle",
+        "direction": 2,
+        "closestHandWeaponSurfaceMetres": 0.004491867868084873
+      },
+      {
+        "clip": "Idle",
+        "direction": 3,
+        "closestHandWeaponSurfaceMetres": 0.0044915087375237825
+      },
+      {
+        "clip": "Idle",
+        "direction": 4,
+        "closestHandWeaponSurfaceMetres": 0.004491874954733543
+      },
+      {
+        "clip": "Idle",
+        "direction": 5,
+        "closestHandWeaponSurfaceMetres": 0.00449159084728959
+      },
+      {
+        "clip": "Idle",
+        "direction": 6,
+        "closestHandWeaponSurfaceMetres": 0.004491867868084873
+      },
+      {
+        "clip": "Idle",
+        "direction": 7,
+        "closestHandWeaponSurfaceMetres": 0.004491462062869391
+      },
+      {
+        "clip": "Attack",
+        "direction": 0,
+        "closestHandWeaponSurfaceMetres": 0.004484111186778598
+      },
+      {
+        "clip": "Attack",
+        "direction": 1,
+        "closestHandWeaponSurfaceMetres": 0.0044839502160402694
+      },
+      {
+        "clip": "Attack",
+        "direction": 2,
+        "closestHandWeaponSurfaceMetres": 0.004484111186778598
+      },
+      {
+        "clip": "Attack",
+        "direction": 3,
+        "closestHandWeaponSurfaceMetres": 0.0044839502160402694
+      },
+      {
+        "clip": "Attack",
+        "direction": 4,
+        "closestHandWeaponSurfaceMetres": 0.004484082993864618
+      },
+      {
+        "clip": "Attack",
+        "direction": 5,
+        "closestHandWeaponSurfaceMetres": 0.004483880922557221
+      },
+      {
+        "clip": "Attack",
+        "direction": 6,
+        "closestHandWeaponSurfaceMetres": 0.0044840971917571235
+      },
+      {
+        "clip": "Attack",
+        "direction": 7,
+        "closestHandWeaponSurfaceMetres": 0.00448382336733165
+      }
+    ]
+  },
+  {
+    "unit": "besteiro",
+    "passed": true,
+    "rigidHandAndDirectionPivotVerified": true,
+    "checks": [
+      {
+        "clip": "Idle",
+        "direction": 0,
+        "closestHandWeaponSurfaceMetres": 0.06670752651193751
+      },
+      {
+        "clip": "Idle",
+        "direction": 1,
+        "closestHandWeaponSurfaceMetres": 0.06670746603120112
+      },
+      {
+        "clip": "Idle",
+        "direction": 2,
+        "closestHandWeaponSurfaceMetres": 0.06670752651193751
+      },
+      {
+        "clip": "Idle",
+        "direction": 3,
+        "closestHandWeaponSurfaceMetres": 0.06670746603120112
+      },
+      {
+        "clip": "Idle",
+        "direction": 4,
+        "closestHandWeaponSurfaceMetres": 0.06670751691355559
+      },
+      {
+        "clip": "Idle",
+        "direction": 5,
+        "closestHandWeaponSurfaceMetres": 0.0667075253666761
+      },
+      {
+        "clip": "Idle",
+        "direction": 6,
+        "closestHandWeaponSurfaceMetres": 0.06670752651193751
+      },
+      {
+        "clip": "Idle",
+        "direction": 7,
+        "closestHandWeaponSurfaceMetres": 0.06670759391871706
+      },
+      {
+        "clip": "Attack",
+        "direction": 0,
+        "closestHandWeaponSurfaceMetres": 0.06661001487512161
+      },
+      {
+        "clip": "Attack",
+        "direction": 1,
+        "closestHandWeaponSurfaceMetres": 0.06660988450637861
+      },
+      {
+        "clip": "Attack",
+        "direction": 2,
+        "closestHandWeaponSurfaceMetres": 0.06661002011826639
+      },
+      {
+        "clip": "Attack",
+        "direction": 3,
+        "closestHandWeaponSurfaceMetres": 0.06660988450637861
+      },
+      {
+        "clip": "Attack",
+        "direction": 4,
+        "closestHandWeaponSurfaceMetres": 0.06661001050583398
+      },
+      {
+        "clip": "Attack",
+        "direction": 5,
+        "closestHandWeaponSurfaceMetres": 0.06660991989766712
+      },
+      {
+        "clip": "Attack",
+        "direction": 6,
+        "closestHandWeaponSurfaceMetres": 0.06661001487512161
+      },
+      {
+        "clip": "Attack",
+        "direction": 7,
+        "closestHandWeaponSurfaceMetres": 0.0666100200636503
+      }
+    ]
+  }
+]

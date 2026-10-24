@@ -1,0 +1,25 @@
+{
+ "ferramentas": [
+  "Blender 5.2 (bpy, GPL)",
+  "arte/portoes-3d/scripts/montar_portao2.py (primitivas e materiais dos portões)"
+ ],
+ "texturas": [
+  "Poly Haven CC0: bark_brown_02, brown_planks_05, weathered_brown_planks, large_sandstone_blocks_01, medieval_blocks_02, thatch_roof_angled, clay_roof_tiles_02, roof_slates_02 (as mesmas dos portões, TEX_DIR)"
+ ],
+ "creditosMeshy": 0,
+ "amostras": 32,
+ "quadros": 34,
+ "escalaAtlas": 1.5,
+ "atlasSha256": "909a98692c94fbc1fcae1abc371fe71012212d7c47f1218c9deafb220c275a63",
+ "detalhe": "enxaimel, sobrado em balanço, cumeeira, caibros, portadas, lenha, carroça, chão de terra batida",
+ "pintura": "Gemini (texto -> imagem, sem créditos): casas, torres, armazém, ferreiro, Centro da Vila, quartel, arquearia, estábulo (Pedra); o resto continua 3D do Blender",
+ "mercadoModelo": {
+  "origem": "modelo GLB gerado no Tripo pelo Fabis (tripo_pbr_model_9db151f2…glb), importado no Blender e encaixado na pegada 3×3",
+  "altura": 1.5,
+  "idades": [
+   1,
+   2
+  ],
+  "nota": "telhado de ardósia dessaturado para não levar a cor da equipa; os toldos azuis levam a cor da equipa"
+ }
+}

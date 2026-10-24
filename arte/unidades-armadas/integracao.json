@@ -1,0 +1,47 @@
+{
+  "units": [
+    {
+      "unit": "aldeao",
+      "modelBytes": 23681524,
+      "atlasBytes": 2602034,
+      "atlasSha256": "0d1049c01aacd1493c7a5282f4d201950fb6157bb3b8c3c2eb7464caaf5bb025"
+    },
+    {
+      "unit": "guerreiro",
+      "modelBytes": 24199240,
+      "atlasBytes": 925624,
+      "atlasSha256": "e5e41e3f51a171730d2caccac0b657853f884fdfd1e6cf369166bf7d6ae91947"
+    },
+    {
+      "unit": "lanceiro",
+      "modelBytes": 24960116,
+      "atlasBytes": 977872,
+      "atlasSha256": "4353899e7105032be57f39db3d554b67c429373f19993a1f029f1561f2951621"
+    },
+    {
+      "unit": "espadachim",
+      "modelBytes": 24877388,
+      "atlasBytes": 938060,
+      "atlasSha256": "f0aceaf1746fdd5a4e4d90855028a43a0edc3abe0a24454b0afe5999d079862e"
+    },
+    {
+      "unit": "arqueiro",
+      "modelBytes": 22152180,
+      "atlasBytes": 785332,
+      "atlasSha256": "c4129994680d1d9fefee23f6c1d8b8e954e29eddcfc9db87945ee0e5cd938185"
+    },
+    {
+      "unit": "besteiro",
+      "modelBytes": 38284908,
+      "atlasBytes": 902650,
+      "atlasSha256": "c4f2e54335893cdbeccaaefbcaff704e3912c5997db11b2d0597f60aba7973b9"
+    }
+  ],
+  "additionalMeshyCredits": 0,
+  "legacyAtlasFilesPreserved": true,
+  "branch": "integracao-soldados-armados",
+  "indexBytesBeforeThisRun": 2859371,
+  "indexBytesAfter": 2865408,
+  "legacyFallback": true,
+  "scope": "Five existing Meshy soldiers plus the existing new villager; besteiroPesado reuses besteiro; cavalry/ships/king unchanged"
+}

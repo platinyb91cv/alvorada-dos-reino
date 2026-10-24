@@ -1,0 +1,42 @@
+{
+  "unit": "aldeao",
+  "method": "Median backwards foot velocity during low ground stance, per normalized clip cycle; both feet; orthographic game projection at 30px.",
+  "screenPixelsPerMeter": 18.791854332914543,
+  "metersPerTile": 2.40821545304732,
+  "foot": {
+    "LeftFoot": {
+      "stanceTravelPerCycleMeters": 0.9096989035606384,
+      "stanceSampleCount": 68,
+      "swingRangeMeters": 0.5320054292678833
+    },
+    "RightFoot": {
+      "stanceTravelPerCycleMeters": 0.8694355934858322,
+      "stanceSampleCount": 65,
+      "swingRangeMeters": 0.5191005915403366
+    }
+  },
+  "strideMeters": 0.8895672485232353,
+  "strideTiles": 0.3693885642157101,
+  "recommendedAnimFactor": 17.00969092132052,
+  "visualPhaseMultiplier": 3.401938184264104,
+  "durationSeconds": 1.3333333333333333,
+  "carry": {
+    "foot": {
+      "LeftFoot": {
+        "stanceTravelPerCycleMeters": 0.6995945423841476,
+        "stanceSampleCount": 61,
+        "swingRangeMeters": 0.44181810319423676
+      },
+      "RightFoot": {
+        "stanceTravelPerCycleMeters": 0.5858198180794716,
+        "stanceSampleCount": 64,
+        "swingRangeMeters": 0.3491896241903305
+      }
+    },
+    "strideMeters": 0.6427071802318096,
+    "strideTiles": 0.26688109629831397,
+    "recommendedAnimFactor": 23.543013702837822,
+    "visualPhaseMultiplier": 4.708602740567565,
+    "durationSeconds": 1.3333333333333333
+  }
+}
