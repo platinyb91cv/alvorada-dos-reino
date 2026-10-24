@@ -315,6 +315,20 @@ body.ingame:not(.gfx-leve) #grade{display:block}
 .mini{font:700 13px var(--f-body);padding:6px 11px;border-radius:6px;border:1px solid var(--rim);background:var(--wood2);color:var(--parch);cursor:pointer;white-space:nowrap}.mini.pri{background:var(--brass);color:var(--ink);border-color:#f0c766}.mini:disabled{opacity:.4;cursor:default}
 .pl .nm{display:flex;flex-direction:column;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.pl .nm small{color:var(--muted);font-size:12px}
 .muted{color:var(--muted)}.small{font-size:13px}
+.ljlist{display:grid;grid-template-columns:repeat(auto-fill,minmax(176px,1fr));gap:9px;width:100%;max-height:52vh;overflow:auto;text-align:left;touch-action:pan-y}
+.lj{display:flex;flex-direction:column;gap:6px;padding:9px 10px;border-radius:11px;border:1px solid rgba(255,220,170,.2);background:rgba(255,255,255,.04)}
+.lj .lh{display:flex;gap:8px;align-items:center}.lj .li{font-size:24px;line-height:1}.lj b{font-size:14px}.lj small{font-size:12px;opacity:.78;line-height:1.3}
+.lj .sw{display:flex;gap:4px;flex-wrap:wrap}.lj .sw i{width:16px;height:16px;border-radius:50%;box-shadow:0 0 0 1px rgba(0,0,0,.5)}
+.lj button{margin-top:auto;height:36px;border-radius:9px;border:1px solid #f0c766;background:var(--brass);color:var(--ink);font:800 14px var(--f-body);cursor:pointer}
+.lj button[disabled]{background:rgba(255,255,255,.06);border-color:rgba(255,220,170,.25);color:#e8d6b8;cursor:default}
+.lj.own{border-color:rgba(151,209,108,.6);background:rgba(151,209,108,.08)}.lj.soon{opacity:.6}
+.ljaviso{font-size:13px;color:#ffe2ad;background:rgba(243,187,78,.12);border:1px solid rgba(243,187,78,.35);border-radius:8px;padding:6px 10px}
+.big.ad{border-color:#7fd38a;color:#d8ffd0}
+.av.fr4{box-shadow:0 0 0 2px #ffd447,0 0 0 4px #8a5bd6,0 0 14px rgba(255,212,71,.7)}
+.krcape button.lock{position:relative;opacity:.55}.krcape button.lock:after{content:"🔒";position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:12px}
+#adBox{position:fixed;inset:0;z-index:99;background:rgba(0,0,0,.82);display:flex;align-items:center;justify-content:center}#adBox[hidden]{display:none}
+#adBox>div{display:flex;flex-direction:column;gap:8px;align-items:center;padding:18px 26px;border-radius:14px;background:#1c1410;border:1px solid var(--trim);color:#f5e3c8;min-width:240px}
+#adBox i{display:block;width:200px;height:6px;border-radius:3px;background:rgba(255,255,255,.12);overflow:hidden}#adBox i b{display:block;height:100%;width:0;background:var(--trim-hi);transition:width .2s linear}
 .card.wide{max-width:620px}.card h4{margin:6px 0 0;font-family:var(--f-display);color:var(--trim-hi);font-size:14px;letter-spacing:.05em;align-self:flex-start}
 .pfhead{display:flex;align-items:center;gap:12px;width:100%}.pfhead>div{flex:1;display:flex;flex-direction:column;gap:4px;text-align:left}.pfhead input{font-size:18px;padding:7px 10px;border-radius:6px;border:2px solid var(--rim);background:#120c08;color:var(--parch);font-weight:700}
 .pfhead small{color:var(--muted)}.pfhead b,.fcode{color:var(--trim-hi);letter-spacing:.15em;cursor:copy;font-family:var(--f-display)}
@@ -449,6 +463,7 @@ input{font-family:inherit;-webkit-user-select:text;user-select:text;touch-action
           <button id="bRank"><i data-ic="trophy"></i>Classificação</button>
           <button id="bTut"><i data-ic="flag"></i>Tutorial</button>
           <button id="bAchv"><i data-ic="star"></i>Conquistas</button>
+          <button id="bLoja"><i data-ic="gold"></i>Loja</button>
           <button id="bHelp"><i data-ic="book"></i>Como jogar</button>
         </nav>
       </div>
@@ -554,6 +569,16 @@ input{font-family:inherit;-webkit-user-select:text;user-select:text;touch-action
     </div>
   </div>
 
+  <div class="screen veil" id="sLoja" hidden>
+    <div class="card wide">
+      <h2>Loja do Reino</h2>
+      <p id="ljSub" class="muted">Só aparência: quem compra fica mais bonito, não mais forte.</p>
+      <p id="ljAviso" class="ljaviso" hidden></p>
+      <div id="ljList" class="ljlist"></div>
+      <button class="big" id="ljBack">Voltar</button>
+    </div>
+  </div>
+  <div id="adBox" hidden><div><b>Anúncio</b><span id="adTxt">A carregar…</span><i><b></b></i></div></div>
   <div class="screen veil" id="sAchv" hidden>
     <div class="card wide">
       <h2>Conquistas</h2>
@@ -634,7 +659,7 @@ input{font-family:inherit;-webkit-user-select:text;user-select:text;touch-action
     <div class="card">
       <h2>Jogo pausado</h2>
       <div class="row"><button class="big pri" id="bResume">Continuar</button><button class="big" id="bRestart">Recomeçar</button><button class="big" id="bQuit">Menu principal</button></div>
-      <div class="row"><button class="big" id="bSave">Guardar jogo</button><button class="big" id="bNetSave" hidden>Gravar e sair</button><button class="big" id="bSound">Som: ligado</button><button class="big" id="bVib">Vibração: ligada</button><button class="big" id="bVoz">Voz: ligada</button><button class="big" id="bGfx">Gráficos: alto</button><button class="big" id="bDN">Dia e noite: sim</button></div>
+      <div class="row"><button class="big" id="bSave">Guardar jogo</button><button class="big ad" id="bAdGold" hidden>🎬 +100 ouro</button><button class="big" id="bNetSave" hidden>Gravar e sair</button><button class="big" id="bSound">Som: ligado</button><button class="big" id="bVib">Vibração: ligada</button><button class="big" id="bVoz">Voz: ligada</button><button class="big" id="bGfx">Gráficos: alto</button><button class="big" id="bDN">Dia e noite: sim</button></div>
       <div class="row audio"><label>🎵 Música<input type="range" id="vMusic" min="0" max="100" value="40"></label><label>🔊 Efeitos<input type="range" id="vSfx" min="0" max="100" value="85"></label><label>🌿 Ambiente<input type="range" id="vAmb" min="0" max="100" value="55"></label></div>
     </div>
   </div>
@@ -5484,7 +5509,7 @@ $('bHome').onclick=()=>{const tc=ents.find(e=>e.kind==='b'&&e.o===ME&&e.type==='
 $('bChat').onclick=()=>{const b=$('chatBox');b.hidden=!b.hidden;if(!b.hidden)setTimeout(()=>$('chatIn').focus(),50)};
 $('bSpeed').onclick=()=>{speed=speed===1?1.5:speed===1.5?2:speed===2?3:1;$('bSpeed').textContent=speed+'×';if(speed===3)toast('Velocidade 3×')};
 $('btnMenu').onclick=togglePause;
-function togglePause(){if(!running)return;if(NET.on){$('sPause').hidden=!$('sPause').hidden;netPauseUI();return}paused=!paused;$('sPause').hidden=!paused;audioPause(paused)}
+function togglePause(){if(!running)return;try{adGoldUI()}catch(e){}if(NET.on){$('sPause').hidden=!$('sPause').hidden;netPauseUI();return}paused=!paused;$('sPause').hidden=!paused;audioPause(paused)}
 function netPauseUI(){const on=NET.on;$('bSave').hidden=on;$('bNetSave').hidden=!on;$('bRestart').textContent=on?'Desistir':'Recomeçar';$('sPause').querySelector('h2').textContent=on?'Menu (a partida continua)':'Jogo pausado'}
 $('bResume').onclick=togglePause;
 $('bRestart').onclick=()=>{$('sPause').hidden=true;if(NET.on){if(confirmResign())act('resign',{});return}if(G.reino){if(Date.now()-resignArm<2500){resignArm=0;reinoRetry()}else{resignArm=Date.now();$('sPause').hidden=false;toast('Volta ao último capítulo cumprido. Toca outra vez para confirmar.',true)}return}if(G.camp!=null){campStart(G.camp);return}if(G.daily){$('bDaily').onclick();return}const sd=Math.floor(Math.random()*1e9);startGame(sd,{map:G.map,vic:G.vic,civ:G.civ})};
@@ -5846,8 +5871,9 @@ const ACHV=[
   ['diario','📅','Desafio cumprido','Vence um desafio diário.'],
   ['camp','📜','Fundador','Completa a campanha.'],
   ['online','🌍','Vencedor online','Ganha uma partida online.']];
-const COLORS=[['#3f86e0','#1d4f8f','Azul',0],['#2fae96','#16614f','Verde-mar',3],['#8a5bd6','#4a2a85','Púrpura',6],['#d9a52c','#8a6410','Dourado',10]];
-const FRAMES=[['','Sem moldura',0],['fr1','Bronze',1],['fr2','Prata',5],['fr3','Ouro',10]];
+const COLORS=[['#3f86e0','#1d4f8f','Azul',0],['#2fae96','#16614f','Verde-mar',3],['#8a5bd6','#4a2a85','Púrpura',6],['#d9a52c','#8a6410','Dourado',10],
+  ['#1fb3c6','#0b5f6a','Turquesa',999,'cor_turquesa'],['#d264a6','#7a2a5c','Rosa real',999,'cor_rosa'],['#3aa64a','#1a5a24','Esmeralda',999,'cor_esmeralda'],['#5560e0','#262c80','Índigo',999,'cor_indigo']];
+const FRAMES=[['','Sem moldura',0],['fr1','Bronze',1],['fr2','Prata',5],['fr3','Ouro',10],['fr4','Fundador',999,'apoio_fundador']];
 function ukey(k){const id=ACC&&ACC.user&&!ACC.preview?ACC.user.id:null;if(!id)return k;const uk=k+'_'+id;try{if(localStorage.getItem(uk)==null){const own=localStorage.getItem(k+'__dono'),old=localStorage.getItem(k);if(old!=null&&(!own||own===id)){localStorage.setItem(uk,old);localStorage.setItem(k+'__dono',id)}}}catch(e){}return uk}
 function achvGet(){try{return JSON.parse(localStorage.getItem(ukey('alv_achv'))||'{}')}catch(e){return{}}}
 function achvN(){return Object.keys(achvGet()).length}
@@ -5871,18 +5897,66 @@ function achvEnd(win,why){if(!win)return;const real=!['forfeit','peer_quit','res
   if(G.time<15*60&&G.vic!=='sobrevivencia')achv('rapido');if(G.daily)achv('diario');if(G.camp!=null&&G.camp+1>=CAMP.length)achv('camp')}
 function cosm(){try{return JSON.parse(localStorage.getItem(ukey('alv_cosm'))||'{}')}catch(e){return{}}}
 function cosmSet(k,v){const c=cosm();c[k]=v;try{localStorage.setItem(ukey('alv_cosm'),JSON.stringify(c))}catch(e){}achvRender();accChip()}
-function myColor(){const c=cosm(),n=achvN();const col=COLORS.find(x=>x[0]===c.col&&n>=x[3]);return col||COLORS[0]}
-function myFrame(){const c=cosm(),n=achvN();const f=FRAMES.find(x=>x[0]===c.frame&&n>=x[2]);return f?f[0]:''}
+const cosmOk=(need,id)=>achvN()>=need||!!(id&&LOJA.has(id));
+function myColor(){const c=cosm();const col=COLORS.find(x=>x[0]===c.col&&cosmOk(x[3],x[4]));return col||COLORS[0]}
+function myFrame(){const c=cosm();const f=FRAMES.find(x=>x[0]===c.frame&&cosmOk(x[2],x[3]));return f?f[0]:''}
 function achvOpen(){for(const id of ['sMenu','sProfile','sRank','sFriends'])$(id).hidden=true;$('sAchv').hidden=false;achvSync().then(achvRender);achvRender()}
 function achvRender(){const A=achvGet(),n=Object.keys(A).length;$('acSub').textContent=n+' de '+ACHV.length+' conquistas. Cada conquista desbloqueia cores e molduras.';
   $('acList').innerHTML=ACHV.map(a=>`<div class="ach ${A[a[0]]?'on':''}"><span class="ai">${a[1]}</span><span><b>${esc(a[2])}</b><small>${esc(a[3])}${A[a[0]]?' · ✔ '+esc(A[a[0]]):''}</small></span></div>`).join('');
   const mc=myColor()[0],mf=myFrame();
-  $('acCol').innerHTML=COLORS.map(c=>`<button data-c="${c[0]}" title="${c[2]}${n<c[3]?' (precisa de '+c[3]+' conquistas)':''}" style="background:${c[0]}" class="${c[0]===mc?'sel':''}" ${n<c[3]?'disabled':''}></button>`).join('');
-  $('acFrame').innerHTML=FRAMES.map(f=>`<button data-f="${f[0]}" title="${f[1]}${n<f[2]?' (precisa de '+f[2]+' conquistas)':''}" style="background:#2a2230" class="${f[0]===mf?'sel':''}" ${n<f[2]?'disabled':''}><span class="av ${f[0]}" style="display:block;width:22px;height:22px;border-radius:50%;margin:auto;background:#5a4a6a"></span></button>`).join('')}
+  const lockT=(need,id)=>id?' (na Loja)':' (precisa de '+need+' conquistas)';
+  $('acCol').innerHTML=COLORS.map(c=>{const ok=cosmOk(c[3],c[4]);return `<button data-c="${c[0]}" title="${c[2]}${ok?'':lockT(c[3],c[4])}" style="background:${c[0]}" class="${c[0]===mc?'sel':''}" ${ok?'':'disabled'}></button>`}).join('');
+  $('acFrame').innerHTML=FRAMES.map(f=>`<button data-f="${f[0]}" title="${f[1]}${cosmOk(f[2],f[3])?'':lockT(f[2],f[3])}" style="background:#2a2230" class="${f[0]===mf?'sel':''}" ${cosmOk(f[2],f[3])?'':'disabled'}><span class="av ${f[0]}" style="display:block;width:22px;height:22px;border-radius:50%;margin:auto;background:#5a4a6a"></span></button>`).join('')}
 $('acCol').addEventListener('click',ev=>{const b=ev.target.closest('button');if(b&&!b.disabled){cosmSet('col',b.dataset.c);sfx('click')}});
 $('acFrame').addEventListener('click',ev=>{const b=ev.target.closest('button');if(b&&!b.disabled){cosmSet('frame',b.dataset.f);sfx('click')}});
 $('acBack').onclick=()=>{$('sAchv').hidden=true;showMenu()};
 $('bAchv').onclick=()=>{sfx('click');achvOpen()};
+// ---------- Loja: só aparência. Desligada até haver conta de comerciante (pagamentos) e AdMob (anúncios) ----------
+// LOJA_CFG.pagamentos / LOJA_CFG.anuncios ligam as compras e os anúncios reais (precisam dos plugins nativos, ver loja/LOJA.md).
+// Com ?loja=teste no endereço, as compras e o anúncio são simulados para experimentar o fluxo; nada é cobrado.
+const LOJA_CFG={pagamentos:false,anuncios:false,ouroAnuncio:100};
+const LOJA_TESTE=(()=>{try{return new URLSearchParams(location.search).get('loja')==='teste'}catch(e){return false}})();
+const LOJA_ITENS=[
+  {id:'capas_reais',ic:'👑',n:'Capas reais',d:'6 capas novas para o teu Rei: turquesa, rubi, esmeralda, marfim, vinho e prata.',p:'0,99 €',sw:()=>KING_CAPES_REAIS},
+  {id:'cor_turquesa',ic:'🎨',n:'Reino Turquesa',d:'Os teus edifícios, bandeiras e soldados em turquesa.',p:'0,99 €',sw:()=>['#1fb3c6']},
+  {id:'cor_rosa',ic:'🎨',n:'Reino Rosa real',d:'Os teus edifícios, bandeiras e soldados em rosa real.',p:'0,99 €',sw:()=>['#d264a6']},
+  {id:'cor_esmeralda',ic:'🎨',n:'Reino Esmeralda',d:'Os teus edifícios, bandeiras e soldados em esmeralda.',p:'0,99 €',sw:()=>['#3aa64a']},
+  {id:'cor_indigo',ic:'🎨',n:'Reino Índigo',d:'Os teus edifícios, bandeiras e soldados em índigo.',p:'0,99 €',sw:()=>['#5560e0']},
+  {id:'pacote_real',ic:'🏰',n:'Pacote Real',d:'Todas as capas reais e as 4 cores de reino. Poupa mais de metade.',p:'2,99 €',inclui:['capas_reais','cor_turquesa','cor_rosa','cor_esmeralda','cor_indigo']},
+  {id:'sem_anuncios',ic:'🚫',n:'Sem anúncios',d:'Nunca mais vês anúncios. O bónus de ouro contra a IA passa a ser teu sem ver nada.',p:'1,99 €'},
+  {id:'apoio_fundador',ic:'⭐',n:'Fundador do Reino',d:'Apoia o criador do jogo. Moldura de Fundador no perfil e na classificação, mais o Pacote Real.',p:'4,99 €',inclui:['fr4','pacote_real','capas_reais','cor_turquesa','cor_rosa','cor_esmeralda','cor_indigo']},
+  {id:'passe',ic:'🎟️',n:'Passe da temporada',d:'Recompensas a cada temporada da classificação online.',p:'',breve:true}];
+const LOJA={get(){try{return JSON.parse(localStorage.getItem(ukey('alv_loja'))||'{}')}catch(e){return{}}},
+  has(id){const o=this.get();return !!o[id]||(id==='fr4'&&!!o.apoio_fundador)},
+  give(id){const o=this.get(),it=LOJA_ITENS.find(x=>x.id===id);o[id]=Date.now();if(it&&it.inclui)for(const k of it.inclui)o[k]=o[k]||Date.now();try{localStorage.setItem(ukey('alv_loja'),JSON.stringify(o))}catch(e){}},
+  pode(){return LOJA_TESTE||(LOJA_CFG.pagamentos&&!!PAY.loja())}};
+// pagamentos: adaptador para o plugin de compras (cordova-plugin-purchase / CdvPurchase) quando existir no APK. NOT TESTED.
+const PAY={loja(){return window.CdvPurchase&&window.CdvPurchase.store||null},
+  async comprar(id){if(LOJA_TESTE){await new Promise(r=>setTimeout(r,500));return true}
+    const st=this.loja();if(!st||!LOJA_CFG.pagamentos)return false;const pr=st.get(id);const of=pr&&pr.getOffer&&pr.getOffer();if(!of)return false;
+    const err=await of.order();return !err}}; // a entrega real faz-se no evento 'approved/verified' do plugin e deve ser confirmada no servidor
+// anúncios com recompensa: AdMob (@capacitor-community/admob) quando existir no APK. NOT TESTED.
+const ADS={pode(){return LOJA.has('sem_anuncios')||LOJA_TESTE||(LOJA_CFG.anuncios&&!!(window.Capacitor&&Capacitor.Plugins&&Capacitor.Plugins.AdMob))},
+  async ver(){if(LOJA.has('sem_anuncios'))return true;
+    if(LOJA_TESTE){$('adBox').hidden=false;const bar=$('adBox').querySelector('i b');$('adTxt').textContent='Anúncio de teste (nada é mostrado de verdade)';
+      for(let k=0;k<=10;k++){bar.style.width=k*10+'%';await new Promise(r=>setTimeout(r,250))}$('adBox').hidden=true;return true}
+    try{const A=Capacitor.Plugins.AdMob;await A.prepareRewardVideoAd({adId:LOJA_CFG.admobId||''});const r=await A.showRewardVideoAd();return !!r}catch(e){return false}}};
+function adGoldOk(){return !!(running&&G&&!NET.on&&!G.daily&&!G.adOuro&&ADS.pode())}
+function adGoldUI(){const b=$('bAdGold');if(!b)return;b.hidden=!adGoldOk();b.textContent=LOJA.has('sem_anuncios')?'⭐ +'+LOJA_CFG.ouroAnuncio+' ouro (apoiante)':'🎬 Ver anúncio: +'+LOJA_CFG.ouroAnuncio+' ouro'}
+$('bAdGold').onclick=async()=>{if(!adGoldOk())return;sfx('click');const ok=await ADS.ver();if(!ok||!adGoldOk()){toast('O anúncio não terminou: sem bónus',true);return}
+  G.adOuro=1;P[ME].res.gold+=LOJA_CFG.ouroAnuncio;resDirty=true;adGoldUI();toast('+'+LOJA_CFG.ouroAnuncio+' de ouro 💰')};
+let lojaVolta=null;
+function lojaOpen(after){lojaVolta=after||null;for(const id of ['sMenu','sProfile','sRank','sFriends','sAchv'])$(id).hidden=true;$('sLoja').hidden=false;lojaRender()}
+function lojaRender(){const pode=LOJA.pode();
+  $('ljAviso').hidden=pode&&!LOJA_TESTE;$('ljAviso').textContent=LOJA_TESTE?'Modo de teste: as compras são simuladas e nada é cobrado.':'A loja abre em breve. Já podes ver o que vai ter.';
+  $('ljList').innerHTML=LOJA_ITENS.map(it=>{const own=!it.breve&&LOJA.has(it.id);const sw=it.sw?`<div class="sw">${it.sw().map(c=>`<i style="background:${c}"></i>`).join('')}</div>`:'';
+    const bt=it.breve?'<button disabled>Em breve</button>':own?'<button disabled>✔ Já tens</button>':pode?`<button data-id="${it.id}">Comprar · ${it.p}</button>`:`<button disabled>${it.p} · em breve</button>`;
+    return `<div class="lj${own?' own':''}${it.breve?' soon':''}"><div class="lh"><span class="li">${it.ic}</span><b>${esc(it.n)}</b></div><small>${esc(it.d)}</small>${sw}${bt}</div>`}).join('')}
+$('ljList').addEventListener('click',async ev=>{const b=ev.target.closest('button[data-id]');if(!b)return;const id=b.dataset.id;b.disabled=true;b.textContent='A comprar…';sfx('click');
+  const ok=await PAY.comprar(id);if(ok){LOJA.give(id);toast('Obrigado! Já é teu ✨');try{accChip()}catch(e){}}else toast('A compra não foi feita',true);lojaRender()});
+$('ljBack').onclick=()=>{sfx('click');$('sLoja').hidden=true;const a=lojaVolta;lojaVolta=null;if(a)a();else showMenu()};
+$('bLoja').onclick=()=>{sfx('click');lojaOpen()};
+
 // ---------- gravação na nuvem (a tua conta guarda a última partida) ----------
 let cloudBusy=false;
 async function cloudSave(quiet){if(!ACC.sb||!ACC.user||ACC.preview||cloudBusy||!running||NET.on||G.over||(G.reino&&G.reino.demo))return false;cloudBusy=true;
@@ -6131,10 +6205,12 @@ function heroPower(o,p){const h=G.hero&&G.hero[o],P0=HERO_POW[p];if(!h||!P0)retu
 // ---------- aparência e nome do Rei ----------
 const KING_CROWNS=['Clássica','Imperial','Louros','Guerreira'];
 const KING_CAPES=['#b0202a','#6a2a9a','#1f4fa8','#1e7a4a','#c9a227','#2b2b33','#e8e2d6','#d0602a'];
+const KING_CAPES_REAIS=['#12a5b8','#c2457f','#0f5a3c','#e6d27a','#5a1020','#8fa0b8']; // capas da Loja (pacote "Capas reais")
+const KING_CAPES_ALL=KING_CAPES.concat(KING_CAPES_REAIS);
 const KING_DEF={name:'',crown:0,cape:'#b0202a'};
 function kingLookMine(){try{return {...KING_DEF,...JSON.parse(localStorage.getItem(ukey('alv_rei'))||'{}')}}catch(e){return {...KING_DEF}}}
 function kingLookSave(L){try{localStorage.setItem(ukey('alv_rei'),JSON.stringify(L))}catch(e){}}
-function kingLookClean(L){L=L&&typeof L==='object'?L:{};return{name:String(L.name||'').replace(/[<>&"]/g,'').trim().slice(0,16),crown:clamp(+L.crown|0,0,KING_CROWNS.length-1),cape:KING_CAPES.includes(L.cape)?L.cape:KING_DEF.cape}}
+function kingLookClean(L){L=L&&typeof L==='object'?L:{};return{name:String(L.name||'').replace(/[<>&"]/g,'').trim().slice(0,16),crown:clamp(+L.crown|0,0,KING_CROWNS.length-1),cape:KING_CAPES_ALL.includes(L.cape)?L.cape:KING_DEF.cape}}
 const RIVAL_LOOK={name:'',crown:3,cape:'#2b2b33'};
 function kingLook(o){if(G&&G.kingLook&&G.kingLook[o])return G.kingLook[o];return o===ME?kingLookMine():RIVAL_LOOK}
 function kingTitle(o){const L=kingLook(o);return L.name?'Rei '+L.name:(o===ME?'O teu Rei':'O Rei rival')}
@@ -6202,13 +6278,14 @@ function kingEdRender(){const L=KED.L;
   for(const el of [$('krCrown'),$('krCrown').previousElementSibling])el.hidden=KART.ready;
   $('krCrown').innerHTML=KING_CROWNS.map((n,i)=>`<button data-i="${i}" class="${L.crown===i?'sel':''}"><canvas width="44" height="36"></canvas><small>${n}</small></button>`).join('');
   for(const b of $('krCrown').querySelectorAll('button')){const g=b.firstChild.getContext('2d');g.scale(2,2);drawCrownStyle(g,11,12,+b.dataset.i,0)}
-  $('krCape').innerHTML=KING_CAPES.map(c=>`<button data-c="${c}" class="${L.cape===c?'sel':''}" style="background:${c}" title="Capa"></button>`).join('');
+  const reais=LOJA.has('capas_reais');
+  $('krCape').innerHTML=KING_CAPES_ALL.map(c=>{const lk=KING_CAPES_REAIS.includes(c)&&!reais;return `<button data-c="${c}" class="${L.cape===c?'sel':''}${lk?' lock':''}" style="background:${c}" title="${lk?'Capa real (na Loja)':'Capa'}"></button>`}).join('');
   const lv=reinoHas()?((()=>{try{const s=JSON.parse(localStorage.getItem(reinoKey()));return s.X&&s.X.hero&&s.X.hero[0]?s.X.hero[0].lv:1}catch(e){return 1}})()):1;
   $('krInfo').textContent=(L.name?'Rei '+L.name:'O teu Rei')+' · nível '+lv+' no teu reino. Sobe de nível nas batalhas, inspira os soldados à volta e ganha poderes: '+Object.values(HERO_POW).map(p=>p.ic+' '+p.n+' (nível '+p.lv+')').join(', ')+'.'}
 $('krCrown').addEventListener('click',ev=>{const b=ev.target.closest('button');if(!b)return;KED.L.crown=+b.dataset.i;sfx('click');kingEdRender()});
-$('krCape').addEventListener('click',ev=>{const b=ev.target.closest('button');if(!b)return;KED.L.cape=b.dataset.c;sfx('click');kingEdRender()});
+$('krCape').addEventListener('click',ev=>{const b=ev.target.closest('button');if(!b)return;if(b.classList.contains('lock')){sfx('click');lojaOpen(()=>{$('sRei').hidden=false;kingEdRender()});$('sRei').hidden=true;return}KED.L.cape=b.dataset.c;sfx('click');kingEdRender()});
 $('krName').addEventListener('input',()=>{KED.L.name=$('krName').value});
-$('krSave').onclick=()=>{sfx('click');const L=kingLookClean({...KED.L,name:$('krName').value});kingLookSave(L);if(NET.room&&NET.peerOnline)netRelay({g:'rei',r:L});$('sRei').hidden=true;toast(L.name?'Viva o Rei '+L.name+'! 👑':'O teu Rei está pronto 👑');const a=KED.after;KED=null;if(a)a();else{reinoOpen()}};
+$('krSave').onclick=()=>{sfx('click');const L=kingLookClean({...KED.L,name:$('krName').value});if(KING_CAPES_REAIS.includes(L.cape)&&!LOJA.has('capas_reais'))L.cape=KING_DEF.cape;kingLookSave(L);if(NET.room&&NET.peerOnline)netRelay({g:'rei',r:L});$('sRei').hidden=true;toast(L.name?'Viva o Rei '+L.name+'! 👑':'O teu Rei está pronto 👑');const a=KED.after;KED=null;if(a)a();else{reinoOpen()}};
 $('krBack').onclick=()=>{sfx('click');$('sRei').hidden=true;KED=null;reinoOpen()};
 $('bKing').onclick=()=>{const k=heroKing(ME);if(k){setSel([k]);centerCam(k.x,k.y);sfx('click')}else{const h=G.hero&&G.hero[ME];toast(hasUnitWhere(ME,u=>u.d.king)?'O Rei está abrigado num edifício.':h&&h.resp!=null?'O Rei renasce em '+Math.max(0,Math.ceil(h.resp-G.time))+' s.':'Não tens Rei nesta partida.',true)}};
 function heroInfo(o){const h=G.hero[o];const need=heroNeed(h.lv);const w=h.lv>=HERO_MAX?100:Math.round(h.xp/need*100);
