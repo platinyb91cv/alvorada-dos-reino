@@ -1,0 +1,40 @@
+{
+  "passed": true,
+  "herd": {
+    "midHerdRestored": true,
+    "inside": [
+      true,
+      true,
+      true
+    ],
+    "allAssigned": true,
+    "hp": [
+      12,
+      12,
+      12
+    ],
+    "workerState": "gather",
+    "food": 1090
+  },
+  "roads": {
+    "count": 15,
+    "cost": 30,
+    "pavedSpeed": 2.04,
+    "grassSpeed": 1.7,
+    "pavedWaypoints": 13
+  },
+  "saveLoad": true,
+  "snapshot": {
+    "exactSnapshot": true,
+    "flippedOwner": true,
+    "swapRoundTrip": true
+  },
+  "issueButton": {
+    "visible": true,
+    "count": "1"
+  },
+  "indexBytes": 2892841,
+  "menuButtons": true,
+  "blockedButtonSelectsUnit": true,
+  "errors": []
+}

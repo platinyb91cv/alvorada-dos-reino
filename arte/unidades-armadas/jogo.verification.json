@@ -1,0 +1,332 @@
+{
+  "passed": true,
+  "browser": "Chrome headless; actual game and atlas renderer",
+  "androidDeviceTested": false,
+  "sources": {
+    "aldeao": {
+      "url": "http://127.0.0.1:55921/assets/units3d-armados/aldeao.webp?v=0d1049c01aac",
+      "hash": "0d1049c01aacd1493c7a5282f4d201950fb6157bb3b8c3c2eb7464caaf5bb025"
+    },
+    "guerreiro": {
+      "url": "http://127.0.0.1:55921/assets/units3d-armados/guerreiro.webp?v=e5e41e3f51a1",
+      "hash": "e5e41e3f51a171730d2caccac0b657853f884fdfd1e6cf369166bf7d6ae91947"
+    },
+    "lanceiro": {
+      "url": "http://127.0.0.1:55921/assets/units3d-armados/lanceiro.webp?v=4353899e7105",
+      "hash": "4353899e7105032be57f39db3d554b67c429373f19993a1f029f1561f2951621"
+    },
+    "espadachim": {
+      "url": "http://127.0.0.1:55921/assets/units3d-armados/espadachim.webp?v=f0aceaf1746f",
+      "hash": "f0aceaf1746fdd5a4e4d90855028a43a0edc3abe0a24454b0afe5999d079862e"
+    },
+    "arqueiro": {
+      "url": "http://127.0.0.1:55921/assets/units3d-armados/arqueiro.webp?v=c4129994680d",
+      "hash": "c4129994680d1d9fefee23f6c1d8b8e954e29eddcfc9db87945ee0e5cd938185"
+    },
+    "besteiro": {
+      "url": "http://127.0.0.1:55921/assets/units3d-armados/besteiro.webp?v=c4f2e5433589",
+      "hash": "c4f2e54335893cdbeccaaefbcaff704e3912c5997db11b2d0597f60aba7973b9"
+    },
+    "besteiroPesado": {
+      "url": "http://127.0.0.1:55921/assets/units3d-armados/besteiro.webp?v=c4f2e5433589",
+      "hash": "c4f2e54335893cdbeccaaefbcaff704e3912c5997db11b2d0597f60aba7973b9"
+    }
+  },
+  "game": {
+    "units": [
+      "aldeao",
+      "aldeao",
+      "aldeao",
+      "aldeao",
+      "guerreiro",
+      "guerreiro",
+      "guerreiro",
+      "guerreiro",
+      "lanceiro",
+      "lanceiro",
+      "lanceiro",
+      "lanceiro",
+      "espadachim",
+      "espadachim",
+      "espadachim",
+      "espadachim",
+      "arqueiro",
+      "arqueiro",
+      "arqueiro",
+      "arqueiro",
+      "besteiro",
+      "besteiro",
+      "besteiro",
+      "besteiro"
+    ],
+    "preferred": true,
+    "meanRenderMs": 3.5766666665673257,
+    "camera": {
+      "x": -448,
+      "y": 386.6666666666667,
+      "z": 1.5
+    },
+    "indexLocation": "http://127.0.0.1:55921/index.html"
+  },
+  "performanceComparison": {
+    "browserOnly": true,
+    "androidDeviceTested": false,
+    "before": {
+      "meanMs": 3.059999999962747,
+      "medianMs": 3,
+      "p95Ms": 5.200000002980232
+    },
+    "after": {
+      "meanMs": 2.05,
+      "medianMs": 2,
+      "p95Ms": 3.5
+    }
+  },
+  "directions": [
+    {
+      "type": "aldeao",
+      "d": 0,
+      "actual": 0
+    },
+    {
+      "type": "aldeao",
+      "d": 1,
+      "actual": 1
+    },
+    {
+      "type": "aldeao",
+      "d": 2,
+      "actual": 2
+    },
+    {
+      "type": "aldeao",
+      "d": 3,
+      "actual": 3
+    },
+    {
+      "type": "aldeao",
+      "d": 4,
+      "actual": 4
+    },
+    {
+      "type": "aldeao",
+      "d": 5,
+      "actual": 5
+    },
+    {
+      "type": "aldeao",
+      "d": 6,
+      "actual": 6
+    },
+    {
+      "type": "aldeao",
+      "d": 7,
+      "actual": 7
+    },
+    {
+      "type": "guerreiro",
+      "d": 0,
+      "actual": 0
+    },
+    {
+      "type": "guerreiro",
+      "d": 1,
+      "actual": 1
+    },
+    {
+      "type": "guerreiro",
+      "d": 2,
+      "actual": 2
+    },
+    {
+      "type": "guerreiro",
+      "d": 3,
+      "actual": 3
+    },
+    {
+      "type": "guerreiro",
+      "d": 4,
+      "actual": 4
+    },
+    {
+      "type": "guerreiro",
+      "d": 5,
+      "actual": 5
+    },
+    {
+      "type": "guerreiro",
+      "d": 6,
+      "actual": 6
+    },
+    {
+      "type": "guerreiro",
+      "d": 7,
+      "actual": 7
+    },
+    {
+      "type": "lanceiro",
+      "d": 0,
+      "actual": 0
+    },
+    {
+      "type": "lanceiro",
+      "d": 1,
+      "actual": 1
+    },
+    {
+      "type": "lanceiro",
+      "d": 2,
+      "actual": 2
+    },
+    {
+      "type": "lanceiro",
+      "d": 3,
+      "actual": 3
+    },
+    {
+      "type": "lanceiro",
+      "d": 4,
+      "actual": 4
+    },
+    {
+      "type": "lanceiro",
+      "d": 5,
+      "actual": 5
+    },
+    {
+      "type": "lanceiro",
+      "d": 6,
+      "actual": 6
+    },
+    {
+      "type": "lanceiro",
+      "d": 7,
+      "actual": 7
+    },
+    {
+      "type": "espadachim",
+      "d": 0,
+      "actual": 0
+    },
+    {
+      "type": "espadachim",
+      "d": 1,
+      "actual": 1
+    },
+    {
+      "type": "espadachim",
+      "d": 2,
+      "actual": 2
+    },
+    {
+      "type": "espadachim",
+      "d": 3,
+      "actual": 3
+    },
+    {
+      "type": "espadachim",
+      "d": 4,
+      "actual": 4
+    },
+    {
+      "type": "espadachim",
+      "d": 5,
+      "actual": 5
+    },
+    {
+      "type": "espadachim",
+      "d": 6,
+      "actual": 6
+    },
+    {
+      "type": "espadachim",
+      "d": 7,
+      "actual": 7
+    },
+    {
+      "type": "arqueiro",
+      "d": 0,
+      "actual": 0
+    },
+    {
+      "type": "arqueiro",
+      "d": 1,
+      "actual": 1
+    },
+    {
+      "type": "arqueiro",
+      "d": 2,
+      "actual": 2
+    },
+    {
+      "type": "arqueiro",
+      "d": 3,
+      "actual": 3
+    },
+    {
+      "type": "arqueiro",
+      "d": 4,
+      "actual": 4
+    },
+    {
+      "type": "arqueiro",
+      "d": 5,
+      "actual": 5
+    },
+    {
+      "type": "arqueiro",
+      "d": 6,
+      "actual": 6
+    },
+    {
+      "type": "arqueiro",
+      "d": 7,
+      "actual": 7
+    },
+    {
+      "type": "besteiro",
+      "d": 0,
+      "actual": 0
+    },
+    {
+      "type": "besteiro",
+      "d": 1,
+      "actual": 1
+    },
+    {
+      "type": "besteiro",
+      "d": 2,
+      "actual": 2
+    },
+    {
+      "type": "besteiro",
+      "d": 3,
+      "actual": 3
+    },
+    {
+      "type": "besteiro",
+      "d": 4,
+      "actual": 4
+    },
+    {
+      "type": "besteiro",
+      "d": 5,
+      "actual": 5
+    },
+    {
+      "type": "besteiro",
+      "d": 6,
+      "actual": 6
+    },
+    {
+      "type": "besteiro",
+      "d": 7,
+      "actual": 7
+    }
+  ],
+  "fallback": {
+    "url": "http://127.0.0.1:55921/assets/units3d/guerreiro.webp?v=d1599874d76c",
+    "legacyMeta": true
+  },
+  "errors": []
+}

@@ -1,0 +1,1106 @@
+{
+  "browser": "Chrome headless, real game renderer",
+  "viewport": {
+    "width": 1600,
+    "height": 1050
+  },
+  "deviceTested": false,
+  "errors": [],
+  "coveredApprovedKeys": [
+    "centro|0",
+    "centro|1",
+    "centro|2",
+    "casa|0",
+    "casa|1",
+    "casa|2",
+    "armazem|0",
+    "armazem|1",
+    "armazem|2",
+    "quartel|0",
+    "quartel|1",
+    "quartel|2",
+    "arquearia|0",
+    "arquearia|1",
+    "arquearia|2",
+    "estabulo|0",
+    "estabulo|1",
+    "estabulo|2",
+    "ferreiro|0",
+    "ferreiro|1",
+    "ferreiro|2",
+    "quinta|0",
+    "quinta|1",
+    "templo|1",
+    "templo|2",
+    "doca|0",
+    "torre|1",
+    "torre|2",
+    "torre|3",
+    "oficina|1",
+    "maravilha|2",
+    "portaoMadeira|0",
+    "portaoPedra|0",
+    "muralhaMadeira|0",
+    "muralhaPedra|0",
+    "ruina|0",
+    "ruina|1"
+  ],
+  "ages": [
+    {
+      "age": 0,
+      "seed": 48172,
+      "buildings": 19,
+      "keys": [
+        "centro|0",
+        "casa|0",
+        "armazem|0",
+        "quartel|0",
+        "arquearia|0",
+        "estabulo|0",
+        "ferreiro|0",
+        "quinta|0",
+        "doca|0",
+        "muralhaMadeira|0",
+        "portaoMadeira|0",
+        "muralhaPedra|0",
+        "portaoPedra|0",
+        "ruina|0"
+      ],
+      "camera": {
+        "x": -767.2727272727271,
+        "y": 392.909090909091,
+        "z": 1.042654028436019
+      },
+      "size": {
+        "vw": 1600,
+        "vh": 1050
+      },
+      "boxes": [
+        {
+          "key": "centro|0",
+          "x": -121,
+          "y": 558,
+          "w": 242,
+          "h": 191
+        },
+        {
+          "key": "casa|0",
+          "x": 124,
+          "y": 712,
+          "w": 136,
+          "h": 90
+        },
+        {
+          "key": "casa|0",
+          "x": 316,
+          "y": 808,
+          "w": 136,
+          "h": 90
+        },
+        {
+          "key": "armazem|0",
+          "x": 508,
+          "y": 893,
+          "w": 136,
+          "h": 102
+        },
+        {
+          "key": "quartel|0",
+          "x": -293,
+          "y": 674,
+          "w": 202,
+          "h": 160
+        },
+        {
+          "key": "arquearia|0",
+          "x": -101,
+          "y": 782,
+          "w": 202,
+          "h": 149
+        },
+        {
+          "key": "estabulo|0",
+          "x": 91,
+          "y": 874,
+          "w": 202,
+          "h": 153
+        },
+        {
+          "key": "ferreiro|0",
+          "x": 316,
+          "y": 975,
+          "w": 136,
+          "h": 116
+        },
+        {
+          "key": "quinta|0",
+          "x": -485,
+          "y": 793,
+          "w": 202,
+          "h": 138
+        },
+        {
+          "key": "doca|0",
+          "x": -644,
+          "y": 900,
+          "w": 136,
+          "h": 94
+        },
+        {
+          "key": "casa|0",
+          "x": -68,
+          "y": 1192,
+          "w": 136,
+          "h": 90
+        },
+        {
+          "key": "muralhaMadeira|0",
+          "x": -227,
+          "y": 585,
+          "w": 70,
+          "h": 58
+        },
+        {
+          "key": "muralhaMadeira|0",
+          "x": -195,
+          "y": 601,
+          "w": 70,
+          "h": 58
+        },
+        {
+          "key": "portaoMadeira|0",
+          "x": -186,
+          "y": 569,
+          "w": 116,
+          "h": 106
+        },
+        {
+          "key": "muralhaMadeira|0",
+          "x": -131,
+          "y": 633,
+          "w": 70,
+          "h": 58
+        },
+        {
+          "key": "muralhaPedra|0",
+          "x": 189,
+          "y": 603,
+          "w": 70,
+          "h": 56
+        },
+        {
+          "key": "muralhaPedra|0",
+          "x": 157,
+          "y": 619,
+          "w": 70,
+          "h": 56
+        },
+        {
+          "key": "portaoPedra|0",
+          "x": 102,
+          "y": 609,
+          "w": 116,
+          "h": 82
+        },
+        {
+          "key": "muralhaPedra|0",
+          "x": 93,
+          "y": 651,
+          "w": 70,
+          "h": 56
+        }
+      ]
+    },
+    {
+      "age": 1,
+      "seed": 48172,
+      "buildings": 23,
+      "keys": [
+        "centro|1",
+        "casa|1",
+        "armazem|1",
+        "quartel|1",
+        "arquearia|1",
+        "estabulo|1",
+        "ferreiro|1",
+        "quinta|1",
+        "templo|1",
+        "oficina|1",
+        "torre|1",
+        "doca|0",
+        "muralhaMadeira|0",
+        "portaoMadeira|0",
+        "muralhaPedra|0",
+        "portaoPedra|0",
+        "ruina|1"
+      ],
+      "camera": {
+        "x": -765.4545454545455,
+        "y": 396.18181818181813,
+        "z": 1.0451306413301662
+      },
+      "size": {
+        "vw": 1600,
+        "vh": 1050
+      },
+      "boxes": [
+        {
+          "key": "centro|1",
+          "x": -121,
+          "y": 561,
+          "w": 242,
+          "h": 187
+        },
+        {
+          "key": "casa|1",
+          "x": 124,
+          "y": 713,
+          "w": 136,
+          "h": 90
+        },
+        {
+          "key": "casa|1",
+          "x": 316,
+          "y": 809,
+          "w": 136,
+          "h": 90
+        },
+        {
+          "key": "armazem|1",
+          "x": 508,
+          "y": 893,
+          "w": 136,
+          "h": 101
+        },
+        {
+          "key": "quartel|1",
+          "x": -293,
+          "y": 674,
+          "w": 202,
+          "h": 161
+        },
+        {
+          "key": "arquearia|1",
+          "x": -101,
+          "y": 783,
+          "w": 202,
+          "h": 147
+        },
+        {
+          "key": "estabulo|1",
+          "x": 91,
+          "y": 872,
+          "w": 202,
+          "h": 154
+        },
+        {
+          "key": "ferreiro|1",
+          "x": 316,
+          "y": 976,
+          "w": 136,
+          "h": 114
+        },
+        {
+          "key": "quinta|1",
+          "x": -485,
+          "y": 795,
+          "w": 202,
+          "h": 135
+        },
+        {
+          "key": "templo|1",
+          "x": -293,
+          "y": 884,
+          "w": 202,
+          "h": 142
+        },
+        {
+          "key": "oficina|1",
+          "x": -101,
+          "y": 989,
+          "w": 202,
+          "h": 133
+        },
+        {
+          "key": "torre|1",
+          "x": 124,
+          "y": 952,
+          "w": 136,
+          "h": 235
+        },
+        {
+          "key": "doca|0",
+          "x": -644,
+          "y": 900,
+          "w": 136,
+          "h": 94
+        },
+        {
+          "key": "torre|1",
+          "x": -260,
+          "y": 952,
+          "w": 136,
+          "h": 235
+        },
+        {
+          "key": "casa|1",
+          "x": -68,
+          "y": 1193,
+          "w": 136,
+          "h": 90
+        },
+        {
+          "key": "muralhaMadeira|0",
+          "x": -227,
+          "y": 585,
+          "w": 70,
+          "h": 58
+        },
+        {
+          "key": "muralhaMadeira|0",
+          "x": -195,
+          "y": 601,
+          "w": 70,
+          "h": 58
+        },
+        {
+          "key": "portaoMadeira|0",
+          "x": -186,
+          "y": 569,
+          "w": 116,
+          "h": 106
+        },
+        {
+          "key": "muralhaMadeira|0",
+          "x": -131,
+          "y": 633,
+          "w": 70,
+          "h": 58
+        },
+        {
+          "key": "muralhaPedra|0",
+          "x": 189,
+          "y": 603,
+          "w": 70,
+          "h": 56
+        },
+        {
+          "key": "muralhaPedra|0",
+          "x": 157,
+          "y": 619,
+          "w": 70,
+          "h": 56
+        },
+        {
+          "key": "portaoPedra|0",
+          "x": 102,
+          "y": 609,
+          "w": 116,
+          "h": 82
+        },
+        {
+          "key": "muralhaPedra|0",
+          "x": 93,
+          "y": 651,
+          "w": 70,
+          "h": 56
+        }
+      ]
+    },
+    {
+      "age": 2,
+      "seed": 48172,
+      "buildings": 24,
+      "keys": [
+        "centro|2",
+        "casa|2",
+        "armazem|2",
+        "quartel|2",
+        "arquearia|2",
+        "estabulo|2",
+        "ferreiro|2",
+        "quinta|1",
+        "templo|2",
+        "oficina|2",
+        "torre|2",
+        "doca|0",
+        "maravilha|2",
+        "torre|3",
+        "muralhaMadeira|0",
+        "portaoMadeira|0",
+        "muralhaPedra|0",
+        "portaoPedra|0",
+        "ruina|1"
+      ],
+      "camera": {
+        "x": -820.9090909090909,
+        "y": 326.8636363636364,
+        "z": 0.9745293466223699
+      },
+      "size": {
+        "vw": 1600,
+        "vh": 1050
+      },
+      "boxes": [
+        {
+          "key": "centro|2",
+          "x": -121,
+          "y": 500,
+          "w": 242,
+          "h": 249
+        },
+        {
+          "key": "casa|2",
+          "x": 124,
+          "y": 713,
+          "w": 136,
+          "h": 90
+        },
+        {
+          "key": "casa|2",
+          "x": 316,
+          "y": 809,
+          "w": 136,
+          "h": 90
+        },
+        {
+          "key": "armazem|2",
+          "x": 508,
+          "y": 893,
+          "w": 136,
+          "h": 101
+        },
+        {
+          "key": "quartel|2",
+          "x": -293,
+          "y": 669,
+          "w": 202,
+          "h": 166
+        },
+        {
+          "key": "arquearia|2",
+          "x": -101,
+          "y": 778,
+          "w": 202,
+          "h": 153
+        },
+        {
+          "key": "estabulo|2",
+          "x": 91,
+          "y": 869,
+          "w": 202,
+          "h": 158
+        },
+        {
+          "key": "ferreiro|2",
+          "x": 316,
+          "y": 976,
+          "w": 136,
+          "h": 114
+        },
+        {
+          "key": "quinta|1",
+          "x": -485,
+          "y": 795,
+          "w": 202,
+          "h": 135
+        },
+        {
+          "key": "templo|2",
+          "x": -293,
+          "y": 807,
+          "w": 202,
+          "h": 219
+        },
+        {
+          "key": "oficina|2",
+          "x": -101,
+          "y": 967,
+          "w": 203,
+          "h": 156
+        },
+        {
+          "key": "torre|2",
+          "x": 124,
+          "y": 939,
+          "w": 136,
+          "h": 248
+        },
+        {
+          "key": "doca|0",
+          "x": -644,
+          "y": 900,
+          "w": 136,
+          "h": 94
+        },
+        {
+          "key": "maravilha|2",
+          "x": -518,
+          "y": 935,
+          "w": 268,
+          "h": 220
+        },
+        {
+          "key": "torre|3",
+          "x": -260,
+          "y": 936,
+          "w": 136,
+          "h": 251
+        },
+        {
+          "key": "casa|2",
+          "x": -68,
+          "y": 1193,
+          "w": 136,
+          "h": 90
+        },
+        {
+          "key": "muralhaMadeira|0",
+          "x": -227,
+          "y": 585,
+          "w": 70,
+          "h": 58
+        },
+        {
+          "key": "muralhaMadeira|0",
+          "x": -195,
+          "y": 601,
+          "w": 70,
+          "h": 58
+        },
+        {
+          "key": "portaoMadeira|0",
+          "x": -186,
+          "y": 569,
+          "w": 116,
+          "h": 106
+        },
+        {
+          "key": "muralhaMadeira|0",
+          "x": -131,
+          "y": 633,
+          "w": 70,
+          "h": 58
+        },
+        {
+          "key": "muralhaPedra|0",
+          "x": 189,
+          "y": 603,
+          "w": 70,
+          "h": 56
+        },
+        {
+          "key": "muralhaPedra|0",
+          "x": 157,
+          "y": 619,
+          "w": 70,
+          "h": 56
+        },
+        {
+          "key": "portaoPedra|0",
+          "x": 102,
+          "y": 609,
+          "w": 116,
+          "h": 82
+        },
+        {
+          "key": "muralhaPedra|0",
+          "x": 93,
+          "y": 651,
+          "w": 70,
+          "h": 56
+        }
+      ]
+    }
+  ],
+  "checks": [
+    {
+      "key": "centro|0",
+      "CW": 242,
+      "CH": 191,
+      "ox": 121,
+      "oy": 82,
+      "finite": true,
+      "positive": true,
+      "footprintWidth": 237.312,
+      "expectedFootprintWidth": 237.31199999999998,
+      "bottomY": 105.8067829125232,
+      "expectedBottomY": 105.60000000000001,
+      "anchorError": 0.20678291252319525
+    },
+    {
+      "key": "centro|1",
+      "CW": 242,
+      "CH": 187,
+      "ox": 121,
+      "oy": 79,
+      "finite": true,
+      "positive": true,
+      "footprintWidth": 237.31199999999995,
+      "expectedFootprintWidth": 237.31199999999998,
+      "bottomY": 105.31615169466599,
+      "expectedBottomY": 105.60000000000001,
+      "anchorError": 0.2838483053340184
+    },
+    {
+      "key": "centro|2",
+      "CW": 242,
+      "CH": 249,
+      "ox": 121,
+      "oy": 140,
+      "finite": true,
+      "positive": true,
+      "footprintWidth": 237.31199999999998,
+      "expectedFootprintWidth": 237.31199999999998,
+      "bottomY": 105.81229658525751,
+      "expectedBottomY": 105.60000000000001,
+      "anchorError": 0.21229658525750494
+    },
+    {
+      "key": "casa|0",
+      "CW": 136,
+      "CH": 90,
+      "ox": 68,
+      "oy": 24,
+      "finite": true,
+      "positive": true,
+      "footprintWidth": 131.84,
+      "expectedFootprintWidth": 131.84,
+      "bottomY": 63.85721279244987,
+      "expectedBottomY": 64,
+      "anchorError": 0.14278720755012841
+    },
+    {
+      "key": "casa|1",
+      "CW": 136,
+      "CH": 90,
+      "ox": 68,
+      "oy": 23,
+      "finite": true,
+      "positive": true,
+      "footprintWidth": 131.84,
+      "expectedFootprintWidth": 131.84,
+      "bottomY": 64.36608495305028,
+      "expectedBottomY": 64,
+      "anchorError": 0.3660849530502759
+    },
+    {
+      "key": "casa|2",
+      "CW": 136,
+      "CH": 90,
+      "ox": 68,
+      "oy": 23,
+      "finite": true,
+      "positive": true,
+      "footprintWidth": 131.84,
+      "expectedFootprintWidth": 131.84,
+      "bottomY": 64.36615937328145,
+      "expectedBottomY": 64,
+      "anchorError": 0.3661593732814481
+    },
+    {
+      "key": "armazem|0",
+      "CW": 136,
+      "CH": 102,
+      "ox": 68,
+      "oy": 35,
+      "finite": true,
+      "positive": true,
+      "footprintWidth": 131.84,
+      "expectedFootprintWidth": 131.84,
+      "bottomY": 64.35207355246926,
+      "expectedBottomY": 64,
+      "anchorError": 0.352073552469264
+    },
+    {
+      "key": "armazem|1",
+      "CW": 136,
+      "CH": 101,
+      "ox": 68,
+      "oy": 35,
+      "finite": true,
+      "positive": true,
+      "footprintWidth": 131.84,
+      "expectedFootprintWidth": 131.84,
+      "bottomY": 63.85798694933764,
+      "expectedBottomY": 64,
+      "anchorError": 0.14201305066235648
+    },
+    {
+      "key": "armazem|2",
+      "CW": 136,
+      "CH": 101,
+      "ox": 68,
+      "oy": 35,
+      "finite": true,
+      "positive": true,
+      "footprintWidth": 131.84,
+      "expectedFootprintWidth": 131.84,
+      "bottomY": 63.858134564292754,
+      "expectedBottomY": 64,
+      "anchorError": 0.14186543570724552
+    },
+    {
+      "key": "quartel|0",
+      "CW": 202,
+      "CH": 160,
+      "ox": 101,
+      "oy": 62,
+      "finite": true,
+      "positive": true,
+      "footprintWidth": 197.76,
+      "expectedFootprintWidth": 197.76,
+      "bottomY": 95.77641125656618,
+      "expectedBottomY": 96,
+      "anchorError": 0.2235887434338224
+    },
+    {
+      "key": "quartel|1",
+      "CW": 202,
+      "CH": 161,
+      "ox": 101,
+      "oy": 62,
+      "finite": true,
+      "positive": true,
+      "footprintWidth": 197.76,
+      "expectedFootprintWidth": 197.76,
+      "bottomY": 96.28084048002347,
+      "expectedBottomY": 96,
+      "anchorError": 0.2808404800234712
+    },
+    {
+      "key": "quartel|2",
+      "CW": 202,
+      "CH": 166,
+      "ox": 101,
+      "oy": 67,
+      "finite": true,
+      "positive": true,
+      "footprintWidth": 197.76,
+      "expectedFootprintWidth": 197.76,
+      "bottomY": 96.27431856862094,
+      "expectedBottomY": 96,
+      "anchorError": 0.2743185686209415
+    },
+    {
+      "key": "arquearia|0",
+      "CW": 202,
+      "CH": 149,
+      "ox": 101,
+      "oy": 50,
+      "finite": true,
+      "positive": true,
+      "footprintWidth": 197.76,
+      "expectedFootprintWidth": 197.76,
+      "bottomY": 96.28124001385885,
+      "expectedBottomY": 96,
+      "anchorError": 0.28124001385884867
+    },
+    {
+      "key": "arquearia|1",
+      "CW": 202,
+      "CH": 147,
+      "ox": 101,
+      "oy": 49,
+      "finite": true,
+      "positive": true,
+      "footprintWidth": 197.76,
+      "expectedFootprintWidth": 197.76,
+      "bottomY": 95.7889316295936,
+      "expectedBottomY": 96,
+      "anchorError": 0.21106837040639448
+    },
+    {
+      "key": "arquearia|2",
+      "CW": 202,
+      "CH": 153,
+      "ox": 101,
+      "oy": 54,
+      "finite": true,
+      "positive": true,
+      "footprintWidth": 197.76,
+      "expectedFootprintWidth": 197.76,
+      "bottomY": 96.27956205731775,
+      "expectedBottomY": 96,
+      "anchorError": 0.2795620573177473
+    },
+    {
+      "key": "estabulo|0",
+      "CW": 202,
+      "CH": 153,
+      "ox": 101,
+      "oy": 54,
+      "finite": true,
+      "positive": true,
+      "footprintWidth": 197.76,
+      "expectedFootprintWidth": 197.76,
+      "bottomY": 96.27916187921304,
+      "expectedBottomY": 96,
+      "anchorError": 0.27916187921303504
+    },
+    {
+      "key": "estabulo|1",
+      "CW": 202,
+      "CH": 154,
+      "ox": 101,
+      "oy": 56,
+      "finite": true,
+      "positive": true,
+      "footprintWidth": 197.76,
+      "expectedFootprintWidth": 197.76,
+      "bottomY": 95.78418816118125,
+      "expectedBottomY": 96,
+      "anchorError": 0.21581183881875177
+    },
+    {
+      "key": "estabulo|2",
+      "CW": 202,
+      "CH": 158,
+      "ox": 101,
+      "oy": 59,
+      "finite": true,
+      "positive": true,
+      "footprintWidth": 197.76,
+      "expectedFootprintWidth": 197.76,
+      "bottomY": 96.27702728242633,
+      "expectedBottomY": 96,
+      "anchorError": 0.27702728242633157
+    },
+    {
+      "key": "ferreiro|0",
+      "CW": 136,
+      "CH": 116,
+      "ox": 68,
+      "oy": 49,
+      "finite": true,
+      "positive": true,
+      "footprintWidth": 131.84,
+      "expectedFootprintWidth": 131.84,
+      "bottomY": 64.34641613843935,
+      "expectedBottomY": 64,
+      "anchorError": 0.34641613843935204
+    },
+    {
+      "key": "ferreiro|1",
+      "CW": 136,
+      "CH": 114,
+      "ox": 68,
+      "oy": 48,
+      "finite": true,
+      "positive": true,
+      "footprintWidth": 131.84,
+      "expectedFootprintWidth": 131.84,
+      "bottomY": 63.84771162937477,
+      "expectedBottomY": 64,
+      "anchorError": 0.1522883706252287
+    },
+    {
+      "key": "ferreiro|2",
+      "CW": 136,
+      "CH": 114,
+      "ox": 68,
+      "oy": 48,
+      "finite": true,
+      "positive": true,
+      "footprintWidth": 131.84,
+      "expectedFootprintWidth": 131.84,
+      "bottomY": 63.850521891887524,
+      "expectedBottomY": 64,
+      "anchorError": 0.14947810811247564
+    },
+    {
+      "key": "quinta|0",
+      "CW": 202,
+      "CH": 138,
+      "ox": 101,
+      "oy": 39,
+      "finite": true,
+      "positive": true,
+      "footprintWidth": 197.76,
+      "expectedFootprintWidth": 197.76,
+      "bottomY": 96.28443220259305,
+      "expectedBottomY": 96,
+      "anchorError": 0.28443220259305235
+    },
+    {
+      "key": "quinta|1",
+      "CW": 202,
+      "CH": 135,
+      "ox": 101,
+      "oy": 37,
+      "finite": true,
+      "positive": true,
+      "footprintWidth": 197.76,
+      "expectedFootprintWidth": 197.76,
+      "bottomY": 95.79692456189511,
+      "expectedBottomY": 96,
+      "anchorError": 0.20307543810488937
+    },
+    {
+      "key": "templo|1",
+      "CW": 202,
+      "CH": 142,
+      "ox": 101,
+      "oy": 44,
+      "finite": true,
+      "positive": true,
+      "footprintWidth": 197.76,
+      "expectedFootprintWidth": 197.76,
+      "bottomY": 95.79099984944105,
+      "expectedBottomY": 96,
+      "anchorError": 0.20900015055894983
+    },
+    {
+      "key": "templo|2",
+      "CW": 202,
+      "CH": 219,
+      "ox": 101,
+      "oy": 121,
+      "finite": true,
+      "positive": true,
+      "footprintWidth": 197.76,
+      "expectedFootprintWidth": 197.76,
+      "bottomY": 95.75394366081846,
+      "expectedBottomY": 96,
+      "anchorError": 0.24605633918153558
+    },
+    {
+      "key": "doca|0",
+      "CW": 136,
+      "CH": 94,
+      "ox": 68,
+      "oy": 28,
+      "finite": true,
+      "positive": true,
+      "footprintWidth": 131.84,
+      "expectedFootprintWidth": 131.84,
+      "bottomY": 63.85619971926762,
+      "expectedBottomY": 64,
+      "anchorError": 0.14380028073237838
+    },
+    {
+      "key": "torre|1",
+      "CW": 136,
+      "CH": 235,
+      "ox": 68,
+      "oy": 168,
+      "finite": true,
+      "positive": true,
+      "footprintWidth": 131.84,
+      "expectedFootprintWidth": 131.84,
+      "bottomY": 64.328835116602,
+      "expectedBottomY": 64,
+      "anchorError": 0.3288351166019936
+    },
+    {
+      "key": "torre|2",
+      "CW": 136,
+      "CH": 248,
+      "ox": 68,
+      "oy": 181,
+      "finite": true,
+      "positive": true,
+      "footprintWidth": 131.84,
+      "expectedFootprintWidth": 131.84,
+      "bottomY": 64.33644113688621,
+      "expectedBottomY": 64,
+      "anchorError": 0.3364411368862079
+    },
+    {
+      "key": "torre|3",
+      "CW": 136,
+      "CH": 251,
+      "ox": 68,
+      "oy": 184,
+      "finite": true,
+      "positive": true,
+      "footprintWidth": 131.84,
+      "expectedFootprintWidth": 131.84,
+      "bottomY": 64.33661791187203,
+      "expectedBottomY": 64,
+      "anchorError": 0.3366179118720254
+    },
+    {
+      "key": "oficina|1",
+      "CW": 202,
+      "CH": 133,
+      "ox": 101,
+      "oy": 35,
+      "finite": true,
+      "positive": true,
+      "footprintWidth": 197.76,
+      "expectedFootprintWidth": 197.76,
+      "bottomY": 95.7978404750221,
+      "expectedBottomY": 96,
+      "anchorError": 0.20215952497790113
+    },
+    {
+      "key": "maravilha|2",
+      "CW": 268,
+      "CH": 220,
+      "ox": 134,
+      "oy": 89,
+      "finite": true,
+      "positive": true,
+      "footprintWidth": 263.68,
+      "expectedFootprintWidth": 263.68,
+      "bottomY": 128.20252240828225,
+      "expectedBottomY": 128,
+      "anchorError": 0.202522408282249
+    },
+    {
+      "key": "portaoMadeira|0",
+      "CW": 116,
+      "CH": 106,
+      "ox": 58,
+      "oy": 71,
+      "finite": true,
+      "positive": true
+    },
+    {
+      "key": "portaoPedra|0",
+      "CW": 116,
+      "CH": 82,
+      "ox": 58,
+      "oy": 47,
+      "finite": true,
+      "positive": true
+    },
+    {
+      "key": "muralhaMadeira|0",
+      "CW": 70,
+      "CH": 58,
+      "ox": 35,
+      "oy": 23,
+      "finite": true,
+      "positive": true
+    },
+    {
+      "key": "muralhaPedra|0",
+      "CW": 70,
+      "CH": 56,
+      "ox": 35,
+      "oy": 21,
+      "finite": true,
+      "positive": true
+    },
+    {
+      "key": "ruina|0",
+      "CW": 134,
+      "CH": 82.5,
+      "ox": 66.92,
+      "oy": 17.35906848948011,
+      "finite": true,
+      "positive": true
+    },
+    {
+      "key": "ruina|1",
+      "CW": 200,
+      "CH": 121.5,
+      "ox": 99.88,
+      "oy": 24.305278571527666,
+      "finite": true,
+      "positive": true
+    }
+  ]
+}

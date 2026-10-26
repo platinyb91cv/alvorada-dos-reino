@@ -1,0 +1,38 @@
+{
+ "fonte": "Modelo gerado pelo utilizador no site meshy.ai; créditos gastos no site, não por este pipeline",
+ "creditosAdicionais": 0,
+ "original": {
+  "ficheiro": "Meshy_AI_Stag_1020024809_texture.glb",
+  "sha256": "155d3914115426acca57bdd5dd59b99afecfa545af11bd180af36652821aea3f",
+  "triangulos": 338453
+ },
+ "reducao": {
+  "script": "arte/fauna-meshy/scripts/reduzir.py",
+  "triangulos": 24000,
+  "texturaMax": 2048
+ },
+ "riggado": {
+  "ficheiro": "arte/fauna-meshy/modelos/veado-rig.glb",
+  "sha256": "c8fb7e42c176f6483c5d4e542a70d2ad0d8eb1105e9b456552403e4eed3f1f9f",
+  "ossos": 15,
+  "pesos": "suaves por distância (3 ossos mais próximos)"
+ },
+ "tipoJogo": "gazela",
+ "alturaM": 1.9968,
+ "clips": {
+  "Idle": 48,
+  "Graze": 48,
+  "Walk": 24,
+  "Attack": 30,
+  "Hit": 20,
+  "Death": 40
+ },
+ "atlas": {
+  "gazela": "263a4c5cee2e53a666b51586573e486175bec3f61167183ecd0e32f94ea61d5c"
+ },
+ "limites": [
+  "Pesos automáticos por distância: torções fortes do pescoço deformam um pouco a crina",
+  "No pastar a boca fica perto do chão mas não lhe toca",
+  "O retrato do painel continua a arte 2D"
+ ]
+}

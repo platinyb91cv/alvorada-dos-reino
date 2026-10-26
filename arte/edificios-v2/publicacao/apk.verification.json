@@ -1,0 +1,19 @@
+{
+  "commit": "1530283e5b1ce11ff962283fb5a4654d06ba919f",
+  "apkBytes": 23740799,
+  "apkSha256": "ec51af5da2a9b426d221d7bb9b42b789908adee3c99ecff05891fab1bfd3190d",
+  "files": {
+    "index.html": "eea7f848eb1d1b510dd40a5b9742fa3ef7b5e1c09a6e75ea91398ea52cdaff4b",
+    "assets/edificios-v2/bld-atlas-v2.webp": "12ef34eef9ac3fa07e1400eec267f60cd44cd50764f739885db26081251016d5",
+    "assets/edificios-v2/bld-v2.json": "fb06041f3f65ff573a8e04a5eef2f782ae4111eb0e2a2ebd75cc94a487468417",
+    "assets/edificios-v2/bld-compatibilidade.json": "daf5d2db16710c02561631fb338383b8e6e548d0fc1dd64a99e76ffa9d7aa4c1"
+  },
+  "workflowRun": "https://github.com/platinyb91cv/alvorada-dos-reino/actions/runs/39235076082",
+  "artifactId": 12179630136,
+  "artifactZipSha256": "5925a9daabe1bce85c8a03674c9e263a9b428b3672e84d405f2e77c4671794dd",
+  "artifactDigestMatches": true,
+  "apkZipCrcVerified": true,
+  "packagedFilesMatchCommittedSources": true,
+  "apkSigningBlockPresent": true,
+  "deviceTested": false
+}

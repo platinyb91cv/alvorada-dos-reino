@@ -1,0 +1,20 @@
+{
+  "keys": 40,
+  "managedKeys": 37,
+  "preservedLegacyKeys": [
+    "oficina|2",
+    "mercado|1",
+    "mercado|2"
+  ],
+  "atlasDimensions": [
+    2048,
+    2279
+  ],
+  "atlasBytes": 1353454,
+  "atlasSha256": "12ef34eef9ac3fa07e1400eec267f60cd44cd50764f739885db26081251016d5",
+  "decodedRgbaBytes": 18669568,
+  "legacyDecodedRgbaBytes": 18956288,
+  "metadataSha256": "fb06041f3f65ff573a8e04a5eef2f782ae4111eb0e2a2ebd75cc94a487468417",
+  "indexBytes": 2815793,
+  "indexSha256": "da82943d7ab143254a7e9def34e3d3d1442597b9da464844d57e75be830376d6"
+}

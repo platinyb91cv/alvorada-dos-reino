@@ -1,0 +1,73 @@
+{
+ "vilas": [
+  {
+   "tx": 35,
+   "ty": 41,
+   "o": 2
+  },
+  {
+   "tx": 74,
+   "ty": 72,
+   "o": 2
+  }
+ ],
+ "jobs": [
+  "lenhador",
+  "mineiro",
+  "coletor",
+  "ocioso"
+ ],
+ "jobs2": {
+  "lenhador": 1,
+  "mineiro": 1,
+  "coletor": 1,
+  "ocioso": 1
+ },
+ "infoNone": true,
+ "sentinel": {
+  "centro": 3,
+  "torre": 2
+ },
+ "night": 1,
+ "form": {
+  "ar": 1,
+  "la": 0,
+  "g": [
+   2,
+   2,
+   2
+  ],
+  "solo": 0,
+  "dmgProtected": 8,
+  "dmgUnprotected": 10
+ },
+ "flank": {
+  "flank": 10,
+  "front": 7
+ },
+ "vila": {
+  "o": 2
+ },
+ "vila2": {
+  "o": 2,
+  "claim": [
+   9.2,
+   0
+  ]
+ },
+ "vila3": {
+  "o": 0,
+  "gold": 8,
+  "info": "<img class=\"port \" src=\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGAAAABgCAYAAADimHc4AAAQAElEQVR4Aex6CZxdVX3/99z1vfv2bebNm30mk8m+QBYSYhICRQErSotVq/6xWm1FtF"
+ },
+ "caravana": {
+  "state": "trade",
+  "loot": 50,
+  "rivalGain": 50
+ },
+ "idleB": [
+  "centro",
+  "mercado"
+ ],
+ "errors": []
+}

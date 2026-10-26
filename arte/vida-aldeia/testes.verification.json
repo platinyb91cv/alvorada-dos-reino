@@ -1,0 +1,52 @@
+{
+  "tests": [
+    {
+      "file": "check_bronze_atlas.cjs",
+      "sha256": "c6063bd0c73acbb11722b05dace684239a007c92c2ba4810d422fb147ede8d5c",
+      "exitCode": 0
+    },
+    {
+      "file": "check_buildings_v2.cjs",
+      "sha256": "2abf0061f966acf7f61620fcf63de2266bac2478c7a36ed6e159c7e61c392464",
+      "exitCode": 0
+    },
+    {
+      "file": "check_food_economy.cjs",
+      "sha256": "b6d363a59d9c49737a327d36f36e4a15bd75e4640a7d068e03c3d528ec9aebf5",
+      "exitCode": 0
+    },
+    {
+      "file": "check_king_atlas.cjs",
+      "sha256": "787439ebc09c032d52b79deed0adf27b48558190534e91d87978f5a4132ed1a9",
+      "exitCode": 0
+    },
+    {
+      "file": "check_king_memory.cjs",
+      "sha256": "b6c9a376f9b26aff35092501412c30c42eddc5da5b79690161ed2af7e694672f",
+      "exitCode": 0
+    },
+    {
+      "file": "check_unit3d_armed.cjs",
+      "sha256": "fb4e96c02adba03b012c1a23a2ed1ecb6da73a45c6142e789f8eee2ecae25d5d",
+      "exitCode": 0
+    },
+    {
+      "file": "check_unit3d_correction.cjs",
+      "sha256": "072404accd1e2d81ee71159ff12f6b178962026261a942e88638eb0ec0c2e38e",
+      "exitCode": 0
+    },
+    {
+      "file": "check_unit3d.cjs",
+      "sha256": "12fc9a13646b09133ecb1c4fe9b2fd878eb62776d264da93f9fdb3f5e86c591e",
+      "exitCode": 0
+    },
+    {
+      "file": "check_village_life.cjs",
+      "sha256": "df981f3727ad83ad74f3c88785de6a0145e118ec8599e2eccfe51231237d3cbc",
+      "exitCode": 0
+    }
+  ],
+  "passed": true,
+  "verifiedAtUtc": "2026-10-20T00:52:16.3375750Z",
+  "htmlSha256": "0c63a7ad22e02a0d1e08d174f378b5207897b0f94e13f74740caeb631bb04dfd"
+}

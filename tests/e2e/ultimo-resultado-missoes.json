@@ -1,0 +1,792 @@
+{
+ "camp": [
+  {
+   "missao": 1,
+   "objetivos": [
+    {
+     "d": "Ter 12 aldeões",
+     "ok": true
+    },
+    {
+     "d": "Construir 4 casas",
+     "ok": true
+    },
+    {
+     "d": "Construir um Quartel",
+     "ok": true
+    },
+    {
+     "d": "Juntar 300 de madeira",
+     "ok": true
+    }
+   ],
+   "resultado": {
+    "over": true,
+    "won": true,
+    "end": true,
+    "title": "Vitória",
+    "text": "Missão cumprida! A próxima missão foi desbloqueada.",
+    "running": false,
+    "camp": 0,
+    "reino": null,
+    "objs": [
+     {
+      "d": "Ter 12 aldeões",
+      "ok": true
+     },
+     {
+      "d": "Construir 4 casas",
+      "ok": true
+     },
+     {
+      "d": "Construir um Quartel",
+      "ok": true
+     },
+     {
+      "d": "Juntar 300 de madeira",
+      "ok": true
+     }
+    ],
+    "done": 1,
+    "errs": []
+   }
+  },
+  {
+   "missao": 2,
+   "objetivos": [
+    {
+     "d": "Treinar 6 soldados",
+     "ok": true
+    },
+    {
+     "d": "Matar 8 lobos (8/8)",
+     "ok": true
+    },
+    {
+     "d": "Avançar para a Idade do Bronze",
+     "ok": true
+    }
+   ],
+   "resultado": {
+    "over": true,
+    "won": true,
+    "end": true,
+    "title": "Vitória",
+    "text": "Missão cumprida! A próxima missão foi desbloqueada.",
+    "running": false,
+    "camp": 1,
+    "reino": null,
+    "objs": [
+     {
+      "d": "Treinar 6 soldados",
+      "ok": true
+     },
+     {
+      "d": "Matar 8 lobos (8/8)",
+      "ok": true
+     },
+     {
+      "d": "Avançar para a Idade do Bronze",
+      "ok": true
+     }
+    ],
+    "done": 2,
+    "errs": []
+   }
+  },
+  {
+   "missao": 3,
+   "objetivos": [
+    {
+     "d": "Sobreviver a 6 vagas",
+     "ok": true
+    }
+   ],
+   "resultado": {
+    "over": true,
+    "won": true,
+    "end": true,
+    "title": "Vitória",
+    "text": "Missão cumprida! A próxima missão foi desbloqueada.",
+    "running": false,
+    "camp": 2,
+    "reino": null,
+    "objs": [
+     {
+      "d": "Sobreviver a 6 vagas",
+      "ok": true
+     }
+    ],
+    "done": 3,
+    "errs": []
+   }
+  },
+  {
+   "missao": 4,
+   "objetivos": [
+    {
+     "d": "Construir uma Doca",
+     "ok": true
+    },
+    {
+     "d": "Ter um Barco de Transporte",
+     "ok": true
+    },
+    {
+     "d": "Destruir o Centro da Vila inimigo",
+     "ok": true
+    }
+   ],
+   "resultado": {
+    "over": true,
+    "won": true,
+    "end": true,
+    "title": "Vitória",
+    "text": "Missão cumprida! A próxima missão foi desbloqueada.",
+    "running": false,
+    "camp": 3,
+    "reino": null,
+    "objs": [
+     {
+      "d": "Construir uma Doca",
+      "ok": true
+     },
+     {
+      "d": "Ter um Barco de Transporte",
+      "ok": true
+     },
+     {
+      "d": "Destruir o Centro da Vila inimigo",
+      "ok": true
+     }
+    ],
+    "done": 4,
+    "errs": []
+   }
+  },
+  {
+   "missao": 5,
+   "objetivos": [
+    {
+     "d": "Manter o teu Rei vivo",
+     "ok": true
+    },
+    {
+     "d": "Derrotar o Rei rival",
+     "ok": true
+    }
+   ],
+   "resultado": {
+    "over": true,
+    "won": true,
+    "end": true,
+    "title": "Vitória",
+    "text": "Missão cumprida! A próxima missão foi desbloqueada.",
+    "running": false,
+    "camp": 4,
+    "reino": null,
+    "objs": [
+     {
+      "d": "Manter o teu Rei vivo",
+      "ok": true
+     },
+     {
+      "d": "Derrotar o Rei rival",
+      "ok": true
+     }
+    ],
+    "done": 5,
+    "errs": []
+   }
+  },
+  {
+   "missao": 6,
+   "objetivos": [
+    1,
+    [
+     {
+      "d": "Chegar à Idade do Ferro",
+      "ok": true
+     },
+     {
+      "d": "Construir uma Maravilha",
+      "ok": true
+     },
+     {
+      "d": "Defender a Maravilha 5 minutos (0:02)",
+      "ok": false
+     }
+    ]
+   ],
+   "resultado": {
+    "over": true,
+    "won": true,
+    "end": true,
+    "title": "Vitória",
+    "text": "Campanha completa! O teu povo tem agora um reino lendário.",
+    "running": false,
+    "camp": 5,
+    "reino": null,
+    "objs": [
+     {
+      "d": "Chegar à Idade do Ferro",
+      "ok": true
+     },
+     {
+      "d": "Construir uma Maravilha",
+      "ok": true
+     },
+     {
+      "d": "Defender a Maravilha 5 minutos (0:00)",
+      "ok": true
+     }
+    ],
+    "done": 6,
+    "errs": []
+   }
+  }
+ ],
+ "campDerrota": {
+  "over": true,
+  "won": false,
+  "end": true,
+  "title": "Derrota",
+  "text": "O teu Rei caiu. O reino rende-se.",
+  "running": false,
+  "camp": 4,
+  "reino": null,
+  "objs": [
+   {
+    "d": "Manter o teu Rei vivo",
+    "ok": false
+   },
+   {
+    "d": "Derrotar o Rei rival",
+    "ok": false
+   }
+  ]
+ },
+ "reino": [
+  {
+   "cap": 1,
+   "tipo": "fund",
+   "objetivos": [
+    {
+     "d": "Ter 12 aldeões",
+     "ok": true
+    },
+    {
+     "d": "Construir 4 casas",
+     "ok": true
+    },
+    {
+     "d": "Construir um Quartel",
+     "ok": true
+    },
+    {
+     "d": "Juntar 300 de madeira",
+     "ok": true
+    }
+   ],
+   "ok": true,
+   "estado": {
+    "over": false,
+    "won": null,
+    "end": false,
+    "title": "Vitória",
+    "text": "",
+    "running": true,
+    "camp": null,
+    "reino": {
+     "n": 1,
+     "ms": null
+    },
+    "objs": null,
+    "errs": [],
+    "gl": 10
+   }
+  },
+  {
+   "cap": 2,
+   "tipo": "lobos",
+   "objetivos": [
+    {
+     "d": "Ter 6 soldados",
+     "ok": true
+    },
+    {
+     "d": "Matar 8 lobos (8/8)",
+     "ok": true
+    },
+    {
+     "d": "Avançar para a Idade do Bronze",
+     "ok": true
+    }
+   ],
+   "ok": true,
+   "estado": {
+    "over": false,
+    "won": null,
+    "end": false,
+    "title": "Vitória",
+    "text": "",
+    "running": true,
+    "camp": null,
+    "reino": {
+     "n": 2,
+     "ms": null
+    },
+    "objs": null,
+    "errs": [],
+    "gl": 20
+   }
+  },
+  {
+   "cap": 3,
+   "tipo": "raids",
+   "objetivos": [
+    {
+     "d": "Aguentar 4 vagas (4/4)",
+     "ok": true
+    }
+   ],
+   "ok": true,
+   "estado": {
+    "over": false,
+    "won": null,
+    "end": false,
+    "title": "Vitória",
+    "text": "",
+    "running": true,
+    "camp": null,
+    "reino": {
+     "n": 3,
+     "ms": null
+    },
+    "objs": null,
+    "errs": [],
+    "gl": 30
+   }
+  },
+  {
+   "cap": 4,
+   "tipo": "rival",
+   "objetivos": [
+    {
+     "d": "Destruir o Centro da Vila do reino vizinho",
+     "ok": true
+    }
+   ],
+   "ok": true,
+   "estado": {
+    "over": false,
+    "won": null,
+    "end": false,
+    "title": "Vitória",
+    "text": "",
+    "running": true,
+    "camp": null,
+    "reino": {
+     "n": 4,
+     "ms": null
+    },
+    "objs": null,
+    "errs": [],
+    "gl": 40
+   }
+  },
+  {
+   "cap": 5,
+   "tipo": "rei",
+   "objetivos": [
+    {
+     "d": "Manter o teu Rei vivo",
+     "ok": true
+    },
+    {
+     "d": "Derrotar o Senhor da Guerra",
+     "ok": true
+    }
+   ],
+   "ok": true,
+   "estado": {
+    "over": false,
+    "won": null,
+    "end": false,
+    "title": "Vitória",
+    "text": "",
+    "running": true,
+    "camp": null,
+    "reino": {
+     "n": 5,
+     "ms": null
+    },
+    "objs": null,
+    "errs": [],
+    "gl": 50
+   }
+  },
+  {
+   "cap": 6,
+   "tipo": "maravilha",
+   "objetivos": [
+    {
+     "d": "Chegar à Idade do Ferro",
+     "ok": true
+    },
+    {
+     "d": "Construir uma Maravilha",
+     "ok": true
+    },
+    {
+     "d": "Defender a Maravilha 5 minutos",
+     "ok": true
+    }
+   ],
+   "ok": true,
+   "estado": {
+    "over": false,
+    "won": null,
+    "end": false,
+    "title": "Vitória",
+    "text": "",
+    "running": true,
+    "camp": null,
+    "reino": {
+     "n": 6,
+     "ms": null
+    },
+    "objs": null,
+    "errs": [],
+    "gl": 60
+   }
+  },
+  {
+   "cap": 7,
+   "tipo": "raids",
+   "objetivos": [
+    {
+     "d": "Aguentar 3 vagas (3/3)",
+     "ok": true
+    }
+   ],
+   "ok": true,
+   "estado": {
+    "over": false,
+    "won": null,
+    "end": false,
+    "title": "Vitória",
+    "text": "",
+    "running": true,
+    "camp": null,
+    "reino": {
+     "n": 7,
+     "ms": null
+    },
+    "objs": null,
+    "errs": [],
+    "gl": 73
+   }
+  },
+  {
+   "cap": 8,
+   "tipo": "fort",
+   "objetivos": [
+    {
+     "d": "Arrasar o forte inimigo (4/4)",
+     "ok": true
+    }
+   ],
+   "ok": true,
+   "estado": {
+    "over": false,
+    "won": null,
+    "end": false,
+    "title": "Vitória",
+    "text": "",
+    "running": true,
+    "camp": null,
+    "reino": {
+     "n": 8,
+     "ms": null
+    },
+    "objs": null,
+    "errs": [],
+    "gl": 89
+   }
+  },
+  {
+   "cap": 9,
+   "tipo": "econ",
+   "objetivos": [
+    {
+     "d": "Recolher 3300 recursos (3300)",
+     "ok": true
+    },
+    {
+     "d": "Chegar a 48 de população",
+     "ok": true
+    }
+   ],
+   "ok": true,
+   "estado": {
+    "over": false,
+    "won": null,
+    "end": false,
+    "title": "Vitória",
+    "text": "",
+    "running": true,
+    "camp": null,
+    "reino": {
+     "n": 9,
+     "ms": null
+    },
+    "objs": null,
+    "errs": [],
+    "gl": 108
+   }
+  },
+  {
+   "cap": 10,
+   "tipo": "boss",
+   "objetivos": [
+    {
+     "d": "Derrotar o Tirano do Leste",
+     "ok": true
+    }
+   ],
+   "ok": true,
+   "estado": {
+    "over": false,
+    "won": null,
+    "end": false,
+    "title": "Vitória",
+    "text": "",
+    "running": true,
+    "camp": null,
+    "reino": {
+     "n": 10,
+     "ms": null
+    },
+    "objs": null,
+    "errs": [],
+    "gl": 130
+   }
+  },
+  {
+   "cap": 11,
+   "tipo": "cerco",
+   "objetivos": [
+    {
+     "d": "Resistir 5:30",
+     "ok": true
+    },
+    {
+     "d": "Manter o Centro da Vila de pé",
+     "ok": true
+    }
+   ],
+   "ok": true,
+   "estado": {
+    "over": false,
+    "won": null,
+    "end": false,
+    "title": "Vitória",
+    "text": "",
+    "running": true,
+    "camp": null,
+    "reino": {
+     "n": 11,
+     "ms": null
+    },
+    "objs": null,
+    "errs": [],
+    "gl": 155
+   }
+  },
+  {
+   "cap": 12,
+   "tipo": "raids",
+   "objetivos": [
+    {
+     "d": "Aguentar 6 vagas (6/6)",
+     "ok": true
+    }
+   ],
+   "ok": true,
+   "estado": {
+    "over": false,
+    "won": null,
+    "end": false,
+    "title": "Vitória",
+    "text": "",
+    "running": true,
+    "camp": null,
+    "reino": {
+     "n": 12,
+     "ms": null
+    },
+    "objs": null,
+    "errs": [],
+    "gl": 183
+   }
+  },
+  {
+   "cap": 13,
+   "tipo": "fort",
+   "objetivos": [
+    {
+     "d": "Arrasar o forte inimigo (7/7)",
+     "ok": true
+    }
+   ],
+   "ok": true,
+   "estado": {
+    "over": false,
+    "won": null,
+    "end": false,
+    "title": "Vitória",
+    "text": "",
+    "running": true,
+    "camp": null,
+    "reino": {
+     "n": 13,
+     "ms": null
+    },
+    "objs": null,
+    "errs": [],
+    "gl": 214
+   }
+  },
+  {
+   "cap": 14,
+   "tipo": "econ",
+   "objetivos": [
+    {
+     "d": "Recolher 6300 recursos (6300)",
+     "ok": true
+    },
+    {
+     "d": "Chegar a 78 de população",
+     "ok": true
+    }
+   ],
+   "ok": true,
+   "estado": {
+    "over": false,
+    "won": null,
+    "end": false,
+    "title": "Vitória",
+    "text": "",
+    "running": true,
+    "camp": null,
+    "reino": {
+     "n": 14,
+     "ms": null
+    },
+    "objs": null,
+    "errs": [],
+    "gl": 248
+   }
+  },
+  {
+   "cap": 15,
+   "tipo": "boss",
+   "objetivos": [
+    {
+     "d": "Derrotar o Tirano do Leste",
+     "ok": true
+    }
+   ],
+   "ok": true,
+   "estado": {
+    "over": false,
+    "won": null,
+    "end": false,
+    "title": "Vitória",
+    "text": "",
+    "running": true,
+    "camp": null,
+    "reino": {
+     "n": 15,
+     "ms": null
+    },
+    "objs": null,
+    "errs": [],
+    "gl": 285
+   }
+  },
+  {
+   "cap": 16,
+   "tipo": "cerco",
+   "objetivos": [
+    {
+     "d": "Resistir 8:00",
+     "ok": true
+    },
+    {
+     "d": "Manter o Centro da Vila de pé",
+     "ok": true
+    }
+   ],
+   "ok": true,
+   "estado": {
+    "over": false,
+    "won": null,
+    "end": false,
+    "title": "Vitória",
+    "text": "",
+    "running": true,
+    "camp": null,
+    "reino": {
+     "n": 16,
+     "ms": null
+    },
+    "objs": null,
+    "errs": [],
+    "gl": 325
+   }
+  }
+ ],
+ "save": {
+  "antes": {
+   "camp": 1,
+   "k": 2,
+   "time": 3,
+   "units": 8
+  },
+  "ui": {
+   "toasts": [
+    "Recolhe recursos e prepara-te: o reino rival não vai esperar.",
+    "Missão 2: Lobos na floresta",
+    "Jogo guardado ✔"
+   ],
+   "toastVisivelPorCima": false,
+   "botao": "✓ Guardado às 20:19",
+   "gravado": true
+  },
+  "depoisDeContinuar": {
+   "camp": 1,
+   "k": 2,
+   "time": 5,
+   "units": 8,
+   "running": true
+  }
+ },
+ "erros": [],
+ "reinoQueda": {
+  "over": true,
+  "won": false,
+  "end": true,
+  "title": "O reino caiu",
+  "text": "O teu Rei caiu. Sem Rei, o reino não pode continuar. Podes recomeçar a partir do último capítulo cumprido — a cidade volta como estava.",
+  "running": false,
+  "camp": null,
+  "reino": {
+   "n": 16,
+   "ms": null
+  },
+  "objs": null
+ },
+ "errosFinais": []
+}

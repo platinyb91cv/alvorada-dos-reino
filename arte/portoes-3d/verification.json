@@ -1,0 +1,53 @@
+{
+ "versao": 3,
+ "creditosAdicionais": 0,
+ "ferramentas": [
+  "Blender 5.2 (GPL) no PC do utilizador, Cycles CUDA numa Quadro P5000",
+  "Texturas Poly Haven (CC0)"
+ ],
+ "texturasCC0": {
+  "large_sandstone_blocks_01": "https://polyhaven.com/a/large_sandstone_blocks_01",
+  "medieval_blocks_02": "https://polyhaven.com/a/medieval_blocks_02",
+  "weathered_brown_planks": "https://polyhaven.com/a/weathered_brown_planks",
+  "brown_planks_05": "https://polyhaven.com/a/brown_planks_05",
+  "bark_brown_02": "https://polyhaven.com/a/bark_brown_02",
+  "thatch_roof_angled": "https://polyhaven.com/a/thatch_roof_angled",
+  "clay_roof_tiles_02": "https://polyhaven.com/a/clay_roof_tiles_02",
+  "roof_slates_02": "https://polyhaven.com/a/roof_slates_02",
+  "kloofendal_48d_partly_cloudy_puresky": "https://polyhaven.com/a/kloofendal_48d_partly_cloudy_puresky (só na vitrine)"
+ },
+ "variantes": [
+  "madeira0",
+  "madeira1",
+  "madeira2",
+  "pedra1",
+  "pedra2"
+ ],
+ "direcoes": [
+  "x",
+  "y"
+ ],
+ "portas": [
+  "fechada",
+  "meio",
+  "aberta"
+ ],
+ "atlas": {
+  "ficheiro": "www/assets/edificios-extra/portoes-3d.webp",
+  "sha256": "442a5dd921f228252798ac301cffc464959f635de34debf98d25b160c1cefe39",
+  "tamanho": [
+   2048,
+   2012
+  ]
+ },
+ "regenerar": "Blender: TEX_DIR=<texturas> OUT=<render> VARS=madeira0,... GPU=1 -> scripts/montar_portao2.py; depois python3 scripts/integrar_portao.py <render> <repo>",
+ "melhorias": [
+  "arestas biseladas",
+  "sujidade junto ao chão",
+  "seteiras escuras",
+  "telhados com espessura",
+  "arco de pedra até ao chão (pilares + arco semicircular)",
+  "estandartes da pedra nas torres"
+ ],
+ "portasAbertas": "118 graus; abrem a 2,6 casas e fecham devagar"
+}
