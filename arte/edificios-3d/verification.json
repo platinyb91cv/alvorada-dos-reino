@@ -10,7 +10,7 @@
  "amostras": 32,
  "quadros": 34,
  "escalaAtlas": 1.5,
- "atlasSha256": "b008a76592f9f9bc4e504471db7be32e9bfdba25f619ccf0649a549756fab1d5",
+ "atlasSha256": "4a877bf0180799846321db37277c0bffa9110f5e42d2ed9af92fdf7c09f5d4ac",
  "detalhe": "enxaimel, sobrado em balanço, cumeeira, caibros, portadas, lenha, carroça, chão de terra batida",
  "pintura": "Gemini (texto -> imagem, sem créditos): casas, torres, armazém, ferreiro, Centro da Vila, quartel, arquearia, estábulo (Pedra); o resto continua 3D do Blender",
  "mercadoModelo": {
@@ -30,9 +30,10 @@
  },
  "sombraEmbutidaRemovida": 776460,
  "centro2Pintado": {
-  "origem": "arte/pintura-castelo/fonte/castelo_centro_v3.png",
+  "origem": "arte/pintura-castelo/fonte/castelo_centro_v4.png",
   "script": "arte/pintura-castelo/scripts/castelo_centro.py",
-  "inclinacaoBase": 0.51,
-  "sitios": 12
+  "inclinacaoBase": 0.63,
+  "achatado": 0.797,
+  "sitios": 11
  }
 }
