@@ -329,6 +329,9 @@ body.ingame:not(.gfx-leve) #grade{display:block}
 #adBox{position:fixed;inset:0;z-index:99;background:rgba(0,0,0,.82);display:flex;align-items:center;justify-content:center}#adBox[hidden]{display:none}
 #adBox>div{display:flex;flex-direction:column;gap:8px;align-items:center;padding:18px 26px;border-radius:14px;background:#1c1410;border:1px solid var(--trim);color:#f5e3c8;min-width:240px}
 #adBox i{display:block;width:200px;height:6px;border-radius:3px;background:rgba(255,255,255,.12);overflow:hidden}#adBox i b{display:block;height:100%;width:0;background:var(--trim-hi);transition:width .2s linear}
+.big.bot{border-color:#7fb3ff;color:#dbe9ff}.big.bot.on{background:#2f55d4;color:#fff;border-color:#9fc0ff}
+#botTag{display:none;position:absolute;left:calc(env(safe-area-inset-left,0px) + 10px);top:calc(env(safe-area-inset-top,0px) + 44px);z-index:6;padding:3px 12px;border-radius:12px;background:rgba(47,85,212,.85);color:#fff;font:800 12px var(--f-body);letter-spacing:.06em;pointer-events:none;box-shadow:0 2px 8px rgba(0,0,0,.4)}
+body.bot.ingame #botTag{display:block}
 .card.wide{max-width:620px}.card h4{margin:6px 0 0;font-family:var(--f-display);color:var(--trim-hi);font-size:14px;letter-spacing:.05em;align-self:flex-start}
 .pfhead{display:flex;align-items:center;gap:12px;width:100%}.pfhead>div{flex:1;display:flex;flex-direction:column;gap:4px;text-align:left}.pfhead input{font-size:18px;padding:7px 10px;border-radius:6px;border:2px solid var(--rim);background:#120c08;color:var(--parch);font-weight:700}
 .pfhead small{color:var(--muted)}.pfhead b,.fcode{color:var(--trim-hi);letter-spacing:.15em;cursor:copy;font-family:var(--f-display)}
@@ -406,6 +409,7 @@ input{font-family:inherit;-webkit-user-select:text;user-select:text;touch-action
   </div>
   <div id="rotate" aria-live="polite"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><rect x="7" y="2.5" width="10" height="19" rx="2"/><path d="M11 18.5h2"/></svg><b>Roda o telemóvel</b><span>O jogo joga-se com o ecrã deitado.</span></div>
   <div id="toast"></div>
+  <div id="botTag" aria-live="polite">🤖 BOT A JOGAR</div>
   <div id="coach" hidden role="status" aria-live="polite"><div class="ch-top"><span class="ch-step"></span><button class="ch-skip" type="button">Saltar tutorial</button></div><p class="ch-txt"></p><div class="ch-bar"><i></i></div></div>
   <div id="grp"><button data-g="0">1<small></small></button><button data-g="1">2<small></small></button><button data-g="2">3<small></small></button><button id="bAlert" hidden title="Ir para o ataque">⚠️</button><button id="bKing" hidden title="O teu Rei">👑</button></div>
   <div id="objBox" hidden><h4 id="objTitle"></h4><ul id="objList"></ul></div>
@@ -659,7 +663,7 @@ input{font-family:inherit;-webkit-user-select:text;user-select:text;touch-action
     <div class="card">
       <h2>Jogo pausado</h2>
       <div class="row"><button class="big pri" id="bResume">Continuar</button><button class="big" id="bRestart">Recomeçar</button><button class="big" id="bQuit">Menu principal</button></div>
-      <div class="row"><button class="big" id="bSave">Guardar jogo</button><button class="big ad" id="bAdGold" hidden>🎬 +100 ouro</button><button class="big" id="bNetSave" hidden>Gravar e sair</button><button class="big" id="bSound">Som: ligado</button><button class="big" id="bVib">Vibração: ligada</button><button class="big" id="bVoz">Voz: ligada</button><button class="big" id="bGfx">Gráficos: alto</button><button class="big" id="bDN">Dia e noite: sim</button></div>
+      <div class="row"><button class="big" id="bSave">Guardar jogo</button><button class="big bot" id="bBot" hidden>🤖 Bot: desligado</button><button class="big ad" id="bAdGold" hidden>🎬 +100 ouro</button><button class="big" id="bNetSave" hidden>Gravar e sair</button><button class="big" id="bSound">Som: ligado</button><button class="big" id="bVib">Vibração: ligada</button><button class="big" id="bVoz">Voz: ligada</button><button class="big" id="bGfx">Gráficos: alto</button><button class="big" id="bDN">Dia e noite: sim</button></div>
       <div class="row audio"><label>🎵 Música<input type="range" id="vMusic" min="0" max="100" value="40"></label><label>🔊 Efeitos<input type="range" id="vSfx" min="0" max="100" value="85"></label><label>🌿 Ambiente<input type="range" id="vAmb" min="0" max="100" value="55"></label></div>
     </div>
   </div>
@@ -2023,6 +2027,26 @@ function aiBuild(me,type,vills,cx,cy){
   return !!b;
 }
 function aiUpdate(dt){for(const a of AIs)if(a)aiRun(a,dt)}
+// ---------- Bot que joga sozinho (só na conta do criador do jogo, para transmissões em direto) ----------
+// Usa a mesma IA do computador, mas pelo jogador (sem bónus: mult 1), só contra o computador ou no Reino/campanha, nunca online.
+// A câmara vai sozinha para onde há ação (combate, obras, Centro da Vila). As partidas com o bot não contam para a pontuação nem conquistas.
+const BOT_EMAILS=['fabispaty46@gmail.com'];
+const BOT={on:false,cam:null,next:0};
+function botAllowed(){try{if(location.hostname==='localhost'&&new URLSearchParams(location.search).get('bot')==='teste')return true}catch(e){}
+  return !!(ACC&&ACC.user&&ACC.user.email&&BOT_EMAILS.includes(String(ACC.user.email).toLowerCase()))}
+function botSet(on){if(on&&(!botAllowed()||NET.on||!running))return;BOT.on=!!on;document.body.classList.toggle('bot',BOT.on);
+  if(BOT.on){const A=mkAI(ME,DIFF[2]);A.mult=1;A.bot=true;A.nextAttack=Math.min(A.nextAttack,600);AIs[ME]=A;G.botUsed=true;BOT.next=0;toast('🤖 Bot ligado: o reino joga sozinho')}
+  else{AIs[ME]=null;BOT.cam=null;toast('Bot desligado: voltas a jogar tu')}
+  botUI()}
+function botUI(){const b=$('bBot');if(!b)return;b.hidden=!(botAllowed()&&!NET.on&&running);b.classList.toggle('on',BOT.on);b.textContent=BOT.on?'🤖 Bot: ligado':'🤖 Bot: desligado'}
+$('bBot').onclick=()=>{sfx('click');botSet(!BOT.on);if(BOT.on&&paused)togglePause()};
+function botDirector(dt){if(!G||!running)return;BOT.next-=dt;
+  if(BOT.next<=0){BOT.next=6;const mine=ents.filter(e=>e.o===ME);
+    const fight=mine.filter(e=>e.kind==='u'&&e.d.mil&&(e.state==='attack'||alive(e.target)));
+    let f=null;if(fight.length){let sx=0,sy=0;for(const u of fight){sx+=u.x;sy+=u.y}f={x:sx/fight.length,y:sy/fight.length}}
+    else{const work=mine.filter(e=>e.kind==='b'&&!e.done);const tc=mine.find(e=>e.type==='centro');const b=work.length?work[Math.floor(G.time/6)%work.length]:tc;if(b)f={x:b.tx+b.w/2,y:b.ty+b.h/2}}
+    if(f){const p=proj(f.x,f.y);BOT.cam={x:p.x-vw/2/cam.z,y:p.y-(vh-70)/2/cam.z}}}
+  if(BOT.cam){const k=Math.min(1,dt*1.6);cam.x+=(BOT.cam.x-cam.x)*k;cam.y+=(BOT.cam.y-cam.y)*k;clampCam()}}
 function aiRun(AI,dt){
   AI.t+=dt;AI.tick-=dt;if(AI.tick>0)return;AI.tick=1;
   const me=AI.me,en=1-me,D=aiD(AI);
@@ -5618,7 +5642,7 @@ $('bHome').onclick=()=>{const tc=ents.find(e=>e.kind==='b'&&e.o===ME&&e.type==='
 $('bChat').onclick=()=>{const b=$('chatBox');b.hidden=!b.hidden;if(!b.hidden)setTimeout(()=>$('chatIn').focus(),50)};
 $('bSpeed').onclick=()=>{speed=speed===1?1.5:speed===1.5?2:speed===2?3:1;$('bSpeed').textContent=speed+'×';if(speed===3)toast('Velocidade 3×')};
 $('btnMenu').onclick=togglePause;
-function togglePause(){if(!running)return;try{adGoldUI()}catch(e){}if(NET.on){$('sPause').hidden=!$('sPause').hidden;netPauseUI();return}paused=!paused;$('sPause').hidden=!paused;audioPause(paused)}
+function togglePause(){if(!running)return;try{adGoldUI();botUI()}catch(e){}if(NET.on){$('sPause').hidden=!$('sPause').hidden;netPauseUI();return}paused=!paused;$('sPause').hidden=!paused;audioPause(paused)}
 function netPauseUI(){const on=NET.on;$('bSave').hidden=on;$('bNetSave').hidden=!on;$('bRestart').textContent=on?'Desistir':'Recomeçar';$('sPause').querySelector('h2').textContent=on?'Menu (a partida continua)':'Jogo pausado'}
 $('bResume').onclick=togglePause;
 $('bRestart').onclick=()=>{$('sPause').hidden=true;if(NET.on){if(confirmResign())act('resign',{});return}if(G.reino){if(Date.now()-resignArm<2500){resignArm=0;reinoRetry()}else{resignArm=Date.now();$('sPause').hidden=false;toast('Volta ao último capítulo cumprido. Toca outra vez para confirmar.',true)}return}if(G.camp!=null){campStart(G.camp);return}if(G.daily){$('bDaily').onclick();return}const sd=Math.floor(Math.random()*1e9);startGame(sd,{map:G.map,vic:G.vic,civ:G.civ})};
@@ -5692,7 +5716,7 @@ try{const d=localStorage.getItem('alv_diff');if(d!=null){difficulty=+d;document.
 audioLoad();$('bSound').textContent='Som: '+(AUD.on?'ligado':'desligado');$('vMusic').value=Math.round(AUD.vol.music*100);$('vSfx').value=Math.round(AUD.vol.sfx*100);$('vAmb').value=Math.round(AUD.vol.amb*100);
 
 /* ---------------- início / fim ---------------- */
-function startGame(seed,opts){
+function startGame(seed,opts){BOT.on=false;BOT.cam=null;document.body.classList.remove('bot');
   const mode=NET.on?'normal':gameMode;seed=seed??Math.floor(Math.random()*1e9);
   const O=opts||(NET.on?{}:setupOpts(seed));
   G={seed,time:0,starts:null,amoveNext:false,over:false,fishRespawn:[],form:'livre',cmdMode:null,mode,
@@ -5803,7 +5827,7 @@ function loadGame(key){
     if(st==='move'){if(e.dest){const am=e.amove;moveTo(e,e.dest.x,e.dest.y);e.amove=am}else st='idle'}
     if(st!=='move')e.state=st;
   }
-  AIs=(d.AIs||[]).map(a=>a?{...a}:null);AI=AIs[1];
+  AIs=(d.AIs||[]).map(a=>a?{...a}:null);AI=AIs[1];BOT.on=!!(AIs[ME]&&AIs[ME].bot&&botAllowed());if(AIs[ME]&&AIs[ME].bot&&!BOT.on)AIs[ME]=null;document.body.classList.toggle('bot',BOT.on);
   vis=Uint8Array.from(d.vis,ch=>+ch);
   fogCanvas=mkCanvas(W,H);fogCtx=fogCanvas.getContext('2d');fogImg=fogCtx.createImageData(W,H);
   sel=[];projs=[];fx=[];placing=null;menuMode=null;lastAlert=-99;lastPop=-99;lastImp=-99;GROUPS=[[],[],[]];
@@ -6001,7 +6025,8 @@ function achvTick(dt){if(!running||NET.on&&!NET.game||G.mode==='build')return;ac
   if((G.tradeGold||0)>=500)achv('comercio');
   if(G.vic==='sobrevivencia'&&G.surv&&G.surv.wave>=11)achv('sobrev10');
   if(G.bell&&G.bell[ME]&&G.time-(G.alertAt??-99)<30)achv('sino')}
-function achvEnd(win,why){if(!win)return;const real=!['forfeit','peer_quit','resign_peer','abandono'].includes(why);if(!real)return;if(NET.on){achv('online')}else if(G.mode!=='build'){if(AIs[1])achv('primeira');if(G.camp==null&&!G.daily&&(AIs[1]&&AIs[1].di===2))achv('dificil')}
+function achvEnd(win,why){if(G&&G.botUsed)return; // partidas jogadas pelo bot não contam para conquistas
+if(!win)return;const real=!['forfeit','peer_quit','resign_peer','abandono'].includes(why);if(!real)return;if(NET.on){achv('online')}else if(G.mode!=='build'){if(AIs[1])achv('primeira');if(G.camp==null&&!G.daily&&(AIs[1]&&AIs[1].di===2))achv('dificil')}
   if(G.map==='arquipelago')achv('ilhas');if(G.vic==='regicidio')achv('rei');if(G.vic==='total')achv('total');if(why==='surv_win')achv('sobrev20');
   if(G.time<15*60&&G.vic!=='sobrevivencia')achv('rapido');if(G.daily)achv('diario');if(G.camp!=null&&G.camp+1>=CAMP.length)achv('camp')}
 function cosm(){try{return JSON.parse(localStorage.getItem(ukey('alv_cosm'))||'{}')}catch(e){return{}}}
@@ -6733,8 +6758,9 @@ function modeHud(){const el=$('modeT');let ic='',tx='',warn=false;
   else if(G.daily){ic='🏆';tx='Desafio de hoje'}
   el.hidden=!ic;if(ic){el.firstChild.textContent=ic;el.lastChild.textContent=tx;el.classList.toggle('warn',warn)}}
 function endGame(win,wonder,why){
+  if(BOT.on){BOT.on=false;document.body.classList.remove('bot')}
   G.won=!!win;running=false;$('coach').hidden=true;document.body.classList.remove('coaching');document.body.classList.remove('ingame');if(!NET.on&&!G.reino){clearSave();if(ACC.sb&&ACC.user&&!ACC.preview)ACC.sb.from('cloud_saves').delete().eq('user_id',ACC.user.id).then(()=>{},()=>{})}$('endRate').hidden=true;
-  if(NET.on)netReport(win,why||(wonder?'wonder':'normal'));else if(G.mode!=='build')accRecordSP(win);ambStop();MUS.want='menu';audioPause(false);snd(win?'victory':'defeat',null,null,{force:1});if(win||why==='king')setTimeout(()=>voz(win?'vitoria':'derrota',1),1400);
+  if(NET.on)netReport(win,why||(wonder?'wonder':'normal'));else if(G.mode!=='build'&&!G.botUsed)accRecordSP(win);ambStop();MUS.want='menu';audioPause(false);snd(win?'victory':'defeat',null,null,{force:1});if(win||why==='king')setTimeout(()=>voz(win?'vitoria':'derrota',1),1400);
   $('endTitle').textContent=why==='reino'?'O reino caiu':why==='surv_win'?'Vitória lendária':win?'Vitória':'Derrota';
   let extraTxt='';
   if(why==='surv'||why==='surv_win'){const n=G.surv?G.surv.wave-(why==='surv'?1:0):0;let best=0;try{best=+(localStorage.getItem(ukey('alv_surv_best'))||0)}catch(e){}if(n>best){try{localStorage.setItem(ukey('alv_surv_best'),n)}catch(e){}extraTxt=' Novo recorde!'}else extraTxt=' Recorde: '+best+' vagas.'}
@@ -6767,7 +6793,7 @@ function step(dt){
   updProjs(dt);
   for(let i=fx.length-1;i>=0;i--){fx[i].t+=dt;if(fx[i].t>=fx[i].life){const f=fx[i];fx.splice(i,1);if(f.type==='spark'||f.type==='hit'||f.type==='dust'){if(FXPOOL.length<200)FXPOOL.push(f)}}}
   recount();
-  aiUpdate(dt);
+  aiUpdate(dt);if(BOT.on)botDirector(dt);
   visT-=dt;if(visT<=0){visT=.2;updVis()}
   for(let i=G.fishRespawn.length-1;i>=0;i--){const f=G.fishRespawn[i];f.t-=dt;if(f.t<=0){G.fishRespawn.splice(i,1);addFish(f.x,f.y,150)}}
   if(G.wonder){const w=byId.get(G.wonder.id);
