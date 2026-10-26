@@ -19,8 +19,8 @@ async def main():
           S.t=W('torre',q.x+9,q.y+2);S.t.lvl=3;S.ta=W('muralhaPedra',q.x+11,q.y+3);S.tb=W('muralhaPedra',q.x+9,q.y+4);S.tc=W('muralhaPedra',q.x+10,q.y+1);
           for(let j=0;j<7;j++)S['n'+j]=W(j===3?'portaoPedra':'muralhaPedra',q.x+12,q.y+3+j);    // ao longo de y
           window.__S=S;window.__q=q;for(const k in BCACHE)delete BCACHE[k];
-          const gx=S.m4,gy=S.n3;return{pintado:PGATE.ready,dir_x:bldVariant(gx),dir_y:bldVariant(gy),debaixo_das_torres:[S.m3,S.m5,S.n2,S.n4].map(b=>bldVariant(b)&768),
-            longe:[S.m2,S.m6].map(b=>bldVariant(b)&768),topz_portao:TOPZ(gx),topz_torre_do_portao:TOPZ(S.m3),topz_torre3:TOPZ(S.t)}}""")
+          const gx=S.m4,gy=S.n3;return{pintado:PGATE.ready,dir_x:bldVariant(gx),dir_y:bldVariant(gy),perto_do_portao:[S.m1,S.m2,S.m3,S.m5,S.m6,S.m7].map(b=>(bldVariant(b)&768)+':'+(bldVariant(b)>>10&7)),topz_muros:[S.m3,S.m2,S.m1].map(TOPZ),
+            longe:[S.m0,S.m8].map(b=>bldVariant(b)&768),topz_portao:TOPZ(gx),topz_torre_do_portao:TOPZ(S.m3),topz_torre3:TOPZ(S.t)}}""")
         await pg.evaluate("()=>{cam.z=1.6;centerCam(__q.x+6,__q.y+5)}"); await pg.wait_for_timeout(1200); await pg.screenshot(path=OUT + '/castelo_geral.png')
         # soldados em cima e porta aberta (dono ao pé)
         R['subir'] = await pg.evaluate("""()=>{const S=__S;for(const b of [S.m4,S.m3,S.m5,S.t]){const us=Array.from({length:b.d.garr},(_,k)=>mkUnit(ME,'arqueiro',b.tx+k*.3,b.ty+2));act('garrison',{b:b.id,u:us.map(u=>u.id)})}

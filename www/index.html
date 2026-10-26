@@ -817,7 +817,7 @@ BLDS.centro.garr=10;BLDS.torre.garr=5;BLDS.casa.garr=3;
 // soldados em cima das muralhas de pedra e dos portões (adarve): só infantaria e atiradores; os atiradores disparam lá de cima
 BLDS.muralhaPedra.garr=2;BLDS.muralhaFort.garr=3;BLDS.portaoPedra.garr=4;BLDS.portaoMadeira.garr=2;
 const onWall=b=>!!(b&&(b.d.wall||b.d.gate));
-function TOPZ(e){if(typeof PGATE!=='undefined'&&PGATE.ready){if(e.type==='portaoPedra')return PGATE.meta.walk;if(e.d.wall&&(bldVariant(e)&768))return PGATE.meta.towerTop}
+function TOPZ(e){if(typeof PGATE!=='undefined'&&PGATE.ready){if(e.type==='portaoPedra')return PGATE.meta.walk;if(e.d.wall){const v=bldVariant(e);if(v&768){const k=v>>10&7,S=PGATE.meta.span||1,R=PGATE.meta.rTorre||.36;if(k<=S-R)return PGATE.meta.walk;if(Math.abs(k-S)<=R+.01)return PGATE.meta.towerTop}}}
   if(e.type==='portaoMadeira')return [1.28,1.65,1.8][Math.min(2,P[e.o]?P[e.o].age:0)];if(e.d.wall&&e.type!=='muralhaMadeira'){const m=bldVariant(e)&15,tw=!(m===5||m===10);return (e.type==='muralhaFort'?1.5:1.3)+(tw?.44:0)} // pontas/cantos têm torreão mais alto
   if(e.type==='muralhaPedra')return .95;if(e.type==='muralhaFort')return 1.12;if(e.type==='portaoPedra')return (P[e.o]&&P[e.o].age>=2)?2.0:1.8;if(e.type==='portaoMadeira')return 1.0;
   if(e.type==='torre')return [0,2.22,2.45,3.3][e.lvl||1];return 0}
@@ -2679,7 +2679,9 @@ function bldVariant(e){
     const gAt=(x,y,d)=>{const n=inb(x,y)&&byId.get(bldAt[idx(x,y)]);return !!n&&n.o===e.o&&n.d.gate&&bldVariant(n)===d};
     if((m&4)&&gAt(e.tx-1,e.ty,'x'))m|=64;if((m&8)&&gAt(e.tx,e.ty-1,'y'))m|=128;
     if(typeof PGATE!=='undefined'&&PGATE.ready){const pg=(x,y,d)=>{const n=inb(x,y)&&byId.get(bldAt[idx(x,y)]);return !!n&&n.type==='portaoPedra'&&bldVariant(n)===d};
-      if(pg(e.tx-1,e.ty,'x')||pg(e.tx,e.ty-1,'y'))m|=256;else if(pg(e.tx+1,e.ty,'x')||pg(e.tx,e.ty+1,'y'))m|=512} // a torre pintada fica em cima deste muro
+      // muro a k casas de uma casa do portão pintada (que se estende span+raio para cada lado): 256 = à frente (recortado), 512 = atrás (tapado); k nos bits 10-12
+      const S=PGATE.meta.span||1,R=PGATE.meta.rTorre||.36,N=Math.ceil(S+R-.5);
+      for(let k=1;k<=N;k++){if(pg(e.tx-k,e.ty,'x')||pg(e.tx,e.ty-k,'y')){m|=256|(k<<10);break}if(pg(e.tx+k,e.ty,'x')||pg(e.tx,e.ty+k,'y')){m|=512|(k<<10);break}}}
     return m}
   return '';
 }
@@ -3081,7 +3083,7 @@ function bldSprite(type,age,o,vr){
   const s={cv,ox,oy,CW,CH};BCACHE[key]=s;return s;
 }
 // portões 3D (Blender, arte/portoes-3d): madeira nas 3 idades, pedra no Bronze/Ferro; direções x/y; portas fechadas, a meio e abertas
-const PGATE_DATA={"file":"portoes-pintados.webp","scale":2,"atlasSha256":"99520178e12f72edeae009e6448007f49879b0eaf97d7b36aa4783f28b51910a","walk":1.38,"towerTop":1.93,"rTorre":0.36,"frames":{"pedra_x_0":[2,2,211,270,97.68,181.38],"pedra_x_1":[428,2,211,270,97.68,181.38],"pedra_x_2":[2,274,211,270,97.68,181.38],"pedra_y_0":[215,2,211,270,113.32,181.38],"pedra_y_1":[641,2,211,270,113.32,181.38],"pedra_y_2":[215,274,211,270,113.32,181.38]}};
+const PGATE_DATA={"file":"portoes-pintados.webp","scale":2,"atlasSha256":"1d5c3670a7672698fc0d4bfbbd4a58df9873efb93c9a85abd07e02cdae6abb03","walk":1.31,"span":2.0,"towerTop":2.21,"rTorre":0.55,"frames":{"pedra_x_0":[2,2,359,388,180.43,265.51],"pedra_x_1":[2,392,359,388,180.43,265.51],"pedra_x_2":[2,782,359,388,180.43,265.51],"pedra_y_0":[363,2,359,388,178.57,265.51],"pedra_y_1":[363,392,359,388,178.57,265.51],"pedra_y_2":[363,782,359,388,178.57,265.51]}};
 const GATE3D_DATA={"file":"portoes-3d.webp","scale":2,"atlasSha256":"442a5dd921f228252798ac301cffc464959f635de34debf98d25b160c1cefe39","frames":{"madeira0_x_0":[2,2,306,400,126.0,232.8],"madeira0_x_1":[310,2,306,400,126.0,232.8],"madeira0_x_2":[618,2,306,400,126.0,232.8],"madeira0_y_0":[926,2,309,400,129.0,232.8],"madeira0_y_1":[1237,2,309,400,129.0,232.8],"madeira0_y_2":[1548,2,309,400,129.0,232.8],"madeira1_x_0":[2,404,289,400,109.0,232.8],"madeira1_x_1":[293,404,287,400,107.0,232.8],"madeira1_x_2":[582,404,287,400,107.0,232.8],"madeira1_y_0":[871,404,306,400,126.0,232.8],"madeira1_y_1":[1179,404,306,400,126.0,232.8],"madeira1_y_2":[1487,404,306,400,126.0,232.8],"madeira2_x_0":[2,806,287,400,107.0,232.8],"madeira2_x_1":[291,806,287,400,107.0,232.8],"madeira2_x_2":[580,806,287,400,107.0,232.8],"madeira2_y_0":[869,806,310,400,130.0,232.8],"madeira2_y_1":[1181,806,310,400,130.0,232.8],"madeira2_y_2":[1493,806,310,400,130.0,232.8],"pedra1_x_0":[2,1208,271,400,91.0,232.8],"pedra1_x_1":[275,1208,271,400,91.0,232.8],"pedra1_x_2":[548,1208,271,400,91.0,232.8],"pedra1_y_0":[821,1208,277,400,97.0,232.8],"pedra1_y_1":[1100,1208,277,400,97.0,232.8],"pedra1_y_2":[1379,1208,275,400,95.0,232.8],"pedra2_x_0":[1656,1208,269,400,89.0,232.8],"pedra2_x_1":[2,1610,269,400,89.0,232.8],"pedra2_x_2":[273,1610,269,400,89.0,232.8],"pedra2_y_0":[544,1610,280,400,100.0,232.8],"pedra2_y_1":[826,1610,278,400,98.0,232.8],"pedra2_y_2":[1106,1610,278,400,98.0,232.8]}};
 const GATE3D={ready:false,img:null,wide:true,teams:new Map(),meta:GATE3D_DATA};
 // casa do portão de pedra pintada (arte/pintura-castelo): duas torres redondas que ficam nas casas de muralha ao lado
@@ -3110,7 +3112,7 @@ function wall3dSprite(type,o,m){if(!WALL3D.ready||!WALL3D_KIND[type])return null
   const cv=mkCanvas(CW*SS,CH*SS),c=cv.getContext('2d');c.scale(SS,SS);c.imageSmoothingEnabled=true;c.imageSmoothingQuality='high';c.drawImage(tintCrop(WALL3D,team,sx,sy,w,h),0,0,w,h,1,1,w*k,h*k);
   const r={cv,ox:ax*k+1,oy:ay*k+1,CW,CH};BCACHE[key]=r;return r}
 // edifícios 3D (Blender, arte/edificios-3d): casas, quartel, Centro da Vila… por idade (torre: por nível), mesma câmara e luz dos portões
-const BLD3D_DATA={"file":"edificios-3d.webp","scale":1.5,"atlasSha256":"8e876e6eca1792a1be5b9ed63ba33e649dba3c503fc05b74aa30e9b2d7a2f53a","frames":{"armazem_0":[1702,1566,188,142,93.66,40.3],"armazem_1":[192,1788,186,135,93.1,30.94],"armazem_2":[2,1788,188,140,93.49,34.96],"arquearia_0":[2,1566,280,220,139.93,46.97],"arquearia_1":[284,1566,280,215,140.21,54.73],"arquearia_2":[1708,990,280,244,140.03,73.81],"casa_0":[1135,1566,187,163,93.31,61.7],"casa_1":[1513,1566,187,153,93.25,51.59],"casa_2":[566,1566,187,186,93.2,83.66],"centro_0":[2,1321,280,243,139.85,77.97],"centro_1":[1144,990,280,256,140.32,104.5],"centro_2":[862,990,280,257,140.48,103.25],"doca_0":[566,1321,213,232,135.0,136.95],"doca_1":[781,1321,213,232,135.0,136.95],"doca_2":[996,1321,213,232,135.0,136.95],"estabulo_0":[1211,1321,280,232,140.32,61.36],"estabulo_1":[2,655,348,333,195.0,195.15],"estabulo_2":[352,655,351,333,195.0,195.15],"ferreiro_0":[1324,1566,187,160,93.55,52.3],"ferreiro_1":[945,1566,188,178,93.29,76.9],"ferreiro_2":[755,1566,188,186,93.86,75.04],"maravilha_2":[981,2,510,452,255.0,253.35],"mercado_1":[2,990,342,329,195.0,195.15],"mercado_2":[346,990,342,329,195.0,195.15],"oficina_1":[1097,655,352,332,195.0,195.15],"oficina_2":[705,655,390,333,195.0,195.15],"quartel_0":[1493,1321,280,230,140.03,59.97],"quartel_1":[284,1321,280,236,140.12,75.2],"quartel_2":[1426,990,280,256,139.86,95.5],"templo_1":[1451,655,334,332,195.0,195.15],"templo_2":[1493,2,334,334,195.0,195.15],"torre_1":[2,2,473,651,310.12,376.74],"torre_2":[477,2,502,651,310.12,376.74],"torre_3":[690,990,170,291,84.45,217.55]}};
+const BLD3D_DATA={"file":"edificios-3d.webp","scale":1.5,"atlasSha256":"96b5ac4f218ff3ade16d687d6b1157bccf1071fe7cceb252e02e0b193a9a8a3e","frames":{"armazem_0":[1702,1566,188,142,93.66,40.3],"armazem_1":[192,1788,186,135,93.1,30.94],"armazem_2":[2,1788,188,140,93.49,34.96],"arquearia_0":[2,1566,280,220,139.93,46.97],"arquearia_1":[284,1566,280,215,140.21,54.73],"arquearia_2":[1698,990,280,244,140.03,73.81],"casa_0":[1135,1566,187,163,93.31,61.7],"casa_1":[1513,1566,187,153,93.25,51.59],"casa_2":[566,1566,187,186,93.2,83.66],"centro_0":[2,1321,280,243,139.85,77.97],"centro_1":[1134,990,280,256,140.32,104.5],"centro_2":[852,990,280,257,140.48,103.25],"doca_0":[566,1321,213,232,135.0,136.95],"doca_1":[781,1321,213,232,135.0,136.95],"doca_2":[996,1321,213,232,135.0,136.95],"estabulo_0":[1211,1321,280,232,140.32,61.36],"estabulo_1":[2,655,348,333,195.0,195.15],"estabulo_2":[352,655,351,333,195.0,195.15],"ferreiro_0":[1324,1566,187,160,93.55,52.3],"ferreiro_1":[945,1566,188,178,93.29,76.9],"ferreiro_2":[755,1566,188,186,93.86,75.04],"maravilha_2":[981,2,510,452,255.0,253.35],"mercado_1":[2,990,342,329,195.0,195.15],"mercado_2":[346,990,342,329,195.0,195.15],"oficina_1":[1097,655,352,332,195.0,195.15],"oficina_2":[705,655,390,333,195.0,195.15],"quartel_0":[1493,1321,280,230,140.03,59.97],"quartel_1":[284,1321,280,236,140.12,75.2],"quartel_2":[1416,990,280,256,139.86,95.5],"templo_1":[1451,655,334,332,195.0,195.15],"templo_2":[1493,2,334,334,195.0,195.15],"torre_1":[2,2,473,651,310.12,376.74],"torre_2":[477,2,502,651,310.12,376.74],"torre_3":[690,990,160,296,80.05,218.59]}};
 const BLD3D={ready:false,img:null,wide:true,teams:new Map(),meta:BLD3D_DATA};
 (()=>{if(!BLD3D_DATA.file)return;const im=new Image();im.onload=()=>{BLD3D.img=im;BLD3D.ready=true;for(const k in BCACHE)delete BCACHE[k];try{PORTS.clear()}catch(e){}try{if(typeof MBG!=='undefined'&&MBG.L&&!document.body.classList.contains('ingame')){MBG.L=null;menuBgStart()}}catch(e){}};im.src='assets/edificios-extra/'+BLD3D_DATA.file})();
 function bld3dKey(type,age,vr){const F=BLD3D.meta.frames;if(!F)return null;
@@ -3145,9 +3147,10 @@ function clipBox(c,x0,x1,y0,y1,z){const ZP1=HW*2/Math.SQRT2*Math.cos(Math.PI/6),
   for(const p of P.slice().reverse()){while(up.length>1&&cr(up[up.length-2],up[up.length-1],p)<=0)up.pop();up.push(p)}
   const H=lo.slice(0,-1).concat(up.slice(0,-1));c.beginPath();H.forEach((p,i)=>i?c.lineTo(p[0],p[1]):c.moveTo(p[0],p[1]));c.closePath();c.clip()}
 // muro à frente de uma torre da casa do portão pintada: só a parte entre a parede da torre e o fim da casa
-function pgateWallClip(c,e){const v=bldVariant(e);if(!(v&256))return false;const R=PGATE.meta.rTorre||.36,T=.34,Z=2.4;
+function pgateWallClip(c,e){const v=bldVariant(e);if(!(v&256))return false;const k=v>>10&7,S=PGATE.meta.span||1,R=PGATE.meta.rTorre||.36,T=.34,Z=2.6;
   const g=(x,y)=>{const n=inb(x,y)&&byId.get(bldAt[idx(x,y)]);return n&&n.type==='portaoPedra'?n:null};
-  if(g(e.tx-1,e.ty))clipBox(c,e.tx+.5+R,e.tx+1.02,e.ty+.5-T,e.ty+.5+T,Z);else clipBox(c,e.tx+.5-T,e.tx+.5+T,e.ty+.5+R,e.ty+1.02,Z);return true}
+  const ax=!!g(e.tx-k,e.ty)&&bldVariant(g(e.tx-k,e.ty))==='x',st=.5-k+S+R; // a parte visível começa na parede da torre (st casas depois do início deste muro)
+  if(st>=1)return 'skip';if(ax)clipBox(c,e.tx+st,e.tx+1.02,e.ty+.5-T,e.ty+.5+T,Z);else clipBox(c,e.tx+.5-T,e.tx+.5+T,e.ty+st,e.ty+1.02,Z);return true}
 function towerWallStubs(c,e,near,lit){if(!WALL3D.ready)return;
   if((e.lvl||1)===3){ // torre redonda (nível 3) mais estreita que a base: os muros entram até à parede dela
     const at=(x,y)=>{if(!inb(x,y))return null;const n=byId.get(bldAt[idx(x,y)]);return n&&n.d.wall&&n.done?n:null};
@@ -4025,7 +4028,7 @@ function render(){UCFM=0;
         for(let zz=10;zz<hgt;zz+=14){c.beginPath();c.moveTo(a.x,a.y-zz);c.lineTo(b.x,b.y-zz);c.lineTo(d2.x,d2.y-zz);c.stroke()}
       }else{
         if(e.type==='torre')towerWallStubs(c,e,false,lit);
-        if(e.d.wall&&PGATE.ready&&(bldVariant(e)&256)){c.save();pgateWallClip(c,e);c.drawImage(lit?s.cv:darkOf(s.cv),dx,dy,s.CW,s.CH);c.restore()}else c.drawImage(lit?s.cv:darkOf(s.cv),dx,dy,s.CW,s.CH);
+        if(e.d.wall&&PGATE.ready&&(bldVariant(e)&256)){c.save();if(pgateWallClip(c,e)!=='skip')c.drawImage(lit?s.cv:darkOf(s.cv),dx,dy,s.CW,s.CH);c.restore()}else c.drawImage(lit?s.cv:darkOf(s.cv),dx,dy,s.CW,s.CH);
         if(e.type==='torre')towerWallStubs(c,e,true,lit);
         if(lit&&e.garr&&e.garr.length)drawGarrTop(c,e,performance.now()/1000);
         {const fr=bldFringe(e);if(fr)c.drawImage(lit?fr.cv:darkOf(fr.cv),p.x-fr.ox,p.y-fr.oy,fr.CW,fr.CH)}
