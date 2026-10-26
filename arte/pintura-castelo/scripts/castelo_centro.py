@@ -23,10 +23,17 @@ def calm_blues(im):
     a[..., :3] = gray[..., None] + (a[..., :3] - gray[..., None]) * k
     return Image.fromarray((a * 255).clip(0, 255).astype('uint8'))
 im = calm_blues(cutout(Image.open(src)))
-L, Rr, GY = 131, 1121, 790          # centros da base das torres dos cantos esquerdo/direito e o seu chão (px da pintura)
+V3 = 'v3' in src.name
+# centros da base das torres dos cantos esquerdo/direito e o seu chão (px da pintura); v3 = castelo com topos planos (inclinação da base 0,51)
+L, Rr, GY = (128, 1415, 627) if V3 else (131, 1121, 790)
+# v3: sítios onde ficam os soldados (topo das torres, casa do portão, caminhos de ronda) e o Rei (terraço da torre de menagem), em px da pintura
+STAND = {'rei': (885, 338), 't_frente': (815, 728), 't_esq': (128, 398), 't_dir': (1410, 398), 't_tras': (760, 135), 'portao': (495, 608),
+         'm_fe2': (683, 700), 'm_fd1': (1050, 660), 'm_fe1': (270, 540), 'm_fd2': (1230, 570), 'm_te': (450, 345), 'm_td': (1185, 390)} if V3 else {}
 s = 2 * 3 * 64 / (Rr - L) * .97     # largura da pegada 3x3 a 2x
 im = im.resize((round(im.width * s), round(im.height * s)), Image.LANCZOS)
 ax, ay = (L + Rr) / 2 * s, GY * s - 3 * 32   # canto de cima = canto esquerdo/direito sobe 96 px a 2x
+stand = {k: [round((x * s - ax) / 2, 1), round((y * s - ay) / 2, 1)] for k, (x, y) in STAND.items()}  # px do jogo (1x) a partir da âncora
 bb = im.getchannel('A').point(lambda v: 255 if v > 8 else 0).getbbox(); im = im.crop(bb); ax -= bb[0]; ay -= bb[1]
 im.save(out / 'centro_2.png'); af = out / 'anchors.json'; A = json.loads(af.read_text()) if af.exists() else {}
 A['centro|2'] = [round(ax, 2), round(ay, 2), 3, 3]; af.write_text(json.dumps(A, indent=1)); print('centro_2', im.size, round(s, 3), A['centro|2'])
+(out / 'castelo_stand.json').write_text(json.dumps(stand)); print('sitios', stand)
