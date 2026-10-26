@@ -1,0 +1,17 @@
+{
+ "atlasSha256": "c21ef5e3404d04f2cb02178ba70929e51d4336a9e21961c8cb53dde037d171d6",
+ "pecas": 85,
+ "pxPorCasa2x": 90.50966799187808,
+ "T": 0.62,
+ "H": {
+  "pedra": 1.3,
+  "fort": 1.5
+ },
+ "torre": {
+  "diametro": 1.7,
+  "piso": 3.3
+ },
+ "sombraDeChao": false,
+ "block": false,
+ "creditosMeshy": 0
+}

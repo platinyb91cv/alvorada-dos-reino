@@ -16,7 +16,7 @@ assert.match(edif,/        H = 2\.45\n/);assert.match(edif,/        Hb = 1\.3; H
 assert.match(html,/return \(e\.type==='muralhaFort'\?1\.5:1\.3\)\+\(tw\?\.44:0\)/);
 assert.match(html,/if\(e\.type==='portaoPedra'\)return \(P\[e\.o\]&&P\[e\.o\]\.age>=2\)\?2\.0:1\.8;/);
 assert.match(html,/if\(e\.type==='portaoMadeira'\)return \[1\.28,1\.65,1\.8\]/);
-assert.match(html,/if\(e\.type==='torre'\)return \[0,2\.22,2\.45,2\.98\]\[e\.lvl\|\|1\]/);
+assert.match(html,/if\(e\.type==='torre'\)return \[0,2\.22,2\.45,3\.3\]\[e\.lvl\|\|1\]/);
 assert.match(html,/const ZP=HW\*2\/Math\.SQRT2\*Math\.cos\(Math\.PI\/6\); \/\/ píxeis/,'no leftover render-scale fudge factor');
 // 4) muro ao lado da casa do portão: variantes renderizadas e escolhidas no jogo
 const W=JSON.parse(html.match(/const WALL3D_DATA=(\{[^\n]+\});/)[1]).frames;
