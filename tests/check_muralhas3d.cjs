@@ -10,5 +10,5 @@ let n=0;for(const t of ['madeira','pedra','fort'])for(let m=0;m<16;m++){const f=
  assert.ok(x>=0&&y>=0&&x+fw<=w&&y+fh<=h);assert.ok(fw<=72,'piece stays inside its screen column (+3 px of overlap each side)');assert.ok(ax>=0&&ax<=fw&&ay>0&&ay<=fh+40)}
 assert.equal(n,48);
 assert.match(html,/const WALL3D_KIND=\{muralhaMadeira:'madeira',muralhaPedra:'pedra',muralhaFort:'fort'\};/);
-assert.match(html,/if\(BLDS\[type\]\.wall\)\{const w3=wall3dSprite\(type,o,vr\);if\(w3\)return w3\}/);
+assert.match(html,/if\(BLDS\[type\]\.wall\)\{if\(\(vr\|0\)&256\)return EMPTY_SPR;const w3=wall3dSprite\(type,o,vr\);if\(w3\)return w3\}/);
 console.log('PASS: 3D walls (3 types × 16 joins)');
