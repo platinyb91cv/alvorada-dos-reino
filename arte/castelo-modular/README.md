@@ -43,3 +43,6 @@ python3 arte/castelo-modular/scripts/integrar_modular.py /tmp/mod .
 ## Provas e testes
 - Montagem de teste: `provas/teste/`. Resultado final: `provas/final/`.
 - Testes: `tests/check_castelo_modular.cjs` e `tests/e2e/castelo_modular.py`.
+
+## Tom areia
+Depois de `integrar_modular.py`, `scripts/tom_areia.py` põe a pedra no tom areia das peças pintadas (torre de menagem e Torre de Catapulta).
