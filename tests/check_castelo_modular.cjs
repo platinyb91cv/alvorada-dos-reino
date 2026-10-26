@@ -16,5 +16,5 @@ const v=JSON.parse(fs.readFileSync(path.join(root,'arte/castelo-modular/verifica
 const sc=fs.readFileSync(path.join(root,'arte/castelo-modular/scripts/montar_modular.py'),'utf8');
 assert.match(sc,/is_shadow_catcher/,'apanha-sombras retirado');assert.match(sc,/ShaderNodeHoldout/,'torre como recorte');assert.match(sc,/R\(30\)/);
 assert.match(html,/if\(CMOD\.ready&&CMOD_KIND\[type\]\)/,'muros usam o conjunto modular');assert.match(html,/cmodSprite\('tw_'\+CMOD_KIND\[n\.type\]\+'_'\+k/,'pedaços da torre');
-assert.match(html,/return\[0,2\.22,2\.45,3\.3\]|\[0,2\.22,2\.45,3\.3\]/);
+assert.match(html,/return\[0,2\.22,5\.45,3\.3\]|\[0,2\.22,5\.45,3\.3\]/);
 console.log('PASS: castelo modular ('+Object.keys(d.frames).length+' peças, '+w+'x'+h+', '+(webp.length/1024|0)+' KB)');

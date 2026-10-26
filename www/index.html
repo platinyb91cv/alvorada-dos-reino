@@ -787,7 +787,7 @@ const UNITS={
   elefante:{name:'Elefante',icon:'🐘',cls:'animal',hp:240,atk:11,arm:1,range:0,rate:2,speed:1.4,sight:5,age:9,r:.55,gaia:1,meat:600,fight:1},
 };
 const CLSNAME={inf:'infantaria',arch:'arqueiros',cav:'cavalaria',siege:'cerco',ship:'navios',vill:'aldeões'};
-const TOWER=[null,{name:'Torre de Vigia',atk:5,range:6.5,hp:320,sight:8},{name:'Torre de Flechas',atk:7,range:7.5,hp:480,sight:9,cost:{stone:80,wood:40},time:30,age:1},{name:'Torre Fortificada',atk:9,range:8.5,hp:750,sight:10,cost:{stone:150,gold:50},time:40,age:2,shots:2}];
+const TOWER=[null,{name:'Torre de Vigia',atk:5,range:6.5,hp:320,sight:8},{name:'Torre de Catapulta',atk:7,range:7.5,hp:480,sight:10,cost:{stone:80,wood:40},time:30,age:1,cat:{atk:16,range:9,minRange:2,rate:5}},{name:'Torre Fortificada',atk:9,range:8.5,hp:750,sight:10,cost:{stone:150,gold:50},time:40,age:2,shots:2}];
 const BLDS={
   centro:{name:'Centro da Vila',icon:'🏛️',w:3,h:3,art:1.2,hp:700,cost:{wood:275,stone:60},time:60,age:1,pop:5,drop:1,train:['aldeao'],techs:['arado','roda'],atk:4,range:6,rate:2,sight:8,proj:'arrow'},
   casa:{name:'Casa',icon:'🏠',w:2,h:2,hp:160,cost:{wood:30},time:14,age:0,pop:5,sight:3},
@@ -820,7 +820,7 @@ const onWall=b=>!!(b&&(b.d.wall||b.d.gate));
 function TOPZ(e){if(typeof PGATE!=='undefined'&&PGATE.ready){if(e.type==='portaoPedra')return PGATE.meta.walk;if(e.d.wall){const v=bldVariant(e);if(v&768){const k=v>>10&7,S=PGATE.meta.span||1,R=PGATE.meta.rTorre||.36;if(k<=S-R)return PGATE.meta.walk;if(Math.abs(k-S)<=R+.01)return PGATE.meta.towerTop}}}
   if(e.type==='portaoMadeira')return [1.28,1.65,1.8][Math.min(2,P[e.o]?P[e.o].age:0)];if(CMOD.ready&&CMOD_KIND[e.type])return CMOD.meta.H[CMOD_KIND[e.type]];if(pwallOn(e.type))return PWALL.meta.walk;if(e.d.wall&&e.type!=='muralhaMadeira'){const m=bldVariant(e)&15,tw=!(m===5||m===10);return (e.type==='muralhaFort'?1.5:1.3)+(tw?.44:0)} // pontas/cantos têm torreão mais alto
   if(e.type==='muralhaPedra')return .95;if(e.type==='muralhaFort')return 1.12;if(e.type==='portaoPedra')return (P[e.o]&&P[e.o].age>=2)?2.0:1.8;if(e.type==='portaoMadeira')return 1.0;
-  if(e.type==='torre')return [0,2.22,2.45,3.3][e.lvl||1];return 0}
+  if(e.type==='torre')return [0,2.22,5.45,3.3][e.lvl||1];return 0}
 const BUILD_MENU=['casa','quinta','curral','estrada','armazem','quartel','arquearia','estabulo','doca','mercado','ferreiro','templo','torre','oficina','centro','maravilha'];
 const DEF_MENU=['muralhaMadeira','muralhaPedra','muralhaFort','portaoMadeira','portaoPedra','torre'];
 const TECHS={
@@ -1852,6 +1852,8 @@ function updBld(b,dt){
   if(b.d.gate){const want=!b.locked&&ents.some(e=>e.kind==='u'&&e.o===b.o&&Math.abs(e.x-b.tx-.5)<2.6&&Math.abs(e.y-b.ty-.5)<2.6);b.open=clamp((b.open||0)+(want?dt*3:-dt*.8),0,1)}
   if(b.d.atk){b.cd-=dt;b.scan-=dt;const rg=brange(b);
     const tv=t=>alive(t)&&t.o!==b.o;if(b.scan<=0){b.scan=.4;if(!tv(b.target)||distTo({x:b.tx+b.w/2,y:b.ty+b.h/2,d:{r:0}},b.target)>rg)b.target=scanEnemy(b,rg,false)}
+    if(b.type==='torre'&&TOWER[b.lvl||1].cat){const K=TOWER[b.lvl||1].cat;b.ccd=(b.ccd||0)-dt;if(b.ccd<=0){const c0={x:b.tx+b.w/2,y:b.ty+b.h/2,d:{r:0}};let t2=tv(b.target)&&distTo(c0,b.target)>=K.minRange&&distTo(c0,b.target)<=K.range?b.target:null;
+      if(!t2){const t3=scanEnemy(b,K.range,false);if(t3&&distTo(c0,t3)>=K.minRange)t2=t3}if(t2){b.ccd=K.rate;b.cfire=G.time;fire(b,t2,b,'stone',K.atk);snd('cat_launch',b.tx+1,b.ty+1)}}}
     if(tv(b.target)&&b.cd<=0){b.cd=b.d.rate;fire(b,b.target);if(b.type==='torre'&&TOWER[b.lvl||1].shots>1){const t2=scanEnemy(b,rg,false);if(t2)fire(b,t2)}
       if(b.garr&&b.garr.length){const n=Math.min(6,Math.ceil(b.garr.reduce((a,u)=>a+(u.d.proj==='arrow'?2:1),0)/2));for(let k=0;k<n;k++){const t2=k===0?b.target:scanEnemy(b,rg,false)||b.target;if(tv(t2))fire(b,t2)}}
       snd('bow',b.tx+b.w/2,b.ty+b.h/2)}
@@ -3140,7 +3142,7 @@ function wall3dSprite(type,o,m){if(CMOD.ready&&CMOD_KIND[type]){const base=CMOD_
   const cv=mkCanvas(CW*SS,CH*SS),c=cv.getContext('2d');c.scale(SS,SS);c.imageSmoothingEnabled=true;c.imageSmoothingQuality='high';c.drawImage(tintCrop(WALL3D,team,sx,sy,w,h),0,0,w,h,1,1,w*k,h*k);
   const r={cv,ox:ax*k+1,oy:ay*k+1,CW,CH};BCACHE[key]=r;return r}
 // edifícios 3D (Blender, arte/edificios-3d): casas, quartel, Centro da Vila… por idade (torre: por nível), mesma câmara e luz dos portões
-const BLD3D_DATA={"file":"edificios-3d.webp","scale":1.5,"atlasSha256":"6da0b04f8b17de11aadd9cfa0dbb084b4edddcda122682e4c275dd9bd97123c8","frames":{"armazem_0":[1702,1566,188,142,93.66,40.3],"armazem_1":[192,1788,186,135,93.1,30.94],"armazem_2":[2,1788,188,140,93.49,34.96],"arquearia_0":[2,1566,280,220,139.93,46.97],"arquearia_1":[284,1566,280,215,140.21,54.73],"arquearia_2":[1736,990,280,244,140.03,73.81],"casa_0":[1135,1566,187,163,93.31,61.7],"casa_1":[1513,1566,187,153,93.25,51.59],"casa_2":[566,1566,187,186,93.2,83.66],"centro_0":[2,1321,280,243,139.85,77.97],"centro_1":[1172,990,280,256,140.32,104.5],"centro_2":[889,990,281,292,140.82,132.8],"doca_0":[566,1321,213,232,135.0,136.95],"doca_1":[781,1321,213,232,135.0,136.95],"doca_2":[996,1321,213,232,135.0,136.95],"estabulo_0":[1211,1321,280,232,140.32,61.36],"estabulo_1":[2,655,348,333,195.0,195.15],"estabulo_2":[352,655,351,333,195.0,195.15],"ferreiro_0":[1324,1566,187,160,93.55,52.3],"ferreiro_1":[945,1566,188,178,93.29,76.9],"ferreiro_2":[755,1566,188,186,93.86,75.04],"maravilha_2":[981,2,510,452,255.0,253.35],"mercado_1":[2,990,342,329,195.0,195.15],"mercado_2":[346,990,342,329,195.0,195.15],"oficina_1":[1097,655,352,332,195.0,195.15],"oficina_2":[705,655,390,333,195.0,195.15],"quartel_0":[1493,1321,280,230,140.03,59.97],"quartel_1":[284,1321,280,236,140.12,75.2],"quartel_2":[1454,990,280,256,139.86,95.5],"templo_1":[1451,655,334,332,195.0,195.15],"templo_2":[1493,2,334,334,195.0,195.15],"torre_1":[2,2,473,651,310.12,376.74],"torre_2":[477,2,502,651,310.12,376.74],"torre_3":[690,990,197,293,75.84,215.87]}};
+const BLD3D_DATA={"file":"edificios-3d.webp","scale":1.5,"atlasSha256":"2b1ccd4fd8a44e9c25083df8d5fe0a64a8d36b3e524695b6034e32bf526fc130","frames":{"armazem_0":[1420,1559,188,142,93.66,40.3],"armazem_1":[1800,1559,186,135,93.1,30.94],"armazem_2":[1610,1559,188,140,93.49,34.96],"arquearia_0":[1493,1321,280,220,139.93,46.97],"arquearia_1":[2,1559,280,215,140.21,54.73],"arquearia_2":[1392,990,280,244,140.03,73.81],"casa_0":[853,1559,187,163,93.31,61.7],"casa_1":[1231,1559,187,153,93.25,51.59],"casa_2":[284,1559,187,186,93.2,83.66],"centro_0":[1674,990,280,243,139.85,77.97],"centro_1":[828,990,280,256,140.32,104.5],"centro_2":[545,990,281,292,140.82,132.8],"doca_0":[284,1321,213,232,135.0,136.95],"doca_1":[499,1321,213,232,135.0,136.95],"doca_2":[714,1321,213,232,135.0,136.95],"estabulo_0":[929,1321,280,232,140.32,61.36],"estabulo_1":[1516,2,348,333,195.0,195.15],"estabulo_2":[2,655,351,333,195.0,195.15],"ferreiro_0":[1042,1559,187,160,93.55,52.3],"ferreiro_1":[663,1559,188,178,93.29,76.9],"ferreiro_2":[473,1559,188,186,93.86,75.04],"maravilha_2":[477,2,510,452,255.0,253.35],"mercado_1":[1437,655,342,329,195.0,195.15],"mercado_2":[2,990,342,329,195.0,195.15],"oficina_1":[747,655,352,332,195.0,195.15],"oficina_2":[355,655,390,333,195.0,195.15],"quartel_0":[1211,1321,280,230,140.03,59.97],"quartel_1":[2,1321,280,236,140.12,75.2],"quartel_2":[1110,990,280,256,139.86,95.5],"templo_1":[1101,655,334,332,195.0,195.15],"templo_2":[1180,2,334,334,195.0,195.15],"torre_1":[2,2,473,651,310.12,376.74],"torre_2":[989,2,189,445,94.51,356.17],"torre_3":[346,990,197,293,75.84,215.87]}};
 const BLD3D={ready:false,img:null,wide:true,teams:new Map(),meta:BLD3D_DATA};
 (()=>{if(!BLD3D_DATA.file)return;const im=new Image();im.onload=()=>{BLD3D.img=im;BLD3D.ready=true;for(const k in BCACHE)delete BCACHE[k];try{PORTS.clear()}catch(e){}try{if(typeof MBG!=='undefined'&&MBG.L&&!document.body.classList.contains('ingame')){MBG.L=null;menuBgStart()}}catch(e){}};im.src='assets/edificios-extra/'+BLD3D_DATA.file})();
 function bld3dKey(type,age,vr){const F=BLD3D.meta.frames;if(!F)return null;
@@ -3169,6 +3171,13 @@ function drawCastleTop(c,e,t){const p0=proj(e.tx,e.ty),cx=e.tx+e.w/2,cy=e.ty+e.h
     const firing=tg&&u.d.proj&&hyp(tg.x-cx,tg.y-cy)<(u.d.range||5)+3,dir=tg?kingDirFromDelta(tg.x-cx,tg.y-cy):Math.floor(t/3+i*3+e.id)%8;
     const fr=firing&&st.attack?st.attack[Math.floor((t*4+i*.7)%st.attack.length)]:st.idle[0];
     c.save();c.beginPath();c.rect(x-30,y-60,60,60-2);c.clip();c.translate(x,y);c.scale(.46,.46);drawUnit3dFrame(c,src,fr,dir,P[e.o].col,0,0,null,false,false);c.restore()})}
+// catapulta no terraço da torre de nível 2 (torre pintada, arte/pintura-castelo/fonte/torre2_v1.png): vira-se para o alvo e recua ao disparar
+const TOWER2_DECK=[-0.1,-181.4];
+function drawTowerCat(c,e,lit){if(!e.done)return;const p=proj(e.tx,e.ty),x=p.x+TOWER2_DECK[0],y=p.y+TOWER2_DECK[1]+6,tg=alive(e.target)?centerOf(e.target):null;
+  const u=e.__cat||(e.__cat={kind:'u',type:'catapulta',d:UNITS.catapulta,o:e.o,id:e.id*7+1,hp:1,max:1,state:'idle',face:1,x:e.tx+1,y:e.ty+1,path:null,pi:0});
+  u.o=e.o;if(tg){u.face=(tg.x-tg.y)-(e.tx-e.ty)>=0?1:-1;u.dir=kingDirFromDelta(tg.x-(e.tx+1),tg.y-(e.ty+1))}
+  u.state=e.cfire!=null&&G.time-e.cfire<.6?'attack':'idle';u.atkT=e.cfire!=null?G.time-e.cfire:9;
+  c.save();c.translate(x,y);c.scale(.8,.8);if(!lit)c.filter='brightness(.55)';try{drawUnit(c,u,0,0)}catch(err){}c.restore()}
 function drawGarrTop(c,e,t){if(castleTop(e)){drawCastleTop(c,e,t);return}const mil=e.garr.filter(u=>u.d.mil);if(!mil.length)return;const top3=TOPZ(e);if(!top3)return; // em cima do adarve/terraço: pés à altura do caminho de ronda, pernas escondidas atrás das ameias, viram-se para o alvo e disparam
   const ZP=HW*2/Math.SQRT2*Math.cos(Math.PI/6); // píxeis do ecrã por unidade de altura (≈39,2; a câmara do Blender agora usa a escala certa)
   const v=bldVariant(e),ax=e.type==='torre'?'q':e.d.gate?(v==='y'?'y':'x'):((v&10)&&!(v&5)?'y':'x');
@@ -4091,6 +4100,7 @@ function render(){UCFM=0;
         if(e.d.wall&&PGATE.ready&&(bldVariant(e)&256)){c.save();if(pgateWallClip(c,e)!=='skip')c.drawImage(lit?s.cv:darkOf(s.cv),dx,dy,s.CW,s.CH);c.restore()}
         else if(pwallOn(e.type)&&(bldVariant(e)&192)){const v=bldVariant(e);c.save();if(v&64)clipBox(c,e.tx+.28,e.tx+1.02,e.ty-.05,e.ty+1.05,2.6);else clipBox(c,e.tx-.05,e.tx+1.05,e.ty+.28,e.ty+1.02,2.6);c.drawImage(lit?s.cv:darkOf(s.cv),dx,dy,s.CW,s.CH);c.restore()}else c.drawImage(lit?s.cv:darkOf(s.cv),dx,dy,s.CW,s.CH);
         if(e.type==='torre')towerWallStubs(c,e,true,lit);
+        if(e.type==='torre'&&(e.lvl||1)===2&&TOWER[2].cat)drawTowerCat(c,e,lit);
         if(lit&&e.garr&&e.garr.length)drawGarrTop(c,e,performance.now()/1000);
         {const fr=bldFringe(e);if(fr)c.drawImage(lit?fr.cv:darkOf(fr.cv),p.x-fr.ox,p.y-fr.oy,fr.CW,fr.CH)}
         if(e.d.gate&&!BLDART.ready&&!GATE3D.ready)drawGateDoor(c,e,p);
