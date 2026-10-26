@@ -20,14 +20,14 @@ async def main():
         R['isoladas'] = await pg.evaluate("""async()=>{await new Promise(r=>setTimeout(r,1500));const out={};const ZP=HW*2/Math.SQRT2*Math.cos(Math.PI/6);
           const meas=(s,colX)=>{const c=s.cv.getContext('2d'),W2=s.cv.width,H2=s.cv.height,sc=W2/s.CW;const x=Math.round(colX*sc);const d=c.getImageData(x,0,1,H2).data;let top=-1,bot=-1;
             for(let y=0;y<H2;y++){const a=d[y*4+3],l=(d[y*4]+d[y*4+1]+d[y*4+2])/3;if(a>200&&!(l<60&&a<250)){if(top<0)top=y;bot=y}}return{top:top/sc,bot:bot/sc}};
-          // portão de pedra pintado (arte/pintura-castelo): valores de referência medidos na pintura integrada (regressão), não no modelo 3D
+          // muralha de pedra e portão de pedra pintados (arte/pintura-castelo): valores de referência medidos na pintura integrada (regressão), não no modelo 3D
           // geometria (unidades do jogo): na coluna do centro do ecrã (x=y) o topo é a aresta de trás (y=.5-hw) e a base é a aresta da frente (y=.5+hw+sapata)
-          const cases=[['muralhaPedra',5,[1.35,1.45],.28,.04],['muralhaFort',5,[1.55,1.65],.32,.04],['muralhaMadeira',5,[.95,1.15],.055,0],['portaoPedra','x',PGATE.ready?[1.3,1.45]:[2.0,2.25],.46,PGATE.ready?-.045:.03],['portaoMadeira','x',[1.8,2.1],.44,.03]];
+          const cases=[['muralhaPedra',5,PWALL.ready?[1.55,1.75]:[1.35,1.45],PWALL.ready?PWALL.meta.espX/2:.28,PWALL.ready?-.02:.04],['muralhaFort',5,[1.55,1.65],.32,.04],['muralhaMadeira',5,[.95,1.15],.055,0],['portaoPedra','x',PGATE.ready?[1.3,1.45]:[2.0,2.25],.46,PGATE.ready?-.045:.03],['portaoMadeira','x',[1.8,2.1],.44,.03]];
           for(const [t,v,[h0,h1],hw,sp] of cases){const s=bldSprite(t,2,ME,v);if(!s||!s.cv){out[t]='SEM SPRITE';continue}
             const m=meas(s,s.ox),groundC=s.oy+HH;
             const alt=(groundC-m.top-2*hw*HH)/ZP, base=(m.bot-groundC)/HH, eb=2*(hw+sp);
             out[t]={altura:+alt.toFixed(2),esperado:[h0,h1],altura_ok:alt>=h0-.06&&alt<=h1+.06,base_casas:+base.toFixed(2),base_esperada:+eb.toFixed(2),assente_ok:Math.abs(base-eb)<=.1}}
-          const TT={1:3.28,2:3.39,3:4.5},FB={1:4,2:4,3:3.05}; // nível 3 = torre redonda pintada: o topo é a ponta da bandeira e a base redonda fica centrada na pegada
+          const TT={1:3.28,2:3.39,3:3.8},FB={1:4,2:4,3:3.1}; // nível 3 = torre redonda pintada: o topo é a ponta da bandeira e a base redonda fica centrada na pegada
           for(const lv of [1,2,3]){const s=bldSprite('torre',2,ME,lv);const m=meas(s,s.ox),top=(s.oy+2*HH-m.top)/ZP,fundo=(m.bot-s.oy)/HH;
             out['torre'+lv]={topo:+top.toFixed(2),topo_esperado:TT[lv],topo_ok:Math.abs(top-TT[lv])<=.12,fundo_casas:+fundo.toFixed(2),assente_ok:Math.abs(fundo-FB[lv])<=.12}}
           return out}""")

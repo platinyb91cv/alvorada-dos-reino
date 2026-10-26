@@ -1,0 +1,20 @@
+{
+ "x": {
+  "N": 4,
+  "ameias": 5,
+  "passo_medido": 0.794,
+  "passo_final": 0.794,
+  "esticado": 0.97,
+  "comprimento": 7.57,
+  "espessura": 0.95
+ },
+ "y": {
+  "N": 1,
+  "ameias": 1,
+  "passo_medido": 1.0,
+  "passo_final": 1.0,
+  "esticado": 1.0,
+  "comprimento": 7.58,
+  "espessura": 0.7
+ }
+}
