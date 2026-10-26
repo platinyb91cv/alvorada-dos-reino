@@ -8,6 +8,7 @@ import sys, json, io, hashlib
 import numpy as np
 from pathlib import Path
 from PIL import Image, ImageDraw, ImageFilter
+sys.path.insert(0, str(Path(__file__).resolve().parent)); from tom_muro import tom_muro  # pedra no cinzento das muralhas (TOM=original para manter)
 src, repo = Path(sys.argv[1]), Path(sys.argv[2]); prov = Path(sys.argv[3]) if len(sys.argv) > 3 else None
 def cutout(im):
     rgb = im.convert('RGB'); w, h = rgb.size; m = rgb.copy(); key = (255, 0, 255)
@@ -23,7 +24,7 @@ LY = [330, 352, 356, 358, 348, 364, 396, 400, 446, 452, 446, 418, 405]
 base = np.interp(xx, LX, LY)
 keep = (yy < base) & ~((xx < 150) & (yy > 250)) & ~((xx > 636) & (yy > 280))
 al = np.array(Image.fromarray(np.where(keep, a[..., 3], 0).astype('uint8')).filter(ImageFilter.GaussianBlur(1.0)))
-a[..., 3] = np.minimum(a[..., 3], al); im = Image.fromarray(a)
+a[..., 3] = np.minimum(a[..., 3], al); im = tom_muro(Image.fromarray(a))
 # portas fechadas + grade em baixo, desenhadas no arco (para o estado 0)
 def fechado(img):
     o = img.copy(); d = ImageDraw.Draw(o, 'RGBA')
@@ -69,7 +70,7 @@ buf = io.BytesIO(); atlas.save(buf, 'WEBP', lossless=True, method=6); webp = buf
 # alturas do caminho de ronda (soldados): casa do portão e torres, em unidades do jogo
 ZP2 = 2 * 64 / 2 ** .5 * .8660254
 meta = {'file': 'portoes-pintados.webp', 'scale': 2, 'atlasSha256': hashlib.sha256(webp).hexdigest(), 'walk': round((MID[1] - 176) * SY / ZP2, 2),
-        'towerTop': round((T1[1] - 140) * SY / ZP2, 2), 'frames': dict(sorted(frames.items()))}
+        'towerTop': round((T1[1] - 140) * SY / ZP2, 2), 'rTorre': round(150 * SX / (2 * 64 * 2 ** .5) / 2 * 2, 2), 'frames': dict(sorted(frames.items()))}
 html = (repo / 'www/index.html').read_text(); line = 'const PGATE_DATA=' + json.dumps(meta, separators=(',', ':')) + ';'
 if 'const PGATE_DATA=' in html:
     i = html.index('const PGATE_DATA='); j = html.index('\n', i); html = html[:i] + line + html[j:]

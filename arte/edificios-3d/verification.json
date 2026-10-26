@@ -10,7 +10,7 @@
  "amostras": 32,
  "quadros": 34,
  "escalaAtlas": 1.5,
- "atlasSha256": "c4476a1153654d3cbad3cbe70490abd54ae4c979ecdb25e38568aba545c2e21c",
+ "atlasSha256": "8e876e6eca1792a1be5b9ed63ba33e649dba3c503fc05b74aa30e9b2d7a2f53a",
  "detalhe": "enxaimel, sobrado em balanço, cumeeira, caibros, portadas, lenha, carroça, chão de terra batida",
  "pintura": "Gemini (texto -> imagem, sem créditos): casas, torres, armazém, ferreiro, Centro da Vila, quartel, arquearia, estábulo (Pedra); o resto continua 3D do Blender",
  "mercadoModelo": {
@@ -25,6 +25,7 @@
  "torre3Pintada": {
   "origem": "arte/pintura-castelo/fonte/torre_4vistas.png (vista frontal)",
   "script": "arte/pintura-castelo/scripts/torre_pintada.py",
-  "varanda": 2.85
+  "varanda": 3.3,
+  "raioCorpo": 0.85
  }
 }
