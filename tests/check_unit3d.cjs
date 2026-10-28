@@ -14,8 +14,8 @@ assert.ok(pixels<10000000,'Atlas set exceeded decoded image budget');
 function fn(name){const start=html.indexOf('function '+name+'(');assert.ok(start>=0,name);const end=html.indexOf('\nfunction ',start+1);return html.slice(start,end)}
 const drawCalls=[],scaleCalls=[],sources=Object.fromEntries(types.map(type=>[type,{ready:true,img:{type},teams:new Map(),meta:data[type]}]));
 sources.besteiroPesado=sources.besteiro;
-const ctx={Math,Number,UNIT3D_HEIGHT:30,UNIT3D_TYPES:types,UNIT3D:sources,P:[{col:'#3366cc'}],performance:{now:()=>1000},atkPhase:()=>.5,distTo:(u,t)=>Math.hypot(t.x-u.x,t.y-u.y),rectOf:t=>t.kind==='u'?{x:t.x-.5,y:t.y-.5,w:1,h:1}:{x:t.tx,y:t.ty,w:t.w||1,h:t.h||1},recolorImg:(source,team)=>{if(!source.teams.has(team))source.teams.set(team,{...source.img,team});return source.teams.get(team)}};
-for(const name of ['u3ready','kingDirFromDelta','kingDirection','unit3dHeading','unit3dDeathDirection','unit3dState','unit3dFrame','unit3dTint','drawUnit3dFrame','drawUnit3D','drawUnit3DCorpse'])ctx[name]=vm.runInNewContext('('+fn(name)+'\n)',ctx);
+const ctx={Math,Number,UNIT3D_HEIGHT:30,UNIT3D_TYPES:types,UNIT3D:sources,P:[{col:'#3366cc'}],performance:{now:()=>1000},atkPhase:()=>.5,distTo:(u,t)=>Math.hypot(t.x-u.x,t.y-u.y),rectOf:t=>t.kind==='u'?{x:t.x-.5,y:t.y-.5,w:1,h:1}:{x:t.tx,y:t.ty,w:t.w||1,h:t.h||1},recolorImg:(source,team)=>{if(!source.teams.has(team))source.teams.set(team,{...source.img,team});return source.teams.get(team)},u3FrameTint:()=>({cv:null})};
+for(const name of ['u3ready','kingDirFromDelta','kingDirection','unit3dHeading','unit3dDeathDirection','unit3dState','unit3dFrame','drawUnit3dFrame','drawUnit3D','drawUnit3DCorpse'])ctx[name]=vm.runInNewContext('('+fn(name)+'\n)',ctx);
 const canvas={save(){},restore(){},translate(){},scale(...a){scaleCalls.push(a)},beginPath(){},ellipse(){},fill(){},drawImage(...a){drawCalls.push(a)}};
 const vectors=[[1,0],[1,1],[0,1],[-1,1],[-1,0],[-1,-1],[0,-1],[1,-1]];
 for(const type of types)for(const [direction,[dx,dy]]of vectors.entries()){
@@ -49,7 +49,13 @@ const ma=html.indexOf('const mkU=(q,push)=>'),mb=html.indexOf("  for(const q of 
 for(const type of ctx.UNIT3D_TYPES)for(let direction=0;direction<8;direction++){saveCtx.ents=[{kind:'u',id:1,o:0,type,d:{},x:2,y:3,hp:30,state:'idle',kingDir:direction}];const q=JSON.parse(serialize()).ents[0];assert.equal(q.kd,direction);assert.equal(restore(q,true).kingDir,direction)}
 console.log('PASS: all new units retain eight directions through movement and save/continue');
 
-for(const team of ['#112233','#223344','#334455','#445566'])ctx.unit3dTint(sources.aldeao,team);assert.equal(sources.aldeao.teams.size,3);assert.ok(sources.aldeao.teams.has('#445566'));console.log('PASS: per-unit team texture cache bounded to three variants');
+{const made=[];const tctx={Math,performance:{now:()=>0},MOB:false,U3T:new Map(),U3TB:0,U3TMS:0,U3UID:0,U3TMP:null,U3T_BUDGET:3*40*50*4,teamTintData:()=>true,
+  mkCanvas:(w,h)=>{const cv={width:w,height:h,getContext:()=>({clearRect(){},drawImage(){},getImageData:(x,y,w2,h2)=>({data:new Uint8ClampedArray(w2*h2*4)}),putImageData(){}})};made.push(cv);return cv}};
+ vm.runInNewContext(fn('u3FrameTint').replace(/^function u3FrameTint/,'var u3FrameTint=function'),tctx);const src={img:{},wide:true};
+ const a=tctx.u3FrameTint(src,'#ff0000',0,0,0,40,50);assert.ok(a&&a.cv&&a.cv.width===40);assert.equal(tctx.u3FrameTint(src,'#ff0000',0,0,0,40,50),a,'cached frame reused');
+ for(let f=1;f<8;f++)tctx.u3FrameTint(src,'#ff0000',f,0,0,40,50);assert.ok(tctx.U3TB<=tctx.U3T_BUDGET&&tctx.U3T.size<=3,'frame cache bounded by bytes');
+ tctx.U3TMS=99;assert.equal(tctx.u3FrameTint(src,'#00ff00',0,0,0,40,50),false,'per-frame tint budget respected');
+ console.log('PASS: team colour painted per frame (LRU bounded by memory, per-frame time budget), no full-atlas copies')}
 
 assert.equal(ctx.unit3dState({...vill,state:'idle',carry:5}),'carryIdle');assert.equal(data.aldeao.states.carryIdle.length,1);console.log('PASS: stopped villager retains resource crate');
 

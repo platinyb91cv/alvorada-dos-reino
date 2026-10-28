@@ -1,0 +1,478 @@
+[
+ {
+  "k": 1,
+  "cfg": [
+   "jogo",
+   "rios",
+   "total"
+  ],
+  "rows": [
+   {
+    "t": 948,
+    "over": false,
+    "run": true,
+    "paused": false,
+    "u": 136
+   },
+   {
+    "t": 1008,
+    "over": false,
+    "run": true,
+    "paused": false,
+    "u": 136
+   },
+   {
+    "t": 1068,
+    "over": false,
+    "run": true,
+    "paused": false,
+    "u": 136
+   }
+  ],
+  "parou": false,
+  "erros": [],
+  "errlog": []
+ },
+ {
+  "k": 0,
+  "cfg": [
+   "jogo",
+   "rios",
+   "classico"
+  ],
+  "rows": [
+   {
+    "t": 946,
+    "over": false,
+    "run": true,
+    "paused": false,
+    "u": 129
+   },
+   {
+    "t": 1006,
+    "over": false,
+    "run": true,
+    "paused": false,
+    "u": 131
+   },
+   {
+    "t": 1067,
+    "over": false,
+    "run": true,
+    "paused": false,
+    "u": 132
+   }
+  ],
+  "parou": false,
+  "erros": [],
+  "errlog": []
+ },
+ {
+  "k": 2,
+  "cfg": [
+   "jogo",
+   "continental",
+   "classico"
+  ],
+  "rows": [
+   {
+    "t": 721,
+    "over": false,
+    "run": true,
+    "paused": false,
+    "u": 156
+   },
+   {
+    "t": 781,
+    "over": false,
+    "run": true,
+    "paused": false,
+    "u": 168
+   },
+   {
+    "t": 789,
+    "over": true,
+    "run": false,
+    "paused": false,
+    "u": 167
+   }
+  ],
+  "parou": false,
+  "erros": [],
+  "errlog": []
+ },
+ {
+  "k": 3,
+  "cfg": [
+   "jogo",
+   "continental",
+   "total"
+  ],
+  "rows": [
+   {
+    "t": 961,
+    "over": false,
+    "run": true,
+    "paused": false,
+    "u": 133
+   },
+   {
+    "t": 1020,
+    "over": false,
+    "run": true,
+    "paused": false,
+    "u": 134
+   },
+   {
+    "t": 1080,
+    "over": false,
+    "run": true,
+    "paused": false,
+    "u": 136
+   }
+  ],
+  "parou": false,
+  "erros": [],
+  "errlog": []
+ },
+ {
+  "k": 4,
+  "cfg": [
+   "jogo",
+   "lagos",
+   "classico"
+  ],
+  "rows": [
+   {
+    "t": 963,
+    "over": false,
+    "run": true,
+    "paused": false,
+    "u": 136
+   },
+   {
+    "t": 1023,
+    "over": false,
+    "run": true,
+    "paused": false,
+    "u": 136
+   },
+   {
+    "t": 1083,
+    "over": false,
+    "run": true,
+    "paused": false,
+    "u": 136
+   }
+  ],
+  "parou": false,
+  "erros": [],
+  "errlog": []
+ },
+ {
+  "k": 5,
+  "cfg": [
+   "jogo",
+   "lagos",
+   "total"
+  ],
+  "rows": [
+   {
+    "t": 782,
+    "over": false,
+    "run": true,
+    "paused": false,
+    "u": 155
+   },
+   {
+    "t": 842,
+    "over": false,
+    "run": true,
+    "paused": false,
+    "u": 165
+   },
+   {
+    "t": 868,
+    "over": true,
+    "run": false,
+    "paused": false,
+    "u": 165
+   }
+  ],
+  "parou": false,
+  "erros": [],
+  "errlog": []
+ },
+ {
+  "k": 6,
+  "cfg": [
+   "jogo",
+   "arquipelago",
+   "classico"
+  ],
+  "rows": [
+   {
+    "t": 963,
+    "over": false,
+    "run": true,
+    "paused": false,
+    "u": 107
+   },
+   {
+    "t": 1023,
+    "over": false,
+    "run": true,
+    "paused": false,
+    "u": 107
+   },
+   {
+    "t": 1083,
+    "over": false,
+    "run": true,
+    "paused": false,
+    "u": 107
+   }
+  ],
+  "parou": false,
+  "erros": [],
+  "errlog": []
+ },
+ {
+  "k": 7,
+  "cfg": [
+   "jogo",
+   "arquipelago",
+   "total"
+  ],
+  "rows": [
+   {
+    "t": 963,
+    "over": false,
+    "run": true,
+    "paused": false,
+    "u": 112
+   },
+   {
+    "t": 1023,
+    "over": false,
+    "run": true,
+    "paused": false,
+    "u": 115
+   },
+   {
+    "t": 1083,
+    "over": false,
+    "run": true,
+    "paused": false,
+    "u": 117
+   }
+  ],
+  "parou": false,
+  "erros": [],
+  "errlog": []
+ },
+ {
+  "k": 8,
+  "cfg": [
+   "camp",
+   0,
+   null
+  ],
+  "rows": [
+   {
+    "t": 963,
+    "over": false,
+    "run": true,
+    "paused": false,
+    "u": 121
+   },
+   {
+    "t": 1023,
+    "over": false,
+    "run": true,
+    "paused": false,
+    "u": 121
+   },
+   {
+    "t": 1083,
+    "over": false,
+    "run": true,
+    "paused": false,
+    "u": 121
+   }
+  ],
+  "parou": false,
+  "erros": [],
+  "errlog": []
+ },
+ {
+  "k": 9,
+  "cfg": [
+   "camp",
+   4,
+   null
+  ],
+  "rows": [
+   {
+    "t": 902,
+    "over": false,
+    "run": true,
+    "paused": false,
+    "u": 151
+   },
+   {
+    "t": 962,
+    "over": false,
+    "run": true,
+    "paused": false,
+    "u": 156
+   },
+   {
+    "t": 1000,
+    "over": true,
+    "run": false,
+    "paused": false,
+    "u": 154
+   }
+  ],
+  "parou": false,
+  "erros": [],
+  "errlog": []
+ },
+ {
+  "k": 10,
+  "cfg": [
+   "camp",
+   8,
+   null
+  ],
+  "rows": [
+   {
+    "t": 903,
+    "over": false,
+    "run": true,
+    "paused": false,
+    "u": 148
+   },
+   {
+    "t": 963,
+    "over": false,
+    "run": true,
+    "paused": false,
+    "u": 149
+   },
+   {
+    "t": 970,
+    "over": true,
+    "run": false,
+    "paused": false,
+    "u": 148
+   }
+  ],
+  "parou": false,
+  "erros": [],
+  "errlog": []
+ },
+ {
+  "k": 11,
+  "cfg": [
+   "reino",
+   0,
+   null
+  ],
+  "rows": [
+   {
+    "t": 963,
+    "over": false,
+    "run": true,
+    "paused": false,
+    "u": 210
+   },
+   {
+    "t": 1023,
+    "over": false,
+    "run": true,
+    "paused": false,
+    "u": 211
+   },
+   {
+    "t": 1083,
+    "over": false,
+    "run": true,
+    "paused": false,
+    "u": 211
+   }
+  ],
+  "parou": false,
+  "erros": [],
+  "errlog": []
+ },
+ {
+  "k": 12,
+  "cfg": [
+   "jogo",
+   "rios",
+   "sobrevivencia"
+  ],
+  "rows": [
+   {
+    "t": 422,
+    "over": false,
+    "run": true,
+    "paused": false,
+    "u": 119
+   },
+   {
+    "t": 482,
+    "over": false,
+    "run": true,
+    "paused": false,
+    "u": 119
+   },
+   {
+    "t": 519,
+    "over": true,
+    "run": false,
+    "paused": false,
+    "u": 118
+   }
+  ],
+  "parou": false,
+  "erros": [],
+  "errlog": []
+ },
+ {
+  "k": 13,
+  "cfg": [
+   "build",
+   "rios",
+   "classico"
+  ],
+  "rows": [
+   {
+    "t": 962,
+    "over": false,
+    "run": true,
+    "paused": false,
+    "u": 112
+   },
+   {
+    "t": 1022,
+    "over": false,
+    "run": true,
+    "paused": false,
+    "u": 112
+   },
+   {
+    "t": 1082,
+    "over": false,
+    "run": true,
+    "paused": false,
+    "u": 112
+   }
+  ],
+  "parou": false,
+  "erros": [],
+  "errlog": []
+ }
+]

@@ -1,0 +1,1019 @@
+[
+ {
+  "k": 0,
+  "cfg": [
+   "jogo",
+   "rios",
+   "classico"
+  ],
+  "rows": [
+   {
+    "t": 638,
+    "over": false,
+    "run": true,
+    "paused": false,
+    "u": 153
+   },
+   {
+    "t": 715,
+    "over": false,
+    "run": true,
+    "paused": false,
+    "u": 150
+   },
+   {
+    "t": 758,
+    "over": true,
+    "run": false,
+    "paused": false,
+    "u": 151
+   }
+  ],
+  "parou": false,
+  "erros": [],
+  "errlog": []
+ },
+ {
+  "k": 1,
+  "cfg": [
+   "jogo",
+   "rios",
+   "total"
+  ],
+  "rows": [
+   {
+    "t": 869,
+    "over": false,
+    "run": true,
+    "paused": false,
+    "u": 187
+   },
+   {
+    "t": 947,
+    "over": false,
+    "run": true,
+    "paused": false,
+    "u": 188
+   },
+   {
+    "t": 969,
+    "over": true,
+    "run": false,
+    "paused": false,
+    "u": 192
+   }
+  ],
+  "parou": false,
+  "erros": [],
+  "errlog": []
+ },
+ {
+  "k": 3,
+  "cfg": [
+   "jogo",
+   "continental",
+   "total"
+  ],
+  "harness": "Page.evaluate: TypeError: Cannot read properties of undefined (reading 'mult')\n    at mkAI (http://localhost:8777/index.html?bot=teste:1997:82)\n    at aiInit (http://localhost:8777/index.html?bot=teste:1996:170)\n    at startGame (http://localhost:8777/index.html?bot=teste:5764:3)\n    at eval (eval a",
+  "erros": []
+ },
+ {
+  "k": 2,
+  "cfg": [
+   "jogo",
+   "continental",
+   "classico"
+  ],
+  "rows": [
+   {
+    "t": 857,
+    "over": false,
+    "run": true,
+    "paused": false,
+    "u": 182
+   },
+   {
+    "t": 927,
+    "over": false,
+    "run": true,
+    "paused": false,
+    "u": 185
+   },
+   {
+    "t": 999,
+    "over": true,
+    "run": true,
+    "paused": false,
+    "u": 185
+   }
+  ],
+  "parou": false,
+  "erros": [],
+  "errlog": []
+ },
+ {
+  "k": 4,
+  "cfg": [
+   "jogo",
+   "lagos",
+   "classico"
+  ],
+  "rows": [
+   {
+    "t": 711,
+    "over": false,
+    "run": true,
+    "paused": false,
+    "u": 164
+   },
+   {
+    "t": 790,
+    "over": false,
+    "run": true,
+    "paused": false,
+    "u": 160
+   },
+   {
+    "t": 869,
+    "over": true,
+    "run": true,
+    "paused": false,
+    "u": 165
+   }
+  ],
+  "parou": false,
+  "erros": [],
+  "errlog": []
+ },
+ {
+  "k": 5,
+  "cfg": [
+   "jogo",
+   "lagos",
+   "total"
+  ],
+  "rows": [
+   {
+    "t": 792,
+    "over": false,
+    "run": true,
+    "paused": false,
+    "u": 179
+   },
+   {
+    "t": 868,
+    "over": false,
+    "run": true,
+    "paused": false,
+    "u": 171
+   },
+   {
+    "t": 923,
+    "over": true,
+    "run": false,
+    "paused": false,
+    "u": 176
+   }
+  ],
+  "parou": false,
+  "erros": [],
+  "errlog": []
+ },
+ {
+  "k": 7,
+  "cfg": [
+   "jogo",
+   "arquipelago",
+   "total"
+  ],
+  "harness": "Page.evaluate: TypeError: Cannot read properties of undefined (reading 'mult')\n    at mkAI (http://localhost:8777/index.html?bot=teste:1997:82)\n    at aiInit (http://localhost:8777/index.html?bot=teste:1996:170)\n    at startGame (http://localhost:8777/index.html?bot=teste:5764:3)\n    at eval (eval a",
+  "erros": []
+ },
+ {
+  "k": 6,
+  "cfg": [
+   "jogo",
+   "arquipelago",
+   "classico"
+  ],
+  "rows": [
+   {
+    "t": 1247,
+    "over": false,
+    "run": true,
+    "paused": false,
+    "u": 184
+   },
+   {
+    "t": 1327,
+    "over": false,
+    "run": true,
+    "paused": false,
+    "u": 164
+   },
+   {
+    "t": 1392,
+    "over": true,
+    "run": false,
+    "paused": false,
+    "u": 162
+   }
+  ],
+  "parou": false,
+  "erros": [],
+  "errlog": []
+ },
+ {
+  "k": 8,
+  "cfg": [
+   "camp",
+   0,
+   null
+  ],
+  "rows": [
+   {
+    "t": 398,
+    "over": false,
+    "run": true,
+    "paused": false,
+    "u": 145
+   },
+   {
+    "t": 476,
+    "over": false,
+    "run": true,
+    "paused": false,
+    "u": 148
+   },
+   {
+    "t": 486,
+    "over": true,
+    "run": false,
+    "paused": false,
+    "u": 148
+   }
+  ],
+  "parou": false,
+  "erros": [],
+  "errlog": [
+   {
+    "m": "step: TypeError: Cannot read properties of null (reading 't')\n    at applyDmg (http://localhost:8777/index.html?bot=teste:1431:69)\n    at updProjs (http://localhost:8777/index.html?bot=teste:1467:111)\n    at step (http://localhost:8777/index.html?bot=teste:6862:3)\n    at frameBody (http://localhost:8777/index.html?bot=teste:6892:69)\n    at frame (http://localhost:8777/index.html?bot=teste:6886:53)",
+    "n": 3,
+    "t": 410
+   },
+   {
+    "m": "step: TypeError: Cannot read properties of null (reading 't')\n    at applyDmg (http://localhost:8777/index.html?bot=teste:1431:69)\n    at updUnit (http://localhost:8777/index.html?bot=teste:1839:238)\n    at step (http://localhost:8777/index.html?bot=teste:6859:67)\n    at frameBody (http://localhost:8777/index.html?bot=teste:6892:69)\n    at frame (http://localhost:8777/index.html?bot=teste:6886:53)",
+    "n": 1,
+    "t": 414
+   },
+   {
+    "m": "step: TypeError: Cannot read properties of null (reading 't')\n    at applyDmg (http://localhost:8777/index.html?bot=teste:1431:69)\n    at updProjs (http://localhost:8777/index.html?bot=teste:1467:111)\n    at step (http://localhost:8777/index.html?bot=teste:6862:3)\n    at frameBody (http://localhost:8777/index.html?bot=teste:6892:69)\n    at frame (http://localhost:8777/index.html?bot=teste:6886:53)",
+    "n": 1,
+    "t": 415
+   },
+   {
+    "m": "step: TypeError: Cannot read properties of null (reading 't')\n    at applyDmg (http://localhost:8777/index.html?bot=teste:1431:69)\n    at updUnit (http://localhost:8777/index.html?bot=teste:1839:238)\n    at step (http://localhost:8777/index.html?bot=teste:6859:67)\n    at frameBody (http://localhost:8777/index.html?bot=teste:6892:69)\n    at frame (http://localhost:8777/index.html?bot=teste:6886:53)",
+    "n": 2,
+    "t": 416
+   },
+   {
+    "m": "step: TypeError: Cannot read properties of null (reading 't')\n    at applyDmg (http://localhost:8777/index.html?bot=teste:1431:69)\n    at updProjs (http://localhost:8777/index.html?bot=teste:1467:111)\n    at step (http://localhost:8777/index.html?bot=teste:6862:3)\n    at frameBody (http://localhost:8777/index.html?bot=teste:6892:69)\n    at frame (http://localhost:8777/index.html?bot=teste:6886:53)",
+    "n": 1,
+    "t": 417
+   },
+   {
+    "m": "step: TypeError: Cannot read properties of null (reading 't')\n    at applyDmg (http://localhost:8777/index.html?bot=teste:1431:69)\n    at updUnit (http://localhost:8777/index.html?bot=teste:1839:238)\n    at step (http://localhost:8777/index.html?bot=teste:6859:67)\n    at frameBody (http://localhost:8777/index.html?bot=teste:6892:69)\n    at frame (http://localhost:8777/index.html?bot=teste:6886:53)",
+    "n": 1,
+    "t": 419
+   },
+   {
+    "m": "step: TypeError: Cannot read properties of null (reading 't')\n    at applyDmg (http://localhost:8777/index.html?bot=teste:1431:69)\n    at updProjs (http://localhost:8777/index.html?bot=teste:1467:111)\n    at step (http://localhost:8777/index.html?bot=teste:6862:3)\n    at frameBody (http://localhost:8777/index.html?bot=teste:6892:69)\n    at frame (http://localhost:8777/index.html?bot=teste:6886:53)",
+    "n": 1,
+    "t": 419
+   },
+   {
+    "m": "step: TypeError: Cannot read properties of null (reading 't')\n    at applyDmg (http://localhost:8777/index.html?bot=teste:1431:69)\n    at updUnit (http://localhost:8777/index.html?bot=teste:1839:238)\n    at step (http://localhost:8777/index.html?bot=teste:6859:67)\n    at frameBody (http://localhost:8777/index.html?bot=teste:6892:69)\n    at frame (http://localhost:8777/index.html?bot=teste:6886:53)",
+    "n": 1,
+    "t": 420
+   },
+   {
+    "m": "step: TypeError: Cannot read properties of null (reading 't')\n    at applyDmg (http://localhost:8777/index.html?bot=teste:1431:69)\n    at updProjs (http://localhost:8777/index.html?bot=teste:1467:111)\n    at step (http://localhost:8777/index.html?bot=teste:6862:3)\n    at frameBody (http://localhost:8777/index.html?bot=teste:6892:69)\n    at frame (http://localhost:8777/index.html?bot=teste:6886:53)",
+    "n": 1,
+    "t": 421
+   },
+   {
+    "m": "step: TypeError: Cannot read properties of null (reading 't')\n    at applyDmg (http://localhost:8777/index.html?bot=teste:1431:69)\n    at updUnit (http://localhost:8777/index.html?bot=teste:1839:238)\n    at step (http://localhost:8777/index.html?bot=teste:6859:67)\n    at frameBody (http://localhost:8777/index.html?bot=teste:6892:69)\n    at frame (http://localhost:8777/index.html?bot=teste:6886:53)",
+    "n": 2,
+    "t": 422
+   },
+   {
+    "m": "step: TypeError: Cannot read properties of null (reading 't')\n    at applyDmg (http://localhost:8777/index.html?bot=teste:1431:69)\n    at updProjs (http://localhost:8777/index.html?bot=teste:1467:111)\n    at step (http://localhost:8777/index.html?bot=teste:6862:3)\n    at frameBody (http://localhost:8777/index.html?bot=teste:6892:69)\n    at frame (http://localhost:8777/index.html?bot=teste:6886:53)",
+    "n": 1,
+    "t": 423
+   },
+   {
+    "m": "step: TypeError: Cannot read properties of null (reading 't')\n    at applyDmg (http://localhost:8777/index.html?bot=teste:1431:69)\n    at updUnit (http://localhost:8777/index.html?bot=teste:1839:238)\n    at step (http://localhost:8777/index.html?bot=teste:6859:67)\n    at frameBody (http://localhost:8777/index.html?bot=teste:6892:69)\n    at frame (http://localhost:8777/index.html?bot=teste:6886:53)",
+    "n": 1,
+    "t": 425
+   },
+   {
+    "m": "step: TypeError: Cannot read properties of null (reading 't')\n    at applyDmg (http://localhost:8777/index.html?bot=teste:1431:69)\n    at updProjs (http://localhost:8777/index.html?bot=teste:1467:111)\n    at step (http://localhost:8777/index.html?bot=teste:6862:3)\n    at frameBody (http://localhost:8777/index.html?bot=teste:6892:69)\n    at frame (http://localhost:8777/index.html?bot=teste:6886:53)",
+    "n": 1,
+    "t": 426
+   },
+   {
+    "m": "step: TypeError: Cannot read properties of null (reading 't')\n    at applyDmg (http://localhost:8777/index.html?bot=teste:1431:69)\n    at updUnit (http://localhost:8777/index.html?bot=teste:1839:238)\n    at step (http://localhost:8777/index.html?bot=teste:6859:67)\n    at frameBody (http://localhost:8777/index.html?bot=teste:6892:69)\n    at frame (http://localhost:8777/index.html?bot=teste:6886:53)",
+    "n": 1,
+    "t": 426
+   },
+   {
+    "m": "step: TypeError: Cannot read properties of null (reading 't')\n    at applyDmg (http://localhost:8777/index.html?bot=teste:1431:69)\n    at updProjs (http://localhost:8777/index.html?bot=teste:1467:111)\n    at step (http://localhost:8777/index.html?bot=teste:6862:3)\n    at frameBody (http://localhost:8777/index.html?bot=teste:6892:69)\n    at frame (http://localhost:8777/index.html?bot=teste:6886:53)",
+    "n": 41,
+    "t": 428
+   },
+   {
+    "m": "step: TypeError: Cannot read properties of null (reading 't')\n    at applyDmg (http://localhost:8777/index.html?bot=teste:1431:69)\n    at updUnit (http://localhost:8777/index.html?bot=teste:1839:238)\n    at step (http://localhost:8777/index.html?bot=teste:6859:67)\n    at frameBody (http://localhost:8777/index.html?bot=teste:6892:69)\n    at frame (http://localhost:8777/index.html?bot=teste:6886:53)",
+    "n": 7,
+    "t": 469
+   }
+  ]
+ },
+ {
+  "k": 9,
+  "cfg": [
+   "camp",
+   1,
+   null
+  ],
+  "rows": [
+   {
+    "t": 321,
+    "over": false,
+    "run": true,
+    "paused": false,
+    "u": 147
+   },
+   {
+    "t": 399,
+    "over": false,
+    "run": true,
+    "paused": false,
+    "u": 156
+   },
+   {
+    "t": 469,
+    "over": true,
+    "run": false,
+    "paused": false,
+    "u": 157
+   }
+  ],
+  "parou": false,
+  "erros": [],
+  "errlog": [
+   {
+    "m": "step: TypeError: Cannot read properties of null (reading 't')\n    at applyDmg (http://localhost:8777/index.html?bot=teste:1431:69)\n    at updProjs (http://localhost:8777/index.html?bot=teste:1467:111)\n    at step (http://localhost:8777/index.html?bot=teste:6862:3)\n    at frameBody (http://localhost:8777/index.html?bot=teste:6892:69)\n    at frame (http://localhost:8777/index.html?bot=teste:6886:53)",
+    "n": 2,
+    "t": 446
+   },
+   {
+    "m": "step: TypeError: Cannot read properties of null (reading 't')\n    at applyDmg (http://localhost:8777/index.html?bot=teste:1431:69)\n    at updAnimal (http://localhost:8777/index.html?bot=teste:1667:106)\n    at updUnit (http://localhost:8777/index.html?bot=teste:1677:15)\n    at step (http://localhost:8777/index.html?bot=teste:6859:67)\n    at frameBody (http://localhost:8777/index.html?bot=teste:6892:69)\n ",
+    "n": 4,
+    "t": 446
+   },
+   {
+    "m": "step: TypeError: Cannot read properties of null (reading 't')\n    at applyDmg (http://localhost:8777/index.html?bot=teste:1431:69)\n    at updProjs (http://localhost:8777/index.html?bot=teste:1467:111)\n    at step (http://localhost:8777/index.html?bot=teste:6862:3)\n    at frameBody (http://localhost:8777/index.html?bot=teste:6892:69)\n    at frame (http://localhost:8777/index.html?bot=teste:6886:53)",
+    "n": 2,
+    "t": 448
+   },
+   {
+    "m": "step: TypeError: Cannot read properties of null (reading 't')\n    at applyDmg (http://localhost:8777/index.html?bot=teste:1431:69)\n    at updAnimal (http://localhost:8777/index.html?bot=teste:1667:106)\n    at updUnit (http://localhost:8777/index.html?bot=teste:1677:15)\n    at step (http://localhost:8777/index.html?bot=teste:6859:67)\n    at frameBody (http://localhost:8777/index.html?bot=teste:6892:69)\n ",
+    "n": 2,
+    "t": 449
+   },
+   {
+    "m": "step: TypeError: Cannot read properties of null (reading 't')\n    at applyDmg (http://localhost:8777/index.html?bot=teste:1431:69)\n    at updProjs (http://localhost:8777/index.html?bot=teste:1467:111)\n    at step (http://localhost:8777/index.html?bot=teste:6862:3)\n    at frameBody (http://localhost:8777/index.html?bot=teste:6892:69)\n    at frame (http://localhost:8777/index.html?bot=teste:6886:53)",
+    "n": 2,
+    "t": 450
+   },
+   {
+    "m": "step: TypeError: Cannot read properties of null (reading 't')\n    at applyDmg (http://localhost:8777/index.html?bot=teste:1431:69)\n    at updAnimal (http://localhost:8777/index.html?bot=teste:1667:106)\n    at updUnit (http://localhost:8777/index.html?bot=teste:1677:15)\n    at step (http://localhost:8777/index.html?bot=teste:6859:67)\n    at frameBody (http://localhost:8777/index.html?bot=teste:6892:69)\n ",
+    "n": 4,
+    "t": 451
+   },
+   {
+    "m": "step: TypeError: Cannot read properties of null (reading 't')\n    at applyDmg (http://localhost:8777/index.html?bot=teste:1431:69)\n    at updProjs (http://localhost:8777/index.html?bot=teste:1467:111)\n    at step (http://localhost:8777/index.html?bot=teste:6862:3)\n    at frameBody (http://localhost:8777/index.html?bot=teste:6892:69)\n    at frame (http://localhost:8777/index.html?bot=teste:6886:53)",
+    "n": 2,
+    "t": 452
+   },
+   {
+    "m": "step: TypeError: Cannot read properties of null (reading 't')\n    at applyDmg (http://localhost:8777/index.html?bot=teste:1431:69)\n    at updAnimal (http://localhost:8777/index.html?bot=teste:1667:106)\n    at updUnit (http://localhost:8777/index.html?bot=teste:1677:15)\n    at step (http://localhost:8777/index.html?bot=teste:6859:67)\n    at frameBody (http://localhost:8777/index.html?bot=teste:6892:69)\n ",
+    "n": 1,
+    "t": 453
+   },
+   {
+    "m": "step: TypeError: Cannot read properties of null (reading 't')\n    at applyDmg (http://localhost:8777/index.html?bot=teste:1431:69)\n    at updUnit (http://localhost:8777/index.html?bot=teste:1839:238)\n    at step (http://localhost:8777/index.html?bot=teste:6859:67)\n    at frameBody (http://localhost:8777/index.html?bot=teste:6892:69)\n    at frame (http://localhost:8777/index.html?bot=teste:6886:53)",
+    "n": 1,
+    "t": 453
+   },
+   {
+    "m": "step: TypeError: Cannot read properties of null (reading 't')\n    at applyDmg (http://localhost:8777/index.html?bot=teste:1431:69)\n    at updAnimal (http://localhost:8777/index.html?bot=teste:1667:106)\n    at updUnit (http://localhost:8777/index.html?bot=teste:1677:15)\n    at step (http://localhost:8777/index.html?bot=teste:6859:67)\n    at frameBody (http://localhost:8777/index.html?bot=teste:6892:69)\n ",
+    "n": 3,
+    "t": 454
+   },
+   {
+    "m": "step: TypeError: Cannot read properties of null (reading 't')\n    at applyDmg (http://localhost:8777/index.html?bot=teste:1431:69)\n    at updUnit (http://localhost:8777/index.html?bot=teste:1839:238)\n    at step (http://localhost:8777/index.html?bot=teste:6859:67)\n    at frameBody (http://localhost:8777/index.html?bot=teste:6892:69)\n    at frame (http://localhost:8777/index.html?bot=teste:6886:53)",
+    "n": 1,
+    "t": 455
+   },
+   {
+    "m": "step: TypeError: Cannot read properties of null (reading 't')\n    at applyDmg (http://localhost:8777/index.html?bot=teste:1431:69)\n    at updAnimal (http://localhost:8777/index.html?bot=teste:1667:106)\n    at updUnit (http://localhost:8777/index.html?bot=teste:1677:15)\n    at step (http://localhost:8777/index.html?bot=teste:6859:67)\n    at frameBody (http://localhost:8777/index.html?bot=teste:6892:69)\n ",
+    "n": 2,
+    "t": 456
+   },
+   {
+    "m": "step: TypeError: Cannot read properties of null (reading 't')\n    at applyDmg (http://localhost:8777/index.html?bot=teste:1431:69)\n    at updUnit (http://localhost:8777/index.html?bot=teste:1839:238)\n    at step (http://localhost:8777/index.html?bot=teste:6859:67)\n    at frameBody (http://localhost:8777/index.html?bot=teste:6892:69)\n    at frame (http://localhost:8777/index.html?bot=teste:6886:53)",
+    "n": 1,
+    "t": 457
+   },
+   {
+    "m": "step: TypeError: Cannot read properties of null (reading 't')\n    at applyDmg (http://localhost:8777/index.html?bot=teste:1431:69)\n    at updAnimal (http://localhost:8777/index.html?bot=teste:1667:106)\n    at updUnit (http://localhost:8777/index.html?bot=teste:1677:15)\n    at step (http://localhost:8777/index.html?bot=teste:6859:67)\n    at frameBody (http://localhost:8777/index.html?bot=teste:6892:69)\n ",
+    "n": 2,
+    "t": 457
+   },
+   {
+    "m": "step: TypeError: Cannot read properties of null (reading 't')\n    at applyDmg (http://localhost:8777/index.html?bot=teste:1431:69)\n    at updUnit (http://localhost:8777/index.html?bot=teste:1839:238)\n    at step (http://localhost:8777/index.html?bot=teste:6859:67)\n    at frameBody (http://localhost:8777/index.html?bot=teste:6892:69)\n    at frame (http://localhost:8777/index.html?bot=teste:6886:53)",
+    "n": 1,
+    "t": 458
+   },
+   {
+    "m": "step: TypeError: Cannot read properties of null (reading 't')\n    at applyDmg (http://localhost:8777/index.html?bot=teste:1431:69)\n    at updAnimal (http://localhost:8777/index.html?bot=teste:1667:106)\n    at updUnit (http://localhost:8777/index.html?bot=teste:1677:15)\n    at step (http://localhost:8777/index.html?bot=teste:6859:67)\n    at frameBody (http://localhost:8777/index.html?bot=teste:6892:69)\n ",
+    "n": 4,
+    "t": 458
+   },
+   {
+    "m": "step: TypeError: Cannot read properties of null (reading 't')\n    at applyDmg (http://localhost:8777/index.html?bot=teste:1431:69)\n    at updUnit (http://localhost:8777/index.html?bot=teste:1839:238)\n    at step (http://localhost:8777/index.html?bot=teste:6859:67)\n    at frameBody (http://localhost:8777/index.html?bot=teste:6892:69)\n    at frame (http://localhost:8777/index.html?bot=teste:6886:53)",
+    "n": 1,
+    "t": 460
+   },
+   {
+    "m": "step: TypeError: Cannot read properties of null (reading 't')\n    at applyDmg (http://localhost:8777/index.html?bot=teste:1431:69)\n    at updAnimal (http://localhost:8777/index.html?bot=teste:1667:106)\n    at updUnit (http://localhost:8777/index.html?bot=teste:1677:15)\n    at step (http://localhost:8777/index.html?bot=teste:6859:67)\n    at frameBody (http://localhost:8777/index.html?bot=teste:6892:69)\n ",
+    "n": 5,
+    "t": 460
+   },
+   {
+    "m": "step: TypeError: Cannot read properties of null (reading 't')\n    at applyDmg (http://localhost:8777/index.html?bot=teste:1431:69)\n    at updUnit (http://localhost:8777/index.html?bot=teste:1839:238)\n    at step (http://localhost:8777/index.html?bot=teste:6859:67)\n    at frameBody (http://localhost:8777/index.html?bot=teste:6892:69)\n    at frame (http://localhost:8777/index.html?bot=teste:6886:53)",
+    "n": 1,
+    "t": 462
+   },
+   {
+    "m": "step: TypeError: Cannot read properties of null (reading 't')\n    at applyDmg (http://localhost:8777/index.html?bot=teste:1431:69)\n    at updAnimal (http://localhost:8777/index.html?bot=teste:1667:106)\n    at updUnit (http://localhost:8777/index.html?bot=teste:1677:15)\n    at step (http://localhost:8777/index.html?bot=teste:6859:67)\n    at frameBody (http://localhost:8777/index.html?bot=teste:6892:69)\n ",
+    "n": 19,
+    "t": 462
+   }
+  ]
+ },
+ {
+  "k": 10,
+  "cfg": [
+   "camp",
+   2,
+   null
+  ],
+  "rows": [
+   {
+    "t": 863,
+    "over": false,
+    "run": true,
+    "paused": false,
+    "u": 177
+   },
+   {
+    "t": 940,
+    "over": false,
+    "run": true,
+    "paused": false,
+    "u": 199
+   },
+   {
+    "t": 981,
+    "over": true,
+    "run": false,
+    "paused": false,
+    "u": 191
+   }
+  ],
+  "parou": false,
+  "erros": [],
+  "errlog": [
+   {
+    "m": "step: TypeError: Cannot read properties of null (reading 't')\n    at applyDmg (http://localhost:8777/index.html?bot=teste:1431:69)\n    at updAnimal (http://localhost:8777/index.html?bot=teste:1667:106)\n    at updUnit (http://localhost:8777/index.html?bot=teste:1677:15)\n    at step (http://localhost:8777/index.html?bot=teste:6859:67)\n    at frameBody (http://localhost:8777/index.html?bot=teste:6892:69)\n ",
+    "n": 1,
+    "t": 959
+   },
+   {
+    "m": "step: TypeError: Cannot read properties of null (reading 't')\n    at applyDmg (http://localhost:8777/index.html?bot=teste:1431:69)\n    at updUnit (http://localhost:8777/index.html?bot=teste:1839:238)\n    at step (http://localhost:8777/index.html?bot=teste:6859:67)\n    at frameBody (http://localhost:8777/index.html?bot=teste:6892:69)\n    at frame (http://localhost:8777/index.html?bot=teste:6886:53)",
+    "n": 1,
+    "t": 959
+   },
+   {
+    "m": "step: TypeError: Cannot read properties of null (reading 't')\n    at applyDmg (http://localhost:8777/index.html?bot=teste:1431:69)\n    at updProjs (http://localhost:8777/index.html?bot=teste:1467:111)\n    at step (http://localhost:8777/index.html?bot=teste:6862:3)\n    at frameBody (http://localhost:8777/index.html?bot=teste:6892:69)\n    at frame (http://localhost:8777/index.html?bot=teste:6886:53)",
+    "n": 1,
+    "t": 959
+   },
+   {
+    "m": "step: TypeError: Cannot read properties of null (reading 't')\n    at applyDmg (http://localhost:8777/index.html?bot=teste:1431:69)\n    at updUnit (http://localhost:8777/index.html?bot=teste:1839:238)\n    at step (http://localhost:8777/index.html?bot=teste:6859:67)\n    at frameBody (http://localhost:8777/index.html?bot=teste:6892:69)\n    at frame (http://localhost:8777/index.html?bot=teste:6886:53)",
+    "n": 1,
+    "t": 959
+   },
+   {
+    "m": "step: TypeError: Cannot read properties of null (reading 't')\n    at applyDmg (http://localhost:8777/index.html?bot=teste:1431:69)\n    at updAnimal (http://localhost:8777/index.html?bot=teste:1667:106)\n    at updUnit (http://localhost:8777/index.html?bot=teste:1677:15)\n    at step (http://localhost:8777/index.html?bot=teste:6859:67)\n    at frameBody (http://localhost:8777/index.html?bot=teste:6892:69)\n ",
+    "n": 1,
+    "t": 959
+   },
+   {
+    "m": "step: TypeError: Cannot read properties of null (reading 't')\n    at applyDmg (http://localhost:8777/index.html?bot=teste:1431:69)\n    at updUnit (http://localhost:8777/index.html?bot=teste:1839:238)\n    at step (http://localhost:8777/index.html?bot=teste:6859:67)\n    at frameBody (http://localhost:8777/index.html?bot=teste:6892:69)\n    at frame (http://localhost:8777/index.html?bot=teste:6886:53)",
+    "n": 2,
+    "t": 960
+   },
+   {
+    "m": "step: TypeError: Cannot read properties of null (reading 't')\n    at applyDmg (http://localhost:8777/index.html?bot=teste:1431:69)\n    at updAnimal (http://localhost:8777/index.html?bot=teste:1667:106)\n    at updUnit (http://localhost:8777/index.html?bot=teste:1677:15)\n    at step (http://localhost:8777/index.html?bot=teste:6859:67)\n    at frameBody (http://localhost:8777/index.html?bot=teste:6892:69)\n ",
+    "n": 1,
+    "t": 960
+   },
+   {
+    "m": "step: TypeError: Cannot read properties of null (reading 't')\n    at applyDmg (http://localhost:8777/index.html?bot=teste:1431:69)\n    at updUnit (http://localhost:8777/index.html?bot=teste:1839:238)\n    at step (http://localhost:8777/index.html?bot=teste:6859:67)\n    at frameBody (http://localhost:8777/index.html?bot=teste:6892:69)\n    at frame (http://localhost:8777/index.html?bot=teste:6886:53)",
+    "n": 2,
+    "t": 960
+   },
+   {
+    "m": "step: TypeError: Cannot read properties of null (reading 't')\n    at applyDmg (http://localhost:8777/index.html?bot=teste:1431:69)\n    at updAnimal (http://localhost:8777/index.html?bot=teste:1667:106)\n    at updUnit (http://localhost:8777/index.html?bot=teste:1677:15)\n    at step (http://localhost:8777/index.html?bot=teste:6859:67)\n    at frameBody (http://localhost:8777/index.html?bot=teste:6892:69)\n ",
+    "n": 1,
+    "t": 961
+   },
+   {
+    "m": "step: TypeError: Cannot read properties of null (reading 't')\n    at applyDmg (http://localhost:8777/index.html?bot=teste:1431:69)\n    at updUnit (http://localhost:8777/index.html?bot=teste:1839:238)\n    at step (http://localhost:8777/index.html?bot=teste:6859:67)\n    at frameBody (http://localhost:8777/index.html?bot=teste:6892:69)\n    at frame (http://localhost:8777/index.html?bot=teste:6886:53)",
+    "n": 1,
+    "t": 961
+   },
+   {
+    "m": "step: TypeError: Cannot read properties of null (reading 't')\n    at applyDmg (http://localhost:8777/index.html?bot=teste:1431:69)\n    at updProjs (http://localhost:8777/index.html?bot=teste:1467:111)\n    at step (http://localhost:8777/index.html?bot=teste:6862:3)\n    at frameBody (http://localhost:8777/index.html?bot=teste:6892:69)\n    at frame (http://localhost:8777/index.html?bot=teste:6886:53)",
+    "n": 1,
+    "t": 961
+   },
+   {
+    "m": "step: TypeError: Cannot read properties of null (reading 't')\n    at applyDmg (http://localhost:8777/index.html?bot=teste:1431:69)\n    at updUnit (http://localhost:8777/index.html?bot=teste:1839:238)\n    at step (http://localhost:8777/index.html?bot=teste:6859:67)\n    at frameBody (http://localhost:8777/index.html?bot=teste:6892:69)\n    at frame (http://localhost:8777/index.html?bot=teste:6886:53)",
+    "n": 1,
+    "t": 961
+   },
+   {
+    "m": "step: TypeError: Cannot read properties of null (reading 't')\n    at applyDmg (http://localhost:8777/index.html?bot=teste:1431:69)\n    at updAnimal (http://localhost:8777/index.html?bot=teste:1667:106)\n    at updUnit (http://localhost:8777/index.html?bot=teste:1677:15)\n    at step (http://localhost:8777/index.html?bot=teste:6859:67)\n    at frameBody (http://localhost:8777/index.html?bot=teste:6892:69)\n ",
+    "n": 1,
+    "t": 962
+   },
+   {
+    "m": "step: TypeError: Cannot read properties of null (reading 't')\n    at applyDmg (http://localhost:8777/index.html?bot=teste:1431:69)\n    at updUnit (http://localhost:8777/index.html?bot=teste:1839:238)\n    at step (http://localhost:8777/index.html?bot=teste:6859:67)\n    at frameBody (http://localhost:8777/index.html?bot=teste:6892:69)\n    at frame (http://localhost:8777/index.html?bot=teste:6886:53)",
+    "n": 3,
+    "t": 962
+   },
+   {
+    "m": "step: TypeError: Cannot read properties of null (reading 't')\n    at applyDmg (http://localhost:8777/index.html?bot=teste:1431:69)\n    at updAnimal (http://localhost:8777/index.html?bot=teste:1667:106)\n    at updUnit (http://localhost:8777/index.html?bot=teste:1677:15)\n    at step (http://localhost:8777/index.html?bot=teste:6859:67)\n    at frameBody (http://localhost:8777/index.html?bot=teste:6892:69)\n ",
+    "n": 1,
+    "t": 962
+   },
+   {
+    "m": "step: TypeError: Cannot read properties of null (reading 't')\n    at applyDmg (http://localhost:8777/index.html?bot=teste:1431:69)\n    at updUnit (http://localhost:8777/index.html?bot=teste:1839:238)\n    at step (http://localhost:8777/index.html?bot=teste:6859:67)\n    at frameBody (http://localhost:8777/index.html?bot=teste:6892:69)\n    at frame (http://localhost:8777/index.html?bot=teste:6886:53)",
+    "n": 2,
+    "t": 963
+   },
+   {
+    "m": "step: TypeError: Cannot read properties of null (reading 't')\n    at applyDmg (http://localhost:8777/index.html?bot=teste:1431:69)\n    at updAnimal (http://localhost:8777/index.html?bot=teste:1667:106)\n    at updUnit (http://localhost:8777/index.html?bot=teste:1677:15)\n    at step (http://localhost:8777/index.html?bot=teste:6859:67)\n    at frameBody (http://localhost:8777/index.html?bot=teste:6892:69)\n ",
+    "n": 1,
+    "t": 963
+   },
+   {
+    "m": "step: TypeError: Cannot read properties of null (reading 't')\n    at applyDmg (http://localhost:8777/index.html?bot=teste:1431:69)\n    at updUnit (http://localhost:8777/index.html?bot=teste:1839:238)\n    at step (http://localhost:8777/index.html?bot=teste:6859:67)\n    at frameBody (http://localhost:8777/index.html?bot=teste:6892:69)\n    at frame (http://localhost:8777/index.html?bot=teste:6886:53)",
+    "n": 5,
+    "t": 963
+   },
+   {
+    "m": "step: TypeError: Cannot read properties of null (reading 't')\n    at applyDmg (http://localhost:8777/index.html?bot=teste:1431:69)\n    at updProjs (http://localhost:8777/index.html?bot=teste:1467:111)\n    at step (http://localhost:8777/index.html?bot=teste:6862:3)\n    at frameBody (http://localhost:8777/index.html?bot=teste:6892:69)\n    at frame (http://localhost:8777/index.html?bot=teste:6886:53)",
+    "n": 1,
+    "t": 965
+   },
+   {
+    "m": "step: TypeError: Cannot read properties of null (reading 't')\n    at applyDmg (http://localhost:8777/index.html?bot=teste:1431:69)\n    at updUnit (http://localhost:8777/index.html?bot=teste:1839:238)\n    at step (http://localhost:8777/index.html?bot=teste:6859:67)\n    at frameBody (http://localhost:8777/index.html?bot=teste:6892:69)\n    at frame (http://localhost:8777/index.html?bot=teste:6886:53)",
+    "n": 10,
+    "t": 965
+   }
+  ]
+ },
+ {
+  "k": 11,
+  "cfg": [
+   "camp",
+   3,
+   null
+  ],
+  "rows": [
+   {
+    "t": 875,
+    "over": false,
+    "run": true,
+    "paused": false,
+    "u": 157
+   },
+   {
+    "t": 951,
+    "over": false,
+    "run": true,
+    "paused": false,
+    "u": 164
+   },
+   {
+    "t": 979,
+    "over": true,
+    "run": false,
+    "paused": false,
+    "u": 164
+   }
+  ],
+  "parou": false,
+  "erros": [],
+  "errlog": []
+ },
+ {
+  "k": 12,
+  "cfg": [
+   "camp",
+   4,
+   null
+  ],
+  "rows": [
+   {
+    "t": 856,
+    "over": false,
+    "run": true,
+    "paused": false,
+    "u": 165
+   },
+   {
+    "t": 936,
+    "over": false,
+    "run": true,
+    "paused": false,
+    "u": 169
+   },
+   {
+    "t": 964,
+    "over": true,
+    "run": false,
+    "paused": false,
+    "u": 177
+   }
+  ],
+  "parou": false,
+  "erros": [],
+  "errlog": []
+ },
+ {
+  "k": 13,
+  "cfg": [
+   "camp",
+   5,
+   null
+  ],
+  "rows": [
+   {
+    "t": 787,
+    "over": false,
+    "run": true,
+    "paused": false,
+    "u": 181
+   },
+   {
+    "t": 867,
+    "over": false,
+    "run": true,
+    "paused": false,
+    "u": 196
+   },
+   {
+    "t": 928,
+    "over": true,
+    "run": false,
+    "paused": false,
+    "u": 185
+   }
+  ],
+  "parou": false,
+  "erros": [],
+  "errlog": []
+ },
+ {
+  "k": 14,
+  "cfg": [
+   "camp",
+   6,
+   null
+  ],
+  "rows": [
+   {
+    "t": 399,
+    "over": false,
+    "run": true,
+    "paused": false,
+    "u": 146
+   },
+   {
+    "t": 478,
+    "over": false,
+    "run": true,
+    "paused": false,
+    "u": 146
+   },
+   {
+    "t": 554,
+    "over": true,
+    "run": false,
+    "paused": false,
+    "u": 146
+   }
+  ],
+  "parou": false,
+  "erros": [],
+  "errlog": []
+ },
+ {
+  "k": 15,
+  "cfg": [
+   "camp",
+   7,
+   null
+  ],
+  "rows": [
+   {
+    "t": 399,
+    "over": false,
+    "run": true,
+    "paused": false,
+    "u": 143
+   },
+   {
+    "t": 478,
+    "over": false,
+    "run": true,
+    "paused": false,
+    "u": 144
+   },
+   {
+    "t": 526,
+    "over": true,
+    "run": false,
+    "paused": false,
+    "u": 141
+   }
+  ],
+  "parou": false,
+  "erros": [],
+  "errlog": []
+ },
+ {
+  "k": 17,
+  "cfg": [
+   "camp",
+   9,
+   null
+  ],
+  "rows": [
+   {
+    "t": 919,
+    "over": false,
+    "run": true,
+    "paused": false,
+    "u": 188
+   },
+   {
+    "t": 989,
+    "over": false,
+    "run": true,
+    "paused": false,
+    "u": 178
+   },
+   {
+    "t": 1046,
+    "over": true,
+    "run": false,
+    "paused": false,
+    "u": 177
+   }
+  ],
+  "parou": false,
+  "erros": [],
+  "errlog": []
+ },
+ {
+  "k": 16,
+  "cfg": [
+   "camp",
+   8,
+   null
+  ],
+  "rows": [
+   {
+    "t": 1419,
+    "over": false,
+    "run": true,
+    "paused": false,
+    "u": 229
+   },
+   {
+    "t": 1475,
+    "over": false,
+    "run": true,
+    "paused": false,
+    "u": 222
+   },
+   {
+    "t": 1512,
+    "over": true,
+    "run": false,
+    "paused": false,
+    "u": 205
+   }
+  ],
+  "parou": false,
+  "erros": [],
+  "errlog": []
+ },
+ {
+  "k": 19,
+  "cfg": [
+   "camp",
+   11,
+   null
+  ],
+  "rows": [
+   {
+    "t": 1009,
+    "over": false,
+    "run": true,
+    "paused": false,
+    "u": 178
+   },
+   {
+    "t": 1078,
+    "over": false,
+    "run": true,
+    "paused": false,
+    "u": 183
+   },
+   {
+    "t": 1148,
+    "over": true,
+    "run": true,
+    "paused": false,
+    "u": 180
+   }
+  ],
+  "parou": false,
+  "erros": [],
+  "errlog": []
+ },
+ {
+  "k": 18,
+  "cfg": [
+   "camp",
+   10,
+   null
+  ],
+  "rows": [
+   {
+    "t": 1236,
+    "over": false,
+    "run": true,
+    "paused": false,
+    "u": 158
+   },
+   {
+    "t": 1302,
+    "over": false,
+    "run": true,
+    "paused": false,
+    "u": 167
+   },
+   {
+    "t": 1373,
+    "over": true,
+    "run": false,
+    "paused": false,
+    "u": 150
+   }
+  ],
+  "parou": false,
+  "erros": [],
+  "errlog": []
+ },
+ {
+  "k": 20,
+  "cfg": [
+   "reino",
+   0,
+   null
+  ],
+  "rows": [
+   {
+    "t": 1687,
+    "over": false,
+    "run": true,
+    "paused": false,
+    "u": 308
+   },
+   {
+    "t": 1764,
+    "over": false,
+    "run": true,
+    "paused": false,
+    "u": 308
+   },
+   {
+    "t": 1840,
+    "over": false,
+    "run": true,
+    "paused": false,
+    "u": 308
+   }
+  ],
+  "parou": false,
+  "erros": [],
+  "errlog": []
+ },
+ {
+  "k": 21,
+  "cfg": [
+   "jogo",
+   "rios",
+   "sobrevivencia"
+  ],
+  "rows": [
+   {
+    "t": 1713,
+    "over": false,
+    "run": true,
+    "paused": false,
+    "u": 196
+   },
+   {
+    "t": 1785,
+    "over": false,
+    "run": true,
+    "paused": false,
+    "u": 177
+   },
+   {
+    "t": 1864,
+    "over": false,
+    "run": true,
+    "paused": false,
+    "u": 191
+   }
+  ],
+  "parou": false,
+  "erros": [],
+  "errlog": []
+ },
+ {
+  "k": 22,
+  "cfg": [
+   "build",
+   "rios",
+   "classico"
+  ],
+  "rows": [
+   {
+    "t": 1764,
+    "over": false,
+    "run": true,
+    "paused": false,
+    "u": 211
+   },
+   {
+    "t": 1844,
+    "over": false,
+    "run": true,
+    "paused": false,
+    "u": 211
+   },
+   {
+    "t": 1924,
+    "over": false,
+    "run": true,
+    "paused": false,
+    "u": 211
+   }
+  ],
+  "parou": false,
+  "erros": [],
+  "errlog": []
+ }
+]

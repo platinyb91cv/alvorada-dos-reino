@@ -16,7 +16,7 @@ assert.ok(w*h<2.5e6,'deer atlas stays within a small memory budget');
 const L=meta.locomotion.walk;assert.ok(Math.abs(L.phaseScale*L.strideTiles-2*Math.PI/5)<1e-5,'trot cadence matches movement');
 const rig=fs.readFileSync(path.join(root,proof.riggado.ficheiro));assert.equal(crypto.createHash('sha256').update(rig).digest('hex'),proof.riggado.sha256);assert.ok(rig.length<20*1024*1024);
 assert.match(html,/for\(const type of Object\.keys\(UNIT3D_FAUNA_DATA\)\)\{const source=\{ready:false,img:null,fauna:true/);
-assert.match(html,/source\.fauna\?source\.img:unit3dTint\(source,team\)/,'no team recolor on wild animals');
+assert.match(html,/if\(!source\.fauna\)\{[^\n]*u3FrameTint\(source,team/,'no team recolor on wild animals');
 assert.match(html,/if\(u\.o===2&&u\.state!=='attack'\)return [^\n]+'graze':'idle'/,'animals graze when idle');
 assert.match(html,/carcass:true,walk:true,dir:e\.kingDir\?\?0\}/,'carcass keeps the death direction');
 assert.match(html,/function carcass3D\(r,t\)/);assert.match(html,/if\(s3\)return s3\}if\(!FAUNA\.ready\)return null;/);
