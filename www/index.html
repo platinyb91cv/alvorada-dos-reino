@@ -2522,7 +2522,7 @@ function groundChunk(i,j){
   if(TL&&FLORA.tex.dirt&&cb.some(e=>!e.d.wall&&!e.d.gate&&!e.d.farm)){const iso=c.getTransform(),wm=wearMask();
     if(!GTMP||GTMP.width!==cv.width||GTMP.height!==cv.height)GTMP=mkCanvas(cv.width,cv.height);const tc=GTMP.getContext('2d');
     tc.setTransform(1,0,0,1,0,0);tc.clearRect(0,0,GTMP.width,GTMP.height);tc.setTransform(iso);tc.globalCompositeOperation='source-over';
-    for(const e of cb){if(e.d.wall||e.d.gate||e.d.farm)continue;const m=e.done?(e.type==='centro'?2.8:e.w>=3?1.4:1):.4;tc.globalAlpha=e.done?1:.6;tc.drawImage(wm,(e.tx-m)*GT,(e.ty-m)*GT,(e.w+m*2)*GT,(e.h+m*2)*GT)}
+    for(const e of cb){if(e.d.wall||e.d.gate||e.d.farm)continue;const m=e.done?(e.type==='centro'?2.8:e.w>=3?1.7:1.3):.4;tc.globalAlpha=e.done?1:.6;tc.drawImage(wm,(e.tx-m)*GT,(e.ty-m)*GT,(e.w+m*2)*GT,(e.h+m*2)*GT)}
     tc.globalAlpha=1;tc.setTransform(1,0,0,1,0,0);tc.globalCompositeOperation='source-in';tc.fillStyle=groundTex(tc,FLORA.tex.dirt,X0,Y0,cs);tc.fillRect(0,0,GTMP.width,GTMP.height);tc.globalCompositeOperation='source-over';
     c.setTransform(1,0,0,1,0,0);c.globalAlpha=.9;c.drawImage(GTMP,0,0);c.globalAlpha=1;c.setTransform(iso)}
   {const wd=wearDecal();c.globalAlpha=TL?.18:.5;for(const e of cb){if(e.d.wall||e.d.gate)continue;const m=e.done?.55:.3;c.drawImage(wd,(e.tx-m)*GT,(e.ty-m)*GT,(e.w+m*2)*GT,(e.h+m*2)*GT)}c.globalAlpha=1;
@@ -2568,8 +2568,9 @@ const FRINGE=new WeakMap();
 function bldFringe(e){let f=FRINGE.get(e);if(f!==undefined)return f;f=null;
   if(SPR.flora&&!e.d.wall&&!e.d.gate&&!e.d.farm&&!e.d.walk&&e.type!=='doca'){
     const p0=proj(e.tx,e.ty),L=proj(e.tx,e.ty+e.h),B=proj(e.tx+e.w,e.ty+e.h),Rt=proj(e.tx+e.w,e.ty);const r=mulberry32(e.id*7919+13);const items=[];
-    const edge=(a,b,n)=>{for(let k=0;k<n;k++){const t=(k+.5+(r()-.5)*.7)/n;const x=a.x+(b.x-a.x)*t-p0.x,y=a.y+(b.y-a.y)*t-p0.y+1.5+r()*2.5;const q=r();const sp=q<.55?SPR.deco.tuft[(r()*3)|0]:q<.7?SPR.deco.flower[(r()*3)|0]:q<.9?SPR.deco.pebble[(r()*3)|0]:SPR.deco.shrub[(r()*3)|0];items.push({x,y,sp,sc:(q>=.9?.75:.85)+r()*.3})}};
-    const per=Math.round(3.2*(e.w+e.h)/2+2);edge(L,B,per);edge(B,Rt,per);
+    const edge=(a,b,n)=>{for(let k=0;k<n;k++){if(r()<.28)continue; // espalhado e em grupos (antes era uma fila certinha ao longo da aresta, que denunciava o retângulo)
+      const t=Math.min(.97,Math.max(.03,(k+.5+(r()-.5)*1.6)/n));const x=a.x+(b.x-a.x)*t-p0.x+(r()-.5)*7,y=a.y+(b.y-a.y)*t-p0.y-2.5+r()*10;const q=r();const sp=q<.55?SPR.deco.tuft[(r()*3)|0]:q<.7?SPR.deco.flower[(r()*3)|0]:q<.9?SPR.deco.pebble[(r()*3)|0]:SPR.deco.shrub[(r()*3)|0];items.push({x,y,sp,sc:(q>=.9?.75:.85)+r()*.3})}};
+    const per=Math.round(3.6*(e.w+e.h)/2+2);edge(L,B,per);edge(B,Rt,per);
     // cantos laterais: um tufo maior
     items.push({x:L.x-p0.x+2,y:L.y-p0.y+1,sp:SPR.deco.tuft[0],sc:1.15},{x:Rt.x-p0.x-2,y:Rt.y-p0.y+1,sp:SPR.deco.tuft[2],sc:1.15});
     items.sort((a,b)=>a.y-b.y);
@@ -2585,8 +2586,8 @@ function wearDecal(){if(WEAR)return WEAR;const n=64,cv=mkCanvas(n,n),c=cv.getCon
   return WEAR=cv}
 // máscara de terra batida: centro cheio, borda gasta e irregular
 let WMASK=null;function wearMask(){if(WMASK)return WMASK;const n=128,cv=mkCanvas(n,n),c=cv.getContext('2d'),im=c.createImageData(n,n),nz=vnoise(4242,9),nz2=vnoise(4243,26);
-  for(let y=0;y<n;y++)for(let x=0;x<n;x++){const dx=(x+.5)/n-.5,dy=(y+.5)/n-.5,d=Math.hypot(dx,dy)*2,u=x/n,v=y/n;
-    const edge=.62+(nz(u,v)-.5)*.42+(nz2(u,v)-.5)*.18;let a=Math.min(1,Math.max(0,(edge-d)/.34));a=a*a*(3-2*a)*(.7+.3*nz2(u,v));im.data[(y*n+x)*4+3]=a*255}
+  for(let y=0;y<n;y++)for(let x=0;x<n;x++){const dx=(x+.5)/n-.5,dy=(y+.5)/n-.5,d=Math.pow(Math.pow(Math.abs(dx),3)+Math.pow(Math.abs(dy),3),1/3)*2,u=x/n,v=y/n; // quadrado de cantos redondos: cobre os cantos do lote
+    const edge=.72+(nz(u,v)-.5)*.42+(nz2(u,v)-.5)*.18;let a=Math.min(1,Math.max(0,(edge-d)/.34));a=a*a*(3-2*a)*(.7+.3*nz2(u,v));im.data[(y*n+x)*4+3]=a*255}
   c.putImageData(im,0,0);return WMASK=cv}
 let CLOUDS=null;
 function cloudSprite(){const cv=mkCanvas(256,256),c=cv.getContext('2d'),r=mulberry32(5);
@@ -3212,7 +3213,16 @@ function bld3dSprite(type,age,o,vr){if(!BLD3D.ready)return null;const v=bld3dKey
   const team=P[o]?P[o].col:'#3f86e0',key='b3|'+v+'|'+team;if(BCACHE[key])return BCACHE[key];
   const [sx,sy,w,h,ax,ay]=BLD3D.meta.frames[v],k=1/BLD3D.meta.scale,CW=Math.ceil(w*k)+2,CH=Math.ceil(h*k)+2;
   const cv=mkCanvas(CW*SS,CH*SS),c=cv.getContext('2d');c.scale(SS,SS);c.imageSmoothingEnabled=true;c.imageSmoothingQuality='high';c.drawImage(tintCrop(BLD3D,team,sx,sy,w,h),0,0,w,h,1,1,w*k,h*k);
+  if(type!=='doca')padSoften(cv,(ax*k+1)*SS,(ay*k+1)*SS,BLDS[type].w,BLDS[type].h);
   const r={cv,ox:ax*k+1,oy:ay*k+1,CW,CH};BCACHE[key]=r;return r}
+// O lote de cada edifício 3D acabava numa aresta reta com a espessura da base à vista: parecia uma imagem pousada no chão.
+// Apaga a face lateral do lote por baixo das arestas da frente e suaviza a própria aresta; a terra batida do chão faz a transição.
+function padSoften(cv,Tx,Ty,fw,fh){try{const c=cv.getContext('2d'),W2=cv.width,H2=cv.height,im=c.getImageData(0,0,W2,H2),D=im.data;
+  const Lx=Tx-fh*HW*SS,Ly=Ty+fh*HH*SS,Bx=Tx+(fw-fh)*HW*SS,By=Ty+(fw+fh)*HH*SS,Rx=Tx+fw*HW*SS,Ry=Ty+fw*HH*SS,F=7*SS,IN=3*SS,y0=Math.max(0,Math.floor(Math.min(Ly,Ry)-IN));
+  for(let x=0;x<W2;x++){const ye=x<=Lx?Ly:x>=Rx?Ry:x<=Bx?Ly+(x-Lx)*(By-Ly)/((Bx-Lx)||1):By+(x-Bx)*(Ry-By)/((Rx-Bx)||1),side=x<Lx-F||x>Rx+F;if(side)continue;
+    for(let y=Math.max(y0,Math.floor(ye-IN)),y9=Math.min(H2,Math.ceil(ye+F*1.15+2));y<y9;y++){const i=(y*W2+x)*4+3;if(!D[i])continue;const dv=(y-ye)*.894;
+      const f=dv<=0?.72+.28*(-dv/IN):Math.max(0,1-dv/F);D[i]=D[i]*Math.min(1,f*f*(3-2*f))}}
+  c.putImageData(im,0,0)}catch(e){}}
 // muralhas que chegam a uma torre entram nela: as de trás atravessam a casa por trás da torre; as da frente só chegam à base (meia casa)
 // Centro da Vila na Idade do Ferro = castelo pintado (arte/pintura-castelo/fonte/castelo_centro_v5.png): sítios em cima, em px do jogo a partir
 // do canto de cima da pegada. O Rei fica no terraço da torre de menagem; os soldados nas torres, na casa do portão e nos caminhos de ronda.
