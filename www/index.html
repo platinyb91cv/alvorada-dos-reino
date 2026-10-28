@@ -744,7 +744,8 @@ function lazyImg(src,url,onl){src.url=url;src.onl=onl||null;src.lazy=()=>{const 
 function atlasRelease(src){if(!src.url||!src.ready)return;src.img=null;src.ready=false;src.uid=0;src.lt=null;src.seen=null;if(src.teams)src.teams.clear();if(src.cape)src.cape.clear();
   if(src.key&&typeof KFRAME!=='undefined')for(const k of [...KFRAME.keys()])if(k.startsWith(src.key+'|'))KFRAME.delete(k);lazyImg(src,src.url,src.onl)}
 function atlasGC(){if(!G||!P||G.time-(G.agc||0)<10)return;G.agc=G.time;const seen=new Set();for(const e of ents)if(e.kind==='u')seen.add(e.type);for(const f of fx)if(f.ut)seen.add(f.ut);
-  for(const [t,s2] of Object.entries(UNIT3D)){if(!s2.url||!s2.ready)continue;if(seen.has(t)||s2.seen==null){if(seen.has(t)||s2.seen==null)s2.seen=G.time;continue}if(G.time-s2.seen>60)atlasRelease(s2)}
+  const active=new Set([...seen].map(t=>UNIT3D[t]).filter(Boolean)); // aliases (carrocaCarga/carroca) usam a mesma imagem
+  for(const s2 of new Set(Object.values(UNIT3D))){if(!s2.url||!s2.ready)continue;if(active.has(s2)||s2.seen==null){s2.seen=G.time;continue}if(G.time-s2.seen>60)atlasRelease(s2)}
   const need2d=ents.some(e=>e.kind==='u'&&!UNIT3D[e.type]&&ANIM.meta[e.type]);for(const s2 of [ANIM,ANIMB]){if(need2d){s2.seen=G.time;u3ready(s2);continue}if(s2.seen==null)s2.seen=G.time;else if(s2.ready&&G.time-s2.seen>60)atlasRelease(s2)}
   const ages=new Set([P[0]&&P[0].age,P[1]&&P[1].age]);for(const [s2,a] of [[BART,0],[BRONZE_ART,1]]){if(ages.has(a)||s2.seen==null){s2.seen=G.time;continue}if(s2.ready&&G.time-s2.seen>30)atlasRelease(s2)}}
 function loadUnit3dPreferred(type,source){
@@ -5195,6 +5196,7 @@ async function accInit(){
   if(!window.supabase||!ALV_CFG.supabaseUrl){ACC.sb=null;showLogin(isPreviewHost()?'O login não está disponível nesta página de pré-visualização.':'Sem ligação ao serviço de contas. Verifica a internet.');return}
   ACC.sb=window.supabase.createClient(ALV_CFG.supabaseUrl,ALV_CFG.supabaseKey,{auth:{flowType:'pkce',persistSession:true,autoRefreshToken:true,detectSessionInUrl:!isNative()}});
   ACC.sb.auth.onAuthStateChange((ev,session)=>{
+    if(ev==='SIGNED_OUT'||(session&&session.user&&session.user.id)!==(ACC.user&&ACC.user.id))cloudInvalidate();
     if(ev==='TOKEN_REFRESHED'&&session&&NET.ws&&NET.authed)netSend({type:'auth',token:session.access_token,refresh:true});
     if(session&&session.user){const fresh=!ACC.user||ACC.user.id!==session.user.id;ACC.user=session.user;if(fresh)setTimeout(accAfterLogin,0)}
     else if(ev==='SIGNED_OUT'){ACC.user=null;ACC.profile=null;netClose();showLogin('Sessão terminada.')}});
@@ -5221,7 +5223,7 @@ async function accGoogle(){
       if(error)throw error;await br.open({url:data.url,presentationStyle:'popover'})}
     else{const {error}=await ACC.sb.auth.signInWithOAuth({provider:'google',options:{redirectTo:location.origin+location.pathname,queryParams:{prompt:'select_account'}}});if(error)throw error}
   }catch(e){loginStatus('Não foi possível abrir o login: '+(e.message||e),true)}}
-function accPreview(){ACC.preview=true;ACC.user=null;ACC.profile={username:'Visitante',rating:1000,avatar_url:null,wins:0,losses:0,games:0,sp_wins:0,sp_losses:0,friend_code:'—'};accEnterMenu();toast('Modo de pré-visualização: sem conta, sem online nem pontuação')}
+function accPreview(){cloudInvalidate();ACC.preview=true;ACC.user=null;ACC.profile={username:'Visitante',rating:1000,avatar_url:null,wins:0,losses:0,games:0,sp_wins:0,sp_losses:0,friend_code:'—'};accEnterMenu();toast('Modo de pré-visualização: sem conta, sem online nem pontuação')}
 async function accToken(){if(!ACC.sb||ACC.preview)return null;try{const {data}=await ACC.sb.auth.getSession();return data.session?data.session.access_token:null}catch(e){return null}}
 function accCachedProfile(){try{return JSON.parse(localStorage.getItem('alv_profile')||'null')}catch(e){return null}}
 async function accLoadProfile(){
@@ -5244,7 +5246,7 @@ async function accDeleteAccount(){const b=$('pfDelete');
   try{const {error}=await ACC.sb.rpc('delete_my_account');if(error)throw error;clearSave();try{localStorage.removeItem('alv_profile')}catch(e){}
     await accLogout();showLogin('A tua conta e os teus dados foram apagados.')}
   catch(e){b.disabled=false;b.classList.remove('arm');b.textContent='Apagar a minha conta';toast('Não foi possível apagar a conta. Tenta outra vez.',true)}}
-async function accLogout(){try{await ACC.sb.auth.signOut()}catch(e){}try{localStorage.removeItem('alv_uid_ultimo')}catch(e){}ACC.user=null;ACC.profile=null;ACC.preview=false;try{localStorage.removeItem('alv_profile')}catch(e){}netClose();showLogin('Sessão terminada.')}
+async function accLogout(){cloudInvalidate();try{await ACC.sb.auth.signOut()}catch(e){}try{localStorage.removeItem('alv_uid_ultimo')}catch(e){}ACC.user=null;ACC.profile=null;ACC.preview=false;try{localStorage.removeItem('alv_profile')}catch(e){}netClose();showLogin('Sessão terminada.')}
 async function accRecordSP(win){if(!ACC.sb||ACC.preview||!ACC.user)return;try{await ACC.sb.rpc('record_sp',{p_win:!!win});if(ACC.profile){ACC.profile[win?'sp_wins':'sp_losses']++}}catch(e){}}
 // ---------- ecrãs: perfil, classificação, amigos ----------
 function screenGo(id){for(const s of ['sMenu','sProfile','sRank','sFriends'])$(s).hidden=s!==id}
@@ -5817,6 +5819,7 @@ function spawnFauna(){
 }
 /* ---------------- guardar / continuar ---------------- */
 const SAVE_KEY='alv_save_v1';
+function normalSaveKey(){return ukey(SAVE_KEY)} // mesma separação por conta usada pelo Reino, com migração da gravação antiga
 // campos extra de G que viajam no gravar/continuar e na sincronização online
 const GX=['map','vic','civ','camp','daily','reino','hero','surv','sdiff','bell','tradeGold','alertAt','islands','obj','relics','tod','weather','achv','track','king','mkt','regrow','sheepT','relicT','roads'];
 function gExtra(){const o={};for(const k of GX)if(G[k]!==undefined)o[k]=G[k];return JSON.parse(JSON.stringify(o))}
@@ -5837,15 +5840,15 @@ function saveGame(silent){ // devolve {ok,msg}; confirma lendo de volta o que es
   if(G.reino&&G.reino.demo)return r(false,'Modo demonstração: não é guardado (não afeta o teu reino).');
   if(NET.on)return r(false,'Partida online: usa «Gravar e sair» para guardar nos dois telemóveis');
   if(G.over)return r(false,'A partida já terminou: não há nada para guardar');
-  try{const key=G.reino?reinoKey():SAVE_KEY,data=serialize();localStorage.setItem(key,data);if(localStorage.getItem(key)!==data)throw new Error('verify');if(G.reino)reinoSaveMeta();G.savedAt=Date.now();return r(true,'Jogo guardado ✔')}
+  try{const key=G.reino?reinoKey():normalSaveKey(),data=serialize();localStorage.setItem(key,data);if(localStorage.getItem(key)!==data)throw new Error('verify');if(G.reino)reinoSaveMeta();G.savedAt=Date.now();return r(true,'Jogo guardado ✔')}
   catch(e){return r(false,'Não foi possível guardar (memória do telemóvel cheia?)')}}
 function saveBtnFlash(res){const b=$('bSave');if(!b)return;clearTimeout(b._t);if(!b._txt)b._txt=b.textContent;const t=new Date();
   b.textContent=res.ok?'✓ Guardado às '+String(t.getHours()).padStart(2,'0')+':'+String(t.getMinutes()).padStart(2,'0'):'✗ Não guardado';b.classList.toggle('ok',!!res.ok);b.classList.toggle('bad',!res.ok);
   b._t=setTimeout(()=>{b.textContent=b._txt;b.classList.remove('ok','bad')},3500)}
-function hasSave(){try{return !!localStorage.getItem(SAVE_KEY)}catch(e){return false}}
-function clearSave(){try{localStorage.removeItem(SAVE_KEY)}catch(e){}}
+function hasSave(){try{return !!localStorage.getItem(normalSaveKey())}catch(e){return false}}
+function clearSave(){try{localStorage.setItem(normalSaveKey(),'')}catch(e){}} // tombstone: não reimportar uma cópia antiga depois de terminar a partida
 function loadGame(key){
-  let d=null;try{d=JSON.parse(localStorage.getItem(key||SAVE_KEY))}catch(e){}
+  let d=null;try{d=JSON.parse(localStorage.getItem(key||normalSaveKey()))}catch(e){}
   if(!d||d.v!==1){toast('Não há jogo guardado',true);return false}
   G={seed:d.G.seed,time:d.G.time,starts:d.G.starts,wonder:d.G.wonder,amoveNext:false,over:false,fishRespawn:d.G.fishRespawn||[],lake:d.G.lake||null,form:d.G.form||'livre',cmdMode:null,mode:d.G.mode||'normal',tut:d.G.tut||null,map:'rios',vic:'classico',civ:['mar','planicies'],reino:null,...(d.X||{})};gameMode=G.mode;
   P=mkPlayers();d.P.forEach((p,i)=>{Object.assign(P[i].res,p.res);P[i].age=p.age;P[i].techs=p.techs||{};P[i].stats=p.stats});{const mc=myColor();P[0].col=mc[0];P[0].dark=mc[1]}
@@ -6137,20 +6140,44 @@ $('ljBack').onclick=()=>{sfx('click');$('sLoja').hidden=true;const a=lojaVolta;l
 $('bLoja').onclick=()=>{sfx('click');lojaOpen()};
 
 // ---------- gravação na nuvem (a tua conta guarda a última partida) ----------
-let cloudBusy=false;
-// Nuvem: uma linha por jogador com DOIS lugares — a partida normal e o Meu Reino. Antes era um só: guardar ou acabar uma partida
-// normal apagava a cópia do reino na nuvem, e «Continuar (da nuvem)» podia escrever um reino antigo por cima do atual.
-async function cloudRow(){const {data,error}=await ACC.sb.from('cloud_saves').select('data').eq('user_id',ACC.user.id).maybeSingle();if(error)throw error;if(!data)return{v:2,normal:null,reino:null};
-  const o=await unpackJSON(data.data);if(o&&o.v===2)return{v:2,normal:o.normal||null,reino:o.reino||null};return o&&o.X&&o.X.reino?{v:2,normal:null,reino:o}:{v:2,normal:o||null,reino:null}}
-async function cloudPut(row){if(!row.normal&&!row.reino){const {error}=await ACC.sb.from('cloud_saves').delete().eq('user_id',ACC.user.id);if(error)throw error;return}
-  const data=await packJSON(row);const {error}=await ACC.sb.from('cloud_saves').upsert({user_id:ACC.user.id,data,updated_at:new Date().toISOString()});if(error)throw error}
-async function cloudSave(quiet){if(!ACC.sb||!ACC.user||ACC.preview||cloudBusy||!running||NET.on||G.over||(G.reino&&G.reino.demo))return false;cloudBusy=true;
-  try{const obj=JSON.parse(serialize()),row=await cloudRow();if(obj.X&&obj.X.reino)row.reino=obj;else row.normal=obj;await cloudPut(row);if(!quiet)toast('Guardado também na nuvem ☁️');return true}
-  catch(e){if(!quiet)toast('Não foi possível guardar na nuvem',true);return false}finally{cloudBusy=false}}
-async function cloudClearNormal(){if(!ACC.sb||!ACC.user||ACC.preview)return;try{const row=await cloudRow();if(!row.normal)return;row.normal=null;await cloudPut(row)}catch(e){}}
-async function cloudCheck(){if(!ACC.sb||!ACC.user||ACC.preview||hasSave())return;try{const row=await cloudRow();if(!row.normal||hasSave()||running)return;
+// Conta e revisão capturadas por pedido. Uma resposta antiga nunca muda a conta atual.
+let cloudEpoch=0;const CLOUD_QUEUES=new Map();
+function cloudInvalidate(){cloudEpoch++}
+function cloudContext(){return ACC.sb&&ACC.user&&!ACC.preview?{sb:ACC.sb,id:ACC.user.id,epoch:cloudEpoch}:null}
+function cloudCurrent(c){return !!(c&&ACC.sb===c.sb&&ACC.user&&ACC.user.id===c.id&&!ACC.preview&&cloudEpoch===c.epoch)}
+function cloudAssert(c){if(!cloudCurrent(c))throw new Error('A conta mudou durante a gravação')}
+async function cloudQuery(c,q){cloudAssert(c);const ac=new AbortController(),timer=setTimeout(()=>ac.abort(),15000);
+  try{const r=await q.abortSignal(ac.signal);cloudAssert(c);return r}finally{clearTimeout(timer)}}
+function cloudQueue(c,job){cloudAssert(c);const key=c.id+'|'+c.epoch,prev=CLOUD_QUEUES.get(key)||Promise.resolve();
+  const next=prev.catch(()=>{}).then(()=>{cloudAssert(c);return job()});CLOUD_QUEUES.set(key,next);
+  const clean=()=>{if(CLOUD_QUEUES.get(key)===next)CLOUD_QUEUES.delete(key)};next.then(clean,clean);return next}
+async function cloudRead(c){cloudAssert(c);const {data,error}=await cloudQuery(c,c.sb.from('cloud_saves').select('data,updated_at').eq('user_id',c.id).maybeSingle());if(error)throw error;
+  if(!data)return{row:{v:2,normal:null,reino:null},exists:false,revision:null};
+  const o=await unpackJSON(data.data);cloudAssert(c);const row=o&&o.v===2?{v:2,normal:o.normal||null,reino:o.reino||null}:o&&o.X&&o.X.reino?{v:2,normal:null,reino:o}:{v:2,normal:o||null,reino:null};
+  if(!data.updated_at)throw new Error('A gravação da nuvem não tem revisão');return{row,exists:true,revision:data.updated_at}}
+async function cloudRow(c=cloudContext()){return(await cloudRead(c)).row}
+// Só muda um lugar. UPDATE condicional pela revisão impede que outro dispositivo perca a sua alteração.
+// Lugares vazios ficam como tombstone: apagar a linha criaria uma corrida entre INSERT e DELETE.
+async function cloudWriteSlot(c,slot,value){let first;for(let attempt=0;attempt<4;attempt++){
+    const old=await cloudRead(c),row=old.row,target=JSON.stringify(row[slot]);
+    if(attempt&&target!==first)throw new Error('Este lugar foi guardado noutro dispositivo. A cópia local foi preservada.');first=target;
+    if(value===null&&!row[slot])return true;row[slot]=value;
+    const data=await packJSON(row);cloudAssert(c);const stamp=new Date(Math.max(Date.now(),(Date.parse(old.revision)||0)+1)).toISOString();
+    const values={data,updated_at:stamp};let q;
+    if(old.exists)q=c.sb.from('cloud_saves').update(values).eq('user_id',c.id).eq('updated_at',old.revision);
+    else q=c.sb.from('cloud_saves').insert({...values,user_id:c.id});
+    const res=await cloudQuery(c,q.select('user_id'));
+    if(res.error){if(!old.exists&&res.error.code==='23505')continue;throw res.error}
+    if(res.data&&res.data.length)return true;
+  }throw new Error('A gravação mudou noutro dispositivo. Tenta guardar novamente.')}
+function cloudPut(slot,value,c=cloudContext()){if(slot!=='normal'&&slot!=='reino')throw new Error('Lugar de gravação inválido');return cloudQueue(c,()=>cloudWriteSlot(c,slot,value))}
+async function cloudSave(quiet){const c=cloudContext();if(!c||!running||NET.on||G.over||(G.reino&&G.reino.demo))return false;
+  try{const obj=JSON.parse(serialize());await cloudPut(obj.X&&obj.X.reino?'reino':'normal',obj,c);if(!quiet&&cloudCurrent(c))toast('Guardado também na nuvem ☁️');return true}
+  catch(e){if(!quiet&&cloudCurrent(c))toast('Não foi possível guardar na nuvem. A cópia local continua guardada.',true);return false}}
+async function cloudClearNormal(){const c=cloudContext();if(!c)return false;try{return await cloudPut('normal',null,c)}catch(e){return false}}
+async function cloudCheck(){const c=cloudContext();if(!c||hasSave())return;try{const row=await cloudRow(c);if(!row.normal||hasSave()||running)return;cloudAssert(c);
   const b=$('bCont');b.hidden=false;b.lastChild.textContent='Continuar (da nuvem)';b.dataset.cloud='1'}catch(e){}}
-async function cloudLoad(){try{const row=await cloudRow();if(!row.normal)throw 0;localStorage.setItem(SAVE_KEY,JSON.stringify(row.normal));return true}catch(e){toast('Não foi possível ler a gravação da nuvem',true);return false}}
+async function cloudLoad(){const c=cloudContext();try{const row=await cloudRow(c);if(!row.normal)throw 0;cloudAssert(c);localStorage.setItem(normalSaveKey(),JSON.stringify(row.normal));return true}catch(e){if(cloudCurrent(c))toast('Não foi possível ler a gravação da nuvem',true);return false}}
 // progresso de uma gravação do reino: missão/capítulo, depois tempo de jogo (o reino só anda para a frente)
 function reinoScore(o){try{if(typeof o==='string')o=JSON.parse(o);return o&&o.v===1&&o.X&&o.X.reino?(o.X.reino.n||0)*1e7+(o.G.time||0):-1}catch(e){return -1}}
 function reinoMetaOf(o){const R=o.X.reino,h=o.X.hero;return{n:R.n||0,t:(R.ms&&!R.ms.daily?R.ms:reinoDef(R.n||0)).t,gl:R.gl||0,age:(o.P&&o.P[0]&&o.P[0].age)||0,pop:0,klv:h&&h[0]?h[0].lv:1,time:Math.round(o.G.time||0),done:(R.hist||[]).slice(-8),big:(o.mapN||0)>=REINO_N?1:0}}
@@ -6159,8 +6186,8 @@ function reinoAdopt(o,why){const js=typeof o==='string'?o:JSON.stringify(o),ob=t
 function reinoMerge(){try{const uk=reinoKey(),base='alv_reino_v1';if(uk===base)return;const b=localStorage.getItem(base);if(!b)return;const own=localStorage.getItem(base+'__dono'),id=uk.slice(base.length+1);if(own&&own!==id)return;
   const u=localStorage.getItem(uk);if(reinoScore(b)>reinoScore(u)){reinoAdopt(b,'Recuperámos a gravação mais recente do teu reino ✔');const ck=localStorage.getItem('alv_reino_ck');if(ck)localStorage.setItem(reinoCkKey(),ck)}}catch(e){}}
 // cópia do reino na nuvem mais avançada que a deste telemóvel (telemóvel novo, dados apagados): usa-a
-async function reinoCloudSync(){if(!ACC.sb||!ACC.user||ACC.preview)return false;try{const row=await cloudRow();if(!row.reino)return false;let loc=null;try{loc=localStorage.getItem(reinoKey())}catch(e){}
-  if(reinoScore(row.reino)>reinoScore(loc)){reinoAdopt(row.reino,'Reino recuperado da nuvem ☁️');return true}}catch(e){}return false}
+async function reinoCloudSync(){const c=cloudContext();if(!c)return false;try{const row=await cloudRow(c);if(!row.reino)return false;let loc=null;try{loc=localStorage.getItem(reinoKey())}catch(e){}
+  if(reinoScore(row.reino)>reinoScore(loc)){cloudAssert(c);reinoAdopt(row.reino,'Reino recuperado da nuvem ☁️');return true}}catch(e){}return false}
 // ---------- Campanha ----------
 const cntU=(o,t)=>ents.filter(e=>e.o===o&&e.kind==='u'&&e.type===t).length+ents.filter(e=>e.o===o&&e.garr).reduce((a,b)=>a+b.garr.filter(u=>u.type===t).length,0);
 const cntB=(o,t,done=true)=>ents.filter(e=>e.o===o&&e.kind==='b'&&e.type===t&&(!done||e.done)).length;
@@ -6870,7 +6897,8 @@ function modeHud(){const el=$('modeT');let ic='',tx='',warn=false;
   el.hidden=!ic;if(ic){el.firstChild.textContent=ic;el.lastChild.textContent=tx;el.classList.toggle('warn',warn)}}
 function endGame(win,wonder,why){
   if(BOT.on){BOT.on=false;document.body.classList.remove('bot')}
-  G.won=!!win;running=false;$('coach').hidden=true;document.body.classList.remove('coaching');document.body.classList.remove('ingame');if(!NET.on&&!G.reino){clearSave();cloudClearNormal()} // só o lugar da partida normal: a cópia do reino na nuvem fica$('endRate').hidden=true;
+  G.won=!!win;running=false;$('coach').hidden=true;document.body.classList.remove('coaching');document.body.classList.remove('ingame');if(!NET.on&&!G.reino){clearSave();cloudClearNormal()} // só o lugar da partida normal: a cópia do reino na nuvem fica
+  $('endRate').hidden=true;
   if(NET.on)netReport(win,why||(wonder?'wonder':'normal'));else if(G.mode!=='build'&&!G.botUsed)accRecordSP(win);ambStop();MUS.want='menu';audioPause(false);snd(win?'victory':'defeat',null,null,{force:1});if(win||why==='king')setTimeout(()=>voz(win?'vitoria':'derrota',1),1400);
   $('endTitle').textContent=why==='reino'?'O reino caiu':why==='surv_win'?'Vitória lendária':win?'Vitória':'Derrota';
   let extraTxt='';

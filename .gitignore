@@ -15,3 +15,7 @@ tools/
 *.jks.b64
 *.keystore
 arte/rei/rei.b64
+
+# resultados locais de teste
+test-results/
+__pycache__/

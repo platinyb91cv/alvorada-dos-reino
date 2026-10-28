@@ -7,9 +7,13 @@
 import asyncio, json, sys
 from playwright.async_api import async_playwright
 OUT = sys.argv[1] if len(sys.argv) > 1 else '/tmp'
-FAKE = r"""()=>{const db={row:null};window.__db=db;const q=()=>{const o={_del:false,select(){return o},eq(){return o},
-  maybeSingle:async()=>({data:o._del?null:(db.row?{data:db.row}:null),error:null}),delete(){o._del=true;return {eq:async()=>{db.row=null;return{error:null}}}},
-  upsert:async v=>{db.row=v.data;return{error:null}}};return o};ACC.sb={from:()=>q(),auth:{signOut:async()=>{}}};ACC.user={id:'u1'};ACC.preview=false;}"""
+FAKE = r"""()=>{const db={row:null,revision:null,n:0};window.__db=db;
+const fetch=async(url,opt={})=>{const u=new URL(url),v=opt.body?JSON.parse(opt.body):null;let data=[],status=200;
+ if(u.pathname.endsWith('/cloud_saves')){if(!opt.method||opt.method==='GET')data=db.row?[{data:db.row,updated_at:db.revision}]:[];
+ else if(opt.method==='POST'){if(db.row){data={code:'23505',message:'duplicate'};status=409}else{db.row=v.data;db.revision=new Date(++db.n).toISOString();data=[{user_id:v.user_id}]}}
+ else if(opt.method==='PATCH'&&u.searchParams.get('updated_at')==='eq.'+db.revision){db.row=v.data;db.revision=new Date(++db.n).toISOString();data=[{user_id:'u1'}]}}
+ return new Response(JSON.stringify(data),{status,headers:{'content-type':'application/json'}})};
+ ACC.sb=window.supabase.createClient('http://cloud.test','sb_publishable_test',{auth:{persistSession:false,autoRefreshToken:false,detectSessionInUrl:false},global:{fetch}});ACC.user={id:'u1'};ACC.preview=false;}"""
 ST = "()=>({reino:!!(G&&G.reino),t:Math.round(G.time),casas:ents.filter(e=>e.kind==='b'&&e.o===0&&e.type==='casa').length,n:G.reino?G.reino.n:null})"
 async def main():
     async with async_playwright() as p:
@@ -34,11 +38,11 @@ async def main():
         await pg.evaluate("()=>{$('bCampGo').onclick()}"); await pg.wait_for_timeout(4500)
         r['reino_volta'] = await pg.evaluate(ST)
         # «Continuar (da nuvem)» com só o reino na nuvem: não aparece e não mexe no reino
-        r['continuar_nuvem'] = await pg.evaluate("async()=>{running=false;localStorage.removeItem(SAVE_KEY);const b=$('bCont');delete b.dataset.cloud;await cloudCheck();return b.dataset.cloud||'nao'}")
+        r['continuar_nuvem'] = await pg.evaluate("async()=>{running=false;localStorage.removeItem(normalSaveKey());const b=$('bCont');delete b.dataset.cloud;await cloudCheck();return b.dataset.cloud||'nao'}")
         # telemóvel sem o reino: recupera da nuvem; cópia mais atrasada na nuvem é ignorada
         r['recupera'] = await pg.evaluate("""async()=>{const t0=reinoScore(localStorage.getItem(reinoKey()));localStorage.removeItem(reinoKey());localStorage.removeItem(reinoMetaKey());
           const ok=await reinoCloudSync();return{ok,igual:reinoScore(localStorage.getItem(reinoKey()))>0,tem:reinoHas()}}""")
-        r['ignora_atrasada'] = await pg.evaluate("""async()=>{const cur=JSON.parse(localStorage.getItem(reinoKey()));const old=JSON.parse(JSON.stringify(cur));old.G.time=1;await cloudPut({v:2,normal:null,reino:old});
+        r['ignora_atrasada'] = await pg.evaluate("""async()=>{const cur=JSON.parse(localStorage.getItem(reinoKey()));const old=JSON.parse(JSON.stringify(cur));old.G.time=1;await cloudPut('reino',old);
           cur.G.time+=500;localStorage.setItem(reinoKey(),JSON.stringify(cur));const ch=await reinoCloudSync();return{mudou:ch,tempo:JSON.parse(localStorage.getItem(reinoKey())).G.time===cur.G.time}}""")
         # gravação mais avançada feita sem sessão (chave base) é recuperada quando a sessão volta
         r['juntar'] = await pg.evaluate("""()=>{const cur=JSON.parse(localStorage.getItem(reinoKey()));const adv=JSON.parse(JSON.stringify(cur));adv.X.reino.n=(adv.X.reino.n||0)+2;
