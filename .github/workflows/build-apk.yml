@@ -2,7 +2,7 @@ name: Gerar APK e AAB
 
 on:
   push:
-    branches: [main, master]
+    branches: [main, master, 'correcao-gravacoes-*']
   workflow_dispatch:
 
 permissions:
@@ -19,6 +19,35 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 22
+
+      - name: Regressão JavaScript
+        run: for test in tests/*.cjs; do node "$test" || exit 1; done
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Instalar navegador de teste
+        run: |
+          python -m pip install playwright==1.64.0
+          python -m playwright install --with-deps chromium
+
+      - name: Validar gravações, recuperação e imagens
+        run: |
+          mkdir -p test-results
+          python -m http.server 8777 --bind 127.0.0.1 --directory www > /tmp/alvorada-http.log 2>&1 &
+          HTTP_PID=$!
+          trap 'kill "$HTTP_PID"' EXIT
+          python tests/e2e/nao_congela.py test-results
+          python tests/e2e/atlas_leve.py test-results
+          python tests/e2e/reino_save.py test-results
+          python tests/e2e/estabilidade.py test-results
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: alvorada-regressao
+          path: test-results/
 
       - uses: actions/setup-java@v4
         with:
