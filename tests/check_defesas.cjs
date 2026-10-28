@@ -19,7 +19,7 @@ assert.match(html,/if\(e\.type==='portaoMadeira'\)return \[1\.28,1\.65,1\.8\]/);
 assert.match(html,/if\(e\.type==='torre'\)return \[0,2\.22,3\.81,3\.3\]\[e\.lvl\|\|1\]/);
 assert.match(html,/const ZP=HW\*2\/Math\.SQRT2\*Math\.cos\(Math\.PI\/6\); \/\/ píxeis/,'no leftover render-scale fudge factor');
 // 4) muro ao lado da casa do portão: variantes renderizadas e escolhidas no jogo
-const W=JSON.parse(html.match(/const WALL3D_DATA=(\{[^\n]+\});/)[1]).frames;
+const W=JSON.parse(fs.readFileSync(path.join(root,'arte/leve/fonte/WALL3D_DATA.json'),'utf8')).frames; // atlas completo (fonte)
 for(const t of ['pedra','fort','madeira'])for(let m=0;m<16;m++){assert.ok(W[t+'_'+m],t+'_'+m);if(m&4)assert.ok(W[t+'_'+m+'_g4'],t+'_'+m+'_g4');if(m&8)assert.ok(W[t+'_'+m+'_g8'],t+'_'+m+'_g8')}
 assert.match(html,/if\(\(m&4\)&&gAt\(e\.tx-1,e\.ty,'x'\)\)m\|=64;if\(\(m&8\)&&gAt\(e\.tx,e\.ty-1,'y'\)\)m\|=128;/);
 assert.match(html,/fk=gb&&F\[base\+'_g'\+gb\]\?base\+'_g'\+gb:base/);

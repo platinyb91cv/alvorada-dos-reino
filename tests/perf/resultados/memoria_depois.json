@@ -1,0 +1,49 @@
+{
+ "rows": [
+  {
+   "t": 82,
+   "idades": [
+    0,
+    0
+   ],
+   "unidades": 128,
+   "imagens_mb": 91,
+   "imagens_n": 22,
+   "telas_mb": 48
+  },
+  {
+   "t": 312,
+   "idades": [
+    0,
+    0
+   ],
+   "unidades": 144,
+   "imagens_mb": 91,
+   "imagens_n": 22,
+   "telas_mb": 60
+  },
+  {
+   "t": 613,
+   "idades": [
+    1,
+    1
+   ],
+   "unidades": 153,
+   "imagens_mb": 93,
+   "imagens_n": 23,
+   "telas_mb": 80
+  },
+  {
+   "t": 925,
+   "idades": [
+    2,
+    1
+   ],
+   "unidades": 161,
+   "imagens_mb": 97,
+   "imagens_n": 24,
+   "telas_mb": 96
+  }
+ ],
+ "erros": []
+}

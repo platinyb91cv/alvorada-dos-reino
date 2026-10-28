@@ -12,7 +12,7 @@ function verifyAtlas(marker, endMarker, folder) {
   const stored = JSON.parse(fs.readFileSync(path.join(root,folder,'rei.json'),'utf8'));
   assert.deepEqual(meta,stored,marker+': embedded metadata differs');
   assert.equal(meta.h,130);assert.equal(meta.f.length,192);assert.equal(meta.directions,8);assert.equal(meta.framesPerDirection,24);
-  const payload=block.match(/im\.src='(assets\/kings\/[a-z]+\.webp)\?v=([0-9a-f]{12})'/);
+  const payload=block.match(/(?:im\.src=|lazyImg\([A-Z_]+,)'(assets\/kings\/[a-z]+\.webp)\?v=([0-9a-f]{12})'/);
   assert.ok(payload,marker+': atlas file reference missing');
   assert.ok(!/base64,/.test(block),marker+': atlas must not be embedded in index.html');
   const webp=fs.readFileSync(path.join(root,'www',payload[1]));
@@ -36,7 +36,7 @@ assert.match(html,/const KING_H=34/);assert.match(html,/return 16\+Math\.min\(7/
 const selector=html.match(/function kingAtlasForAge\(age\)\{[^\n]+\}/)[0];
 const start=html.indexOf('function drawKing(c,e,v,px,py)'),end=html.indexOf('\nfunction ',start+1);
 const knight={ready:true},stone={ready:true},bronze={ready:true},calls=[];
-const context={BART:stone,BRONZE_ART:bronze,KART:knight,KING_H:34,P:[{age:0,col:'#3366cc'}],G:{hero:{}},ME:0,cam:{z:.5},performance:{now:()=>1000},Math,
+const context={BART:stone,BRONZE_ART:bronze,KART:knight,KING_H:34,P:[{age:0,col:'#3366cc'}],G:{hero:{}},ME:0,cam:{z:.5},performance:{now:()=>1000},Math,u3ready:s=>!!(s&&s.ready),
   kingDirection:()=>0,kingLook:()=>({cape:'#aa2244'}),heroWC:()=>false,kingFrameIdx:()=>8,drawKingArt:(...args)=>calls.push(args[9])};
 context.kingAtlasForAge=vm.runInNewContext('('+selector+'\n)',context);
 const draw=vm.runInNewContext('('+html.slice(start,end)+'\n)',context);

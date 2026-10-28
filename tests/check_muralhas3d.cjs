@@ -1,7 +1,7 @@
 // Muralhas 3D: 3 tipos × 16 máscaras, atlas verificado e gancho em bldSprite.
 const fs=require('node:fs'),path=require('node:path'),crypto=require('node:crypto'),assert=require('node:assert/strict');
 const root=path.resolve(__dirname,'..'),html=fs.readFileSync(path.join(root,'www/index.html'),'utf8');
-const data=JSON.parse(html.match(/const WALL3D_DATA=(\{[^\n]+\});/)[1]);
+const data=JSON.parse(fs.readFileSync(path.join(root,'arte/leve/fonte/WALL3D_DATA.json'),'utf8')); // atlas completo (fonte); o jogo carrega a versão leve: tests/check_atlas_leve.cjs
 const proof=JSON.parse(fs.readFileSync(path.join(root,'arte/muralhas-3d/verification.json'),'utf8'));assert.equal(proof.creditosAdicionais,0);
 const webp=fs.readFileSync(path.join(root,'www/assets/edificios-extra',data.file));const sha=crypto.createHash('sha256').update(webp).digest('hex');
 assert.equal(sha,data.atlasSha256);assert.equal(sha,proof.atlas.sha256);assert.equal(webp.toString('ascii',8,16),'WEBPVP8L');

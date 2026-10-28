@@ -1,7 +1,7 @@
 // Portões 3D: 5 variantes × 2 direções × 3 estados de porta, atlas verificado e ganchos de desenho.
 const fs=require('node:fs'),path=require('node:path'),crypto=require('node:crypto'),assert=require('node:assert/strict');
 const root=path.resolve(__dirname,'..'),html=fs.readFileSync(path.join(root,'www/index.html'),'utf8');
-const data=JSON.parse(html.match(/const GATE3D_DATA=(\{[^\n]+\});/)[1]);
+const data=JSON.parse(fs.readFileSync(path.join(root,'arte/leve/fonte/GATE3D_DATA.json'),'utf8')); // atlas completo (fonte); o jogo carrega a versão leve: tests/check_atlas_leve.cjs
 const proof=JSON.parse(fs.readFileSync(path.join(root,'arte/portoes-3d/verification.json'),'utf8'));
 assert.equal(proof.creditosAdicionais,0);
 const webp=fs.readFileSync(path.join(root,'www/assets/edificios-extra',data.file));const sha=crypto.createHash('sha256').update(webp).digest('hex');
