@@ -5244,7 +5244,7 @@ async function accDeleteAccount(){const b=$('pfDelete');
   try{const {error}=await ACC.sb.rpc('delete_my_account');if(error)throw error;clearSave();try{localStorage.removeItem('alv_profile')}catch(e){}
     await accLogout();showLogin('A tua conta e os teus dados foram apagados.')}
   catch(e){b.disabled=false;b.classList.remove('arm');b.textContent='Apagar a minha conta';toast('Não foi possível apagar a conta. Tenta outra vez.',true)}}
-async function accLogout(){try{await ACC.sb.auth.signOut()}catch(e){}ACC.user=null;ACC.profile=null;ACC.preview=false;try{localStorage.removeItem('alv_profile')}catch(e){}netClose();showLogin('Sessão terminada.')}
+async function accLogout(){try{await ACC.sb.auth.signOut()}catch(e){}try{localStorage.removeItem('alv_uid_ultimo')}catch(e){}ACC.user=null;ACC.profile=null;ACC.preview=false;try{localStorage.removeItem('alv_profile')}catch(e){}netClose();showLogin('Sessão terminada.')}
 async function accRecordSP(win){if(!ACC.sb||ACC.preview||!ACC.user)return;try{await ACC.sb.rpc('record_sp',{p_win:!!win});if(ACC.profile){ACC.profile[win?'sp_wins':'sp_losses']++}}catch(e){}}
 // ---------- ecrãs: perfil, classificação, amigos ----------
 function screenGo(id){for(const s of ['sMenu','sProfile','sRank','sFriends'])$(s).hidden=s!==id}
@@ -5691,7 +5691,7 @@ function netPauseUI(){const on=NET.on;$('bSave').hidden=on;$('bNetSave').hidden=
 $('bResume').onclick=togglePause;
 $('bRestart').onclick=()=>{$('sPause').hidden=true;if(NET.on){if(confirmResign())act('resign',{});return}if(G.reino){if(Date.now()-resignArm<2500){resignArm=0;reinoRetry()}else{resignArm=Date.now();$('sPause').hidden=false;toast('Volta ao último capítulo cumprido. Toca outra vez para confirmar.',true)}return}if(G.camp!=null){campStart(G.camp);return}if(G.daily){$('bDaily').onclick();return}const sd=Math.floor(Math.random()*1e9);startGame(sd,{map:G.map,vic:G.vic,civ:G.civ})};
 let resignArm=0;function confirmResign(){if(Date.now()-resignArm<2500){resignArm=0;return true}resignArm=Date.now();$('sPause').hidden=false;toast('Toca outra vez em Desistir para confirmar',true);return false}
-$('bQuit').onclick=()=>{if(NET.on){if(!G.over){netReport(false,'resign');act('resign',{})}netEndMatch()}else{const r=saveGame(true);if(r.ok)toast('Partida guardada ✔ — usa «Continuar» no menu para voltar')}$('sPause').hidden=true;running=false;paused=false;showMenu()};
+$('bQuit').onclick=()=>{if(NET.on){if(!G.over){netReport(false,'resign');act('resign',{})}netEndMatch()}else{const r=saveGame(true);if(r.ok){toast(G.reino?'Reino guardado ✔ — volta pelo «Meu Reino»':'Partida guardada ✔ — usa «Continuar» no menu para voltar');if(G.reino)cloudSave(true)}}$('sPause').hidden=true;running=false;paused=false;showMenu()};
 $('bSave').onclick=()=>{sfx('click');const res=saveGame(false);saveBtnFlash(res);if(res.ok)cloudSave(false)};
 let netSaveArm=0;$('bNetSave').onclick=()=>{if(!NET.on||G.over)return;if(Date.now()-netSaveArm>2500){netSaveArm=Date.now();toast('Toca outra vez: a partida fica gravada nos dois telemóveis e termina por agora');return}netSaveArm=0;act('savequit',{});$('sPause').hidden=true};
 $('bDN').onclick=()=>{DAYNIGHT=!DAYNIGHT;$('bDN').textContent='Dia e noite: '+(DAYNIGHT?'sim':'não');try{localStorage.setItem('alv_dn',DAYNIGHT?'1':'0')}catch(e){}};$('bDN').textContent='Dia e noite: '+(DAYNIGHT?'sim':'não');
@@ -5700,7 +5700,7 @@ $('bVib').onclick=()=>{vibrateOn=!vibrateOn;$('bVib').textContent='Vibração: '
 try{if(localStorage.getItem('alv_vib')==='0'){vibrateOn=false;$('bVib').textContent='Vibração: desligada'}}catch(e){}
 $('bVoz').onclick=()=>{VOZ.on=!VOZ.on;$('bVoz').textContent='Voz: '+(VOZ.on?'ligada':'desligada');try{localStorage.setItem('alv_voz',VOZ.on?'1':'0')}catch(e){}if(VOZ.on){VOZ.last.paz=-1e9;voz('paz',1)}};
 if(!VOZ.on)$('bVoz').textContent='Voz: desligada';
-$('bCont').onclick=async()=>{sfx('click');if($('bCont').dataset.cloud==='1'){const r=await cloudLoad();if(!r)return;delete $('bCont').dataset.cloud;$('bCont').lastChild.textContent='Continuar partida';$('bCont').hidden=!hasSave();if(r==='reino'){reinoLoad(false);return}}loadGame()};
+$('bCont').onclick=async()=>{sfx('click');if($('bCont').dataset.cloud==='1'){const r=await cloudLoad();if(!r)return;delete $('bCont').dataset.cloud;$('bCont').lastChild.textContent='Continuar partida';$('bCont').hidden=!hasSave();}loadGame()};
 document.addEventListener('visibilitychange',()=>{if(document.hidden&&running&&!G.over&&!NET.on){saveGame(true);if(!paused){paused=true;$('sPause').hidden=false}}
   if(document.hidden)audioPause(true);else if(!running||!paused)audioPause(false)});
 window.addEventListener('pagehide',()=>{if(running)saveGame(true)});
@@ -6051,7 +6051,8 @@ const ACHV=[
 const COLORS=[['#3f86e0','#1d4f8f','Azul',0],['#2fae96','#16614f','Verde-mar',3],['#8a5bd6','#4a2a85','Púrpura',6],['#d9a52c','#8a6410','Dourado',10],
   ['#1fb3c6','#0b5f6a','Turquesa',999,'cor_turquesa'],['#d264a6','#7a2a5c','Rosa real',999,'cor_rosa'],['#3aa64a','#1a5a24','Esmeralda',999,'cor_esmeralda'],['#5560e0','#262c80','Índigo',999,'cor_indigo']];
 const FRAMES=[['','Sem moldura',0],['fr1','Bronze',1],['fr2','Prata',5],['fr3','Ouro',10],['fr4','Fundador',999,'apoio_fundador']];
-function ukey(k){const id=ACC&&ACC.user&&!ACC.preview?ACC.user.id:null;if(!id)return k;const uk=k+'_'+id;try{if(localStorage.getItem(uk)==null){const own=localStorage.getItem(k+'__dono'),old=localStorage.getItem(k);if(old!=null&&(!own||own===id)){localStorage.setItem(uk,old);localStorage.setItem(k+'__dono',id)}}}catch(e){}return uk}
+function ukey(k){let id=ACC&&ACC.user&&!ACC.preview?ACC.user.id:null;try{if(id)localStorage.setItem('alv_uid_ultimo',id);else id=localStorage.getItem('alv_uid_ultimo')}catch(e){} // sem sessão (sem rede, sessão expirada, Visitante): continua a usar os dados da última conta deste telemóvel, em vez de mostrar outro reino
+  if(!id)return k;const uk=k+'_'+id;try{if(localStorage.getItem(uk)==null){const own=localStorage.getItem(k+'__dono'),old=localStorage.getItem(k);if(old!=null&&(!own||own===id)){localStorage.setItem(uk,old);localStorage.setItem(k+'__dono',id)}}}catch(e){}return uk}
 function achvGet(){try{return JSON.parse(localStorage.getItem(ukey('alv_achv'))||'{}')}catch(e){return{}}}
 function achvN(){return Object.keys(achvGet()).length}
 function achv(code){const A=achvGet();if(A[code])return;const a=ACHV.find(x=>x[0]===code);if(!a)return;A[code]=new Date().toISOString().slice(0,10);try{localStorage.setItem(ukey('alv_achv'),JSON.stringify(A))}catch(e){}
@@ -6137,12 +6138,29 @@ $('bLoja').onclick=()=>{sfx('click');lojaOpen()};
 
 // ---------- gravação na nuvem (a tua conta guarda a última partida) ----------
 let cloudBusy=false;
+// Nuvem: uma linha por jogador com DOIS lugares — a partida normal e o Meu Reino. Antes era um só: guardar ou acabar uma partida
+// normal apagava a cópia do reino na nuvem, e «Continuar (da nuvem)» podia escrever um reino antigo por cima do atual.
+async function cloudRow(){const {data,error}=await ACC.sb.from('cloud_saves').select('data').eq('user_id',ACC.user.id).maybeSingle();if(error)throw error;if(!data)return{v:2,normal:null,reino:null};
+  const o=await unpackJSON(data.data);if(o&&o.v===2)return{v:2,normal:o.normal||null,reino:o.reino||null};return o&&o.X&&o.X.reino?{v:2,normal:null,reino:o}:{v:2,normal:o||null,reino:null}}
+async function cloudPut(row){if(!row.normal&&!row.reino){const {error}=await ACC.sb.from('cloud_saves').delete().eq('user_id',ACC.user.id);if(error)throw error;return}
+  const data=await packJSON(row);const {error}=await ACC.sb.from('cloud_saves').upsert({user_id:ACC.user.id,data,updated_at:new Date().toISOString()});if(error)throw error}
 async function cloudSave(quiet){if(!ACC.sb||!ACC.user||ACC.preview||cloudBusy||!running||NET.on||G.over||(G.reino&&G.reino.demo))return false;cloudBusy=true;
-  try{const data=await packJSON(JSON.parse(serialize()));const {error}=await ACC.sb.from('cloud_saves').upsert({user_id:ACC.user.id,data,updated_at:new Date().toISOString()});if(error)throw error;if(!quiet)toast('Guardado também na nuvem ☁️');return true}
+  try{const obj=JSON.parse(serialize()),row=await cloudRow();if(obj.X&&obj.X.reino)row.reino=obj;else row.normal=obj;await cloudPut(row);if(!quiet)toast('Guardado também na nuvem ☁️');return true}
   catch(e){if(!quiet)toast('Não foi possível guardar na nuvem',true);return false}finally{cloudBusy=false}}
-async function cloudCheck(){if(!ACC.sb||!ACC.user||ACC.preview||hasSave())return;try{const {data,error}=await ACC.sb.from('cloud_saves').select('updated_at').eq('user_id',ACC.user.id).maybeSingle();if(error||!data||hasSave()||running)return;
+async function cloudClearNormal(){if(!ACC.sb||!ACC.user||ACC.preview)return;try{const row=await cloudRow();if(!row.normal)return;row.normal=null;await cloudPut(row)}catch(e){}}
+async function cloudCheck(){if(!ACC.sb||!ACC.user||ACC.preview||hasSave())return;try{const row=await cloudRow();if(!row.normal||hasSave()||running)return;
   const b=$('bCont');b.hidden=false;b.lastChild.textContent='Continuar (da nuvem)';b.dataset.cloud='1'}catch(e){}}
-async function cloudLoad(){try{const {data,error}=await ACC.sb.from('cloud_saves').select('data').eq('user_id',ACC.user.id).maybeSingle();if(error||!data)throw 0;const obj=await unpackJSON(data.data);if(obj.X&&obj.X.reino){localStorage.setItem(reinoKey(),JSON.stringify(obj));if(!localStorage.getItem(reinoCkKey()))localStorage.setItem(reinoCkKey(),JSON.stringify(obj));return 'reino'}localStorage.setItem(SAVE_KEY,JSON.stringify(obj));return true}catch(e){toast('Não foi possível ler a gravação da nuvem',true);return false}}
+async function cloudLoad(){try{const row=await cloudRow();if(!row.normal)throw 0;localStorage.setItem(SAVE_KEY,JSON.stringify(row.normal));return true}catch(e){toast('Não foi possível ler a gravação da nuvem',true);return false}}
+// progresso de uma gravação do reino: missão/capítulo, depois tempo de jogo (o reino só anda para a frente)
+function reinoScore(o){try{if(typeof o==='string')o=JSON.parse(o);return o&&o.v===1&&o.X&&o.X.reino?(o.X.reino.n||0)*1e7+(o.G.time||0):-1}catch(e){return -1}}
+function reinoMetaOf(o){const R=o.X.reino,h=o.X.hero;return{n:R.n||0,t:(R.ms&&!R.ms.daily?R.ms:reinoDef(R.n||0)).t,gl:R.gl||0,age:(o.P&&o.P[0]&&o.P[0].age)||0,pop:0,klv:h&&h[0]?h[0].lv:1,time:Math.round(o.G.time||0),done:(R.hist||[]).slice(-8),big:(o.mapN||0)>=REINO_N?1:0}}
+function reinoAdopt(o,why){const js=typeof o==='string'?o:JSON.stringify(o),ob=typeof o==='string'?JSON.parse(o):o;try{localStorage.setItem(reinoKey(),js);if(!localStorage.getItem(reinoCkKey()))localStorage.setItem(reinoCkKey(),js);localStorage.setItem(reinoMetaKey(),JSON.stringify(reinoMetaOf(ob)));if(why)toast(why)}catch(e){}}
+// gravações do reino separadas pela conta (jogou sem sessão iniciada, ou antes de a sessão abrir): fica a mais avançada
+function reinoMerge(){try{const uk=reinoKey(),base='alv_reino_v1';if(uk===base)return;const b=localStorage.getItem(base);if(!b)return;const own=localStorage.getItem(base+'__dono'),id=uk.slice(base.length+1);if(own&&own!==id)return;
+  const u=localStorage.getItem(uk);if(reinoScore(b)>reinoScore(u)){reinoAdopt(b,'Recuperámos a gravação mais recente do teu reino ✔');const ck=localStorage.getItem('alv_reino_ck');if(ck)localStorage.setItem(reinoCkKey(),ck)}}catch(e){}}
+// cópia do reino na nuvem mais avançada que a deste telemóvel (telemóvel novo, dados apagados): usa-a
+async function reinoCloudSync(){if(!ACC.sb||!ACC.user||ACC.preview)return false;try{const row=await cloudRow();if(!row.reino)return false;let loc=null;try{loc=localStorage.getItem(reinoKey())}catch(e){}
+  if(reinoScore(row.reino)>reinoScore(loc)){reinoAdopt(row.reino,'Reino recuperado da nuvem ☁️');return true}}catch(e){}return false}
 // ---------- Campanha ----------
 const cntU=(o,t)=>ents.filter(e=>e.o===o&&e.kind==='u'&&e.type===t).length+ents.filter(e=>e.o===o&&e.garr).reduce((a,b)=>a+b.garr.filter(u=>u.type===t).length,0);
 const cntB=(o,t,done=true)=>ents.filter(e=>e.o===o&&e.kind==='b'&&e.type===t&&(!done||e.done)).length;
@@ -6638,7 +6656,7 @@ function reinoDone(){const R=G.reino,m=R.ms;const prize=reinoPrize(m);heroGain(0
   snd('victory',null,null,{force:1});objRender();
   // ponto de controlo: se o reino cair, recomeça daqui
   try{saveGame(true);const s=localStorage.getItem(reinoKey());if(s&&!R.ms)localStorage.setItem(reinoCkKey(),s)}catch(e){}cloudSave(true)}
-function reinoFail(txt){if(G.over)return;G.over=true;const g0=G;G.reino.why=txt;setTimeout(()=>{if(G===g0&&running)endGame(false,false,'reino')},900)}
+function reinoFail(txt){if(G.over)return;G.over=true;try{const ck=localStorage.getItem(reinoCkKey());if(ck)reinoAdopt(ck)}catch(e){} /* o reino caiu: «Continuar o reino» recomeça no último capítulo cumprido, não segundos antes da queda */const g0=G;G.reino.why=txt;setTimeout(()=>{if(G===g0&&running)endGame(false,false,'reino')},900)}
 function reinoCheckFall(){if(G.over)return;if(kingLost(0)){reinoFail('O teu Rei caiu. Sem Rei, o reino não pode continuar.');return}const lost=!ents.some(e=>e.o===0&&e.kind==='b'&&e.done&&!e.d.wall&&!e.d.gate&&!e.d.farm)&&!hasUnitWhere(0,u=>u.type==='aldeao');
   if(lost)reinoFail('A tua última casa caiu e o povo fugiu.')}
 // --- abrir, fundar, continuar ---
@@ -6791,7 +6809,7 @@ function reinoDailyStart(){const R=G.reino;if(!R)return;const D=dailyInfo();cons
 async function reinoDailySubmit(day,secs){const b=dailyBest(day);if(!b||secs<b){try{localStorage.setItem(ukey('alv_daily'),JSON.stringify({day,secs}))}catch(e){}}
   if(!ACC.sb||ACC.preview||!ACC.user)return;try{const {error}=await ACC.sb.rpc('submit_daily',{p_day:day,p_secs:secs});if(error)throw error;const top=await dailyTop(day);if(top){const i=top.findIndex(r=>r.user_id===ACC.user.id);if(i>=0)toast('🏆 Estás em '+(i+1)+'.º lugar no desafio de hoje')}}catch(e){}}
 // --- ecrã do reino ---
-function reinoOpen(){$('sMenu').hidden=true;$('sCamp').hidden=false;reinoRender()}
+function reinoOpen(){$('sMenu').hidden=true;$('sCamp').hidden=false;reinoMerge();reinoRender();reinoCloudSync().then(ch=>{if(ch&&!$('sCamp').hidden)reinoRender()})}
 function reinoRender(){const M=reinoMeta(),has=reinoHas();const D=dailyInfo(),b=dailyBest(D.day);
   $('cmList').innerHTML=has&&M?`<div class="rkstat"><b>${M.n<6?'Missão '+(M.n+1):'Capítulo '+(M.n+1)}</b><small>${esc(M.t||'')}</small></div><div class="rkstat"><b>⭐ ${M.gl||0}</b><small>glória</small></div><div class="rkstat"><b>${['Pedra','Bronze','Ferro'][M.age||0]}</b><small>${M.pop||0} habitantes · ${fmtT(M.time||0)}</small></div>`:'';
   $('cmInfo').innerHTML=(()=>{const L=kingLookMine();return `<p class="krline">👑 <b>${L.name?'Rei '+esc(L.name):'O teu Rei'}</b>${M&&M.klv?' · nível '+M.klv:''}</p>`})()+(has&&M?`<h3>A crónica do reino</h3>${M.done&&M.done.length?'<ul>'+M.done.slice().reverse().map(([n,t])=>'<li>✔ '+(n<6?'Missão ':'Capítulo ')+(n+1)+': '+esc(t)+'</li>').join('')+'</ul>':'<p>A história do teu reino ainda está a começar.</p>'}<p class="muted small">Desafio de hoje: ${b?'cumprido em '+fmtT(b)+' ✔':'por fazer — joga-o dentro do teu reino.'}</p>`
@@ -6852,7 +6870,7 @@ function modeHud(){const el=$('modeT');let ic='',tx='',warn=false;
   el.hidden=!ic;if(ic){el.firstChild.textContent=ic;el.lastChild.textContent=tx;el.classList.toggle('warn',warn)}}
 function endGame(win,wonder,why){
   if(BOT.on){BOT.on=false;document.body.classList.remove('bot')}
-  G.won=!!win;running=false;$('coach').hidden=true;document.body.classList.remove('coaching');document.body.classList.remove('ingame');if(!NET.on&&!G.reino){clearSave();if(ACC.sb&&ACC.user&&!ACC.preview)ACC.sb.from('cloud_saves').delete().eq('user_id',ACC.user.id).then(()=>{},()=>{})}$('endRate').hidden=true;
+  G.won=!!win;running=false;$('coach').hidden=true;document.body.classList.remove('coaching');document.body.classList.remove('ingame');if(!NET.on&&!G.reino){clearSave();cloudClearNormal()} // só o lugar da partida normal: a cópia do reino na nuvem fica$('endRate').hidden=true;
   if(NET.on)netReport(win,why||(wonder?'wonder':'normal'));else if(G.mode!=='build'&&!G.botUsed)accRecordSP(win);ambStop();MUS.want='menu';audioPause(false);snd(win?'victory':'defeat',null,null,{force:1});if(win||why==='king')setTimeout(()=>voz(win?'vitoria':'derrota',1),1400);
   $('endTitle').textContent=why==='reino'?'O reino caiu':why==='surv_win'?'Vitória lendária':win?'Vitória':'Derrota';
   let extraTxt='';
