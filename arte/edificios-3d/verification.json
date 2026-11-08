@@ -10,7 +10,7 @@
  "amostras": 32,
  "quadros": 34,
  "escalaAtlas": 1.5,
- "atlasSha256": "34eb998a9990c18a258abf2ff4a113f5d6d8609d669e3f17856db31cf18472c3",
+ "atlasSha256": "9bba7db4984e25ca405a0e83bb90391fce78ad8fee2e8fa344b89a7714c5710e",
  "detalhe": "enxaimel, sobrado em balanço, cumeeira, caibros, portadas, lenha, carroça, chão de terra batida",
  "pintura": "Gemini (texto -> imagem, sem créditos): casas, torres, armazém, ferreiro, Centro da Vila, quartel, arquearia, estábulo (Pedra); o resto continua 3D do Blender",
  "mercadoModelo": {
@@ -40,5 +40,16 @@
   "origem": "arte/pintura-castelo/fonte/torre2_v1.png",
   "terraco": 3.81,
   "catapulta": true
+ },
+ "grok": {
+  "pecas": [
+   "templo_1",
+   "templo_2",
+   "mercado_2",
+   "maravilha_2"
+  ],
+  "fonte": "arte/edificios-3d/grok/fonte",
+  "script": "arte/edificios-3d/scripts/integrar_grok.py + trocar_no_atlas.py (DESSAT_TELHADO=1)",
+  "medidas": "arte/edificios-3d/grok/medidas.json"
  }
 }
