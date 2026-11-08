@@ -664,7 +664,7 @@ input{font-family:inherit;-webkit-user-select:text;user-select:text;touch-action
     <div class="card">
       <h2>Jogo pausado</h2>
       <div class="row"><button class="big pri" id="bResume">Continuar</button><button class="big" id="bRestart">Recomeçar</button><button class="big" id="bQuit">Menu principal</button></div>
-      <div class="row"><button class="big" id="bSave">Guardar jogo</button><button class="big bot" id="bBot" hidden>🤖 Bot: desligado</button><button class="big" id="bErros" hidden>⚠️ Copiar erros</button><button class="big ad" id="bAdGold" hidden>🎬 +100 ouro</button><button class="big" id="bNetSave" hidden>Gravar e sair</button><button class="big" id="bSound">Som: ligado</button><button class="big" id="bVib">Vibração: ligada</button><button class="big" id="bVoz">Voz: ligada</button><button class="big" id="bGfx">Gráficos: alto</button><button class="big" id="bDN">Dia e noite: sim</button></div>
+      <div class="row"><button class="big" id="bSave">Guardar jogo</button><button class="big bot" id="bBot" hidden>🤖 Bot: desligado</button><button class="big" id="bErros" hidden>⚠️ Copiar erros</button><button class="big ad" id="bAdGold" hidden>🎬 +100 ouro</button><button class="big" id="bNetSave" hidden>Gravar e sair</button><button class="big" id="bSound">Som: ligado</button><button class="big" id="bVib">Vibração: ligada</button><button class="big" id="bVoz">Voz: ligada</button><button class="big" id="bGfx">Gráficos: alto</button><button class="big" id="bRes">Resolução: HD</button><button class="big" id="bDN">Dia e noite: sim</button></div>
       <div class="row audio"><label>🎵 Música<input type="range" id="vMusic" min="0" max="100" value="40"></label><label>🔊 Efeitos<input type="range" id="vSfx" min="0" max="100" value="85"></label><label>🌿 Ambiente<input type="range" id="vAmb" min="0" max="100" value="55"></label></div>
     </div>
   </div>
@@ -696,13 +696,18 @@ const $=id=>document.getElementById(id);
 const cv=$('game'),ctx=cv.getContext('2d');
 const mini=$('mini'),mctx=mini.getContext('2d');
 // resolução adaptativa: se o telemóvel não aguenta (frames lentos), desenha com menos píxeis; volta a subir quando há folga
-let DPRCAP=(()=>{try{const v=+localStorage.getItem('alv_dpr');return v>=1&&v<=2?v:2}catch(e){return 2}})();
-let DPR=Math.min(2,DPRCAP,window.devicePixelRatio||1);
+// Resolução: "HD" desenha à resolução nativa do ecrã (até 3×, ex.: S22 = 3×); "Auto" baixa a resolução se o jogo ficar lento,
+// mas nunca abaixo de 1,5× (antes podia cair para 1× e ficava tudo fosco, e isso ficava gravado).
+let RES=(()=>{try{return localStorage.getItem('alv_res')==='auto'?'auto':'hd'}catch(e){return 'hd'}})();
+const devDPR=()=>Math.min(RES==='hd'?3:2,window.devicePixelRatio||1),dprFloor=()=>Math.min(devDPR(),RES==='hd'?2:1.5);
+let DPRCAP=(()=>{try{if(!localStorage.getItem('alv_dpr2')){localStorage.setItem('alv_dpr2','1');localStorage.removeItem('alv_dpr')}const v=+localStorage.getItem('alv_dpr');return v>=1&&v<=3?v:3}catch(e){return 3}})();
+DPRCAP=Math.max(DPRCAP,dprFloor());
+let DPR=Math.min(DPRCAP,devDPR());
 const PERF={ema:16,t:0,good:0};
 const MOB=(()=>{try{return matchMedia('(pointer:coarse)').matches||/Android|iPhone|iPad/i.test(navigator.userAgent)}catch(e){return false}})(); // telemóvel/tablet: orçamentos de memória mais pequenos
 function perfTick(raw){if(document.hidden)return;PERF.ema+=(raw*1000-PERF.ema)*.05;PERF.t+=raw;if(PERF.t<3)return;PERF.t=0;
-  const dev=Math.min(2,window.devicePixelRatio||1);let cap=DPRCAP;
-  if(PERF.ema>26&&DPR>1){cap=Math.max(1,Math.round((Math.min(cap,dev)-.25)*4)/4);PERF.good=0}
+  const dev=devDPR();let cap=Math.min(DPRCAP,dev);
+  if(PERF.ema>(RES==='hd'?40:30)&&DPR>dprFloor()){cap=Math.max(dprFloor(),Math.round((cap-.25)*4)/4);PERF.good=0}
   else if(PERF.ema<18.5){PERF.good+=3;if(PERF.good>=15&&cap<dev){cap=Math.min(dev,cap+.25);PERF.good=0}}else PERF.good=0;
   if(cap!==DPRCAP){DPRCAP=cap;try{localStorage.setItem('alv_dpr',String(cap))}catch(e){}resize();PERF.ema=17}}
 const clamp=(v,a,b)=>v<a?a:v>b?b:v;
@@ -2610,7 +2615,7 @@ function buildTerrain(){
 const CHW=512,CHH=256;let CHUNKS=new Map(),CH_CS=1,CH_BUD=99;
 function resetChunks(){CHUNKS=new Map();CH_CS=DPR>1?1.5:1}
 // resolução dos pedaços do chão: acompanha o zoom (relva nítida de perto, leve de longe)
-function chunkCS(){const t=cam.z*DPR;return t<=1.05?1:t<=1.6?1.5:t<=2.2?2:t<=2.9?2.5:3}
+function chunkCS(){const t=cam.z*DPR;return t<=1.05?1:t<=1.6?1.5:t<=2.2?2:t<=2.9||MOB?2.5:3}
 const GTEX={K:.62,VS:.72}; // escala da textura do chão no ecrã (VS achata na vertical: perspetiva isométrica)
 let GTMP=null;
 function groundTex(c,img,X0,Y0,cs){const p=c.createPattern(img,'repeat');p.setTransform(new DOMMatrix().translate(-X0*cs,-Y0*cs).scale(cs*GTEX.K,cs*GTEX.K*GTEX.VS));return p}
@@ -3339,7 +3344,13 @@ function bld3dSprite(type,age,o,vr){if(!BLD3D.ready)return null;const v=bld3dKey
   const [sx,sy,w,h,ax,ay]=BLD3D.meta.frames[v],k=1/BLD3D.meta.scale,CW=Math.ceil(w*k)+2,CH=Math.ceil(h*k)+2;
   const cv=mkCanvas(CW*SS,CH*SS),c=cv.getContext('2d');c.scale(SS,SS);c.imageSmoothingEnabled=true;c.imageSmoothingQuality='high';c.drawImage(tintCrop(BLD3D,team,sx,sy,w,h),0,0,w,h,1,1,w*k,h*k);
   if(type!=='doca')padSoften(cv,(ax*k+1)*SS,(ay*k+1)*SS,BLDS[type].w,BLDS[type].h);
+  if(RES==='hd')sharpenCv(cv,.45);
   const r={cv,ox:ax*k+1,oy:ay*k+1,CW,CH};BCACHE[key]=r;return r}
+// HD: realce leve (unsharp 3×3) nos edifícios, feito uma vez quando o sprite é criado; só nos píxeis opacos, sem mexer no alfa
+function sharpenCv(cv,amt){try{const c=cv.getContext('2d'),W2=cv.width,H2=cv.height,im=c.getImageData(0,0,W2,H2),D=im.data,S0=new Uint8ClampedArray(D);const R=W2*4;
+  for(let y=1;y<H2-1;y++)for(let x=1;x<W2-1;x++){const i=y*R+x*4;if(S0[i+3]<200||S0[i-4+3]<200||S0[i+4+3]<200||S0[i-R+3]<200||S0[i+R+3]<200)continue;
+    for(let ch=0;ch<3;ch++){const v=S0[i+ch];D[i+ch]=v+amt*(4*v-S0[i-4+ch]-S0[i+4+ch]-S0[i-R+ch]-S0[i+R+ch])}}
+  c.putImageData(im,0,0)}catch(e){}}
 // O lote de cada edifício 3D acabava numa aresta reta com a espessura da base à vista: parecia uma imagem pousada no chão.
 // Apaga a face lateral do lote por baixo das arestas da frente e suaviza a própria aresta; a terra batida do chão faz a transição.
 function padSoften(cv,Tx,Ty,fw,fh){try{const c=cv.getContext('2d'),W2=cv.width,H2=cv.height,im=c.getImageData(0,0,W2,H2),D=im.data;
@@ -4189,7 +4200,7 @@ function flagAt(c,px,py,col){c.strokeStyle='#3d2817';c.lineWidth=2;c.beginPath()
 /* ---------------- câmara e render ---------------- */
 let vw=0,vh=0;
 function resize(){
-  DPR=Math.min(2,DPRCAP,window.devicePixelRatio||1);vw=window.innerWidth;vh=window.innerHeight;
+  DPR=Math.min(DPRCAP,devDPR());vw=window.innerWidth;vh=window.innerHeight;
   cv.width=Math.round(vw*DPR);cv.height=Math.round(vh*DPR);
   if(cam)clampCam();
 }
@@ -5821,6 +5832,8 @@ $('bQuit').onclick=()=>{if(NET.on){if(!G.over){netReport(false,'resign');act('re
 $('bSave').onclick=()=>{sfx('click');const res=saveGame(false);saveBtnFlash(res);if(res.ok)cloudSave(false)};
 let netSaveArm=0;$('bNetSave').onclick=()=>{if(!NET.on||G.over)return;if(Date.now()-netSaveArm>2500){netSaveArm=Date.now();toast('Toca outra vez: a partida fica gravada nos dois telemóveis e termina por agora');return}netSaveArm=0;act('savequit',{});$('sPause').hidden=true};
 $('bDN').onclick=()=>{DAYNIGHT=!DAYNIGHT;$('bDN').textContent='Dia e noite: '+(DAYNIGHT?'sim':'não');try{localStorage.setItem('alv_dn',DAYNIGHT?'1':'0')}catch(e){}};$('bDN').textContent='Dia e noite: '+(DAYNIGHT?'sim':'não');
+function resUI(){const b=$('bRes');if(b)b.textContent=RES==='hd'?'Resolução: HD':'Resolução: auto (poupa bateria)'}
+$('bRes').onclick=()=>{sfx('click');RES=RES==='hd'?'auto':'hd';try{localStorage.setItem('alv_res',RES)}catch(e){}DPRCAP=devDPR();try{localStorage.setItem('alv_dpr',String(DPRCAP))}catch(e){}PERF.good=0;PERF.ema=17;resize();resUI();if(typeof resetChunks==='function'&&running)resetChunks();toast(RES==='hd'?'Resolução HD: nítido, à resolução do ecrã':'Resolução automática: baixa um pouco se o jogo ficar lento')};resUI();
 $('bGfx').onclick=()=>{GFX=GFX==='alto'?'leve':'alto';document.body.classList.toggle('gfx-leve',GFX==='leve');$('bGfx').textContent='Gráficos: '+GFX;try{localStorage.setItem('alv_gfx',GFX)}catch(e){}};$('bGfx').textContent='Gráficos: '+GFX;document.body.classList.toggle('gfx-leve',GFX==='leve');
 $('bVib').onclick=()=>{vibrateOn=!vibrateOn;$('bVib').textContent='Vibração: '+(vibrateOn?'ligada':'desligada');try{localStorage.setItem('alv_vib',vibrateOn?'1':'0')}catch(e){}if(vibrateOn)buzz(60)};
 try{if(localStorage.getItem('alv_vib')==='0'){vibrateOn=false;$('bVib').textContent='Vibração: desligada'}}catch(e){}
