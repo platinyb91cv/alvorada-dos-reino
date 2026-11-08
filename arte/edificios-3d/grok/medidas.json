@@ -1,110 +1,12 @@
 {
- "doca_0": {
-  "inclinacao_esq": 0.543,
-  "inclinacao_dir": 0.521,
-  "correcao_vertical": 0.94,
-  "escala": 0.212,
-  "tamanho": [
-   254,
-   166
-  ],
-  "pegada": [
-   2,
-   2
-  ]
- },
- "doca_1": {
-  "inclinacao_esq": 0.56,
-  "inclinacao_dir": 0.58,
-  "correcao_vertical": 0.877,
-  "escala": 0.208,
-  "tamanho": [
-   254,
-   147
-  ],
-  "pegada": [
-   2,
-   2
-  ]
- },
- "doca_2": {
-  "inclinacao_esq": 0.523,
-  "inclinacao_dir": 0.569,
-  "correcao_vertical": 0.915,
-  "escala": 0.218,
-  "tamanho": [
-   254,
-   166
-  ],
-  "pegada": [
-   2,
-   2
-  ]
- },
- "estabulo_1": {
-  "inclinacao_esq": 0.579,
-  "inclinacao_dir": 0.574,
-  "correcao_vertical": 0.867,
-  "escala": 0.326,
-  "tamanho": [
-   380,
-   234
-  ],
-  "pegada": [
-   3,
-   3
-  ]
- },
- "estabulo_2": {
-  "inclinacao_esq": 0.638,
-  "inclinacao_dir": 0.614,
-  "correcao_vertical": 0.799,
-  "escala": 0.329,
+ "oficina_1": {
+  "inclinacao_esq": 0.486,
+  "inclinacao_dir": 0.489,
+  "correcao_vertical": 1.0,
+  "escala": 0.408,
   "tamanho": [
    378,
-   219
-  ],
-  "pegada": [
-   3,
-   3
-  ]
- },
- "mercado_1": {
-  "inclinacao_esq": 0.578,
-  "inclinacao_dir": 0.588,
-  "correcao_vertical": 0.858,
-  "escala": 0.314,
-  "tamanho": [
-   380,
-   223
-  ],
-  "pegada": [
-   3,
-   3
-  ]
- },
- "mercado_2": {
-  "inclinacao_esq": 0.468,
-  "inclinacao_dir": 0.509,
-  "correcao_vertical": 1.0,
-  "escala": 0.316,
-  "tamanho": [
-   380,
-   262
-  ],
-  "pegada": [
-   3,
-   3
-  ]
- },
- "oficina_1": {
-  "inclinacao_esq": 0.545,
-  "inclinacao_dir": 0.554,
-  "correcao_vertical": 0.911,
-  "escala": 0.33,
-  "tamanho": [
-   380,
-   248
+   274
   ],
   "pegada": [
    3,
@@ -112,13 +14,69 @@
   ]
  },
  "oficina_2": {
-  "inclinacao_esq": 0.558,
-  "inclinacao_dir": 0.557,
-  "correcao_vertical": 0.897,
-  "escala": 0.308,
+  "inclinacao_esq": 0.485,
+  "inclinacao_dir": 0.487,
+  "correcao_vertical": 1.0,
+  "escala": 0.409,
   "tamanho": [
    379,
-   228
+   274
+  ],
+  "pegada": [
+   3,
+   3
+  ]
+ },
+ "estabulo_1": {
+  "inclinacao_esq": 0.473,
+  "inclinacao_dir": 0.486,
+  "correcao_vertical": 1.0,
+  "escala": 0.401,
+  "tamanho": [
+   380,
+   272
+  ],
+  "pegada": [
+   3,
+   3
+  ]
+ },
+ "estabulo_2": {
+  "inclinacao_esq": 0.483,
+  "inclinacao_dir": 0.495,
+  "correcao_vertical": 1.0,
+  "escala": 0.41,
+  "tamanho": [
+   379,
+   265
+  ],
+  "pegada": [
+   3,
+   3
+  ]
+ },
+ "mercado_1": {
+  "inclinacao_esq": 0.484,
+  "inclinacao_dir": 0.486,
+  "correcao_vertical": 1.0,
+  "escala": 0.409,
+  "tamanho": [
+   379,
+   273
+  ],
+  "pegada": [
+   3,
+   3
+  ]
+ },
+ "mercado_2": {
+  "inclinacao_esq": 0.469,
+  "inclinacao_dir": 0.508,
+  "correcao_vertical": 1.0,
+  "escala": 0.317,
+  "tamanho": [
+   379,
+   263
   ],
   "pegada": [
    3,
@@ -126,13 +84,13 @@
   ]
  },
  "templo_1": {
-  "inclinacao_esq": 0.52,
-  "inclinacao_dir": 0.476,
+  "inclinacao_esq": 0.518,
+  "inclinacao_dir": 0.481,
   "correcao_vertical": 1.0,
-  "escala": 0.343,
+  "escala": 0.344,
   "tamanho": [
-   379,
-   284
+   380,
+   285
   ],
   "pegada": [
    3,
@@ -140,45 +98,87 @@
   ]
  },
  "templo_2": {
-  "inclinacao_esq": 0.519,
-  "inclinacao_dir": 0.48,
+  "inclinacao_esq": 0.521,
+  "inclinacao_dir": 0.482,
   "correcao_vertical": 1.0,
-  "escala": 0.371,
+  "escala": 0.372,
   "tamanho": [
    379,
-   309
+   310
   ],
   "pegada": [
    3,
    3
   ]
  },
- "torre_1": {
-  "inclinacao_esq": 0.578,
-  "inclinacao_dir": 0.582,
-  "correcao_vertical": 0.862,
-  "escala": 0.292,
+ "maravilha_2": {
+  "inclinacao_esq": 0.5,
+  "inclinacao_dir": 0.513,
+  "correcao_vertical": 1.0,
+  "escala": 0.425,
   "tamanho": [
-   254,
-   207
+   503,
+   353
+  ],
+  "pegada": [
+   4,
+   4
+  ]
+ },
+ "torre_1": {
+  "inclinacao_esq": 0.518,
+  "inclinacao_dir": 0.522,
+  "correcao_vertical": 1.0,
+  "escala": 0.291,
+  "tamanho": [
+   255,
+   222
   ],
   "pegada": [
    2,
    2
   ]
  },
- "maravilha_2": {
-  "inclinacao_esq": 0.499,
-  "inclinacao_dir": 0.511,
+ "doca_0": {
+  "inclinacao_esq": 0.5,
+  "inclinacao_dir": 0.502,
   "correcao_vertical": 1.0,
-  "escala": 0.425,
+  "escala": 0.296,
   "tamanho": [
-   504,
-   352
+   253,
+   159
   ],
   "pegada": [
-   4,
-   4
+   2,
+   2
+  ]
+ },
+ "doca_1": {
+  "inclinacao_esq": 0.485,
+  "inclinacao_dir": 0.475,
+  "correcao_vertical": 1.0,
+  "escala": 0.296,
+  "tamanho": [
+   255,
+   174
+  ],
+  "pegada": [
+   2,
+   2
+  ]
+ },
+ "doca_2": {
+  "inclinacao_esq": 0.51,
+  "inclinacao_dir": 0.508,
+  "correcao_vertical": 1.0,
+  "escala": 0.296,
+  "tamanho": [
+   254,
+   153
+  ],
+  "pegada": [
+   2,
+   2
   ]
  }
 }

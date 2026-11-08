@@ -20,13 +20,19 @@ for spec in sys.argv[3:]:
     lab, _ = ndimage.label(white); border = set(np.unique(np.concatenate([lab[0], lab[-1], lab[:, 0], lab[:, -1]]))) - {0}
     bg = np.isin(lab, list(border))
     # orla: perto do fundo, a transparência segue o quanto o píxel se afasta do branco
-    near = ndimage.binary_dilation(bg, iterations=3) & ~bg
-    d = (255 - mn) / 70.0
-    a = np.where(bg, 0.0, np.where(near, np.clip(d, 0, 1), 1.0))
-    a = ndimage.uniform_filter(a, 2)
-    a[bg] = 0
-    col = rgb.copy(); m = (a > 0) & (a < 1)
-    col[m] = np.clip((rgb[m] - 255 * (1 - a[m, None])) / np.maximum(a[m, None], .05), 0, 255)  # tira o branco misturado na orla
+    # orla: os geradores esbatem a borda do lote para branco; numa faixa de 10 px junto ao fundo, os píxeis claros e pouco
+    # saturados são fundo misturado. A transparência segue a distância ao branco e a cor passa a ser a do chão opaco mais próximo
+    # (sem isto ficava uma orla esbranquiçada à volta do lote, como um autocolante)
+    dist_bg = ndimage.distance_transform_edt(~bg)
+    near = (dist_bg <= 10) & ~bg
+    pale = np.clip((mn - 150) / 90, 0, 1) * np.clip(1 - sat / 60, 0, 1)    # 1 = quase branco
+    ramp = np.clip(dist_bg / 10, 0, 1)
+    a = np.where(bg, 0.0, np.where(near, np.clip(1 - pale * (1 - ramp * .6), 0, 1) * np.clip((255 - mn) / 60, 0, 1) ** .5, 1.0))
+    a = ndimage.uniform_filter(a, 3); a[bg] = 0
+    a = np.minimum(a, ndimage.minimum_filter(a, 3) * .5 + a * .5)        # recolhe 1 px a borda
+    solid0 = a >= .97
+    idx = ndimage.distance_transform_edt(~solid0, return_distances=False, return_indices=True)
+    col = rgb[idx[0], idx[1]]; col = np.where(solid0[..., None], rgb, col)  # cor da orla = chão opaco mais próximo
     rgba = np.dstack([col, a * 255]).astype(np.uint8)
     solid = a > .5
     ys, xs = np.nonzero(solid)
