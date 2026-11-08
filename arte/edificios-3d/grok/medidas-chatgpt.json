@@ -1,0 +1,128 @@
+{
+ "oficina_1": {
+  "inclinacao_esq": 0.487,
+  "inclinacao_dir": 0.49,
+  "correcao_vertical": 1.0,
+  "escala": 0.408,
+  "tamanho": [
+   380,
+   274
+  ],
+  "pegada": [
+   3,
+   3
+  ]
+ },
+ "oficina_2": {
+  "inclinacao_esq": 0.486,
+  "inclinacao_dir": 0.488,
+  "correcao_vertical": 1.0,
+  "escala": 0.407,
+  "tamanho": [
+   379,
+   274
+  ],
+  "pegada": [
+   3,
+   3
+  ]
+ },
+ "estabulo_1": {
+  "inclinacao_esq": 0.472,
+  "inclinacao_dir": 0.486,
+  "correcao_vertical": 1.0,
+  "escala": 0.399,
+  "tamanho": [
+   380,
+   271
+  ],
+  "pegada": [
+   3,
+   3
+  ]
+ },
+ "estabulo_2": {
+  "inclinacao_esq": 0.481,
+  "inclinacao_dir": 0.494,
+  "correcao_vertical": 1.0,
+  "escala": 0.409,
+  "tamanho": [
+   379,
+   264
+  ],
+  "pegada": [
+   3,
+   3
+  ]
+ },
+ "mercado_1": {
+  "inclinacao_esq": 0.487,
+  "inclinacao_dir": 0.487,
+  "correcao_vertical": 1.0,
+  "escala": 0.408,
+  "tamanho": [
+   379,
+   273
+  ],
+  "pegada": [
+   3,
+   3
+  ]
+ },
+ "torre_1": {
+  "inclinacao_esq": 0.521,
+  "inclinacao_dir": 0.523,
+  "correcao_vertical": 1.0,
+  "escala": 0.291,
+  "tamanho": [
+   254,
+   222
+  ],
+  "pegada": [
+   2,
+   2
+  ]
+ },
+ "doca_0": {
+  "inclinacao_esq": 0.5,
+  "inclinacao_dir": 0.501,
+  "correcao_vertical": 1.0,
+  "escala": 0.295,
+  "tamanho": [
+   255,
+   159
+  ],
+  "pegada": [
+   2,
+   2
+  ]
+ },
+ "doca_1": {
+  "inclinacao_esq": 0.486,
+  "inclinacao_dir": 0.474,
+  "correcao_vertical": 1.0,
+  "escala": 0.296,
+  "tamanho": [
+   254,
+   174
+  ],
+  "pegada": [
+   2,
+   2
+  ]
+ },
+ "doca_2": {
+  "inclinacao_esq": 0.512,
+  "inclinacao_dir": 0.508,
+  "correcao_vertical": 1.0,
+  "escala": 0.295,
+  "tamanho": [
+   255,
+   153
+  ],
+  "pegada": [
+   2,
+   2
+  ]
+ }
+}

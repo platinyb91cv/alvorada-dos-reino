@@ -10,7 +10,7 @@
  "amostras": 32,
  "quadros": 34,
  "escalaAtlas": 1.5,
- "atlasSha256": "9bba7db4984e25ca405a0e83bb90391fce78ad8fee2e8fa344b89a7714c5710e",
+ "atlasSha256": "439c7434d570551fe20d7bf319d8e52a25369696a2ab057760fa12677b81df21",
  "detalhe": "enxaimel, sobrado em balanço, cumeeira, caibros, portadas, lenha, carroça, chão de terra batida",
  "pintura": "Gemini (texto -> imagem, sem créditos): casas, torres, armazém, ferreiro, Centro da Vila, quartel, arquearia, estábulo (Pedra); o resto continua 3D do Blender",
  "mercadoModelo": {
@@ -51,5 +51,22 @@
   "fonte": "arte/edificios-3d/grok/fonte",
   "script": "arte/edificios-3d/scripts/integrar_grok.py + trocar_no_atlas.py (DESSAT_TELHADO=1)",
   "medidas": "arte/edificios-3d/grok/medidas.json"
+ },
+ "chatgpt": {
+  "pecas": [
+   "oficina_1",
+   "oficina_2",
+   "estabulo_1",
+   "estabulo_2",
+   "mercado_1",
+   "torre_1",
+   "doca_0",
+   "doca_1",
+   "doca_2"
+  ],
+  "fonte": "arte/edificios-3d/grok/fonte",
+  "inclinacao": "0,47-0,53 (sem correção vertical)",
+  "cor": "acertar_cor.py: saturação e brilho iguais aos edifícios do jogo; azul da equipa intacto",
+  "medidas": "arte/edificios-3d/grok/medidas-chatgpt.json"
  }
 }

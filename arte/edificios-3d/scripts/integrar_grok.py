@@ -35,7 +35,7 @@ for spec in sys.argv[3:]:
     L = pt(xs <= xs.min() + 2); R = pt(xs >= xs.max() - 2); B = pt(ys >= ys.max() - 2)
     sL = (B[1] - L[1]) / max(1, B[0] - L[0]); sR = (B[1] - R[1]) / max(1, R[0] - B[0]); slope = (sL + sR) / 2
     im = Image.fromarray(rgba, 'RGBA'); W0, H0 = im.size
-    sy = .5 / slope if abs(slope - .5) > .02 else 1.0
+    sy = .5 / slope if abs(slope - .5) > .03 else 1.0  # dentro de 0,47-0,53 não se mexe na imagem
     target = (fw + fh) * 64 * FIT; k = target / (R[0] - L[0])
     im = im.resize((round(W0 * k), round(H0 * k * sy)), Image.LANCZOS)
     L2 = (L[0] * k, L[1] * k * sy); R2 = (R[0] * k, R[1] * k * sy)
