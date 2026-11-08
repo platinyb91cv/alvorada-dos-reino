@@ -332,6 +332,7 @@ body.ingame:not(.gfx-leve) #grade{display:block}
 .big.bot{border-color:#7fb3ff;color:#dbe9ff}.big.bot.on{background:#2f55d4;color:#fff;border-color:#9fc0ff}
 #botTag{display:none;position:absolute;left:calc(env(safe-area-inset-left,0px) + 10px);top:calc(env(safe-area-inset-top,0px) + 44px);z-index:6;padding:3px 12px;border-radius:12px;background:rgba(47,85,212,.85);color:#fff;font:800 12px var(--f-body);letter-spacing:.06em;pointer-events:none;box-shadow:0 2px 8px rgba(0,0,0,.4)}
 body.bot.ingame #botTag{display:block}
+#bBotCam{display:none;position:absolute;left:calc(env(safe-area-inset-left,0px) + 10px);top:calc(env(safe-area-inset-top,0px) + 70px);z-index:6;padding:4px 12px;border-radius:12px;border:1px solid #9fc0ff;background:rgba(20,32,70,.85);color:#fff;font:700 12px var(--f-body);cursor:pointer}body.bot.ingame #bBotCam{display:block}
 .card.wide{max-width:620px}.card h4{margin:6px 0 0;font-family:var(--f-display);color:var(--trim-hi);font-size:14px;letter-spacing:.05em;align-self:flex-start}
 .pfhead{display:flex;align-items:center;gap:12px;width:100%}.pfhead>div{flex:1;display:flex;flex-direction:column;gap:4px;text-align:left}.pfhead input{font-size:18px;padding:7px 10px;border-radius:6px;border:2px solid var(--rim);background:#120c08;color:var(--parch);font-weight:700}
 .pfhead small{color:var(--muted)}.pfhead b,.fcode{color:var(--trim-hi);letter-spacing:.15em;cursor:copy;font-family:var(--f-display)}
@@ -409,7 +410,7 @@ input{font-family:inherit;-webkit-user-select:text;user-select:text;touch-action
   </div>
   <div id="rotate" aria-live="polite"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><rect x="7" y="2.5" width="10" height="19" rx="2"/><path d="M11 18.5h2"/></svg><b>Roda o telemóvel</b><span>O jogo joga-se com o ecrã deitado.</span></div>
   <div id="toast"></div>
-  <div id="botTag" aria-live="polite">🤖 BOT A JOGAR</div>
+  <div id="botTag" aria-live="polite">🤖 BOT A JOGAR</div><button id="bBotCam" type="button">🎥 Câmara: segue</button>
   <div id="coach" hidden role="status" aria-live="polite"><div class="ch-top"><span class="ch-step"></span><button class="ch-skip" type="button">Saltar tutorial</button></div><p class="ch-txt"></p><div class="ch-bar"><i></i></div></div>
   <div id="grp"><button data-g="0">1<small></small></button><button data-g="1">2<small></small></button><button data-g="2">3<small></small></button><button id="bAlert" hidden title="Ir para o ataque">⚠️</button><button id="bKing" hidden title="O teu Rei">👑</button></div>
   <div id="objBox" hidden><h4 id="objTitle"></h4><ul id="objList"></ul></div>
@@ -2016,13 +2017,14 @@ function buildReach(cx,cy,me){
 function spotReachable(type,x,y){const d=BLDS[type];
   for(let yy=y-1;yy<=y+d.h;yy++)for(let xx=x-1;xx<=x+d.w;xx++){if(inb(xx,yy)&&reachMap[idx(xx,yy)]&&!(xx>=x&&xx<x+d.w&&yy>=y&&yy<y+d.h))return true}return false}
 function aiFindSpot(me,type,cx,cy,rmin,rmax){
-  const d=BLDS[type];
+  const d=BLDS[type];const BG=AIs[me]&&AIs[me].bot?botGrid(AIs[me]):null;
+  if(BG&&BOT_ZONE[type]&&hyp(cx-BG.cx,cy-BG.cy)<6){const s=botPlan(me,type);if(s)return s}
   for(let r=rmin;r<=rmax;r++){
     const cand=[];
     for(let y=cy-r;y<=cy+r;y++)for(let x=cx-r;x<=cx+r;x++){if(Math.max(Math.abs(x-cx),Math.abs(y-cy))!==r)continue;cand.push([x-Math.floor(d.w/2),y-Math.floor(d.h/2)])}
     if(AIs[me]&&AIs[me].bot&&type!=='doca'&&type!=='torre'){ // bot: lotes alinhados (passo = tamanho + 1 casa de rua)
       const sx=d.w+1,sy=d.h+1,ok=([x,y])=>(((x-cx)%sx)+sx)%sx===0&&(((y-cy)%sy)+sy)%sy===0;
-      for(const [x,y] of cand.filter(ok).sort((a,b)=>hyp(a[0]-cx,a[1]-cy)-hyp(b[0]-cx,b[1]-cy)))if(canPlace(type,x,y,me,0,true)&&spotReachable(type,x,y))return{x,y};
+      for(const [x,y] of cand.filter(ok).sort((a,b)=>hyp(a[0]-cx,a[1]-cy)-hyp(b[0]-cx,b[1]-cy)))if(canPlace(type,x,y,me,0,true)&&(!BG||botFree(BG,type,x,y))&&spotReachable(type,x,y))return{x,y};
       continue}
     for(let i=cand.length-1;i>0;i--){const j=Math.floor(rnd()*(i+1));[cand[i],cand[j]]=[cand[j],cand[i]]}
     for(const [x,y] of cand)if(canPlace(type,x,y,me,type==='quinta'||type==='doca'?0:1,true)&&spotReachable(type,x,y))return{x,y};
@@ -2061,13 +2063,127 @@ function errUI(){const b=$('bErros');if(!b)return;const n=errSaved().length;b.hi
 $('bErros').onclick=()=>{sfx('click');const t='Alvorada dos Reinos — erros\n'+navigator.userAgent+'\n'+JSON.stringify(errSaved(),null,1);
   const ok=()=>{toast('Erros copiados. Cola-os numa mensagem para o programador.');try{localStorage.removeItem('alv_erros')}catch(e){}ERRLOG.length=0;errUI()};
   try{navigator.clipboard.writeText(t).then(ok,()=>toast('Não foi possível copiar',true))}catch(e){toast('Não foi possível copiar',true)}};
-function botDirector(dt){if(!G||!running)return;BOT.next-=dt;
+function botDirector(dt){if(!G||!running)return;BOT.next-=dt;const now=performance.now();
+  // se o jogador mexeu na câmara (arrastar, pinça, roda, teclas, minimapa), a câmara fica com ele durante 15 s; com "🎥 Livre" nunca é puxada
+  if(BOT.lc&&(Math.abs(cam.x-BOT.lc.x)>.5||Math.abs(cam.y-BOT.lc.y)>.5||Math.abs(cam.z-BOT.lc.z)>.001)){BOT.userT=now;BOT.cam=null}
+  if(BOT.free||now-(BOT.userT||-1e9)<15000){BOT.lc={x:cam.x,y:cam.y,z:cam.z};return}
   if(BOT.next<=0){BOT.next=6;const mine=ents.filter(e=>e.o===ME);
     const fight=mine.filter(e=>e.kind==='u'&&e.d.mil&&(e.state==='attack'||alive(e.target)));
     let f=null;if(fight.length){let sx=0,sy=0;for(const u of fight){sx+=u.x;sy+=u.y}f={x:sx/fight.length,y:sy/fight.length}}
     else{const work=mine.filter(e=>e.kind==='b'&&!e.done);const tc=mine.find(e=>e.type==='centro');const b=work.length?work[Math.floor(G.time/6)%work.length]:tc;if(b)f={x:b.tx+b.w/2,y:b.ty+b.h/2}}
     if(f){const p=proj(f.x,f.y);BOT.cam={x:p.x-vw/2/cam.z,y:p.y-(vh-70)/2/cam.z}}}
-  if(BOT.cam){const k=Math.min(1,dt*1.6);cam.x+=(BOT.cam.x-cam.x)*k;cam.y+=(BOT.cam.y-cam.y)*k;clampCam()}}
+  if(BOT.cam){const k=Math.min(1,dt*1.6);cam.x+=(BOT.cam.x-cam.x)*k;cam.y+=(BOT.cam.y-cam.y)*k;clampCam()}
+  BOT.lc={x:cam.x,y:cam.y,z:cam.z}}
+function botCamUI(){const b=$('bBotCam');if(b)b.textContent=BOT.free?'🎥 Câmara: livre':'🎥 Câmara: segue'}
+$('bBotCam').onclick=e=>{e.stopPropagation();sfx('click');BOT.free=!BOT.free;BOT.userT=0;BOT.next=0;botCamUI();toast(BOT.free?'Câmara livre: o bot joga e tu vês o que quiseres':'A câmara volta a seguir a ação')};
+cv.addEventListener('pointerdown',()=>{if(BOT.on)BOT.userT=performance.now()});
+// ---------- Bot: cidade em quarteirões, estradas, missões e guerra ----------
+// Cidade: grelha fixa no Centro da Vila. Quarteirões de 4×4 separados por ruas de 1 casa (passo 5); as casas ficam alinhadas 2×2
+// dentro de cada quarteirão. Bairros: quintas e economia junto ao centro, casas atrás (longe do inimigo), quartéis do lado do inimigo.
+// As ruas à volta dos quarteirões ocupados recebem estrada (2 pedra por troço), do centro para fora.
+const BOT_P=5;
+const BOT_ZONE={casa:[2,-1],quinta:[1,0],curral:[1,0],mercado:[1,0],ferreiro:[1,0],templo:[1,-1],armazem:[1,0],quartel:[2,1],arquearia:[2,1],estabulo:[2,1],oficina:[2,1]};
+function botGrid(AI){if(AI.grid)return AI.grid;const tc=ents.find(e=>e.o===AI.me&&e.kind==='b'&&e.type==='centro');if(!tc)return null;
+  const en=1-AI.me,s=G.starts[en]||{x:W/2,y:H/2};let ex=s.x-(tc.tx+1),ey=s.y-(tc.ty+1);const l=hyp(ex,ey)||1;
+  return AI.grid={ox:tc.tx-1,oy:tc.ty-1,cx:tc.tx+1,cy:tc.ty+1,ex:ex/l,ey:ey/l}}
+function botStreet(g,x,y){return((x-g.ox)%BOT_P+BOT_P)%BOT_P===0||((y-g.oy)%BOT_P+BOT_P)%BOT_P===0}
+function botBlock(g,x,y){return{i:Math.floor((x-g.ox)/BOT_P),j:Math.floor((y-g.oy)/BOT_P)}}
+function botFree(g,type,x,y){const d=BLDS[type];for(let yy=y;yy<y+d.h;yy++)for(let xx=x;xx<x+d.w;xx++){if(botStreet(g,xx,yy)||(G.roads&&inb(xx,yy)&&G.roads[idx(xx,yy)]))return false}return true}
+function botPlan(me,type){const AI=AIs[me],g=AI&&botGrid(AI),z=BOT_ZONE[type];if(!g||!z)return null;const d=BLDS[type];if(d.w>4||d.h>4)return null;
+  const offs=[...new Set([0,4-d.w])],offy=[...new Set([0,4-d.h])];let best=null,bs=1e9;
+  for(let j=-3;j<=3;j++)for(let i=-3;i<=3;i++){const r=Math.max(Math.abs(i),Math.abs(j));if(!r)continue;
+    const bx=g.ox+1+i*BOT_P,by=g.oy+1+j*BOT_P;const dot=(i*g.ex+j*g.ey)/(hyp(i,j)||1);
+    let same=0,other=0;for(let yy=by;yy<by+4;yy++)for(let xx=bx;xx<bx+4;xx++){if(!inb(xx,yy))continue;const b=byId.get(bldAt[idx(xx,yy)]);if(b){if(b.type===type)same++;else other++}}
+    let sc=Math.abs(r-z[0])*12+(r>2?30:0)-z[1]*dot*6+hyp(i,j)-(same?5:0)+(other&&type==='casa'?3:0);
+    if(sc>=bs)continue;
+    for(const oy of offy)for(const ox of offs){const x=bx+ox,y=by+oy;if(canPlace(type,x,y,me,0,true)&&botFree(g,type,x,y)&&spotReachable(type,x,y)){bs=sc;best={x,y};break}}}
+  return best}
+function botRoads(AI,me,p){const g=botGrid(AI);const keep=AI.wallNeed?160:p.age>=1?90:30;if(!g||p.res.stone<keep+10)return;AI.rdT=(AI.rdT||0)-1;if(AI.rdT>0)return;AI.rdT=4;
+  const occ=new Set();for(const e of ents)if(e.o===me&&e.kind==='b'&&!e.d.wall&&!e.d.gate&&e.type!=='torre'){const k=botBlock(g,e.tx,e.ty);if(Math.max(Math.abs(k.i),Math.abs(k.j))<=3)occ.add(k.i+','+k.j)}
+  const tiles=[];for(const s of occ){const [i,j]=s.split(',').map(Number);const x0=g.ox+i*BOT_P,y0=g.oy+j*BOT_P;
+    for(let k=0;k<=BOT_P;k++)tiles.push([x0+k,y0],[x0+k,y0+BOT_P],[x0,y0+k],[x0+BOT_P,y0+k])}
+  tiles.sort((a,b)=>hyp(a[0]-g.cx,a[1]-g.cy)-hyp(b[0]-g.cx,b[1]-g.cy));let n=0;
+  for(const [x,y] of tiles){if(n>=8||p.res.stone<keep)break;if(!inb(x,y)||(G.roads&&G.roads[idx(x,y)]))continue;if(placeRoad(me,x,y))n++}}
+// Missões: lê os objetivos por cumprir (campanha ou Meu Reino) e transforma-os em pedidos concretos para a IA.
+function botNorm(s){return String(s||'').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'')}
+function botMatch(txt,defs){let best=null,bl=0;for(const t in defs){const w=botNorm(defs[t].name).split(/\s+/);if(!w[0])continue;const st=w[0].slice(0,Math.max(4,w[0].length-2));
+  if(!txt.includes(st))continue;if(!w.slice(1).every(x=>x.length<3||txt.includes(x)))continue;const l=w.join(' ').length;if(l>bl){bl=l;best=t}}return best}
+function botObjs(){try{if(G.reino&&G.reino.ms)return reinoObjs(G.reino.ms);if(G.camp!=null&&CAMP[G.camp])return campObjs()}catch(e){}return[]}
+function botMission(AI,me){const N={b:{},u:{},cls:{},mil:0,res:null,pop:0,forge:false,age:0,hunt:null,goal:null,hold:false};
+  for(const o of botObjs()){if(o.ok)continue;const t=botNorm(o.d),m=t.match(/(\d+)/),n=m?+m[1]:1;
+    if(/^construir/.test(t)){const b=botMatch(t,BLDS);if(b)N.b[b]=Math.max(N.b[b]||0,n);continue}
+    if(/^(ter|treinar) /.test(t)){if(/soldad/.test(t)){N.mil=Math.max(N.mil,n);continue}if(/cavaleir/.test(t)){N.cls.cav=n;continue}if(/maquinas de cerco/.test(t)){N.cls.siege=n;continue}if(/navios de guerra/.test(t)){N.cls.ship=n;continue}
+      const u=botMatch(t,UNITS);if(u){N.u[u]=Math.max(N.u[u]||0,n);continue}const b=botMatch(t,BLDS);if(b)N.b[b]=Math.max(N.b[b]||0,n);continue}
+    if(/^juntar/.test(t)){N.res=/ouro/.test(t)?'gold':/madeira/.test(t)?'wood':/pedra/.test(t)?'stone':'food';N.resN=n;continue}
+    if(/^(recolher|chegar a \d)/.test(t)||/populacao/.test(t)){N.pop=1;continue}
+    if(/^pesquisar/.test(t)){N.forge=true;continue}
+    if(/idade do ferro/.test(t)){N.age=2;continue}if(/idade do bronze/.test(t)){N.age=Math.max(N.age,1);continue}
+    if(/^matar .*lobo/.test(t)){N.hunt='lobo';continue}
+    if(/^(destruir|derrotar|arrasar)/.test(t)){N.goal=t;continue}
+    if(/^(aguentar|resistir|sobreviver|defender|manter)/.test(t)){N.hold=true;continue}}
+  if(N.forge){N.b.ferreiro=Math.max(N.b.ferreiro||0,1)}
+  AI.need=N;return N}
+function botTrainerOf(t){for(const k in BLDS)if(BLDS[k].train&&BLDS[k].train.includes(t))return k;return null}
+function botDoNeeds(AI,me,p,vills,blds,home,army){const N=AI.need;if(!N)return;
+  const all=t=>blds.filter(b=>b.type===t).length,busy=blds.some(b=>!b.done&&b.type!=='casa'&&b.type!=='quinta'&&!b.d.wall&&!b.d.gate);
+  AI.wallNeed=!!(N.b.muralhaPedra||N.b.portaoPedra||N.b.muralhaFort);
+  if(N.b.portaoPedra&&all('portaoPedra')<N.b.portaoPedra&&canAfford(me,BLDS.portaoPedra.cost)){const w=blds.find(b=>b.done&&b.type==='muralhaPedra')||blds.find(b=>b.done&&b.d.wall);if(w&&canPlace('portaoPedra',w.tx,w.ty,me,0,true))placeBuilding(me,'portaoPedra',w.tx,w.ty,[])}
+  // edifícios pedidos (um de cada vez)
+  if(!busy)for(const t in N.b){if(BLDS[t].wall||BLDS[t].gate||BLDS[t].road)continue;if(all(t)>=N.b[t])continue;if(p.age<(BLDS[t].age||0))continue;if(t==='doca'){aiBuild(me,'doca',vills,home.x,home.y);break}
+    if(aiBuild(me,t,vills,home.x,home.y))break}
+  // unidades pedidas
+  const want=[];for(const t in N.u)want.push([t,N.u[t]]);
+  for(const c in N.cls){const pool=Object.keys(UNITS).filter(t=>UNITS[t].cls===c&&p.age>=(UNITS[t].age||0)&&(c!=='ship'||UNITS[t].mil)&&!UNITS[t].king);
+    const have=ents.filter(e=>e.o===me&&e.kind==='u'&&e.d.cls===c&&(c!=='ship'||e.d.mil)).length;if(have<N.cls[c]&&pool.length){const t=pool.find(t=>blds.some(b=>b.done&&b.d.train&&b.d.train.includes(t)))||pool[0];want.push([t,cntU(me,t)+N.cls[c]-have])}}
+  const queued=t=>blds.reduce((a,b)=>a+(b.queue||[]).filter(q=>q.t===t).length,0);
+  for(const [t,n] of want){if(cntU(me,t)+queued(t)>=n)continue;const bt=botTrainerOf(t);if(!bt)continue;const b=blds.find(b=>b.done&&b.type===bt&&b.queue.length<2);
+    if(b){if(p.age>=(UNITS[t].age||0)&&canAfford(me,UNITS[t].cost))queueUnit(b,t,true)}else if(!all(bt)&&!busy)aiBuild(me,bt,vills,home.x,home.y)}
+  // melhorias do Ferreiro
+  if(N.forge){const f=blds.find(b=>b.done&&b.type==='ferreiro'&&!b.queue.length);if(f)for(const t of f.d.techs){if(p.techs[t]||p.age<TECHS[t].age)continue;if(canAfford(me,TECHS[t].cost)){queueTech(f,t,true);break}}}
+  // caça aos lobos com o exército
+  if(N.hunt){const idle=army.filter(a=>a.state==='idle'&&!a.d.siege&&!a.d.convert);if(idle.length>=3){let w=null,bd=1e9;for(const e of ents)if(e.o===2&&e.type===N.hunt){const d=hyp(e.x-home.x,e.y-home.y);if(d<bd){bd=d;w=e}}
+    if(w)groupMove(idle,w.x,w.y,true,'livre')}}}
+// Guerra: mede forças (valor e vida das unidades, torres e centros), junta o exército num ponto de reunião, ataca quando é mais forte,
+// escolhe alvos (soldados perto primeiro, máquinas de cerco contra edifícios) e retira quando a batalha corre mal.
+function botPow(e){if(e.kind==='b')return e.type==='torre'?6*(e.lvl||1):e.type==='centro'?8:e.d.gate||e.d.wall?0:0;const c=e.d.cost||{};return(e.hp/(e.max||e.hp||1))*(1+((c.food||0)+(c.wood||0)+(c.gold||0)*1.4)/60)}
+function botPowNear(o,x,y,r){let s=0;for(const e of ents){if(e.o!==o||e.dead)continue;if(e.kind==='u'&&!e.d.mil)continue;if(e.kind==='u'&&e.d.naval)continue;const c=e.kind==='b'?centerOf(e):e;if(hyp(c.x-x,c.y-y)<r)s+=botPow(e)}return s}
+function botWar(AI,me,en,army,home,p,threat){const g=botGrid(AI)||{ex:0,ey:0};const N=AI.need||{};
+  const land=army.filter(a=>!a.d.naval&&!a.d.king&&!a.d.convert&&!a.vilaGo);if(!land.length){AI.ws='grow';AI.attacking=false;return true}
+  const rally={x:clamp(Math.round(home.x+g.ex*9),2,W-3),y:clamp(Math.round(home.y+g.ey*9),2,H-3)};
+  const myP=land.reduce((s,u)=>s+botPow(u),0);let enP=0;for(const e of ents)if(e.o===en&&e.kind==='u'&&e.d.mil&&!e.d.naval)enP+=botPow(e);
+  let cx=0,cy=0;for(const u of land){cx+=u.x;cy+=u.y}cx/=land.length;cy/=land.length;
+  const goals=(G.reino&&G.reino.ms&&G.reino.ms.ids||[]).map(id=>byId.get(id)).filter(e=>e&&!e.dead&&e.o!==me);
+  const gk=N.goal?(/torre/.test(N.goal)?'torre':/doca/.test(N.goal)?'doca':/rei/.test(N.goal)&&!/reino/.test(N.goal)?'rei':null):null;
+  if(gk&&!goals.length)for(const e of ents)if(e.o===en&&!e.dead&&e.type===gk&&(!e.d.naval))goals.push(e);
+  const target=()=>{if(N.goal&&goals.length){goals.sort((a,b)=>{const ca=centerOf(a),cb=centerOf(b);return hyp(ca.x-cx,ca.y-cy)-hyp(cb.x-cx,cb.y-cy)});return goals[0]}return aiTarget(en,{x:cx,y:cy})};
+  AI.ws=AI.ws||'grow';AI.wsT=(AI.wsT||0)+1;
+  if(threat&&AI.ws!=='grow'&&hyp(cx-home.x,cy-home.y)>20){const hp=botPowNear(en,home.x,home.y,16);if(hp>myP*.35){AI.ws='grow';AI.attacking=false;groupMove(land,home.x,home.y,true,'livre');return true}}
+  if(AI.ws==='grow'){AI.attacking=false;
+    if(threat||N.hold&&!N.goal)return true;
+    const tgt=target();if(!tgt)return true;const tc=centerOf(tgt);const defP=botPowNear(en,tc.x,tc.y,10);
+    const need=Math.max(8,N.mil||0,Math.min(AI.wave,20));
+    const strong=land.length>=need&&myP>=1.3*(enP*.6+defP)||land.length>=BOT_D.armyMax*.85;
+    if(strong&&AI.t>=Math.min(AI.nextAttack,420)&&!(N.mil&&land.length<N.mil)){AI.ws='rally';AI.wsT=0;groupMove(land,rally.x,rally.y,false,'linha')}
+    return true}
+  if(AI.ws==='rally'){const near=land.filter(u=>hyp(u.x-rally.x,u.y-rally.y)<6).length;
+    if(near>=land.length*.75||AI.wsT>30){const tgt=target();if(!tgt){AI.ws='grow';return true}const c=centerOf(tgt);AI.ws='attack';AI.wsT=0;AI.attacking=true;AI.wN=land.length;AI.tgt=tgt.id;
+      AI.nextAttack=AI.t+BOT_D.gap[0];AI.wave=Math.min(BOT_D.waveMax,AI.wave+BOT_D.grow);groupMove(land,c.x,c.y,true,'linha')}
+    return true}
+  if(AI.ws==='attack'){AI.attacking=true;
+    const mine=botPowNear(me,cx,cy,10),theirs=botPowNear(en,cx,cy,10);
+    if(land.length<AI.wN*.5&&mine<theirs*.6){AI.ws='retreat';AI.wsT=0;AI.attacking=false;AI.nextAttack=AI.t+90;groupMove(land,rally.x,rally.y,false,'livre');return true}
+    let tgt=byId.get(AI.tgt);if(!tgt||tgt.dead||tgt.o!==en&&!goals.includes(tgt)){tgt=target();AI.tgt=tgt&&tgt.id}
+    if(!tgt){AI.ws='grow';AI.attacking=false;groupMove(land,rally.x,rally.y,false,'livre');return true}
+    if(AI.wsT%3===0){const foes=ents.filter(e=>e.o===en&&e.kind==='u'&&e.d.mil&&!e.d.naval&&hyp(e.x-cx,e.y-cy)<9);
+      const blds=ents.filter(e=>e.o===en&&e.kind==='b'&&!e.dead).map(b=>({b,c:centerOf(b)})).filter(q=>hyp(q.c.x-cx,q.c.y-cy)<14);
+      for(const u of land){if(u.d.siege){if(u.state==='attack'&&alive(u.target)&&u.target.kind==='b')continue;
+          const q=blds.sort((a,b)=>(a.b.type==='torre'?-6:0)+hyp(a.c.x-u.x,a.c.y-u.y)-((b.b.type==='torre'?-6:0)+hyp(b.c.x-u.x,b.c.y-u.y)))[0];if(q)orderAttack(u,q.b);continue}
+        if(u.state==='attack'&&alive(u.target)&&u.target.kind==='u')continue;
+        if(foes.length){let f=null,fs=1e9;for(const e of foes){const s=hyp(e.x-u.x,e.y-u.y)+(e.hp/(e.max||1))*3-(e.d.siege?3:0)-(e.d.cls==='arch'&&u.d.cls==='cav'?2:0);if(s<fs){fs=s;f=e}}if(f){orderAttack(u,f);continue}}
+        if(u.state==='idle'){const c=centerOf(tgt);if(hyp(c.x-u.x,c.y-u.y)<3)orderAttack(u,tgt);else{moveTo(u,c.x,c.y);u.amove=true}}}}
+    return true}
+  if(AI.ws==='retreat'){if(AI.wsT>25||land.every(u=>hyp(u.x-rally.x,u.y-rally.y)<8)){AI.ws='grow';AI.wsT=0}return true}
+  AI.ws='grow';return true}
 function aiRun(AI,dt){
   AI.t+=dt;AI.tick-=dt;if(AI.tick>0)return;AI.tick=1;
   const me=AI.me,en=1-me,D=aiD(AI);
@@ -2081,6 +2197,7 @@ function aiRun(AI,dt){
   const home=tc?{x:tc.tx+1,y:tc.ty+1}:(vills[0]?{x:Math.floor(vills[0].x),y:Math.floor(vills[0].y)}:G.starts[me]);
   crowd=new Map();for(const v of vills)if(v.gres)crowd.set(v.gres.id,(crowd.get(v.gres.id)||0)+1);
   buildReach(home.x,home.y,me);
+  if(AI.bot){AI.misT=(AI.misT||0)-1;if(AI.misT<=0){AI.misT=5;botMission(AI,me)}}
   if(AI.landLink==null)AI.landLink=landOf(G.starts[me].x,G.starts[me].y)===landOf(G.starts[en].x,G.starts[en].y);
   // obras abandonadas: atribuir construtor ou cancelar
   let wallB=vills.filter(v=>v.state==='build'&&v.bld&&(v.bld.d.wall||v.bld.d.gate)).length;
@@ -2092,13 +2209,15 @@ function aiRun(AI,dt){
     if(!builders){const c=vills.filter(v=>v.state==='idle'||(v.state==='gather'&&v.gkind==='wood')).sort((a,c)=>hyp(a.x-b.tx,a.y-b.ty)-hyp(c.x-b.tx,c.y-b.ty))[0];if(c)orderBuild(c,b)}}
   // reconstruir centro
   if(!tc&&vills.length&&p.age>=1&&!blds.some(b=>b.type==='centro'))aiBuild(me,'centro',vills,home.x,home.y);
-  const targetV=D.vills[p.age];
+  const targetV=D.vills[p.age]+(AI.bot&&AI.need&&AI.need.pop?8:0);
   // aldeões
   if(tc){const queued=tc.queue.filter(q=>q.t==='aldeao').length;
     if(vills.length+queued<targetV&&tc.queue.length<2&&!tc.queue.some(q=>q.k==='age'))queueUnit(tc,'aldeao',true)}
   // casas
   const housing=blds.some(b=>b.type==='casa'&&!b.done);
-  if(p.popCap-p.pop<=3&&p.popCap<100&&!housing)aiBuild(me,'casa',vills,home.x,home.y);
+  if(AI.bot){const hb=blds.filter(b=>b.type==='casa'&&!b.done).length;if(p.popCap-p.pop<=5+Math.floor(p.pop/12)&&p.popCap<100&&hb<2)aiBuild(me,'casa',vills,home.x,home.y)}
+  else if(p.popCap-p.pop<=3&&p.popCap<100&&!housing)aiBuild(me,'casa',vills,home.x,home.y);
+  if(AI.bot)botDoNeeds(AI,me,p,vills,blds,home,army);
   // ordem de construção
   const plan=[['quartel',0,7,1],['armazem',0,10,1],['arquearia',0,11,1],['estabulo',1,0,1],['torre',1,14,1],['ferreiro',1,16,1],['oficina',1,18,1],['quartel',1,20,2],['mercado',1,21,1],['templo',2,20,1],['torre',2,18,2],['arquearia',2,20,2],['estabulo',2,24,2]];
   if(p.res.wood>500&&p.popCap<100&&p.popCap-p.pop<=8&&!housing)aiBuild(me,'casa',vills,home.x,home.y);
@@ -2111,7 +2230,8 @@ function aiRun(AI,dt){
   }
   const threat=ents.find(e=>e.o===en&&e.kind==='u'&&!e.d.naval&&hyp(e.x-home.x,e.y-home.y)<15);
   // repartição económica
-  const ratio=[{food:.55,wood:.45,gold:0,stone:0},{food:.45,wood:.32,gold:.17,stone:.06},{food:.4,wood:.3,gold:.25,stone:.05}][p.age];
+  let ratio=[{food:.55,wood:.45,gold:0,stone:0},{food:.45,wood:.32,gold:.17,stone:.06},{food:.4,wood:.3,gold:.25,stone:.05}][p.age];
+  if(AI.bot){ratio={...ratio};if(p.age>=1)ratio.stone=AI.wallNeed?.22:.1;const f=AI.need&&AI.need.res;if(f&&(p.age>0||f==='food'||f==='wood'))ratio[f]+=.25}
   const cnt={food:0,wood:0,gold:0,stone:0};for(const v of vills)if(v.gkind&&(v.state==='gather'||v.state==='return'))cnt[v.gkind]++;
   for(const v of vills){
     if(v.state!=='idle'){v.aiIdle=0;continue}
@@ -2142,8 +2262,8 @@ function aiRun(AI,dt){
     for(const k of rich)for(const q of poor){const g=vills.filter(v=>v.state==='gather'&&v.gkind===k).slice(0,3);for(const v of g){const rr=findRes(q,v.x,v.y,60,me);if(rr)orderGather(v,rr)}}}
   // mercado: vende o que sobra, compra o que falta
   AI.mktT=(AI.mktT||0)-1;if(AI.mktT<=0&&blds.some(b=>b.done&&b.d.market)){AI.mktT=15;const R0=p.res;
-    for(const k of MKT_K){if(R0[k]>1600){mktSell(me,k);break}}
-    for(const k of ['food','wood']){if(R0[k]<120&&R0.gold>450){mktBuy(me,k);break}}}
+    for(const k of MKT_K){if(R0[k]>1600&&!(AI.need&&AI.need.res===k)){mktSell(me,k);break}}
+    for(const k of ['food','wood']){if(R0[k]<120&&R0.gold>450&&!(AI.need&&AI.need.res==='gold')){mktBuy(me,k);break}}}
   // sacerdotes livres vão buscar relíquias para o templo
   if(G.relics&&blds.some(b=>b.done&&b.type==='templo')){for(const u of army)if(u.d.convert&&u.state==='idle'&&u.relic!=null&&G.relics[u.relic]&&G.relics[u.relic].c===u.id)orderRelic(u,u.relic);const pr=army.filter(a=>a.d.convert&&a.state==='idle'&&a.relic==null);
     for(const u of pr){if(G.relics.some(q=>q.c===u.id))continue;let bi=-1,bd=40;G.relics.forEach((q,i)=>{if(q.c||q.t)return;if(G.map==='arquipelago'&&landOf(q.x,q.y)!==landOf(home.x,home.y))return;const d=hyp(q.x-u.x,q.y-u.y);if(d<bd&&!ents.some(e=>e.o===me&&e.relicGo===i&&e.state==='relic')){bd=d;bi=i}});if(bi>=0)orderRelic(u,bi)}}
@@ -2162,9 +2282,11 @@ function aiRun(AI,dt){
   const wallSave=D.wall&&!AI.walled&&p.age>=1&&vills.length>=Math.min(18,D.vills[1])&&AI.t>480&&!threat;
   const saving=!aging&&p.age<D.maxAge&&vills.length>=(p.age===0?Math.min(12,D.vills[0]):Math.min(18,D.vills[1]))&&!threat;
   const reserve=saving?{food:AGE_COST[p.age+1].food+60,gold:(AGE_COST[p.age+1].gold||0)+40}:{food:p.age===0?60:120,gold:p.age===2?60:0};
+  const keepR=AI.bot&&AI.need&&AI.need.res?AI.need.res:null; // missão "Juntar N de X": não gastar esse recurso
+  if(keepR==='gold'||keepR==='food')reserve[keepR]=Math.max(reserve[keepR],(AI.need.resN||0)+50);
   if(!saving&&!threat&&(D.techs||p.age>0))for(const b of blds){if(!b.done||!b.d.techs||b.queue.length)continue;if(!D.techs&&b.type!=='armazem'&&b.type!=='centro')continue;
     for(const t of b.d.techs){if(p.techs[t])continue;const tk=TECHS[t];if(p.age<tk.age)continue;if(t==='arado'&&count('quinta')<3)continue;
-      if(KINDS.every(k=>p.res[k]-(tk.cost[k]||0)>=(k==='food'?60:k==='wood'?40:0))){queueTech(b,t,true);break}}}
+      if(KINDS.every(k=>p.res[k]-(tk.cost[k]||0)>=(k===keepR?(AI.need.resN||0)+50:k==='food'?60:k==='wood'?40:0))){queueTech(b,t,true);break}}}
   let picks=aiPicks(me,en,p,blds,army);if(!D.siege)picks=picks.filter(t=>!UNITS[t].siege);
   const ewOn=G.wonder&&G.wonder.o===en&&byId.get(G.wonder.id);
   if(ewOn&&D.siege){if(!blds.some(b=>b.type==='oficina'))aiBuild(me,'oficina',vills,home.x,home.y);picks=['ariete',p.age>=2?'trebuchet':'catapulta',...picks].filter((x,i,a)=>a.indexOf(x)===i).slice(0,3)}
@@ -2187,7 +2309,7 @@ function aiRun(AI,dt){
   if(!AI.landLink)aiSea(AI,me,en,army,blds,p,home);
   // muralha à volta da base
   if(D.wall&&!AI.walled&&p.age>=1&&vills.length>=Math.min(18,D.vills[1])&&p.res.wood>=300&&AI.t>480&&!threat&&!AI.bot){AI.walled=true;aiWallRing(me,home)}
-  if(AI.bot)botWalls(AI,me,home,p,vills,threat);
+  if(AI.bot){botWalls(AI,me,home,p,vills,threat);botRoads(AI,me,p)}
   if(D.towers&&AI.walled&&!AI.towerGate&&p.res.stone>=120&&p.age>=1){const g=blds.find(b=>b.d.gate&&b.done);if(g){const ex=G.starts[en];const dx=Math.sign(ex.x-g.tx),dy=Math.sign(ex.y-g.ty);if(aiBuild(me,'torre',vills,g.tx-dx*3,g.ty-dy*3))AI.towerGate=true}}
   // rei: fica junto ao centro e esconde-se lá dentro se houver perigo
   {const k=mine.find(e=>e.kind==='u'&&e.d.king);if(k&&tc){const c=centerOf(tc);if(threat&&garrSpace(tc)>0&&k.state!=='enter'){orderEnter(k,tc)}else if(k.state==='idle'&&hyp(k.x-c.x,k.y-c.y)>5){moveTo(k,c.x+1,c.y+2.5)}}}
@@ -2200,7 +2322,8 @@ function aiRun(AI,dt){
   // maravilha inimiga: atacar já
   const ew=G.wonder&&G.wonder.o===en?byId.get(G.wonder.id):null;
   const enemyWalled=ents.some(e=>e.o===en&&e.kind==='b'&&(e.d.wall||e.d.gate)&&e.done);
-  if(ew&&army.length){AI.attacking=true;AI.ewT=(AI.ewT||0)-1;const c=centerOf(ew);
+  if(AI.bot&&AI.landLink&&!ew&&botWar(AI,me,en,army,home,p,threat)){}
+  else if(ew&&army.length){AI.attacking=true;AI.ewT=(AI.ewT||0)-1;const c=centerOf(ew);
     if(AI.ewT<=0){AI.ewT=8;for(const a of army){if(a.state==='attack'&&a.target===ew)continue;if(a.d.convert){if(a.state==='idle'){moveTo(a,c.x,c.y);a.amove=true}continue}
       if(a.state==='attack'&&a.target&&a.target.kind==='u'&&distTo(a,a.target)<2.5)continue;orderAttack(a,ew);a.forced=true}}}
   // primeiro assalto: um grupo pequeno vai incomodar os aldeões do rival (só por terra)
@@ -2239,10 +2362,11 @@ function aiPicks(me,en,p,blds,army){
 // muralha do bot: anel quadrado (raio 13) em pedra, com portão de pedra a meio de cada lado e torre em cada canto;
 // vai sendo completado a cada 20 s (os construtores são atribuídos pela IA às obras paradas). Na Idade do Ferro reforça as torres.
 function botWalls(AI,me,home,p,vills,threat){if(p.age<1||vills.length<14||AI.t<300)return;AI.wt=(AI.wt||0)-1;if(AI.wt>0)return;AI.wt=20;AI.walled=true;
-  const R0=13,stone=p.res.stone>=60,wt=stone?'muralhaPedra':'muralhaMadeira',gt=stone?'portaoPedra':'portaoMadeira';let n=0;
-  for(const [x,y] of [[home.x,home.y-R0],[home.x,home.y+R0],[home.x-R0,home.y],[home.x+R0,home.y]])if(inb(x,y)&&canPlace(gt,x,y,me,0,true)&&canAfford(me,BLDS[gt].cost)&&placeBuilding(me,gt,x,y,[]))n++;
-  for(const [x,y] of [[home.x-R0-1,home.y-R0-1],[home.x+R0,home.y-R0-1],[home.x-R0-1,home.y+R0],[home.x+R0,home.y+R0]])if(inb(x,y)&&canPlace('torre',x,y,me,0,true)&&canAfford(me,BLDS.torre.cost))placeBuilding(me,'torre',x,y,[]);
-  for(let k=-R0;k<=R0&&n<24;k++)for(const [x,y] of [[home.x+k,home.y-R0],[home.x+k,home.y+R0],[home.x-R0,home.y+k],[home.x+R0,home.y+k]]){
+  const g=botGrid(AI);if(!g)return;const x0=g.ox-2*BOT_P,x1=g.ox+3*BOT_P,y0=g.oy-2*BOT_P,y1=g.oy+3*BOT_P; // muralha sobre as ruas exteriores da grelha
+  const stone=p.res.stone>=60,wt=stone?'muralhaPedra':'muralhaMadeira',gt=stone?'portaoPedra':'portaoMadeira';let n=0;
+  for(const [x,y] of [[g.ox+BOT_P,y0],[g.ox+BOT_P,y1],[x0,g.oy+BOT_P],[x1,g.oy+BOT_P]])if(inb(x,y)&&canPlace(gt,x,y,me,0,true)&&canAfford(me,BLDS[gt].cost)&&placeBuilding(me,gt,x,y,[]))n++;
+  for(const [x,y] of [[x0-1,y0-1],[x1,y0-1],[x0-1,y1],[x1,y1]])if(inb(x,y)&&canPlace('torre',x,y,me,0,true)&&canAfford(me,BLDS.torre.cost))placeBuilding(me,'torre',x,y,[]);
+  for(let k=0;k<=5*BOT_P&&n<24;k++)for(const [x,y] of [[x0+k,y0],[x0+k,y1],[x0,y0+k],[x1,y0+k]]){
     if(!inb(x,y)||!canPlace(wt,x,y,me,0,true)||!canAfford(me,BLDS[wt].cost))continue;
     let res=0;for(let dy=-1;dy<=1;dy++)for(let dx=-1;dx<=1;dx++)if(inb(x+dx,y+dy)&&resAt[idx(x+dx,y+dy)])res++;if(res>=3)continue;
     if(placeBuilding(me,wt,x,y,[]))n++}
