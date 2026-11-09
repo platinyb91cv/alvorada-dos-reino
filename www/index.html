@@ -5327,9 +5327,20 @@ const inFrame=(()=>{try{return window.top!==window.self}catch(e){return true}})(
 function showLogin(msg){menuBgStart();for(const id of ['sMenu','sOnline','sProfile','sRank','sFriends','sHelp'])$(id).hidden=true;$('sLogin').hidden=false;$('lgPreview').hidden=!isPreviewHost();$('lgGoogle').disabled=!ACC.sb||inFrame;
   // o Google recusa abrir o login dentro de uma moldura (iframe): explica em vez de mostrar "conteúdo bloqueado"
   loginStatus(inFrame&&!msg?'O login Google não funciona dentro desta pré-visualização. Usa a app Android ou abre o jogo em jogo.krioldns.uk.':msg||'',inFrame&&!msg)}
+// Guarda a sessão no armazenamento nativo (Capacitor Preferences) além do localStorage.
+// Na app Android o localStorage do WebView pode ser limpo entre arranques/atualizações, o que fazia
+// o jogo pedir login do Google sempre. O Preferences é persistente, por isso a sessão fica até sair.
+function accStore(){
+  const P=isNative()&&capPlugin('Preferences');
+  if(!P)return undefined; // na web usa o localStorage por omissão
+  return {
+    getItem:async k=>{try{const r=await P.get({key:k});if(r&&r.value!=null)return r.value}catch(e){}try{return localStorage.getItem(k)}catch(e){return null}},
+    setItem:async(k,v)=>{try{await P.set({key:k,value:String(v)})}catch(e){}try{localStorage.setItem(k,v)}catch(e){}},
+    removeItem:async k=>{try{await P.remove({key:k})}catch(e){}try{localStorage.removeItem(k)}catch(e){}}
+  }}
 async function accInit(){
   if(!window.supabase||!ALV_CFG.supabaseUrl){ACC.sb=null;showLogin(isPreviewHost()?'O login não está disponível nesta página de pré-visualização.':'Sem ligação ao serviço de contas. Verifica a internet.');return}
-  ACC.sb=window.supabase.createClient(ALV_CFG.supabaseUrl,ALV_CFG.supabaseKey,{auth:{flowType:'pkce',persistSession:true,autoRefreshToken:true,detectSessionInUrl:!isNative()}});
+  ACC.sb=window.supabase.createClient(ALV_CFG.supabaseUrl,ALV_CFG.supabaseKey,{auth:{storage:accStore(),storageKey:accStorageKey()||undefined,flowType:'pkce',persistSession:true,autoRefreshToken:true,detectSessionInUrl:!isNative()}});
   ACC.sb.auth.onAuthStateChange((ev,session)=>{
     if(ev==='SIGNED_OUT'||(session&&session.user&&session.user.id)!==(ACC.user&&ACC.user.id))cloudInvalidate();
     if(ev==='TOKEN_REFRESHED'&&session&&NET.ws&&NET.authed)netSend({type:'auth',token:session.access_token,refresh:true});
