@@ -78,7 +78,7 @@ jobs:
 
       # Link direto para o telemóvel: Releases → "APK de teste" → Alvorada-dos-Reinos.apk
       - name: Publicar APK na página Releases
-        if: github.ref_name == 'main' || github.ref_name == 'master'
+        if: github.ref_name == 'main' || github.ref_name == 'master' || github.ref_name == 'edificios-grok'
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
