@@ -2652,10 +2652,10 @@ function groundChunk(i,j){
   if(TL&&FLORA.tex.dirt&&cb.some(e=>!e.d.wall&&!e.d.gate&&!e.d.farm)){const iso=c.getTransform(),wm=wearMask();
     if(!GTMP||GTMP.width!==cv.width||GTMP.height!==cv.height)GTMP=mkCanvas(cv.width,cv.height);const tc=GTMP.getContext('2d');
     tc.setTransform(1,0,0,1,0,0);tc.clearRect(0,0,GTMP.width,GTMP.height);tc.setTransform(iso);tc.globalCompositeOperation='source-over';
-    for(const e of cb){if(e.d.wall||e.d.gate||e.d.farm)continue;const m=e.done?(e.type==='centro'?2.8:e.w>=3?1.7:1.3):.4;tc.globalAlpha=e.done?1:.6;tc.drawImage(wm,(e.tx-m)*GT,(e.ty-m)*GT,(e.w+m*2)*GT,(e.h+m*2)*GT)}
+    for(const e of cb){if(e.d.wall||e.d.gate||e.d.farm||DIRTFREE.has(e.type))continue;const m=e.done?(e.type==='centro'?2.8:e.w>=3?1.7:1.3):.4;tc.globalAlpha=e.done?1:.6;tc.drawImage(wm,(e.tx-m)*GT,(e.ty-m)*GT,(e.w+m*2)*GT,(e.h+m*2)*GT)}
     tc.globalAlpha=1;tc.setTransform(1,0,0,1,0,0);tc.globalCompositeOperation='source-in';tc.fillStyle=groundTex(tc,FLORA.tex.dirt,X0,Y0,cs);tc.fillRect(0,0,GTMP.width,GTMP.height);tc.globalCompositeOperation='source-over';
     c.setTransform(1,0,0,1,0,0);c.globalAlpha=.9;c.drawImage(GTMP,0,0);c.globalAlpha=1;c.setTransform(iso)}
-  {const wd=wearDecal();c.globalAlpha=TL?.18:.5;for(const e of cb){if(e.d.wall||e.d.gate)continue;const m=e.done?.55:.3;c.drawImage(wd,(e.tx-m)*GT,(e.ty-m)*GT,(e.w+m*2)*GT,(e.h+m*2)*GT)}c.globalAlpha=1;
+  {const wd=wearDecal();c.globalAlpha=TL?.18:.5;for(const e of cb){if(e.d.wall||e.d.gate||DIRTFREE.has(e.type))continue;const m=e.done?.55:.3;c.drawImage(wd,(e.tx-m)*GT,(e.ty-m)*GT,(e.w+m*2)*GT,(e.h+m*2)*GT)}c.globalAlpha=1;
     for(const e of cb){if(!e.done||e.d.farm)continue;const thin=e.d.wall||e.d.gate,m=thin?.3:.5,ao=aoDecal(e.w,e.h,m);c.globalAlpha=thin?.5:.85;c.drawImage(ao,(e.tx-m)*GT,(e.ty-m)*GT,(e.w+m*2)*GT,(e.h+m*2)*GT)}c.globalAlpha=1}
   drawRoads(c,x0,y0,x1,y1);
   // decorações fixas
@@ -2711,7 +2711,9 @@ function bldFringe(e){let f=FRINGE.get(e);if(f!==undefined)return f;f=null;
   if(SPR.flora)FRINGE.set(e,f);return f}
 // cerca decorativa à volta do lote (estilo Age of Empires): ripas baixas de madeira, abertura virada à frente.
 // Duas partes (trás/frente) para entrarem na ordenação por profundidade — as ripas de trás ficam atrás do edifício, as da frente à frente.
-let FENCES=true;const PFENCE=new Map();
+let FENCES=false;const PFENCE=new Map();
+// edifícios com sprite SEM chão (pintados sem terra): assentam direto na relva — sem anel de terra batida nem desgaste, só sombra de contacto
+const DIRTFREE=new Set(['templo','mercado','doca']);
 function plotFence(e){
   const key=e.w+'x'+e.h;let r=PFENCE.get(key);if(r)return r;
   const g=.30,HGT=11,step=.52; // recuo do lote (tiles), altura da cerca (px), espaçamento dos postes (tiles)
@@ -3360,7 +3362,7 @@ function wall3dSprite(type,o,m){if(CMOD.ready&&CMOD_KIND[type]){const base=CMOD_
   const cv=mkCanvas(CW*SS,CH*SS),c=cv.getContext('2d');c.scale(SS,SS);c.imageSmoothingEnabled=true;c.imageSmoothingQuality='high';c.drawImage(tintCrop(WALL3D,team,sx,sy,w,h),0,0,w,h,1,1,w*k,h*k);
   const r={cv,ox:ax*k+1,oy:ay*k+1,CW,CH};BCACHE[key]=r;return r}
 // edifícios 3D (Blender, arte/edificios-3d): casas, quartel, Centro da Vila… por idade (torre: por nível), mesma câmara e luz dos portões
-const BLD3D_DATA={"file":"edificios-3d.webp","scale":1.5,"atlasSha256":"023d1e220f086f91199f3f39be208614400f118667bbf5db2b2413662f3db6b8","frames":{"armazem_0":[193,898,189,105,94.29,11.25],"armazem_1":[384,898,189,105,94.29,11.25],"armazem_2":[575,898,189,105,94.29,11.25],"arquearia_0":[2,315,280,220,139.93,46.97],"arquearia_1":[284,315,280,215,140.21,54.73],"arquearia_2":[995,2,280,244,140.03,73.81],"casa_0":[955,734,190,148,94.79,52.89],"casa_1":[1147,734,190,148,94.79,52.89],"casa_2":[1339,734,190,148,94.79,52.89],"centro_0":[2,537,284,195,141.63,54.02],"centro_1":[288,537,284,195,141.63,54.02],"centro_2":[335,2,281,292,140.82,132.8],"doca_0":[1721,734,189,116,94.39,22.39],"doca_1":[1531,734,188,129,94.03,35.64],"doca_2":[2,898,189,111,94.66,17.12],"estabulo_0":[1277,2,280,232,140.32,61.36],"estabulo_1":[1133,315,283,202,141.77,63.41],"estabulo_2":[1418,315,284,197,142.4,57.28],"ferreiro_0":[574,734,187,160,93.55,52.3],"ferreiro_1":[764,537,188,178,93.29,76.9],"ferreiro_2":[574,537,188,186,93.86,75.04],"maravilha_2":[618,2,375,262,188.12,76.18],"mercado_1":[848,315,283,203,141.07,63.64],"mercado_2":[1704,315,283,197,141.28,59.29],"oficina_1":[954,537,284,172,141.46,32.12],"oficina_2":[1240,537,284,172,141.46,32.12],"quartel_0":[1526,537,284,162,141.65,23.72],"quartel_1":[2,734,284,162,141.65,23.72],"quartel_2":[288,734,284,162,141.65,23.72],"templo_1":[566,315,280,212,141.7,70.34],"templo_2":[1559,2,282,230,141.38,89.66],"torre_1":[763,734,190,160,94.94,68.4],"torre_2":[2,2,132,311,65.78,234.47],"torre_3":[136,2,197,293,75.84,215.87]}};
+const BLD3D_DATA={"file":"edificios-3d.webp","scale":1.5,"atlasSha256":"1da71ae2adf53c3bdd39e67ed63cfb371d282e899f1ad9508ba8887590b28fe8","frames":{"armazem_0":[194,1017,189,105,94.29,11.25],"armazem_1":[385,1017,189,105,94.29,11.25],"armazem_2":[576,1017,189,105,94.29,11.25],"arquearia_0":[844,399,280,220,139.93,46.97],"arquearia_1":[1126,399,280,215,140.21,54.73],"arquearia_2":[280,399,280,244,140.03,73.81],"casa_0":[1527,843,190,148,94.79,52.89],"casa_1":[1719,843,190,148,94.79,52.89],"casa_2":[2,1017,190,148,94.79,52.89],"centro_0":[2,646,284,195,141.63,54.02],"centro_1":[288,646,284,195,141.63,54.02],"centro_2":[891,2,281,292,140.82,132.8],"doca_0":[764,646,184,184,92.0,88.0],"doca_1":[950,646,184,184,92.0,88.0],"doca_2":[1136,646,184,184,92.0,88.0],"estabulo_0":[562,399,280,232,140.32,61.36],"estabulo_1":[1408,399,283,202,141.77,63.41],"estabulo_2":[1693,399,284,197,142.4,57.28],"ferreiro_0":[1146,843,187,160,93.55,52.3],"ferreiro_1":[1322,646,188,178,93.29,76.9],"ferreiro_2":[574,646,188,186,93.86,75.04],"maravilha_2":[1174,2,375,262,188.12,76.18],"mercado_1":[1551,2,276,245,138.0,101.0],"mercado_2":[2,399,276,245,138.0,101.0],"oficina_1":[1512,646,284,172,141.46,32.12],"oficina_2":[2,843,284,172,141.46,32.12],"quartel_0":[288,843,284,162,141.65,23.72],"quartel_1":[574,843,284,162,141.65,23.72],"quartel_2":[860,843,284,162,141.65,23.72],"templo_1":[2,2,276,395,138.0,251.0],"templo_2":[280,2,276,395,138.0,251.0],"torre_1":[1335,843,190,160,94.94,68.4],"torre_2":[558,2,132,311,65.78,234.47],"torre_3":[692,2,197,293,75.84,215.87]}};
 const BLD3D={ready:false,img:null,wide:true,teams:new Map(),meta:BLD3D_DATA};
 (()=>{if(!BLD3D_DATA.file)return;const im=new Image();im.onload=()=>{BLD3D.img=im;BLD3D.ready=true;for(const k in BCACHE)delete BCACHE[k];try{PORTS.clear()}catch(e){}try{if(typeof MBG!=='undefined'&&MBG.L&&!document.body.classList.contains('ingame')){MBG.L=null;menuBgStart()}}catch(e){}};im.src='assets/edificios-extra/'+BLD3D_DATA.file})();
 function bld3dKey(type,age,vr){const F=BLD3D.meta.frames;if(!F)return null;
@@ -4337,7 +4339,7 @@ function render(){UCFM=0;U3TMS=0;
         if(e.type==='torre')towerWallStubs(c,e,true,lit);
         if(e.type==='torre'&&(e.lvl||1)===2&&TOWER[2].cat)drawTowerCat(c,e,lit);
         if(lit&&e.garr&&e.garr.length)drawGarrTop(c,e,performance.now()/1000);
-        {const fr=bldFringe(e);if(fr)c.drawImage(lit?fr.cv:darkOf(fr.cv),p.x-fr.ox,p.y-fr.oy,fr.CW,fr.CH)}
+        if(!DIRTFREE.has(e.type)){const fr=bldFringe(e);if(fr)c.drawImage(lit?fr.cv:darkOf(fr.cv),p.x-fr.ox,p.y-fr.oy,fr.CW,fr.CH)}
         if(e.d.gate&&!BLDART.ready&&!GATE3D.ready)drawGateDoor(c,e,p);
         if(e.hp<e.max*.6&&lit&&!(e.d.wall&&e.type!=='muralhaMadeira')){ // fogo
           if(!e.fires){const r=mulberry32(e.id);e.fires=[];for(let k=0;k<4;k++)e.fires.push([e.tx+.3+r()*(e.w-.6),e.ty+.3+r()*(e.h-.6),BHEIGHT[e.type]*(.4+r()*.5)])}
