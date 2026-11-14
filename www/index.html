@@ -2666,7 +2666,7 @@ function groundChunk(i,j){
   for(let y=Math.max(0,y0-7);y<Math.min(H,y1+6);y++)for(let x=Math.max(0,x0-6);x<Math.min(W,x1+7);x++){const e=resAt[idx(x,y)];if(!e||e.rk!=='wood')continue;
     const q=proj(x+.5,y+.5);if(q.x<X0-200||q.x>X0+CHW+50||q.y<Y0-60||q.y>Y0+CHH+170)continue;const sp=treeSprite(e),sh=shadowOf(sp,sp.ay-5);c.drawImage(sh.cv,q.x-sp.ax-sh.pad,q.y+4-sp.ay,sh.w,sh.h)}
   // sombras dos edifícios (refeitas quando um edifício acaba, cai ou é avistado)
-  c.globalAlpha=.36;for(const e of cb){if(!e.done)continue;const p=proj(e.tx,e.ty);const sp=bldSprite(e.type,P[e.o].age,e.o,bldVariant(e)),sh=shadowOf(sp,sp.oy+(e.w+e.h)*HH*.86);
+  c.globalAlpha=.44;for(const e of cb){if(!e.done)continue;const p=proj(e.tx,e.ty);const sp=bldSprite(e.type,P[e.o].age,e.o,bldVariant(e)),sh=shadowOf(sp,sp.oy+(e.w+e.h)*HH*.86);
     const dx=p.x-sp.ox-sh.pad,dy=p.y-sp.oy;if(dx>X0+CHW||dx+sh.w<X0||dy>Y0+CHH||dy+sh.h<Y0)continue;c.drawImage(sh.cv,dx,dy,sh.w,sh.h)}
   c.globalAlpha=1;
   CHUNKS.set(key,{cv,t:performance.now(),cs,b:cv.width*cv.height*4});
@@ -2709,6 +2709,35 @@ function bldFringe(e){let f=FRINGE.get(e);if(f!==undefined)return f;f=null;
     for(const it of items){const s2=it.sp;c.drawImage(s2.cv,it.x-s2.ax*it.sc-x0,it.y-s2.ay*it.sc-y0,s2.w*it.sc,s2.h*it.sc)}
     f={cv,ox:-x0,oy:-y0,CW,CH}}
   if(SPR.flora)FRINGE.set(e,f);return f}
+// cerca decorativa à volta do lote (estilo Age of Empires): ripas baixas de madeira, abertura virada à frente.
+// Duas partes (trás/frente) para entrarem na ordenação por profundidade — as ripas de trás ficam atrás do edifício, as da frente à frente.
+let FENCES=true;const PFENCE=new Map();
+function plotFence(e){
+  const key=e.w+'x'+e.h;let r=PFENCE.get(key);if(r)return r;
+  const g=.30,HGT=11,step=.52; // recuo do lote (tiles), altura da cerca (px), espaçamento dos postes (tiles)
+  const Pt=(u,v)=>({x:(u-v)*HW,y:(u+v)*HH}); // posição no ecrã relativa a proj(e.tx,e.ty)
+  const W=e.w,H=e.h,TL=[-g,-g],TR=[W+g,-g],BL=[-g,H+g],BR=[W+g,H+g];
+  const edgePosts=(a,b,gap)=>{const n=Math.max(1,Math.round(Math.hypot(b[0]-a[0],b[1]-a[1])/step)),out=[];
+    for(let k=0;k<=n;k++){const t=k/n;if(gap&&t>.37&&t<.63)continue;const s=Pt(a[0]+(b[0]-a[0])*t,a[1]+(b[1]-a[1])*t);out.push({x:s.x,y:s.y,t})}return out};
+  const build=edges=>{
+    const prep=edges.map(([a,b,gap])=>({ps:edgePosts(a,b,gap),gap}));
+    let minX=1e9,minY=1e9,maxX=-1e9,maxY=-1e9;
+    for(const {ps} of prep)for(const p of ps){minX=Math.min(minX,p.x);maxX=Math.max(maxX,p.x);minY=Math.min(minY,p.y-HGT);maxY=Math.max(maxY,p.y+3)}
+    const pad=3,ox=-minX+pad,oy=-minY+pad,cw=Math.ceil(maxX-minX+pad*2),ch=Math.ceil(maxY-minY+pad*2);
+    const cv=mkCanvas(cw*SS,ch*SS),c=cv.getContext('2d');c.scale(SS,SS);c.lineCap='round';c.lineJoin='round';
+    for(const {ps,gap} of prep){
+      for(let i=0;i<ps.length-1;i++){const a=ps[i],b=ps[i+1];if(gap&&a.t<.5&&b.t>.5)continue;
+        for(const zf of [.42,.82]){const z=HGT*zf;c.strokeStyle='#8b6236';c.lineWidth=1.5;c.beginPath();c.moveTo(a.x+ox,a.y-z+oy);c.lineTo(b.x+ox,b.y-z+oy);c.stroke()}}
+      for(const p of ps){c.fillStyle='rgba(0,0,0,.22)';c.beginPath();c.ellipse(p.x+ox,p.y+oy,2.6,1.1,0,0,7);c.fill();
+        c.strokeStyle='#6b4a2a';c.lineWidth=2.1;c.beginPath();c.moveTo(p.x+ox,p.y+oy);c.lineTo(p.x+ox,p.y-HGT+oy);c.stroke();
+        c.strokeStyle='rgba(255,240,210,.22)';c.lineWidth=.7;c.beginPath();c.moveTo(p.x+ox-.7,p.y+oy-1);c.lineTo(p.x+ox-.7,p.y-HGT+oy+1);c.stroke()}}
+    return {cv,ox,oy,cw,ch};
+  };
+  r={back:build([[TL,TR,false],[TL,BL,false]]),front:build([[TR,BR,false],[BL,BR,true]])};
+  PFENCE.set(key,r);return r;
+}
+// edifícios com cerca de lote (casas/oficinas); exclui muralhas, portões, quintas, estradas, docas, torres, centro e maravilha
+function hasPlotFence(e){return e.done&&e.kind==='b'&&!e.d.wall&&!e.d.gate&&!e.d.farm&&!e.d.walk&&!e.d.dock&&e.type!=='estrada'&&e.type!=='curral'&&e.type!=='doca'&&e.type!=='torre'&&e.type!=='centro'&&e.type!=='maravilha'}
 let WEAR=null;
 function wearDecal(){if(WEAR)return WEAR;const n=64,cv=mkCanvas(n,n),c=cv.getContext('2d'),r=mulberry32(77);
   const g=c.createRadialGradient(n/2,n/2,n*.18,n/2,n/2,n*.5);g.addColorStop(0,'rgba(120,94,58,.9)');g.addColorStop(.7,'rgba(120,94,58,.55)');g.addColorStop(1,'rgba(120,94,58,0)');c.fillStyle=g;c.fillRect(0,0,n,n);
@@ -4270,13 +4299,15 @@ function render(){UCFM=0;U3TMS=0;
   const draw=[];
   for(let y=V.y0;y<=V.y1;y++)for(let x=V.x0;x<=V.x1;x++){const r=resAt[idx(x,y)];if(!r||!vis[idx(x,y)])continue;const p=proj(x+.5,y+.5);if(!onScreen(p.x,p.y,120))continue;draw.push([x+y+1,0,r,p])}
   for(const e of ents){
-    if(e.kind==='b'){if(e.d.walk||!seenBy0(e))continue;const p=proj(e.tx,e.ty);if(!onScreen(p.x,p.y+(e.w+e.h)*HH/2,260))continue;draw.push([bldDepth(e),1,e,p])}
+    if(e.kind==='b'){if(e.d.walk||!seenBy0(e))continue;const p=proj(e.tx,e.ty);if(!onScreen(p.x,p.y+(e.w+e.h)*HH/2,260))continue;draw.push([bldDepth(e),1,e,p]);
+      if(FENCES&&hasPlotFence(e)){draw.push([e.tx+e.ty+.3,4,e,p,0]);draw.push([e.tx+e.ty+e.w+e.h-.3,4,e,p,1])}}
     else if(e.kind==='u'){if(!visibleTo0(e))continue;const p=proj(e.x,e.y);if(!onScreen(p.x,p.y,60))continue;draw.push([e.x+e.y,2,e,p])}
   }
   if(G.relics)for(const q of G.relics){if(q.c||q.t)continue;const i=idx(clamp(q.x|0,0,W-1),clamp(q.y|0,0,H-1));if(!vis[i])continue;const p=proj(q.x,q.y);if(!onScreen(p.x,p.y,40))continue;draw.push([q.x+q.y,3,q,p])}
   draw.sort((a,b)=>a[0]-b[0]);
   const t=performance.now()/1000;
-  for(const [,k,e,p] of draw){
+  for(const [,k,e,p,part] of draw){
+    if(k===4){const f=plotFence(e),g2=part?f.front:f.back,lit=visibleTo0(e);c.drawImage(lit?g2.cv:darkOf(g2.cv),p.x-g2.ox,p.y-g2.oy,g2.cw,g2.ch);continue}
     if(k===3){drawRelic(c,p.x,p.y,t,vis[idx(clamp(e.x|0,0,W-1),clamp(e.y|0,0,H-1))]===2);continue}
     if(k===0){
       const lit=vis[idx(e.tx,e.ty)]===2;let s;
