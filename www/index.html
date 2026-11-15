@@ -2679,7 +2679,7 @@ function groundChunk(i,j){
     tc.globalAlpha=1;tc.setTransform(1,0,0,1,0,0);tc.globalCompositeOperation='source-in';tc.fillStyle=groundTex(tc,FLORA.tex.dirt,X0,Y0,cs);tc.fillRect(0,0,GTMP.width,GTMP.height);tc.globalCompositeOperation='source-over';
     c.setTransform(1,0,0,1,0,0);c.globalAlpha=.9;c.drawImage(GTMP,0,0);c.globalAlpha=1;c.setTransform(iso)}
   {const wd=wearDecal();c.globalAlpha=TL?.18:.5;for(const e of cb){if(e.d.wall||e.d.gate||dirtFreeE(e))continue;const m=e.done?.55:.3;c.drawImage(wd,(e.tx-m)*GT,(e.ty-m)*GT,(e.w+m*2)*GT,(e.h+m*2)*GT)}c.globalAlpha=1;
-    for(const e of cb){if(!e.done||e.d.farm)continue;const thin=e.d.wall||e.d.gate,df=dirtFreeE(e),m=thin?.3:df?.62:.5,ao=aoDecal(e.w,e.h,m);c.globalAlpha=thin?.5:df?1:.85;c.drawImage(ao,(e.tx-m)*GT,(e.ty-m)*GT,(e.w+m*2)*GT,(e.h+m*2)*GT);
+    for(const e of cb){if(!e.done||e.d.farm||dirtFreeE(e))continue;const thin=e.d.wall||e.d.gate,df=false,m=thin?.3:df?.62:.5,ao=aoDecal(e.w,e.h,m);c.globalAlpha=thin?.5:df?1:.85;c.drawImage(ao,(e.tx-m)*GT,(e.ty-m)*GT,(e.w+m*2)*GT,(e.h+m*2)*GT);
       if(df){c.globalAlpha=.55;c.drawImage(ao,(e.tx-m)*GT,(e.ty-m)*GT,(e.w+m*2)*GT,(e.h+m*2)*GT)}} // AoE: sombra de contacto mais forte a assentar na relva
     c.globalAlpha=1}
   drawRoads(c,x0,y0,x1,y1);
@@ -2693,6 +2693,9 @@ function groundChunk(i,j){
   // sombras dos edifícios (refeitas quando um edifício acaba, cai ou é avistado)
   c.globalAlpha=.38;for(const e of cb){if(!e.done)continue;const p=proj(e.tx,e.ty);const sp=bldSprite(e.type,P[e.o].age,e.o,bldVariant(e)),sh=shadowOf(sp,sp.oy+(e.w+e.h)*HH*.86);
     const dx=p.x-sp.ox-sh.pad,dy=p.y-sp.oy;if(dx>X0+CHW||dx+sh.w<X0||dy>Y0+CHH||dy+sh.h<Y0)continue;c.drawImage(sh.cv,dx,dy,sh.w,sh.h)}
+  // edifícios sem chão: sombra de contacto com a forma do próprio edifício (silhueta achatada e esbatida), sem losango à volta
+  c.globalAlpha=.62;for(const e of cb){if(!e.done||!dirtFreeE(e))continue;const p=proj(e.tx,e.ty);const sp=bldSprite(e.type,P[e.o].age,e.o,bldVariant(e)),ct=contactOf(sp,sp.oy+(e.w+e.h)*HH*.5);
+    const dx=p.x-sp.ox-ct.pad,dy=p.y-sp.oy-ct.pad;if(dx>X0+CHW||dx+ct.w<X0||dy>Y0+CHH||dy+ct.h<Y0)continue;c.drawImage(ct.cv,dx,dy,ct.w,ct.h)}
   c.globalAlpha=1;
   CHUNKS.set(key,{cv,t:performance.now(),cs,b:cv.width*cv.height*4});
   // limite de memória: no máximo 34 pedaços e ~90 MB (50 MB no telemóvel)
@@ -2704,6 +2707,12 @@ function groundChunk(i,j){
 let GFX='alto';try{if(localStorage.getItem('alv_gfx')==='leve')GFX='leve'}catch(e){}
 const SHADOW=new WeakMap();
 // silhueta do sprite deitada no chão: sol da esquerda (como as sombras das árvores e unidades), sombra para a direita e para a frente
+const CONTACT=new WeakMap();
+function contactOf(s,yc){let d=CONTACT.get(s);if(d)return d;const w=s.CW??s.w,h=s.CH??s.h,pad=10,K=.4;
+  const cv=mkCanvas(w+pad*2,h+pad*2),c=cv.getContext('2d');
+  try{c.filter='blur(5px)'}catch(e){}c.setTransform(1.04,0,0,K,pad-w*.02,pad+yc*(1-K));c.drawImage(s.cv,0,0,w,h);
+  c.setTransform(1,0,0,1,0,0);c.filter='none';c.globalCompositeOperation='source-in';c.fillStyle='#10160c';c.fillRect(0,0,cv.width,cv.height);
+  d={cv,pad,w:cv.width,h:cv.height};CONTACT.set(s,d);return d}
 function shadowOf(s,by){let d=SHADOW.get(s);if(d)return d;
   const w=s.CW??s.w,h=s.CH??s.h,sx=.78,sy=.6,pad=Math.ceil(Math.max(0,h-by)*sx)+2,ext=Math.ceil(by*sx),h2=Math.ceil(Math.max(h,by*(1+sy))+2);
   const cv=mkCanvas(w+ext+pad,h2),c=cv.getContext('2d');
