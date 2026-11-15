@@ -2543,7 +2543,7 @@ function buildTerrain(){
   TGT=W>90?24:GT;const S=TGT,CW=W*S;
   const TX=FLORA.ready&&FLORA.tex.grass,tsc=S/24;
   // com textura nítida o chão é composto por pedaços a partir das camadas (TL); a tela grande não é usada, por isso não se pinta
-  terrCanvas=mkCanvas(TX?1:CW,TX?1:CW);const c=terrCanvas.getContext('2d');TL=null;
+  terrCanvas=mkCanvas(TX?1:CW,TX?1:CW);const c=terrCanvas.getContext('2d');TL=null;TRAILS.sig='';TRAILS.t=0;if(TRAILS.cv)TRAILS.cv.getContext('2d').clearRect(0,0,TRAILS.cv.width,TRAILS.cv.height);
   const r=mulberry32(G.seed+5);
   const n1=vnoise(G.seed+1,5),n2=vnoise(G.seed+2,14),n3=vnoise(G.seed+3,7);
   // campo de cor de baixa frequência
@@ -2643,6 +2643,7 @@ function groundChunk(i,j){
         tc.setTransform(1,0,0,1,0,0);tc.globalCompositeOperation='source-in';tc.fillStyle=groundTex(tc,img,X0,Y0,cs);tc.fillRect(0,0,GTMP.width,GTMP.height);tc.globalCompositeOperation='source-over';
         c.setTransform(1,0,0,1,0,0);c.globalAlpha=a;c.drawImage(GTMP,0,0);c.globalAlpha=1;c.setTransform(iso)};
       if(TL.dm)masked(TL.dm,FLORA.tex.dirt,.92);
+      if(TRAILS.cv&&TRAILS.sig)masked(TRAILS.cv,FLORA.tex.dirt,.95);
       if(TL.wl)lay(TL.wl);
       if(TL.sm&&FLORA.tex.sand)masked(TL.sm,FLORA.tex.sand,.88);
       c.restore();c.setTransform(iso);
@@ -2745,6 +2746,57 @@ function plotFence(e){
 }
 // edifícios com cerca de lote (casas/oficinas); exclui muralhas, portões, quintas, estradas, docas, torres, centro e maravilha
 function hasPlotFence(e){return e.done&&e.kind==='b'&&!e.d.wall&&!e.d.gate&&!e.d.farm&&!e.d.walk&&!e.d.dock&&e.type!=='estrada'&&e.type!=='curral'&&e.type!=='doca'&&e.type!=='torre'&&e.type!=='centro'&&e.type!=='maravilha'}
+// ── trilhos de terra entre os edifícios (estilo Age of Empires): só visual, sem efeito na velocidade ──
+// cada edifício ganha um trilho até ao centro da vila do dono; o caminho prefere trilhos já feitos, por isso junta-se numa rede.
+// é pintado numa máscara suave (como as manchas de terra) e o chão aplica-lhe a textura de terra.
+const TRAILS={cv:null,sig:'',t:0,MR:4};
+function trailBuildings(){return ents.filter(e=>e.kind==='b'&&e.done&&e.hp>0&&(e.o===ME||e.seen)&&!e.d.wall&&!e.d.gate&&!e.d.walk&&e.type!=='estrada')}
+function trailPath(sx,sy,goal,soft){ // A* 8 direções na grelha; goal(x,y)->bool; soft: custo baixo onde já há trilho
+  const N=W*H,g=new Float32Array(N).fill(1e9),from=new Int32Array(N).fill(-1),open=[],seen=new Uint8Array(N);
+  const push=(i,f)=>{open.push([f,i]);let k=open.length-1;while(k>0){const p=(k-1)>>1;if(open[p][0]<=open[k][0])break;[open[p],open[k]]=[open[k],open[p]];k=p}};
+  const pop=()=>{const top=open[0],last=open.pop();if(open.length){open[0]=last;let k=0;for(;;){const l=k*2+1,r=l+1;let m=k;if(l<open.length&&open[l][0]<open[m][0])m=l;if(r<open.length&&open[r][0]<open[m][0])m=r;if(m===k)break;[open[m],open[k]]=[open[k],open[m]];k=m}}return top};
+  const s=idx(sx,sy);g[s]=0;push(s,0);let it=0;
+  while(open.length&&it++<24000){const [,i]=pop();if(seen[i])continue;seen[i]=1;const x=i%W,y=(i/W)|0;
+    if(goal(x,y)){const out=[];for(let j=i;j>=0;j=from[j])out.push([j%W,(j/W)|0]);return out.reverse()}
+    for(let dy=-1;dy<=1;dy++)for(let dx=-1;dx<=1;dx++){if(!dx&&!dy)continue;const nx=x+dx,ny=y+dy;if(nx<0||ny<0||nx>=W||ny>=H)continue;const j=idx(nx,ny);
+      if(seen[j]||terr[j]===1||bldAt[j]||resAt[j])continue;
+      if(dx&&dy&&(bldAt[idx(x+dx,y)]||bldAt[idx(x,y+dy)]||terr[idx(x+dx,y)]===1||terr[idx(x,y+dy)]===1))continue; // sem cortar esquinas
+      let c=(dx&&dy?1.414:1)*(soft[j]?.32:1);
+      for(const [ax,ay] of [[1,0],[-1,0],[0,1],[0,-1]]){const q=idx(clamp(nx+ax,0,W-1),clamp(ny+ay,0,H-1));if(bldAt[q])c+=.9} // afasta das paredes
+      const ng=g[i]+c;if(ng<g[j]){g[j]=ng;from[j]=i;push(j,ng)}}}
+  return null}
+function trailsRebuild(){
+  const MR=TRAILS.MR;if(!TRAILS.cv||TRAILS.cv.width!==W*MR)TRAILS.cv=mkCanvas(W*MR,H*MR);
+  const c=TRAILS.cv.getContext('2d');c.clearRect(0,0,TRAILS.cv.width,TRAILS.cv.height);
+  const bs=trailBuildings(),soft=new Uint8Array(W*H),paths=[];
+  const centros=bs.filter(e=>e.type==='centro');
+  // edifícios mais perto do centro primeiro: os mais longe aproveitam os trilhos já traçados
+  const near=e=>{let best=null,bd=1e9;for(const c0 of centros){if(c0.o!==e.o)continue;const d=Math.hypot(c0.tx-e.tx,c0.ty-e.ty);if(d<bd){bd=d;best=c0}}return best};
+  const list=bs.filter(e=>e.type!=='centro').map(e=>({e,c:near(e)})).filter(o=>o.c).sort((a,b)=>Math.hypot(a.c.tx-a.e.tx,a.c.ty-a.e.ty)-Math.hypot(b.c.tx-b.e.tx,b.c.ty-b.e.ty));
+  const edge=(e)=>{const t=[];for(let x=e.tx-1;x<=e.tx+e.w;x++)for(let y=e.ty-1;y<=e.ty+e.h;y++){if(x>=e.tx&&x<e.tx+e.w&&y>=e.ty&&y<e.ty+e.h)continue;if(inb(x,y)&&!bldAt[idx(x,y)]&&terr[idx(x,y)]!==1&&!resAt[idx(x,y)])t.push([x,y])}return t};
+  for(const {e,c:c0} of list){
+    const st=edge(e);if(!st.length)continue;const cx=c0.tx+c0.w/2,cy=c0.ty+c0.h/2;
+    const sc=([x,y])=>Math.hypot(x+.5-cx,y+.5-cy)+((x<e.tx||y<e.ty)?2.2:0); // frente (lado de baixo no ecrã) preferida: a parte de trás fica escondida pelo sprite
+    st.sort((a,b)=>sc(a)-sc(b));
+    const [sx,sy]=st[0];
+    const goal=(x,y)=>(x>=c0.tx-1&&x<=c0.tx+c0.w&&y>=c0.ty-1&&y<=c0.ty+c0.h)||(soft[idx(x,y)]&&Math.hypot(x-sx,y-sy)>2.5);
+    const p=trailPath(sx,sy,goal,soft);if(!p||p.length<2)continue;
+    for(const [x,y] of p)soft[idx(x,y)]=1;paths.push(p)}
+  // pintar: curvas suavizadas (Chaikin), traço largo e suave + núcleo; pequenas ondulações para não ficar a régua
+  const smooth=pts=>{let q=pts.map(([x,y])=>[x+.5,y+.5]);for(let k=0;k<3;k++){const o=[q[0]];for(let i=0;i<q.length-1;i++){const [ax,ay]=q[i],[bx,by]=q[i+1];o.push([ax*.75+bx*.25,ay*.75+by*.25],[ax*.25+bx*.75,ay*.25+by*.75])}o.push(q[q.length-1]);q=o}return q};
+  c.lineCap='round';c.lineJoin='round';
+  for(const p of paths){const q=smooth(p);
+    for(const [w,a] of [[1.55,.32],[1.05,.55],[.62,.8]]){c.strokeStyle=`rgba(255,255,255,${a})`;c.lineWidth=w*MR;c.beginPath();
+      q.forEach(([x,y],i)=>{const n=Math.sin(x*1.7+y*2.3)*.12;const X=(x+n)*MR,Y=(y-n)*MR;i?c.lineTo(X,Y):c.moveTo(X,Y)});c.stroke()}}
+  // praça de terra à volta de cada centro
+  for(const c0 of centros){const X=(c0.tx+c0.w/2)*MR,Y=(c0.ty+c0.h/2)*MR,R=(c0.w/2+1.7)*MR;
+    const gr=c.createRadialGradient(X,Y,R*.3,X,Y,R);gr.addColorStop(0,'rgba(255,255,255,.85)');gr.addColorStop(.7,'rgba(255,255,255,.5)');gr.addColorStop(1,'rgba(255,255,255,0)');
+    c.fillStyle=gr;c.beginPath();c.ellipse(X,Y,R*1.08,R,.3,0,7);c.fill()}
+}
+function trailsTick(){
+  if(!G||!TL||!FLORA.tex.dirt)return;const now=performance.now();if(now-TRAILS.t<1500)return;TRAILS.t=now;
+  const sig=trailBuildings().map(e=>e.id+':'+e.tx+','+e.ty).sort().join('|');if(sig===TRAILS.sig&&TRAILS.cv)return;
+  TRAILS.sig=sig;trailsRebuild();CHUNKS.clear()}
 let WEAR=null;
 function wearDecal(){if(WEAR)return WEAR;const n=64,cv=mkCanvas(n,n),c=cv.getContext('2d'),r=mulberry32(77);
   const g=c.createRadialGradient(n/2,n/2,n*.18,n/2,n/2,n*.5);g.addColorStop(0,'rgba(120,94,58,.9)');g.addColorStop(.7,'rgba(120,94,58,.55)');g.addColorStop(1,'rgba(120,94,58,0)');c.fillStyle=g;c.fillRect(0,0,n,n);
@@ -4262,6 +4314,7 @@ function render(){UCFM=0;U3TMS=0;
   const c=ctx;
   c.setTransform(1,0,0,1,0,0);c.fillStyle='#0b0805';c.fillRect(0,0,cv.width,cv.height);
   if(!G||!terrCanvas)return;
+  trailsTick();
   {const w=windAt(G.time);WIND_S=w.s;WIND_SX=(w.x-w.y)/1.42;WIND_SK=(.012+.045*w.s)*Math.sign(WIND_SX||1)*Math.min(1,Math.abs(WIND_SX)*1.6+.25)}
   const z=cam.z*DPR;
   const ground=sc=>c.setTransform(z*HW/sc,z*HH/sc,-z*HW/sc,z*HH/sc,-cam.x*z,-cam.y*z);
