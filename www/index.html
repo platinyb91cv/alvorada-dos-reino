@@ -649,6 +649,7 @@ input{font-family:inherit;-webkit-user-select:text;user-select:text;touch-action
         <b>Natureza:</b> as árvores voltam a crescer devagar junto a outras árvores; ovelhas nascem perto dos Estábulos. Há dia e noite (à noite vê-se menos) e chuva.<br>
         <b>Atalhos:</b> botões 1, 2, 3 à esquerda — carrega sem largar para guardar um grupo, toca para o selecionar, toque duplo para lá ir. ⚠️ leva a câmara ao último ataque. Ao construir, toca em vários locais seguidos para fazer uma fila de obras.<br>
         <b>Física:</b> flechas e pedras voam em arco e podem falhar — quem corre de lado ou muda de direção pode esquivar-se (as pedras das catapultas são lentas). A chuva piora a pontaria e o vento (seta no minimapa) desvia os tiros e ajuda ou atrasa os barcos. As unidades aceleram e travam; a cavalaria lançada a galope dá um golpe mais forte e empurra; os pesados (elefantes, cerco, cavalaria) abrem caminho entre os leves. Na areia anda-se mais devagar.<br>
+        <b>Créditos de som:</b> música de Kevin MacLeod e Alexander Nakarada (filmmusic.io, licença filmmusic.io); efeitos de Kenney (CC0); sons da natureza do Moodist (CC0 / licença Pixabay).<br>
         <b>Conquistas:</b> desbloqueiam novas cores para o teu reino e molduras para o perfil.<br>
         <b>Exército:</b> lanceiros vencem cavalaria, cavalaria vence arqueiros e cerco, arqueiros vencem infantaria, espadachins vencem infantaria. Com várias unidades: Atacar, Patrulhar, Defender, Manter, Recuar e Formação (Linha, Coluna, Defensiva, Cerco). Toque longo no mapa = atacar-mover.<br>
         <b>Defesas:</b> no menu Construir → Defesas. Muralhas: toca no início e no fim. Portões deixam passar aliados; Fechar tranca-os. Torres sobem de nível.<br>
@@ -4775,6 +4776,30 @@ const INST={
 };
 function instBuf(name,m){const k='i|'+name+'|'+(m||0);let b=AUD.buf.get(k);if(!b){b=INST[name](m);AUD.buf.set(k,b)}return b}
 function sndBuf(name,v){const k=name+'|'+v;let b=AUD.buf.get(k);if(!b){b=SND[name].mk(arng(name.length*977+v*131+7),v);AUD.buf.set(k,b)}return b}
+// ---------- sons gravados: efeitos (Kenney, CC0), natureza (Moodist: CC0 / licença Pixabay) e música (filmmusic.io) ----------
+// os sintetizados ficam como reserva: se um ficheiro falhar ou ainda não carregou, toca o som gerado
+// nome do efeito -> [ficheiro base, n.º de variações, velocidade, ganho relativo]
+// ganhos medidos (RMS sintetizado / RMS gravado) para entrarem ao mesmo nível
+const SAMP={map:{chop:['chop',4,1,1.2],mine_stone:['mine',5,1,.7],mine_gold:['mine',5,1.18,.62],hammer:['hammer',5,1,1.2],clash:['clash',6,1,.8],club:['club',4,1,1],
+  stab:['stab',2,1,1.3],hit_flesh:['flesh',4,1,.9],arrow_wood:['arrowwood',3,1,.9],dep_gold:['coins',2,1,2],dep_wood:['plank',2,1,1]},buf:{},amb:{},loading:false};
+function sampLoad(){if(SAMP.loading||!AUD.ctx||AUD.offline)return;SAMP.loading=true;const c=AUD.ctx;
+  const get=async url=>{const r=await fetch(url);if(!r.ok)throw new Error(url);const ab=await r.arrayBuffer();return await new Promise((ok,no)=>c.decodeAudioData(ab,ok,no))};
+  (async()=>{
+    for(const [f,n] of [...new Map(Object.values(SAMP.map).map(v=>[v[0],v[1]]))]){const arr=[];for(let i=0;i<n;i++){try{arr.push(await get(`assets/som/sfx/${f}${i}.ogg`))}catch(e){}}if(arr.length)SAMP.buf[f]=arr}
+    for(const a of ['passaros','grilos','vento','ondas','coruja','pica-pau']){try{SAMP.amb[a]=await get(`assets/som/amb/${a}.ogg`)}catch(e){}}
+    if(AUD.amb&&running){ambStop();ambStart()}})()}
+// música gravada: dois leitores com transição suave; segue o humor (paz / batalha / menu) que o jogo já calcula
+const MUSF={on:true,fail:false,el:[],g:[],cur:-1,mood:null,gap:0,last:{},list:{paz:['paz1','paz2','paz3','paz4','paz5'],batalha:['batalha1','batalha2'],menu:['paz1','paz2']}};
+function musfInit(){if(MUSF.el.length||!AUD.ctx)return;try{for(let i=0;i<2;i++){const a=new Audio();a.preload='auto';const src=AUD.ctx.createMediaElementSource(a);const g=AUD.ctx.createGain();g.gain.value=0;src.connect(g);g.connect(AUD.bus.music);
+  a.onended=()=>{if(MUSF.cur===i){MUSF.mood=null;MUSF.gap=AUD.ctx.currentTime+3+Math.random()*5}};a.onerror=()=>{MUSF.fail=true;for(const e of MUSF.el)try{e.pause()}catch(x){}};MUSF.el.push(a);MUSF.g.push(g)}}catch(e){MUSF.fail=true}}
+function musfTick(){if(!MUSF.on||MUSF.fail||!AUD.ctx||AUD.offline)return false;musfInit();if(MUSF.fail)return false;
+  const now=AUD.ctx.currentTime,want=MUS.want||'paz';
+  if(want!==MUSF.mood&&now>=MUSF.gap){const L=MUSF.list[want]||MUSF.list.paz;let f,k=0;do{f=L[Math.floor(Math.random()*L.length)]}while(L.length>1&&f===MUSF.last[want]&&++k<9);MUSF.last[want]=f;
+    const nx=MUSF.cur<0?0:1-MUSF.cur,a=MUSF.el[nx],g=MUSF.g[nx].gain;a.src='assets/som/mus/'+f+'.ogg';a.play().catch(()=>{});
+    g.cancelScheduledValues(now);g.setValueAtTime(0,now);g.linearRampToValueAtTime(1,now+(want==='batalha'?1.2:3.5));
+    if(MUSF.cur>=0){const o=MUSF.cur,og=MUSF.g[o].gain;og.cancelScheduledValues(now);og.setValueAtTime(og.value,now);og.linearRampToValueAtTime(0,now+2.5);setTimeout(()=>{if(MUSF.cur!==o)try{MUSF.el[o].pause()}catch(e){}},2800)}
+    MUSF.cur=nx;MUSF.mood=want}
+  return true}
 // ---------- motor ----------
 function audioInit(){
   if(AUD.ctx)return true;
@@ -4783,7 +4808,7 @@ function audioInit(){
   const comp=c.createDynamicsCompressor();comp.threshold.value=-14;comp.knee.value=12;comp.ratio.value=4;comp.attack.value=.004;comp.release.value=.2;
   AUD.master.connect(comp);comp.connect(c.destination);
   for(const b of ['music','sfx','amb','ui']){AUD.bus[b]=c.createGain();AUD.bus[b].connect(AUD.master)}
-  audioApplyVol();
+  audioApplyVol();setTimeout(sampLoad,400);
   // pré-gera os sons mais comuns aos poucos, sem travar o jogo
   const heavy=['age_up','chant','collapse','alarm','convert','boom','siege_break','sink','treb_launch','cat_launch'];
   AUD.warm=[...heavy.map(n=>[n,0]),...Object.keys(SND).flatMap(n=>Array.from({length:SND[n].v},(_,v)=>[n,v])).filter(([n,v])=>!(v===0&&heavy.includes(n))&&!['wonder','victory','defeat'].includes(n)),['inst','dum'],['inst','tak'],['inst','shaker']];
@@ -4808,8 +4833,8 @@ function snd(name,x,y,o){ // toca um efeito; x,y em casas do mapa (opcional)
   let g=d.g*(o&&o.g||1),pan=0;
   if(x!=null){const sp=spatial(x,y,o&&o.any);if(!sp){AUD.stats.culled++;return false}g*=sp.g;pan=sp.pan;if(g<.02){AUD.stats.culled++;return false}}
   AUD.last[name]=now;AUD.fnew++;
-  const v=(o&&o.v!=null?o.v:Math.floor(Math.random()*d.v))%d.v;const b=sndBuf(name,v);
-  const src=c.createBufferSource();src.buffer=b;src.playbackRate.value=(o&&o.rate||1)*(1+(Math.random()-.5)*(d.det??.07));
+  const v=(o&&o.v!=null?o.v:Math.floor(Math.random()*d.v))%d.v;const sm=SAMP.map[name],sa=sm&&!(o&&o.off)&&SAMP.buf[sm[0]];const b=sa?sa[Math.floor(Math.random()*sa.length)]:sndBuf(name,v);if(sa)g*=sm[3];
+  const src=c.createBufferSource();src.buffer=b;src.playbackRate.value=(o&&o.rate||1)*(sa?sm[2]:1)*(1+(Math.random()-.5)*(sa?.12:(d.det??.07)));
   const gn=c.createGain();gn.gain.value=g;src.connect(gn);let out=gn;
   if(pan&&c.createStereoPanner){const p=c.createStereoPanner();p.pan.value=pan;gn.connect(p);out=p}
   out.connect(AUD.bus[d.bus||'sfx']);const at=(o&&o.at)||now;src.start(at);AUD.voices++;AUD.stats.played++;AUD.stats.by[name]=(AUD.stats.by[name]||0)+1;
@@ -4865,9 +4890,10 @@ function ambStart(){
       for(let j=0;j<18;j++)addTone(a,n,{at:r()*5,f:350+r()*400,f2:900+r()*500,sw:.01,d:.02,g:.15})});
   const battle=loopBuf('l|battle',5,(a,n)=>{const f=biq('bp',900,.8);for(let i=0;i<n;i++){const t=i/ASR;if((i&63)===0)f.set(800+400*Math.sin(t*2.3));a[i]=f.p(r()*2-1)*(.5+.3*Math.sin(t*4.1)+.2*Math.sin(t*7.3))}
       for(let j=0;j<26;j++){const b=1800+r()*1500;addPartials(a,n,{at:r()*4.6,ps:[[b,.18,.04],[b*1.7,.1,.03]]})}for(let j=0;j<10;j++)addVoice(a,n,{at:r()*4.2,f0:110+r()*60,f1:90+r()*80,dur:.3+r()*.3,seq:'ya',breath:.3,g:.12},r)});
-  AUD.amb={wind:mk(wind),water:mk(water,0),battle:mk(battle),birdT:3};
+  const SA=SAMP.amb;AUD.amb={wind:mk(SA.vento||wind),water:mk(SA.ondas||water,0),battle:mk(battle),birdT:3,real:!!SA.vento,
+    birds:SA.passaros?mk(SA.passaros):null,crick:SA.grilos?mk(SA.grilos):null,owlT:15+Math.random()*20,woodT:20+Math.random()*30};
 }
-function ambStop(){if(!AUD.amb)return;for(const k of ['wind','water','battle']){try{AUD.amb[k].s.stop()}catch(e){}}AUD.amb=null}
+function ambStop(){if(!AUD.amb)return;for(const k of ['wind','water','battle','birds','crick']){try{AUD.amb[k]&&AUD.amb[k].s.stop()}catch(e){}}AUD.amb=null}
 const BIRD=[];function birdBuf(k){const key='b|'+k;let b=AUD.buf.get(key);if(b)return b;const r=arng(77+k);
   b=mkBuf(1.2,(a,n)=>{const nn=2+Math.floor(r()*4);let t=0;const base=2200+r()*1800;for(let j=0;j<nn;j++){const d=.05+r()*.09,f0=base*(.8+r()*.4),f1=f0*(r()<.5?1.5:.65);let ph=0;const s0=Math.floor(t*ASR);
     for(let i=0;i<d*ASR&&s0+i<n;i++){const u=i/(d*ASR);ph+=(f0+(f1-f0)*u)*(1+.05*Math.sin(u*40))/ASR;a[s0+i]+=sn(ph)*Math.sin(u*Math.PI)}t+=d+.03+r()*.08}},.5);AUD.buf.set(key,b);return b}
@@ -4875,9 +4901,17 @@ function ambUpdate(dt){
   const A=AUD.amb,c=AUD.ctx;if(!A||!c)return;const t=c.currentTime;
   AUD.combat*=Math.exp(-dt/2.2);const inten=clamp(AUD.combat/5,0,1);AUD.intensity=inten;
   let water=0,wpan=0;if(G&&G.lake&&cam){const cc=s2w(vw/2,vh/2);const d=hyp(cc.x-G.lake.x,cc.y-G.lake.y)-G.lake.r;water=clamp(1-(d-1)/(7/Math.max(.5,cam.z)),0,1);const s=w2s(G.lake.x,G.lake.y);wpan=clamp((s.x-vw/2)/vw,-.7,.7)}
-  A.wind.g.gain.setTargetAtTime((.32+.25*clamp(1.2-cam.z,0,1))*(1-inten*.5),t,.6);
+  A.wind.g.gain.setTargetAtTime((.32+.25*clamp(1.2-cam.z,0,1))*(1-inten*.5)*(A.real?1.3:1),t,.6);
   A.water.g.gain.setTargetAtTime(water*.55,t,.6);if(A.water.p)A.water.p.pan.setTargetAtTime(wpan,t,.6);
   A.battle.g.gain.setTargetAtTime(inten*.5,t,.4);
+  // natureza gravada: pássaros de dia, grilos à noite (segue o dia/noite), coruja e pica-pau de vez em quando
+  if(A.birds||A.crick){const nt=nightAmt(),calm=1-inten*.8,zf=clamp(.6+cam.z*.35,.6,1.1);
+    if(A.birds)A.birds.g.gain.setTargetAtTime((1-nt)*.42*calm*zf,t,1.2);if(A.crick)A.crick.g.gain.setTargetAtTime(nt*.36*calm*zf,t,1.2);
+    const one=(buf,g)=>{if(!buf||!AUD.on)return;const s=c.createBufferSource();s.buffer=buf;s.playbackRate.value=.94+Math.random()*.12;const gg=c.createGain();gg.gain.value=g;s.connect(gg);
+      if(c.createStereoPanner){const p=c.createStereoPanner();p.pan.value=Math.random()*1.4-.7;gg.connect(p);p.connect(AUD.bus.amb)}else gg.connect(AUD.bus.amb);s.start()};
+    A.owlT-=dt;if(A.owlT<=0){A.owlT=25+Math.random()*35;if(nt>.6&&inten<.3)one(SAMP.amb.coruja,.32)}
+    A.woodT-=dt;if(A.woodT<=0){A.woodT=35+Math.random()*50;if(nt<.2&&inten<.3)one(SAMP.amb['pica-pau'],.16)}
+    return}
   A.birdT-=dt;if(A.birdT<=0){A.birdT=2.5+Math.random()*6;if(inten<.3&&AUD.on){const s=c.createBufferSource();s.buffer=birdBuf(Math.floor(Math.random()*6));s.playbackRate.value=.9+Math.random()*.25;const g=c.createGain();g.gain.value=.08+Math.random()*.1;s.connect(g);
     if(c.createStereoPanner){const p=c.createStereoPanner();p.pan.value=Math.random()*1.6-.8;g.connect(p);p.connect(AUD.bus.amb)}else g.connect(AUD.bus.amb);s.start()}}
 }
@@ -4972,12 +5006,12 @@ function audioFrame(raw){
   if(!AUD.ctx||AUD.offline)return;AUD.fnew=0;
   if(AUD.warm.length){const w=AUD.warm.shift();try{if(w[0]==='inst')instBuf(w[1],0);else sndBuf(w[0],w[1])}catch(e){}}
   if(AUD.ctx.state!=='running')return;
-  musTick();
+  if(!musfTick())musTick();
   if(running&&!paused){audioScan(raw);ambUpdate(raw);
     // humor da música: batalha quando há combate perto da câmara
     const now=AUD.ctx.currentTime;if(AUD.intensity>.35)MUS.fightT=now;if(!G.over)MUS.want=now-(MUS.fightT??-99)<12?'batalha':'paz'}
 }
-function audioPause(p){if(!AUD.ctx)return;if(p)AUD.ctx.suspend().catch(()=>{});else AUD.ctx.resume().catch(()=>{})}
+function audioPause(p){if(!AUD.ctx)return;if(MUSF.cur>=0&&!MUSF.fail){const a=MUSF.el[MUSF.cur];try{if(p)a.pause();else if(a.src&&!a.ended)a.play().catch(()=>{})}catch(e){}}if(p)AUD.ctx.suspend().catch(()=>{});else AUD.ctx.resume().catch(()=>{})}
 function audioGameStart(){if(!audioInit())return;ambStop();setTimeout(()=>{if(running&&!AUD.amb)ambStart()},1500); // o som ambiente é sintetizado depois do arranque (não atrasa o 1.º frame)
   MUS.want='paz';AUD.combat=0;if(MUS.mood==null||MUS.mood==='menu'){MUS.mood='paz';musNewPiece(true)}audioPause(false)}
 function audioToMenu(){ambStop();MUS.want='menu';audioPause(false)}
