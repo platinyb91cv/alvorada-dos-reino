@@ -1,0 +1,13 @@
+{
+ "unit": "guerreiro",
+ "source": "arte/unidades-armadas/guerreiro.glb",
+ "glbSha256": "928859d4f159ac2ec962e033c500fc6099676c315580981d248feaf85f426606",
+ "renderResolution": 512,
+ "cyclesSamples": 16,
+ "bodyReferencePixels": 152.3933382088224,
+ "h": 128,
+ "downscaleFactor": 0.8399317286730962,
+ "atlasSha256": "3b0fffabbaebb2aa984f8369be1aa3981379cf341b329c778069c8043fba9d21",
+ "encoding": "lossless",
+ "additionalMeshyCredits": 0
+}

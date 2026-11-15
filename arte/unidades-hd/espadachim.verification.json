@@ -1,0 +1,13 @@
+{
+ "unit": "espadachim",
+ "source": "arte/unidades-armadas/espadachim.glb",
+ "glbSha256": "953120943370d33a6c4d416ef253e417f123d5d4ffc19108936c013077234aa2",
+ "renderResolution": 512,
+ "cyclesSamples": 16,
+ "bodyReferencePixels": 144.13516720186703,
+ "h": 128,
+ "downscaleFactor": 0.8880553058972132,
+ "atlasSha256": "f0f6eaf0f43c89f6343a18d14ede37cec27be88789b7563177eba794435e90e0",
+ "encoding": "lossless",
+ "additionalMeshyCredits": 0
+}

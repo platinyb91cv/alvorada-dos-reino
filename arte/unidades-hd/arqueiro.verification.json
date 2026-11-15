@@ -1,0 +1,13 @@
+{
+ "unit": "arqueiro",
+ "source": "arte/unidades-armadas/arqueiro.glb",
+ "glbSha256": "13f72ce35cf550aafd43ab0ed26137d2c990c533c10cf016f94a405ef00a1637",
+ "renderResolution": 512,
+ "cyclesSamples": 16,
+ "bodyReferencePixels": 182.05734669673575,
+ "h": 128,
+ "downscaleFactor": 0.7030751701177848,
+ "atlasSha256": "a00e5aaffa20a331208ed9e20c2c535740d2aedeaf8e55e05e7e6eec6aa3390c",
+ "encoding": "lossless",
+ "additionalMeshyCredits": 0
+}

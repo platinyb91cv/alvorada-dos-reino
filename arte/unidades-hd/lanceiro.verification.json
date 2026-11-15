@@ -1,0 +1,13 @@
+{
+ "unit": "lanceiro",
+ "source": "arte/unidades-armadas/lanceiro.glb",
+ "glbSha256": "f50726801d8c7643950a1048533eb48e4ac7825ae73156089ba5314723129bd6",
+ "renderResolution": 640,
+ "cyclesSamples": 16,
+ "bodyReferencePixels": 150.0489567182043,
+ "h": 128,
+ "downscaleFactor": 0.8530549148727986,
+ "atlasSha256": "c7e0d3faee50c942514129fa111ce04a10508df0cfb1ba388d113416ff26352d",
+ "encoding": "lossless",
+ "additionalMeshyCredits": 0
+}

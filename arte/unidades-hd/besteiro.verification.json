@@ -1,0 +1,13 @@
+{
+ "unit": "besteiro",
+ "source": "arte/unidades-armadas/besteiro.glb",
+ "glbSha256": "50a6f2230ef0247a3ea4c47633b58503294d9bcced7a1e3fc7c3e5be8ff81572",
+ "renderResolution": 512,
+ "cyclesSamples": 16,
+ "bodyReferencePixels": 175.39123417944353,
+ "h": 128,
+ "downscaleFactor": 0.7297970197817449,
+ "atlasSha256": "6f3b0539891f7c3b36a12dd217da463d20f05d80fcb75a08fec03ac9fe936125",
+ "encoding": "lossless",
+ "additionalMeshyCredits": 0
+}
