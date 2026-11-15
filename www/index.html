@@ -173,6 +173,7 @@ body:has(#objBox:not([hidden])):not(.coaching) #toast div{white-space:normal;tex
 .res.up{box-shadow:inset 0 0 0 1px rgba(151,209,108,.8),0 0 10px rgba(151,209,108,.35)}.res.down{box-shadow:inset 0 0 0 1px rgba(226,103,90,.85)}
 #agePlate{background:var(--hud-glass);border-color:var(--hud-rim)}
 #clock{text-shadow:0 1px 2px #000;color:#e6d6b6}
+#dayIc{width:22px;height:22px;display:inline-block;flex:none;filter:drop-shadow(0 1px 2px #000)}#dayIc svg{width:22px;height:22px;display:block}
 #bottom{background:none;box-shadow:none;pointer-events:none;align-items:flex-end}
 #bottom:before{display:none}
 #bottom:after{content:"";position:absolute;left:0;right:0;bottom:0;height:70%;background:linear-gradient(transparent,rgba(8,5,3,.42));z-index:-1;pointer-events:none}
@@ -393,7 +394,7 @@ input{font-family:inherit;-webkit-user-select:text;user-select:text;touch-action
     <div class="topr">
       <span id="netChip" class="net" hidden><i></i><span></span></span>
       <div id="agePlate" title="Idade atual"><span id="ageEmb" class="emb">I</span><span class="agetx"><span id="ageName">Idade da Pedra</span><i id="ageBar" hidden><b></b></i></span></div>
-      <span id="clock">0:00</span>
+      <span id="dayIc" title="Hora do dia"></span><span id="clock">0:00</span>
       <button id="btnMenu" aria-label="Menu"><i data-ic="menu"></i></button>
     </div>
   </div>
@@ -4512,6 +4513,36 @@ function duskAmt(){if(!DAYNIGHT||!G)return 0;const f=((G.time+120)%600)/600;retu
 function rainAmt(){if(!G)return 0;const w=Math.floor(G.time/420);const h=((w*2654435761)^(G.seed|0))>>>0;if(h%3!==0||w===0)return 0;const ph=G.time-w*420;return clamp(Math.min((ph-60)/25,(250-ph)/25),0,1)}
 let GLOW=null;function glowSprite(){if(GLOW)return GLOW;const n=64,cv=mkCanvas(n,n),c=cv.getContext('2d');const g=c.createRadialGradient(n/2,n/2,0,n/2,n/2,n/2);g.addColorStop(0,'rgba(255,200,110,.6)');g.addColorStop(.35,'rgba(255,160,70,.26)');g.addColorStop(1,'rgba(255,120,40,0)');c.fillStyle=g;c.fillRect(0,0,n,n);return GLOW=cv}
 const LIT={centro:[0,-44,1.5],casa:[0,-22,.8],torre:[0,-70,.9],templo:[0,-36,1.2],mercado:[0,-14,1.1],quartel:[0,-30,.9],arquearia:[0,-30,.9],estabulo:[0,-26,.8],armazem:[0,-22,.8],ferreiro:[0,-26,1],doca:[0,-18,.8],maravilha:[0,-70,1.8],oficina:[0,-26,.8]};
+// cor do ambiente ao longo do ciclo (multiplicada sobre o mundo): manhã dourada, dia neutro, pôr do sol laranja, noite azul, madrugada rosada
+const AMB_KEYS=[[0,[255,246,236]],[.1,[255,255,255]],[.48,[255,255,255]],[.55,[255,236,210]],[.6,[255,196,150]],[.645,[170,140,165]],[.69,[96,112,172]],[.84,[96,112,172]],[.885,[150,132,176]],[.93,[252,222,206]],[1,[255,246,236]]];
+function dayPhase(){return G?((G.time+120)%600)/600:.3}
+function ambientRGB(){if(!G||!DAYNIGHT&&!NET.on)return [255,255,255];const f=dayPhase();let i=0;while(i<AMB_KEYS.length-2&&AMB_KEYS[i+1][0]<f)i++;
+  const [f0,a]=AMB_KEYS[i],[f1,b]=AMB_KEYS[i+1],k=clamp((f-f0)/Math.max(1e-6,f1-f0),0,1),e=k*k*(3-2*k);return [0,1,2].map(j=>a[j]+(b[j]-a[j])*e)}
+let LMAP=null,LSPR=null;
+function lightSprite(){if(LSPR)return LSPR;const n=128,cv=mkCanvas(n,n),c=cv.getContext('2d');const g=c.createRadialGradient(n/2,n/2,0,n/2,n/2,n/2);
+  g.addColorStop(0,'rgba(255,206,140,1)');g.addColorStop(.2,'rgba(255,190,120,.72)');g.addColorStop(.55,'rgba(245,160,95,.22)');g.addColorStop(1,'rgba(230,140,80,0)');c.fillStyle=g;c.fillRect(0,0,n,n);return LSPR=cv}
+// passa de iluminação: mapa (meia resolução) = cor do ambiente + poças de luz quente (aditivas); depois multiplica sobre o mundo
+function lightPass(c,t,draw,rain){
+  let amb=ambientRGB();if(rain>0)amb=amb.map((v,j)=>v*(1-rain*.28)+[150,160,178][j]*rain*.28*(v/255));
+  const lum=(amb[0]+amb[1]+amb[2])/765;if(lum>.995)return;
+  const z=cam.z,X0=cam.x,Y0=cam.y,Wv=vw/z,Hv=vh/z,lw=Math.ceil(vw/2),lh=Math.ceil(vh/2);
+  if(!LMAP||LMAP.width!==lw||LMAP.height!==lh)LMAP=mkCanvas(lw,lh);const l=LMAP.getContext('2d');
+  l.globalCompositeOperation='source-over';l.fillStyle=`rgb(${amb.map(v=>Math.round(v)).join(',')})`;l.fillRect(0,0,lw,lh);
+  const on=clamp((.93-lum)*2.6,0,1);
+  if(on>0){const sp=lightSprite(),k=lw/Wv;l.globalCompositeOperation='source-over'; // mistura para o laranja da chama (somar ao azul dava lilás)
+    const put=(wx,wy,R,a)=>{const x=(wx-X0)*k,y=(wy-Y0)*k,r=R*k;if(x<-r||y<-r||x>lw+r||y>lh+r)return;l.globalAlpha=a;l.drawImage(sp,x-r,y-r,r*2,r*2)};
+    for(const [,kk,e,p] of draw){
+      if(kk===1){if(!e.done||!LIT[e.type]||!visibleTo0(e)||e.o===2&&e.type!=='vila')continue;const [dx,dy,sz]=LIT[e.type];const q=proj(e.tx+e.w/2,e.ty+e.h/2);
+        const fl=.9+.1*Math.sin(t*5+e.id*1.7);put(q.x+dx*.3,q.y+16,100*sz,.62*on*fl);
+        if(e.hp<e.max*.5)put(q.x,q.y-20,90,.9*on)} // fogo dos edifícios em chamas
+      else if(kk===2){if(e.o===2||e.d.naval||e.type!=='aldeao'&&!e.d.mil||e.id%3)continue;put(p.x,p.y-6,58,.75*on*(.85+.15*Math.sin(t*9+e.id)))}}
+    for(const f of fx)if(f.type==='fire'||f.type==='boom'||f.type==='burst'){const q=proj(f.x,f.y);put(q.x,q.y,70,on)}
+    l.globalAlpha=1;l.globalCompositeOperation='source-over'}
+  c.save();c.globalCompositeOperation='multiply';c.imageSmoothingEnabled=true;c.drawImage(LMAP,X0,Y0,Wv,Hv);c.restore();
+  // brilho por cima (o multiplicar só escurece): halo quente leve onde há luz
+  if(on>.05){const gs=glowSprite();c.save();c.globalCompositeOperation='lighter';c.globalAlpha=.32*on;
+    for(const [,kk,e] of draw){if(kk!==1||!e.done||!LIT[e.type]||!visibleTo0(e)||e.o===2&&e.type!=='vila')continue;const [dx,dy,sz]=LIT[e.type];const q=proj(e.tx+e.w/2,e.ty+e.h/2);const S=80*sz;c.drawImage(gs,q.x+dx-S/2,q.y+dy-S/2,S,S)}
+    c.restore()}}
 const GULLS=[];let gullT=0;
 function atmosWorld(c,t,draw){
   const night=nightAmt(),dusk=duskAmt(),rain=rainAmt();
@@ -4525,6 +4556,7 @@ function atmosWorld(c,t,draw){
   if(Math.random()<.02){const fs=[];for(const [,k,e,p] of draw)if(k===0&&e.fish&&vis[idx(e.tx,e.ty)]===2)fs.push(e);if(fs.length){const f=fs[Math.floor(Math.random()*fs.length)];fx.push({t:0,life:1.1,type:'fishjump',x:f.tx+.3+Math.random()*.4,y:f.ty+.3+Math.random()*.4,dir:Math.random()<.5?-1:1})}}
   // céu: entardecer quente, noite azul, chuva cinzenta
   const z=cam.z;const X0=cam.x,Y0=cam.y,Wv=vw/z,Hv=vh/z;
+  if(GFX==='alto'){lightPass(c,t,draw,rain);return}
   if(dusk>0){c.fillStyle=`rgba(255,130,50,${.13*dusk})`;c.fillRect(X0,Y0,Wv,Hv)}
   const dark=night*.42+rain*.16;if(dark>0){c.fillStyle=`rgba(${Math.round(12+rain*40)},${Math.round(20+rain*35)},${Math.round(52+rain*20)},${(dark*.78).toFixed(3)})`;c.fillRect(X0,Y0,Wv,Hv)}
   // luzes das casas e tochas à noite
@@ -4532,6 +4564,12 @@ function atmosWorld(c,t,draw){
     for(const [,k,e,p] of draw){if(k!==1||!e.done||!LIT[e.type]||!visibleTo0(e))continue;const [dx,dy,sz]=LIT[e.type];const cpt=proj(e.tx+e.w/2,e.ty+e.h/2);const S=70*sz;c.drawImage(gs,cpt.x+dx-S/2,cpt.y+dy-S/2,S,S)}
     for(const [,k,e,p] of draw){if(k!==2||e.o===2||e.d.naval||e.type!=='aldeao'&&!e.d.mil)continue;if(e.id%5)continue;c.drawImage(gs,p.x-14,p.y-38,28,28)}
     c.globalAlpha=1;c.globalCompositeOperation='source-over'}}
+let DAYIC='';function dayIcon(){const el=$('dayIc');if(!el)return;const on=DAYNIGHT||NET.on;el.style.display=on?'':'none';if(!on)return;const f=dayPhase();
+  const k=f<.55||f>=.93?'sol':f<.66?'poente':f<.86?'lua':'aurora';if(k===DAYIC)return;DAYIC=k;
+  el.innerHTML=k==='lua'?'<svg viewBox="0 0 24 24"><path d="M15.5 3.5a8.5 8.5 0 1 0 5 15.2A7 7 0 0 1 15.5 3.5z" fill="#dfe6ff"/></svg>'
+   :k==='sol'?'<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="5" fill="#ffd25a"/><g stroke="#ffd25a" stroke-width="2" stroke-linecap="round"><path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M4.9 19.1L7 17M17 7l2.1-2.1"/></g></svg>'
+   :`<svg viewBox="0 0 24 24"><path d="M4 17a8 8 0 0 1 16 0z" fill="${k==='poente'?'#ff9a4a':'#ffb3a0'}"/><path d="M2 19h20" stroke="#e6d6b6" stroke-width="2" stroke-linecap="round"/></svg>`;
+  el.title=k==='lua'?'Noite: vê-se menos':k==='sol'?'Dia':k==='poente'?'A anoitecer':'A amanhecer'}
 function atmosScreen(c,t){const rain=rainAmt();if(rain<=0||GFX!=='alto')return;
   const n=Math.round(160*rain),wind=.15+.6*WIND_SX;c.strokeStyle='rgba(200,215,235,.42)';c.lineWidth=1;c.beginPath();
   for(let i=0;i<n;i++){const sx=((i*97.13+t*80*wind)%(vw+60))-30,sy=((i*57.31*1.7+t*620)%(vh+40))-20;c.moveTo(sx,sy);c.lineTo(sx-9*wind,sy+15)}c.stroke();
@@ -5544,7 +5582,7 @@ function updateTop(){
   $('ageBar').hidden=!aq;if(aq)$('ageBar').firstChild.style.width=Math.min(100,aq.qt/AGE_TIME[aq.queue[0].a]*100)+'%';
   modeHud();if(G.lastAttack&&G.alertAt!=null){const on=G.time-G.alertAt<12;if($('bAlert').hidden===on)$('bAlert').hidden=!on}if((G.time|0)%2===0)grpRender();
   const wt=$('wonderT');if(G.wonder){wt.hidden=false;const s2=Math.max(0,Math.ceil(G.wonder.t));wt.lastChild.textContent=Math.floor(s2/60)+':'+String(s2%60).padStart(2,'0');wt.style.color=G.wonder.o===ME?'var(--good)':'var(--bad)'}else wt.hidden=true;
-  const s=Math.floor(G.time);$('clock').textContent=Math.floor(s/60)+':'+String(s%60).padStart(2,'0');
+  dayIcon();const s=Math.floor(G.time);$('clock').textContent=Math.floor(s/60)+':'+String(s%60).padStart(2,'0');
   $('idleN').textContent=idle||'';$('bIdle').classList.toggle('alert',idle>0&&G.time>20);$('armyN').textContent=army||'';const stuck=ents.filter(u=>u.o===ME&&workerBlocked(u)).length;$('bStuck').hidden=!stuck;$('stuckN').textContent=stuck||'';{const ib=G.time>60?idleProducers(ME).length:0;$('bIdleB').hidden=!ib;$('idleBN').textContent=ib||''}
   netHud();
 }
