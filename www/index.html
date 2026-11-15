@@ -2570,7 +2570,7 @@ function buildTerrain(){
   TGT=W>90?24:GT;const S=TGT,CW=W*S;
   const TX=FLORA.ready&&FLORA.tex.grass,tsc=S/24;
   // com textura nítida o chão é composto por pedaços a partir das camadas (TL); a tela grande não é usada, por isso não se pinta
-  terrCanvas=mkCanvas(TX?1:CW,TX?1:CW);const c=terrCanvas.getContext('2d');TL=null;TRAILS.sig='';TRAILS.t=0;TRAILS.tile=null;TUF.list=null;if(TRAILS.cv)TRAILS.cv.getContext('2d').clearRect(0,0,TRAILS.cv.width,TRAILS.cv.height);
+  terrCanvas=mkCanvas(TX?1:CW,TX?1:CW);const c=terrCanvas.getContext('2d');TL=null;SHB=shBucket();TRAILS.sig='';TRAILS.t=0;TRAILS.tile=null;TUF.list=null;if(TRAILS.cv)TRAILS.cv.getContext('2d').clearRect(0,0,TRAILS.cv.width,TRAILS.cv.height);
   const r=mulberry32(G.seed+5);
   const n1=vnoise(G.seed+1,5),n2=vnoise(G.seed+2,14),n3=vnoise(G.seed+3,7);
   // campo de cor de baixa frequência
@@ -2692,14 +2692,14 @@ function groundChunk(i,j){
   c.setTransform(cs,0,0,cs,-X0*cs,-Y0*cs);
   for(const d of decos){const q=proj(d.x,d.y);if(q.x<X0-30||q.x>X0+CHW+30||q.y<Y0-12||q.y>Y0+CHH+44)continue;const sp=SPR.deco[d.k][d.v];c.drawImage(sp.cv,q.x-sp.ax,q.y-sp.ay,sp.w,sp.h)}
   // sombras das árvores (fixas no chão; o pedaço é refeito quando uma árvore é cortada)
-  c.globalAlpha=.24;
+  c.globalAlpha=.24*SH_A[SHB];
   for(let y=Math.max(0,y0-7);y<Math.min(H,y1+6);y++)for(let x=Math.max(0,x0-6);x<Math.min(W,x1+7);x++){const e=resAt[idx(x,y)];if(!e||e.rk!=='wood')continue;
     const q=proj(x+.5,y+.5);if(q.x<X0-200||q.x>X0+CHW+50||q.y<Y0-60||q.y>Y0+CHH+170)continue;const sp=treeSprite(e),sh=shadowOf(sp,sp.ay-5);c.drawImage(sh.cv,q.x-sp.ax-sh.pad,q.y+4-sp.ay,sh.w,sh.h)}
   // sombras dos edifícios (refeitas quando um edifício acaba, cai ou é avistado)
-  c.globalAlpha=.38;for(const e of cb){if(!e.done)continue;const p=proj(e.tx,e.ty);const sp=bldSprite(e.type,P[e.o].age,e.o,bldVariant(e)),sh=shadowOf(sp,sp.oy+(e.w+e.h)*HH*.86);
+  c.globalAlpha=.38*SH_A[SHB];for(const e of cb){if(!e.done)continue;const p=proj(e.tx,e.ty);const sp=bldSprite(e.type,P[e.o].age,e.o,bldVariant(e)),sh=shadowOf(sp,sp.oy+(e.w+e.h)*HH*.86);
     const dx=p.x-sp.ox-sh.pad,dy=p.y-sp.oy;if(dx>X0+CHW||dx+sh.w<X0||dy>Y0+CHH||dy+sh.h<Y0)continue;c.drawImage(sh.cv,dx,dy,sh.w,sh.h)}
   // edifícios sem chão: sombra de contacto com a forma do próprio edifício (silhueta achatada e esbatida), sem losango à volta
-  c.globalAlpha=.62;for(const e of cb){if(!e.done||!dirtFreeE(e))continue;const p=proj(e.tx,e.ty);const sp=bldSprite(e.type,P[e.o].age,e.o,bldVariant(e)),ct=contactOf(sp,sp.oy+(e.w+e.h)*HH*.5);
+  c.globalAlpha=.62*(SHB===3?.6:1);for(const e of cb){if(!e.done||!dirtFreeE(e))continue;const p=proj(e.tx,e.ty);const sp=bldSprite(e.type,P[e.o].age,e.o,bldVariant(e)),ct=contactOf(sp,sp.oy+(e.w+e.h)*HH*.5);
     const dx=p.x-sp.ox-ct.pad,dy=p.y-sp.oy-ct.pad;if(dx>X0+CHW||dx+ct.w<X0||dy>Y0+CHH||dy+ct.h<Y0)continue;c.drawImage(ct.cv,dx,dy,ct.w,ct.h)}
   c.globalAlpha=1;
   CHUNKS.set(key,{cv,t:performance.now(),cs,b:cv.width*cv.height*4});
@@ -2718,14 +2718,18 @@ function contactOf(s,yc){let d=CONTACT.get(s);if(d)return d;const w=s.CW??s.w,h=
   try{c.filter='blur(5px)'}catch(e){}c.setTransform(1.04,0,0,K,pad-w*.02,pad+yc*(1-K));c.drawImage(s.cv,0,0,w,h);
   c.setTransform(1,0,0,1,0,0);c.filter='none';c.globalCompositeOperation='source-in';c.fillStyle='#10160c';c.fillRect(0,0,cv.width,cv.height);
   d={cv,pad,w:cv.width,h:cv.height};CONTACT.set(s,d);return d}
-function shadowOf(s,by){let d=SHADOW.get(s);if(d)return d;
-  const w=s.CW??s.w,h=s.CH??s.h,sx=.78,sy=.6,pad=Math.ceil(Math.max(0,h-by)*sx)+2,ext=Math.ceil(by*sx),h2=Math.ceil(Math.max(h,by*(1+sy))+2);
+// sombras pela hora do dia: 0 dia, 1 sol baixo (compridas), 2 crepúsculo (compridas e fracas), 3 noite (quase nada)
+let SHB=0;const SH_L=[1,1.55,1.85,1.15],SH_A=[1,1,.6,.26];
+function shBucket(){if(!G||!DAYNIGHT&&!NET.on)return 0;const f=dayPhase();if(f>=.69&&f<.84)return 3;if(f>=.62&&f<.9)return 2;if(f>=.5||f<.08||f>=.9)return 1;return 0}
+function shTick(){const b=shBucket();if(b===SHB)return;SHB=b;for(const ch of CHUNKS.values())ch.cs=-1} // os pedaços refazem-se um por frame, mostrando o antigo entretanto
+function shadowOf(s,by){let m=SHADOW.get(s);if(!m){m=[];SHADOW.set(s,m)}if(m[SHB])return m[SHB];let d;
+  const w=s.CW??s.w,h=s.CH??s.h,sx=.78*SH_L[SHB],sy=.6*SH_L[SHB],pad=Math.ceil(Math.max(0,h-by)*sx)+2,ext=Math.ceil(by*sx),h2=Math.ceil(Math.max(h,by*(1+sy))+2);
   const cv=mkCanvas(w+ext+pad,h2),c=cv.getContext('2d');
   c.setTransform(1,0,-sx,-sy,sx*by+pad,by*(1+sy));c.drawImage(s.cv,0,0,w,h);
   c.setTransform(1,0,0,1,0,0);c.globalCompositeOperation='source-in';c.fillStyle='#141a30';c.fillRect(0,0,cv.width,h2);
   {const bx=w/2+pad,g=c.createLinearGradient(bx,by,bx+sx*by,by*(1+sy));g.addColorStop(0,'rgba(0,0,0,1)');g.addColorStop(.4,'rgba(0,0,0,.52)');g.addColorStop(.72,'rgba(0,0,0,.16)');g.addColorStop(1,'rgba(0,0,0,0)');c.globalCompositeOperation='destination-in';c.fillStyle=g;c.fillRect(0,0,cv.width,h2);c.globalCompositeOperation='source-over'}
   let out=cv;try{const b2=mkCanvas(cv.width,h2),bc=b2.getContext('2d');bc.filter='blur(1.6px)';bc.drawImage(cv,0,0);out=b2}catch(e){}
-  d={cv:out,pad,w:cv.width,h:h2};SHADOW.set(s,d);return d}
+  d={cv:out,pad,w:cv.width,h:h2};m[SHB]=d;return d}
 function treeSprite(e){const h=(e.tx*7+e.ty*13+e.var)>>>0;const nearW=terr[idx(e.tx,e.ty)]===2;return nearW&&h%3===0?SPR.palm[h%2]:(h%4===0?SPR.pine[h%3]:SPR.oak[h%SPR.oak.length])}
 // sombra de contacto (oclusão ambiente): escura junto às paredes, desvanece para fora
 const AOC=new Map();
@@ -4401,7 +4405,7 @@ function render(){UCFM=0;U3TMS=0;
   const c=ctx;
   c.setTransform(1,0,0,1,0,0);c.fillStyle='#0b0805';c.fillRect(0,0,cv.width,cv.height);
   if(!G||!terrCanvas)return;
-  trailsTick();
+  trailsTick();shTick();
   {const w=windAt(G.time);WIND_S=w.s;WIND_SX=(w.x-w.y)/1.42;WIND_SK=(.012+.045*w.s)*Math.sign(WIND_SX||1)*Math.min(1,Math.abs(WIND_SX)*1.6+.25)}
   const z=cam.z*DPR;
   const ground=sc=>c.setTransform(z*HW/sc,z*HH/sc,-z*HW/sc,z*HH/sc,-cam.x*z,-cam.y*z);
