@@ -15,7 +15,11 @@ frames=[];states={}
 def seq(state,clip,phases,tool):
   states[state]=[]
   for ph in phases:states[state].append(len(frames));frames.append({'i':len(frames),'state':state,'clip':clip,'phase':ph,'tool':tool})
-seq('idle','Idle',[.2,.7],default);seq('walk','Walk',[i/8 for i in range(8)],default);seq('attack','Attack',[0,.15,.3,.5,.7,.9],default);seq('hit','Hit',[.2,.55],default);seq('death','Death',[.1,.35,.65,1],default)
+seq('idle','Idle',[.2,.7],default);seq('walk','Walk',[i/8 for i in range(8)],default);seq('attack','Attack',[0,.15,.3,.5,.7,.9],'hammer' if name=='aldeao' else default);seq('hit','Hit',[.2,.55],default);seq('death','Death',[.1,.35,.65,1],default)
+if name=='aldeao':
+  C=build['clips']
+  for st,clip,tool in [('chop','Chop','axe'),('mine','Mine','pick'),('build','Build' if 'Build' in C else 'Mine','build_hammer' if 'build_hammer' in build['props'] else 'hammer'),('farm','Farm' if 'Farm' in C else 'Harvest','hoe'),('forage','Harvest','basket'),('hunt','Attack','spear'),('butcher','Butcher' if 'Butcher' in C else 'Mine','knife')]:seq(st,clip,[.05,.2,.35,.5,.65,.8],tool)
+  seq('carry','Carry',[i/8 for i in range(8)],'cargo')
 clipLen={}
 for t in rig.animation_data.nla_tracks:
   st=t.strips[0];clipLen[t.name]=(st.frame_start,st.frame_end)

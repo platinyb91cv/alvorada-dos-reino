@@ -2,11 +2,12 @@
 import json,hashlib,sys,io
 from pathlib import Path
 from PIL import Image
-H=128;W=2048;Q=sys.argv[2] if len(sys.argv)>2 else 'lossless'
-name=sys.argv[1];d=Path('/tmp/claude-0/sp/hd')/name;r=json.loads((d/'render-report.json').read_text())
+W=2048;Q=sys.argv[2] if len(sys.argv)>2 else 'lossless'
+name=sys.argv[1];H=96 if name=='aldeao' else 128;d=Path('/tmp/claude-0/sp/hd')/name;r=json.loads((d/'render-report.json').read_text())
 old=json.loads(Path(f'/tmp/claude-0/wt/www/assets/units3d-armados/{name}.json').read_text())
 sc=H/r['bodyReferencePixels'];meta={'h':H,'directions':8,'framesPerDirection':r['framesPerDirection'],'states':r['states'],'directionLabels':r['labels'],'f':[]}
 if 'locomotion' in old:meta['locomotion']=old['locomotion']
+if name=='aldeao':meta['states']['carryIdle']=[meta['states']['carry'][0]]
 assert meta['states']==old['states'] and meta['framesPerDirection']==old['framesPerDirection']
 fr=sorted(r['frames'],key=lambda f:(f['direction'],f['i']));assert len(fr)==8*r['framesPerDirection']
 tiles=[];x=y=2;row=0

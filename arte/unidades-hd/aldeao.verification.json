@@ -1,0 +1,13 @@
+{
+ "unit": "aldeao",
+ "source": "arte/unidades-armadas/aldeao.glb",
+ "glbSha256": "70263be1291913d9241391502242e50ae506d3834f2c1e60948a2c19d7fa6add",
+ "renderResolution": 512,
+ "cyclesSamples": 16,
+ "bodyReferencePixels": 156.03424106347484,
+ "h": 96,
+ "downscaleFactor": 0.6152495717971745,
+ "atlasSha256": "994d57cff53c70a3cfdf63c8e62981a0c67e62521f700440064c2e8ca88aa3ed",
+ "encoding": "lossless",
+ "additionalMeshyCredits": 0
+}

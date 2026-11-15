@@ -1,6 +1,6 @@
 # Soldados HD (h=128)
 
-Guerreiro, lanceiro, espadachim, arqueiro e besteiro renderizados de novo a partir dos mesmos GLB de `arte/unidades-armadas/`
+Aldeão (h=96, 576 quadros com todas as tarefas), guerreiro, lanceiro, espadachim, arqueiro e besteiro (h=128) renderizados de novo a partir dos mesmos GLB de `arte/unidades-armadas/`
 (sem novos créditos Meshy), com a câmara, as 8 direções e as fases do `renderizar.py` original.
 
 - Render: Blender (bpy 5.3) Cycles CPU, 512 px (lanceiro 640 px, por causa da lança), 16 amostras + OIDN, fundo transparente.
