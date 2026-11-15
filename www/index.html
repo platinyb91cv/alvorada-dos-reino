@@ -2544,7 +2544,7 @@ function buildTerrain(){
   TGT=W>90?24:GT;const S=TGT,CW=W*S;
   const TX=FLORA.ready&&FLORA.tex.grass,tsc=S/24;
   // com textura nítida o chão é composto por pedaços a partir das camadas (TL); a tela grande não é usada, por isso não se pinta
-  terrCanvas=mkCanvas(TX?1:CW,TX?1:CW);const c=terrCanvas.getContext('2d');TL=null;TRAILS.sig='';TRAILS.t=0;if(TRAILS.cv)TRAILS.cv.getContext('2d').clearRect(0,0,TRAILS.cv.width,TRAILS.cv.height);
+  terrCanvas=mkCanvas(TX?1:CW,TX?1:CW);const c=terrCanvas.getContext('2d');TL=null;TRAILS.sig='';TRAILS.t=0;TRAILS.tile=null;TUF.list=null;if(TRAILS.cv)TRAILS.cv.getContext('2d').clearRect(0,0,TRAILS.cv.width,TRAILS.cv.height);
   const r=mulberry32(G.seed+5);
   const n1=vnoise(G.seed+1,5),n2=vnoise(G.seed+2,14),n3=vnoise(G.seed+3,7);
   // campo de cor de baixa frequência
@@ -2750,7 +2750,7 @@ function hasPlotFence(e){return e.done&&e.kind==='b'&&!e.d.wall&&!e.d.gate&&!e.d
 // ── trilhos de terra entre os edifícios (estilo Age of Empires): só visual, sem efeito na velocidade ──
 // cada edifício ganha um trilho até ao centro da vila do dono; o caminho prefere trilhos já feitos, por isso junta-se numa rede.
 // é pintado numa máscara suave (como as manchas de terra) e o chão aplica-lhe a textura de terra.
-const TRAILS={cv:null,sig:'',t:0,MR:4};
+const TRAILS={cv:null,sig:'',t:0,MR:4,tile:null};
 function trailBuildings(){return ents.filter(e=>e.kind==='b'&&e.done&&e.hp>0&&(e.o===ME||e.seen)&&!e.d.wall&&!e.d.gate&&!e.d.walk&&e.type!=='estrada')}
 function trailPath(sx,sy,goal,soft){ // A* 8 direções na grelha; goal(x,y)->bool; soft: custo baixo onde já há trilho
   const N=W*H,g=new Float32Array(N).fill(1e9),from=new Int32Array(N).fill(-1),open=[],seen=new Uint8Array(N);
@@ -2783,6 +2783,8 @@ function trailsRebuild(){
     const goal=(x,y)=>(x>=c0.tx-1&&x<=c0.tx+c0.w&&y>=c0.ty-1&&y<=c0.ty+c0.h)||(soft[idx(x,y)]&&Math.hypot(x-sx,y-sy)>2.5);
     const p=trailPath(sx,sy,goal,soft);if(!p||p.length<2)continue;
     for(const [x,y] of p)soft[idx(x,y)]=1;paths.push(p)}
+  {const T=new Uint8Array(W*H);for(let y=0;y<H;y++)for(let x=0;x<W;x++)if(soft[idx(x,y)])for(let dy=-1;dy<=1;dy++)for(let dx=-1;dx<=1;dx++)if(inb(x+dx,y+dy))T[idx(x+dx,y+dy)]=1;
+    for(const c0 of centros)for(let y=c0.ty-3;y<c0.ty+c0.h+3;y++)for(let x=c0.tx-3;x<c0.tx+c0.w+3;x++)if(inb(x,y))T[idx(x,y)]=1;TRAILS.tile=T}
   // pintar: curvas suavizadas (Chaikin), traço largo e suave + núcleo; pequenas ondulações para não ficar a régua
   const smooth=pts=>{let q=pts.map(([x,y])=>[x+.5,y+.5]);for(let k=0;k<3;k++){const o=[q[0]];for(let i=0;i<q.length-1;i++){const [ax,ay]=q[i],[bx,by]=q[i+1];o.push([ax*.75+bx*.25,ay*.75+by*.25],[ax*.25+bx*.75,ay*.25+by*.75])}o.push(q[q.length-1]);q=o}return q};
   c.lineCap='round';c.lineJoin='round';
@@ -2798,6 +2800,36 @@ function trailsTick(){
   if(!G||!TL||!FLORA.tex.dirt)return;const now=performance.now();if(now-TRAILS.t<1500)return;TRAILS.t=now;
   const sig=trailBuildings().map(e=>e.id+':'+e.tx+','+e.ty).sort().join('|');if(sig===TRAILS.sig&&TRAILS.cv)return;
   TRAILS.sig=sig;trailsRebuild();CHUNKS.clear()}
+// ── tufos de relva com vento (folha do Kimi: arte/terreno, 16 tufos a 2x do mundo) ──
+// espalhados em manchas pelo prado, longe de edifícios, caminhos, terra e árvores; ondas de vento atravessam o campo
+const TUF={img:null,F:[[2,48,70,45],[74,42,69,51],[145,54,66,39],[213,48,63,45],[278,6,67,87],[347,2,72,91],[421,6,71,87],[494,10,66,83],[562,24,76,69],[640,27,72,66],[714,23,70,70],[786,36,75,57],[863,33,72,60],[937,30,72,63],[1011,45,72,48],[1085,44,71,49]],K:'ccccaaaafffttscc',list:null,map:null};
+{const im=new Image();im.onload=()=>{TUF.img=im};im.src='assets/terreno/tufos.webp?v=1';}
+function tufBuild(){
+  const N=W*H,list=[];TUF.map=new Int32Array(N+1);
+  let dirt=null;if(TL&&TL.dm){const cv=mkCanvas(W,H),c=cv.getContext('2d');c.drawImage(TL.dm,0,0,W,H);dirt=c.getImageData(0,0,W,H).data}
+  const h=(x,y,k)=>{let v=(x*374761393+y*668265263+k*2147483647+(G.seed|0)*69069)|0;v=(v^(v>>>13))*1274126177|0;return ((v^(v>>>16))>>>0)/4294967296};
+  const blob=(x,y)=>{const S=7,gx=x/S,gy=y/S,ix=Math.floor(gx),iy=Math.floor(gy),fx=gx-ix,fy=gy-iy,sx=fx*fx*(3-2*fx),sy=fy*fy*(3-2*fy);
+    const a=h(ix,iy,9),b=h(ix+1,iy,9),c=h(ix,iy+1,9),d=h(ix+1,iy+1,9);return a+(b-a)*sx+(c-a)*sy+(a-b-c+d)*sx*sy};
+  const kinds={c:[],a:[],f:[],t:[],s:[]};TUF.K.split('').forEach((k,i)=>kinds[k].push(i));
+  for(let y=0;y<H;y++)for(let x=0;x<W;x++){const i=idx(x,y);TUF.map[i]=list.length;
+    if(terr[i]!==0||dirt&&dirt[i*4+3]>70)continue;
+    const b=blob(x,y),p=b*b*1.15-.2;if(p<=0)continue;
+    const n=(h(x,y,1)<p?1:0)+(h(x,y,2)<p*.7?1:0)+(h(x,y,3)<p*.35?1:0);
+    for(let k=0;k<n;k++){const r=h(x,y,10+k);const kk=r<.62?'c':r<.82?'a':r<.9?'t':r<.94?'s':'f';const arr=kinds[kk];
+      list.push({x:x+.15+h(x,y,20+k)*.7,y:y+.15+h(x,y,30+k)*.7,f:arr[Math.floor(h(x,y,40+k)*arr.length)],s:.8+h(x,y,50+k)*.4,fl:h(x,y,60+k)<.5?-1:1,ph:h(x,y,70+k)*6.28,fw:kk==='f'})}}
+  TUF.map[N]=list.length;TUF.list=list}
+function drawTufts(c,t,V,z){
+  if(!TUF.img||GFX!=='alto'||cam.z<.55)return;if(!TUF.list)tufBuild();
+  const L=TUF.list,M=TUF.map,F=TUF.F,img=TUF.img,dir=Math.sign(WIND_SX)||1,amp=.07+.2*WIND_S,soft=TRAILS.tile;
+  const ox=cam.x,oy=cam.y,sw=vw/cam.z,sh=vh/cam.z,thin=cam.z<.8; // longe: metade dos tufos (telemóveis)
+  const near=(x,y,r)=>{for(let yy=y-r;yy<=y+r;yy++)for(let xx=x-r;xx<=x+r;xx++)if(inb(xx,yy)){const j=idx(xx,yy);if(bldAt[j]||resAt[j]&&resAt[j].rk==='wood'&&(r<2||xx===x&&yy===y))return true}return false};
+  for(let y=Math.max(0,V.y0);y<=Math.min(H-1,V.y1);y++)for(let x=Math.max(0,V.x0);x<=Math.min(W-1,V.x1);x++){const i=idx(x,y);const a=M[i],b=M[i+1];if(a===b||!vis[i])continue;
+    const q=proj(x+.5,y+.5);if(q.x<ox-40||q.x>ox+sw+40||q.y<oy-10||q.y>oy+sh+60)continue;
+    if(resAt[i]||G.roads&&G.roads[i]||soft&&soft[i]||near(x,y,1))continue;
+    for(let k=a;k<b;k++){if(thin&&k&1)continue;const u=L[k];if(u.fw&&near(x,y,3))continue;const [fx,fy,fw,fh]=F[u.f];const p=proj(u.x,u.y),S=u.s*.38,flex=fh/90;
+      const sk=dir*amp*flex*(.45*Math.sin(t*2.3+u.ph)+.9*Math.max(0,Math.sin(t*.85-(u.x+u.y)*.42))+.25);
+      c.setTransform(z*u.fl,0,-z*sk,z,(p.x-ox)*z,(p.y-oy)*z);c.drawImage(img,fx,fy,fw,fh,-fw*S/2,-fh*S+2*S,fw*S,fh*S)}}
+}
 let WEAR=null;
 function wearDecal(){if(WEAR)return WEAR;const n=64,cv=mkCanvas(n,n),c=cv.getContext('2d'),r=mulberry32(77);
   const g=c.createRadialGradient(n/2,n/2,n*.18,n/2,n/2,n*.5);g.addColorStop(0,'rgba(120,94,58,.9)');g.addColorStop(.7,'rgba(120,94,58,.55)');g.addColorStop(1,'rgba(120,94,58,0)');c.fillStyle=g;c.fillRect(0,0,n,n);
@@ -4328,6 +4360,7 @@ function render(){UCFM=0;U3TMS=0;
   for(const e of ents)if(e.kind==='b'&&e.d.walk&&seenBy0(e)){const q=proj(e.tx,e.ty);if(!onScreen(q.x,q.y+48,160))continue;
     if(BLDART.ready||e.d.pasture){const s2=bldSprite(e.type,P[e.o].age,e.o,'');c.globalAlpha=e.done?1:.35+.6*e.prog;c.drawImage(e.done||!visibleTo0(e)?s2.cv:darkOf(s2.cv),q.x-s2.ox,q.y-s2.oy,s2.CW,s2.CH);c.globalAlpha=1}
     else c.drawImage(farmSprite(e),q.x-e.h*HW,q.y,(e.w+e.h)*HW,(e.w+e.h)*HH)}
+  drawTufts(c,performance.now()/1000,V,z);flat();
   ground(GT);waterFx(c,V.x0,V.y0,V.x1,V.y1);
   // seleção no chão
   c.lineWidth=2.5;
