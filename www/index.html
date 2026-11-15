@@ -2848,11 +2848,21 @@ function tufBuild(){
     for(let k=0;k<n;k++){const r=h(x,y,10+k);const kk=r<.62?'c':r<.82?'a':r<.9?'t':r<.94?'s':'f';const arr=kinds[kk];
       list.push({x:x+.15+h(x,y,20+k)*.7,y:y+.15+h(x,y,30+k)*.7,f:arr[Math.floor(h(x,y,40+k)*arr.length)],s:.8+h(x,y,50+k)*.4,fl:h(x,y,60+k)<.5?-1:1,ph:h(x,y,70+k)*6.28,fw:kk==='f'})}}
   TUF.map[N]=list.length;TUF.list=list}
+// tufos curtos ao longo das arestas da frente dos edifícios (tapam a junção parede/relva, como no AoE); só relva, sem flores
+const BTUF=new WeakMap();
+function drawBaseTufts(c,e,t){if(!TUF.img||GFX!=='alto'||cam.z<.6||e.type==='doca'||e.d.walk)return;let L=BTUF.get(e);
+  if(!L){L=[];const r=mulberry32(e.id*977+5),sh=[];TUF.K.split('').forEach((k,i)=>{if(k==='c'||k==='a'&&r()<.5)sh.push(i)});
+    const add=(x,y)=>{if(!inb(Math.floor(x),Math.floor(y))||terr[idx(Math.floor(x),Math.floor(y))]===1)return;L.push({x,y,f:sh[Math.floor(r()*sh.length)],s:.17+r()*.1,fl:r()<.5?-1:1,ph:r()*6.28})};
+    const n=Math.round((e.w+e.h)*2.2);for(let k=0;k<n;k++){const u=r(),o=.02+r()*.16;if(r()<.5)add(e.tx+u*e.w,e.ty+e.h+o);else add(e.tx+e.w+o,e.ty+u*e.h)}
+    L.sort((a,b)=>(a.x+a.y)-(b.x+b.y));BTUF.set(e,L)}
+  const F=TUF.F,dir=Math.sign(WIND_SX)||1,amp=.06+.16*WIND_S;
+  for(const u of L){const [fx,fy,fw,fh]=F[u.f],p=proj(u.x,u.y),S=u.s,sk=dir*amp*(fh/90)*(.5*Math.sin(t*2.3+u.ph)+.8*Math.max(0,Math.sin(t*.85-(u.x+u.y)*.42))+.2);
+    c.save();c.translate(p.x,p.y);c.transform(u.fl,0,-sk,1,0,0);c.drawImage(TUF.img,fx,fy,fw,fh,-fw*S/2,-fh*S+1,fw*S,fh*S);c.restore()}}
 function drawTufts(c,t,V,z){
   if(!TUF.img||GFX!=='alto'||cam.z<.55)return;if(!TUF.list)tufBuild();
   const L=TUF.list,M=TUF.map,F=TUF.F,img=TUF.img,dir=Math.sign(WIND_SX)||1,amp=.07+.2*WIND_S,soft=TRAILS.tile;
   const ox=cam.x,oy=cam.y,sw=vw/cam.z,sh=vh/cam.z,thin=cam.z<.8; // longe: metade dos tufos (telemóveis)
-  const near=(x,y,r)=>{for(let yy=y-r;yy<=y+r;yy++)for(let xx=x-r;xx<=x+r;xx++)if(inb(xx,yy)){const j=idx(xx,yy);if(bldAt[j]||resAt[j]&&resAt[j].rk==='wood'&&(r<2||xx===x&&yy===y))return true}return false};
+  const near=(x,y,r)=>{for(let yy=y-r;yy<=y+r;yy++)for(let xx=x-r;xx<=x+r;xx++)if(inb(xx,yy)){const j=idx(xx,yy);if(bldAt[j]&&(xx===x&&yy===y||!dirtFreeE(byId.get(bldAt[j])||{type:'',o:0}))||resAt[j]&&resAt[j].rk==='wood'&&(r<2||xx===x&&yy===y))return true}return false};
   for(let y=Math.max(0,V.y0);y<=Math.min(H-1,V.y1);y++)for(let x=Math.max(0,V.x0);x<=Math.min(W-1,V.x1);x++){const i=idx(x,y);const a=M[i],b=M[i+1];if(a===b||!vis[i])continue;
     const q=proj(x+.5,y+.5);if(q.x<ox-40||q.x>ox+sw+40||q.y<oy-10||q.y>oy+sh+60)continue;
     if(resAt[i]||G.roads&&G.roads[i]||soft&&soft[i]||near(x,y,1))continue;
@@ -3497,8 +3507,15 @@ function bld3dSprite(type,age,o,vr){if(!BLD3D.ready)return null;const v=bld3dKey
   const [sx,sy,w,h,ax,ay]=BLD3D.meta.frames[v],k=1/BLD3D.meta.scale,CW=Math.ceil(w*k)+2,CH=Math.ceil(h*k)+2;
   const cv=mkCanvas(CW*SS,CH*SS),c=cv.getContext('2d',{willReadFrequently:true});c.scale(SS,SS);c.imageSmoothingEnabled=true;c.imageSmoothingQuality='high';c.drawImage(tintCrop(BLD3D,team,sx,sy,w,h),0,0,w,h,1,1,w*k,h*k);
   if(type!=='doca'&&!dirtFree(type,age))padSoften(cv,(ax*k+1)*SS,(ay*k+1)*SS,BLDS[type].w,BLDS[type].h); // sem chão: não há lote a esbater (cortava a base do edifício)
+  else if(type!=='doca')baseShade(c,ax*k+1,ay*k+1,BLDS[type].w,BLDS[type].h);
   if(RES==='hd')sharpenCv(cv,.45);
   const r={cv,ox:ax*k+1,oy:ay*k+1,CW,CH};BCACHE[key]=r;return r}
+// AoE: o fundo das paredes escurece junto à relva (oclusão), em vez de acabar numa linha nítida; também apaga restos claros do recorte na base
+function baseShade(c,ox,oy,w,h){const L=[ox-h*HW,oy+h*HH],B=[ox+(w-h)*HW,oy+(w+h)*HH],R=[ox+w*HW,oy+w*HH],D=11;
+  c.save();c.globalCompositeOperation='source-atop';
+  for(let x=Math.floor(L[0]);x<=Math.ceil(R[0]);x++){const gy=x<=B[0]?L[1]+(B[1]-L[1])*(x-L[0])/(B[0]-L[0]):B[1]+(R[1]-B[1])*(x-B[0])/(R[0]-B[0]);
+    const g=c.createLinearGradient(0,gy-D,0,gy+2);g.addColorStop(0,'rgba(22,18,10,0)');g.addColorStop(.7,'rgba(22,18,10,.32)');g.addColorStop(1,'rgba(22,18,10,.6)');c.fillStyle=g;c.fillRect(x,gy-D,1,D+3)}
+  c.restore()}
 // HD: realce leve (unsharp 3×3) nos edifícios, feito uma vez quando o sprite é criado; só nos píxeis opacos, sem mexer no alfa
 function sharpenCv(cv,amt){try{const c=cv.getContext('2d'),W2=cv.width,H2=cv.height,im=c.getImageData(0,0,W2,H2),D=im.data,S0=new Uint8ClampedArray(D);const R=W2*4;
   for(let y=1;y<H2-1;y++)for(let x=1;x<W2-1;x++){const i=y*R+x*4;if(S0[i+3]<200||S0[i-4+3]<200||S0[i+4+3]<200||S0[i-R+3]<200||S0[i+R+3]<200)continue;
@@ -4464,6 +4481,7 @@ function render(){UCFM=0;U3TMS=0;
         if(e.type==='torre')towerWallStubs(c,e,true,lit);
         if(e.type==='torre'&&(e.lvl||1)===2&&TOWER[2].cat)drawTowerCat(c,e,lit);
         if(lit&&e.garr&&e.garr.length)drawGarrTop(c,e,performance.now()/1000);
+        if(lit&&dirtFreeE(e))drawBaseTufts(c,e,t);
         if((e.lvl||1)>1&&e.type!=='torre'&&!(BLD3D.meta.frames&&BLD3D.meta.frames[e.type+'_n'+e.lvl]&&!(e.type==='centro'&&P[e.o].age>=2)))drawLvlDeco(c,e,lit,t); // sem arte própria: bandeirolas e escudo
         if(!dirtFreeE(e)){const fr=bldFringe(e);if(fr)c.drawImage(lit?fr.cv:darkOf(fr.cv),p.x-fr.ox,p.y-fr.oy,fr.CW,fr.CH)}
         if(e.d.gate&&!BLDART.ready&&!GATE3D.ready)drawGateDoor(c,e,p);
