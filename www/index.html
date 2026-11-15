@@ -4574,6 +4574,9 @@ function render(){UCFM=0;U3TMS=0;
       if(f.t<3){c.globalAlpha=(1-f.t/3)*.5;c.fillStyle='rgba(130,120,110,.5)';c.beginPath();c.arc(p.x,p.y-20-f.t*30,f.w*14*(1+f.t),0,7);c.fill()}c.globalAlpha=1}
     else if(f.type==='rubble'){c.globalAlpha=a;c.fillStyle='#5a4f45';for(let k=0;k<14;k++){const q=proj(f.x-f.w/2+((k*37)%10)/10*f.w,f.y-f.h/2+((k*53)%10)/10*f.h);c.fillRect(q.x-4,q.y-3,8,5)}
       c.fillStyle='rgba(130,120,110,.5)';c.beginPath();c.arc(p.x,p.y-20-f.t*30,f.w*14*(1+f.t),0,7);c.fill();c.globalAlpha=1}
+    else if(f.type==='chips'){const k=f.t/f.life,r=mulberry32(f.seed);
+      if(f.dust){c.fillStyle=`rgba(205,190,155,${.42*(1-k)})`;for(let i=0;i<4;i++){const a=r()*6.28,rr=5+k*16;c.beginPath();c.arc(p.x+Math.cos(a)*rr*.9,p.y-6-k*10+Math.sin(a)*rr*.35,4+k*8,0,7);c.fill()}}
+      for(let i=0;i<9;i++){const vx=(r()-.5)*46,vy=-(24+r()*34),tt=f.t,x=p.x+vx*tt,y=p.y-12+vy*tt+90*tt*tt;if(y>p.y+3)continue;c.fillStyle=f.col[i%f.col.length];c.globalAlpha=1-k*.5;const sz=2+r()*2.2;c.save();c.translate(x,y);c.rotate(r()*3+tt*9);c.fillRect(-sz/2,-sz*.35,sz,sz*.7);c.restore()}c.globalAlpha=1}
     else if(f.type==='lvlup'){const k=f.t/f.life,b=byId.get(f.b),hh=b?BHEIGHT[b.type]||40:40;c.save();c.globalCompositeOperation='lighter';
       const g=c.createLinearGradient(0,p.y,0,p.y-hh-60);g.addColorStop(0,`rgba(255,214,110,${.5*(1-k)})`);g.addColorStop(1,'rgba(255,214,110,0)');c.fillStyle=g;c.fillRect(p.x-26,p.y-hh-60,52,hh+60);
       for(let i=0;i<14;i++){const an=i/14*6.283+f.t*2,r=24+k*10,yy=p.y-k*(hh+40)-(i%3)*6;c.fillStyle=`rgba(255,230,140,${1-k})`;c.fillRect(p.x+Math.cos(an)*r-1.5,yy+Math.sin(an)*r*.5-1.5,3,3)}c.restore()}
@@ -4933,6 +4936,11 @@ function sndOrder(units,kind){ // kind: move | attack | gather | build
 // ---------- sons ligados às animações (lidos do estado visual, sem tocar na simulação) ----------
 const WORK_PH={wood:[.68,'chop'],stone:[.68,'mine_stone'],gold:[.68,'mine_gold'],farm:[.25,'hoe'],forage:[.3,'forage'],build:[.75,'hammer'],butcher:[.15,'butcher']};
 const UA=new WeakMap();
+// partículas de trabalho (AoE): lascas de madeira, pedrinhas, pó da construção, terra; saem no ponto do golpe, no lado do alvo
+const CHIP={wood:['#b8874f','#8a5a2e','#d9b27a'],stone:['#9a958c','#6f6a62','#c2bdb2'],gold:['#e8c45a','#9a958c','#c9a43a'],build:['#cbb894','#a89470','#e3d6b8'],farm:['#7a5a36','#5e4426','#9b7a4e'],butcher:['#a33a2a','#7a2a1e']};
+function workChips(u,job){if(GFX!=='alto'||fx.length>260)return;const col=CHIP[job];if(!col)return;const s=w2s(u.x,u.y);if(s.x<-40||s.x>vw+40||s.y<-40||s.y>vh+40)return;
+  const t=u.state==='build'?u.bld:u.gres;let dx=0,dy=0;if(t){const tx=t.kind==='b'?t.tx+t.w/2:t.tx+.5,ty=t.kind==='b'?t.ty+t.h/2:t.ty+.5,d=Math.hypot(tx-u.x,ty-u.y)||1;dx=(tx-u.x)/d*.32;dy=(ty-u.y)/d*.32}
+  fx.push({t:0,life:job==='build'?.9:.6,type:'chips',x:u.x+dx,y:u.y+dy,col,dust:job==='build'||job==='farm',seed:Math.random()*1e4|0})}
 function audioScan(dt){
   if(!running||paused||!G)return;let nWork=0,cav=0,cx=0,cy=0,inf=0,ix=0,iy=0;
   for(const u of ents){if(u.kind!=='u'||u.dead)continue;
@@ -4941,7 +4949,7 @@ function audioScan(dt){
     const moving=u.path&&u.pi<u.path.length;let q=UA.get(u);if(!q){q={};UA.set(u,q)}
     if(u.type==='aldeao'&&!moving&&(u.state==='gather'||u.state==='build')){
       const job=u.state==='build'?'build':isPasture(u.gres)?'pasture':u.gres&&u.gres.carcass?'butcher':u.gres&&u.gres.kind==='b'?'farm':u.gkind==='food'?'forage':u.gkind;
-      const w=WORK_PH[job];if(w){const ph=u.anim/(Math.PI*2)-w[0],c=Math.floor(ph);if(q.wph!=null&&c>q.wph&&nWork<4){if(snd(w[1],u.x,u.y))nWork++}q.wph=c}}
+      const w=WORK_PH[job];if(w){const ph=u.anim/(Math.PI*2)-w[0],c=Math.floor(ph);if(q.wph!=null&&c>q.wph){workChips(u,job);if(nWork<4&&snd(w[1],u.x,u.y))nWork++}q.wph=c}}
     else q.wph=null;
     if(u.d.fish&&u.state==='gather'&&!moving){q.ft=(q.ft||0)-dt;if(q.ft<=0){q.ft=2+Math.random()*2;snd('splash',u.x,u.y,{g:.6})}}
     if(moving){if(u.d.cls==='cav'){cav++;cx+=u.x;cy+=u.y}else if(u.d.cls==='inf'||u.d.cls==='arch'){inf++;ix+=u.x;iy+=u.y}
