@@ -1,73 +1,73 @@
 {
- "ferramentas": [
-  "Blender 5.2 (bpy, GPL)",
-  "arte/portoes-3d/scripts/montar_portao2.py (primitivas e materiais dos portões)"
- ],
- "texturas": [
-  "Poly Haven CC0: bark_brown_02, brown_planks_05, weathered_brown_planks, large_sandstone_blocks_01, medieval_blocks_02, thatch_roof_angled, clay_roof_tiles_02, roof_slates_02 (as mesmas dos portões, TEX_DIR)"
- ],
- "creditosMeshy": 0,
- "amostras": 32,
- "quadros": 34,
- "escalaAtlas": 1.5,
- "atlasSha256": "c68973901dae75533825a14e130dfeb840eed890fb8bd61a29cd96046d50a6c1",
- "detalhe": "enxaimel, sobrado em balanço, cumeeira, caibros, portadas, lenha, carroça, chão de terra batida",
- "pintura": "Gemini (texto -> imagem, sem créditos): casas, torres, armazém, ferreiro, Centro da Vila, quartel, arquearia, estábulo (Pedra); o resto continua 3D do Blender",
- "mercadoModelo": {
-  "origem": "modelo GLB gerado no Tripo pelo Fabis (tripo_pbr_model_9db151f2…glb), importado no Blender e encaixado na pegada 3×3",
-  "altura": 1.5,
-  "idades": [
-   1,
-   2
+  "ferramentas": [
+    "Blender 5.2 (bpy, GPL)",
+    "arte/portoes-3d/scripts/montar_portao2.py (primitivas e materiais dos portões)"
   ],
-  "nota": "telhado de ardósia dessaturado para não levar a cor da equipa; os toldos azuis levam a cor da equipa"
- },
- "torre3Pintada": {
-  "origem": "arte/pintura-castelo/fonte/torre_v3.png",
-  "escala": "única 0,314 (diâmetro 1,7 casas)",
-  "varanda": 2.98,
-  "raioCorpo": 0.85
- },
- "sombraEmbutidaRemovida": 776460,
- "centro2Pintado": {
-  "origem": "arte/pintura-castelo/fonte/castelo_centro_v5.png",
-  "script": "arte/pintura-castelo/scripts/castelo_centro.py",
-  "inclinacaoBase": 0.52,
-  "achatado": 0.797,
-  "sitios": 11
- },
- "torre2Pintada": {
-  "origem": "arte/pintura-castelo/fonte/torre2_v1.png",
-  "terraco": 3.81,
-  "catapulta": true
- },
- "grok": {
-  "pecas": [
-   "templo_1",
-   "templo_2",
-   "mercado_2",
-   "maravilha_2"
+  "texturas": [
+    "Poly Haven CC0: bark_brown_02, brown_planks_05, weathered_brown_planks, large_sandstone_blocks_01, medieval_blocks_02, thatch_roof_angled, clay_roof_tiles_02, roof_slates_02 (as mesmas dos portões, TEX_DIR)"
   ],
-  "fonte": "arte/edificios-3d/grok/fonte",
-  "script": "arte/edificios-3d/scripts/integrar_grok.py + trocar_no_atlas.py (DESSAT_TELHADO=1)",
-  "medidas": "arte/edificios-3d/grok/medidas.json"
- },
- "chatgpt": {
-  "pecas": [
-   "oficina_1",
-   "oficina_2",
-   "estabulo_1",
-   "estabulo_2",
-   "mercado_1",
-   "torre_1",
-   "doca_0",
-   "doca_1",
-   "doca_2"
-  ],
-  "fonte": "arte/edificios-3d/grok/fonte",
-  "inclinacao": "0,47-0,53 (sem correção vertical)",
-  "cor": "acertar_cor.py: saturação e brilho iguais aos edifícios do jogo; azul da equipa intacto",
-  "medidas": "arte/edificios-3d/grok/medidas-chatgpt.json",
-  "orla": "integrar_grok.py tira a orla esbranquiçada do fundo; suavizar_lote.py desvanece a orla do lote nas arestas da frente"
- }
+  "creditosMeshy": 0,
+  "amostras": 32,
+  "quadros": 34,
+  "escalaAtlas": 1.5,
+  "atlasSha256": "0e08a68e5adb7c4df195b20e47dcf1c32cbfd6d533d6baa962b2d693e28bee24",
+  "detalhe": "enxaimel, sobrado em balanço, cumeeira, caibros, portadas, lenha, carroça, chão de terra batida",
+  "pintura": "Gemini (texto -> imagem, sem créditos): casas, torres, armazém, ferreiro, Centro da Vila, quartel, arquearia, estábulo (Pedra); o resto continua 3D do Blender",
+  "mercadoModelo": {
+    "origem": "modelo GLB gerado no Tripo pelo Fabis (tripo_pbr_model_9db151f2…glb), importado no Blender e encaixado na pegada 3×3",
+    "altura": 1.5,
+    "idades": [
+      1,
+      2
+    ],
+    "nota": "telhado de ardósia dessaturado para não levar a cor da equipa; os toldos azuis levam a cor da equipa"
+  },
+  "torre3Pintada": {
+    "origem": "arte/pintura-castelo/fonte/torre_v3.png",
+    "escala": "única 0,314 (diâmetro 1,7 casas)",
+    "varanda": 2.98,
+    "raioCorpo": 0.85
+  },
+  "sombraEmbutidaRemovida": 776460,
+  "centro2Pintado": {
+    "origem": "arte/pintura-castelo/fonte/castelo_centro_v5.png",
+    "script": "arte/pintura-castelo/scripts/castelo_centro.py",
+    "inclinacaoBase": 0.52,
+    "achatado": 0.797,
+    "sitios": 11
+  },
+  "torre2Pintada": {
+    "origem": "arte/pintura-castelo/fonte/torre2_v1.png",
+    "terraco": 3.81,
+    "catapulta": true
+  },
+  "grok": {
+    "pecas": [
+      "templo_1",
+      "templo_2",
+      "mercado_2",
+      "maravilha_2"
+    ],
+    "fonte": "arte/edificios-3d/grok/fonte",
+    "script": "arte/edificios-3d/scripts/integrar_grok.py + trocar_no_atlas.py (DESSAT_TELHADO=1)",
+    "medidas": "arte/edificios-3d/grok/medidas.json"
+  },
+  "chatgpt": {
+    "pecas": [
+      "oficina_1",
+      "oficina_2",
+      "estabulo_1",
+      "estabulo_2",
+      "mercado_1",
+      "torre_1",
+      "doca_0",
+      "doca_1",
+      "doca_2"
+    ],
+    "fonte": "arte/edificios-3d/grok/fonte",
+    "inclinacao": "0,47-0,53 (sem correção vertical)",
+    "cor": "acertar_cor.py: saturação e brilho iguais aos edifícios do jogo; azul da equipa intacto",
+    "medidas": "arte/edificios-3d/grok/medidas-chatgpt.json",
+    "orla": "integrar_grok.py tira a orla esbranquiçada do fundo; suavizar_lote.py desvanece a orla do lote nas arestas da frente"
+  }
 }

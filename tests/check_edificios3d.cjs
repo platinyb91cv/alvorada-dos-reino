@@ -4,7 +4,9 @@ const root=path.resolve(__dirname,'..'),html=fs.readFileSync(path.join(root,'www
 const data=JSON.parse(html.match(/const BLD3D_DATA=(\{[^\n]+\});/)[1]);
 const want={casa:[0,1,2],armazem:[0,1,2],quartel:[0,1,2],arquearia:[0,1,2],estabulo:[0,1,2],doca:[0,1,2],torre:[1,2,3],ferreiro:[0,1,2],templo:[1,2],mercado:[1,2],oficina:[1,2],centro:[0,1,2],maravilha:[2]};
 let n=0;for(const [t,ages] of Object.entries(want))for(const a of ages){assert.ok(data.frames[t+'_'+a],'frame '+t+'_'+a);n++}
-assert.equal(Object.keys(data.frames).length,n);
+// arte por nível dos edifícios (Nv.2/Nv.3): <tipo>_n2 / <tipo>_n3, só para tipos com níveis
+const lv=Object.keys(data.frames).filter(k=>/_n[23]$/.test(k));for(const k of lv)assert.ok(/^(casa|centro|quartel|arquearia|estabulo|doca|oficina|armazem|mercado|ferreiro|templo)_n[23]$/.test(k),'level frame '+k);
+assert.equal(Object.keys(data.frames).length,n+lv.length);
 const webp=fs.readFileSync(path.join(root,'www/assets/edificios-extra',data.file));assert.equal(crypto.createHash('sha256').update(webp).digest('hex'),data.atlasSha256);
 assert.equal(webp.toString('ascii',8,16),'WEBPVP8L');const bits=webp.readUInt32LE(21),w=(bits&16383)+1,h=((bits>>>14)&16383)+1;
 assert.ok(w<=2048&&h<=2048,'atlas within 2048');assert.ok(webp.length<4*1024*1024,'atlas size budget');

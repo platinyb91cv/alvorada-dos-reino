@@ -3005,6 +3005,7 @@ const MATS=[
 const BHEIGHT={vila:46,curral:28,estrada:2,muralhaMadeira:30,muralhaPedra:58,muralhaFort:66,portaoMadeira:66,portaoPedra:80,doca:28,ferreiro:52,templo:66,maravilha:118,centro:78,casa:50,quinta:6,armazem:46,quartel:56,arquearia:52,estabulo:48,torre:110,oficina:58};
 function bldVariant(e){
   if(e.type==='torre')return e.lvl||1;
+  if((e.lvl||1)>1&&BLVL_T[e.type])return 'n'+e.lvl; // edifício com nível: usa a arte Nv.2/Nv.3 se existir
   if(e.d.wall||e.d.gate){let m=0;const nb=(x,y)=>{if(!inb(x,y))return false;const n=byId.get(bldAt[idx(x,y)]);return !!n&&n.o===e.o&&(n.d.wall||n.d.gate||(n.type==='torre'&&n.done))};
     if(nb(e.tx+1,e.ty))m|=1;if(nb(e.tx,e.ty+1))m|=2;if(nb(e.tx-1,e.ty))m|=4;if(nb(e.tx,e.ty-1))m|=8;
     if(e.d.gate)return (m&5)?'x':(m&10)?'y':(e.gdir||'x');
@@ -3473,11 +3474,12 @@ function wall3dSprite(type,o,m){if(CMOD.ready&&CMOD_KIND[type]){const base=CMOD_
   const cv=mkCanvas(CW*SS,CH*SS),c=cv.getContext('2d');c.scale(SS,SS);c.imageSmoothingEnabled=true;c.imageSmoothingQuality='high';c.drawImage(tintCrop(WALL3D,team,sx,sy,w,h),0,0,w,h,1,1,w*k,h*k);
   const r={cv,ox:ax*k+1,oy:ay*k+1,CW,CH};BCACHE[key]=r;return r}
 // edifícios 3D (Blender, arte/edificios-3d): casas, quartel, Centro da Vila… por idade (torre: por nível), mesma câmara e luz dos portões
-const BLD3D_DATA={"file":"edificios-3d.webp","scale":1.5,"atlasSha256":"c68973901dae75533825a14e130dfeb840eed890fb8bd61a29cd96046d50a6c1","frames":{"armazem_0":[188,1000,184,184,92.0,88.0],"armazem_1":[374,1000,184,184,92.0,88.0],"armazem_2":[560,1000,184,184,92.0,88.0],"arquearia_0":[836,755,276,236,138.0,92.0],"arquearia_1":[1114,755,276,236,138.0,92.0],"arquearia_2":[1392,755,276,236,138.0,92.0],"casa_0":[1304,1000,184,173,92.0,77.0],"casa_1":[1490,1000,184,173,92.0,77.0],"casa_2":[1676,1000,184,173,92.0,77.0],"centro_0":[929,2,276,348,138.0,204.0],"centro_1":[1207,2,276,348,138.0,204.0],"centro_2":[625,407,281,292,140.82,132.8],"doca_0":[1670,755,184,185,92.0,89.0],"doca_1":[1856,755,184,185,92.0,89.0],"doca_2":[2,1000,184,185,92.0,89.0],"estabulo_0":[2,755,276,243,138.0,99.0],"estabulo_1":[280,755,276,243,138.0,99.0],"estabulo_2":[558,755,276,243,138.0,99.0],"ferreiro_0":[746,1000,184,183,92.0,87.0],"ferreiro_1":[932,1000,184,183,92.0,87.0],"ferreiro_2":[1118,1000,184,183,92.0,87.0],"maravilha_2":[2,2,369,403,184.5,211.0],"mercado_1":[1464,407,276,245,138.0,101.0],"mercado_2":[1742,407,276,245,138.0,101.0],"oficina_1":[908,407,276,272,138.0,128.0],"oficina_2":[1186,407,276,272,138.0,128.0],"quartel_0":[1485,2,276,346,138.0,202.0],"quartel_1":[1763,2,276,346,138.0,202.0],"quartel_2":[2,407,276,346,138.0,202.0],"templo_1":[373,2,276,395,138.0,251.0],"templo_2":[651,2,276,395,138.0,251.0],"torre_1":[280,407,113,320,56.5,224.0],"torre_2":[395,407,113,320,56.5,224.0],"torre_3":[510,407,113,320,56.5,224.0]}};
+const BLD3D_DATA={"file":"edificios-3d.webp","scale":1.5,"atlasSha256":"0e08a68e5adb7c4df195b20e47dcf1c32cbfd6d533d6baa962b2d693e28bee24","frames":{"armazem_0":[838,1002,184,184,92.0,88.0],"armazem_1":[1024,1002,184,184,92.0,88.0],"armazem_2":[1210,1002,184,184,92.0,88.0],"arquearia_0":[1392,755,276,236,138.0,92.0],"arquearia_1":[1670,755,276,236,138.0,92.0],"arquearia_2":[2,1002,276,236,138.0,92.0],"casa_0":[374,1240,184,173,92.0,77.0],"casa_1":[560,1240,184,173,92.0,77.0],"casa_2":[746,1240,184,173,92.0,77.0],"casa_n2":[188,1240,184,176,92.0,80.0],"casa_n3":[2,1240,184,182,92.0,86.0],"centro_0":[1207,2,276,348,138.0,204.0],"centro_1":[1485,2,276,348,138.0,204.0],"centro_2":[1181,407,281,292,140.82,132.8],"doca_0":[280,1002,184,185,92.0,89.0],"doca_1":[466,1002,184,185,92.0,89.0],"doca_2":[652,1002,184,185,92.0,89.0],"estabulo_0":[558,755,276,243,138.0,99.0],"estabulo_1":[836,755,276,243,138.0,99.0],"estabulo_2":[1114,755,276,243,138.0,99.0],"ferreiro_0":[1396,1002,184,183,92.0,87.0],"ferreiro_1":[1582,1002,184,183,92.0,87.0],"ferreiro_2":[1768,1002,184,183,92.0,87.0],"maravilha_2":[2,2,369,403,184.5,211.0],"mercado_1":[2,755,276,245,138.0,101.0],"mercado_2":[280,755,276,245,138.0,101.0],"oficina_1":[1464,407,276,272,138.0,128.0],"oficina_2":[1742,407,276,272,138.0,128.0],"quartel_0":[1763,2,276,346,138.0,202.0],"quartel_1":[2,407,276,346,138.0,202.0],"quartel_2":[280,407,276,346,138.0,202.0],"quartel_n2":[558,407,276,339,138.0,195.0],"quartel_n3":[929,2,276,355,138.0,211.0],"templo_1":[373,2,276,395,138.0,251.0],"templo_2":[651,2,276,395,138.0,251.0],"torre_1":[836,407,113,320,56.5,224.0],"torre_2":[951,407,113,320,56.5,224.0],"torre_3":[1066,407,113,320,56.5,224.0]}};
 const BLD3D={ready:false,img:null,wide:true,teams:new Map(),meta:BLD3D_DATA};
 (()=>{if(!BLD3D_DATA.file)return;const im=new Image();im.onload=()=>{BLD3D.img=im;BLD3D.ready=true;for(const k in BCACHE)delete BCACHE[k];try{PORTS.clear()}catch(e){}try{if(typeof MBG!=='undefined'&&MBG.L&&!document.body.classList.contains('ingame')){MBG.L=null;menuBgStart()}}catch(e){}};im.src='assets/edificios-extra/'+BLD3D_DATA.file})();
 function bld3dKey(type,age,vr){const F=BLD3D.meta.frames;if(!F)return null;
   if(type==='torre'){const l=Math.max(1,Math.min(3,vr|0||1));return F['torre_'+l]?'torre_'+l:null}
+  if(typeof vr==='string'&&vr[0]==='n'&&F[type+'_'+vr])return type+'_'+vr;
   for(let a=age;a>=0;a--)if(F[type+'_'+a])return type+'_'+a;
   for(let a=age+1;a<=2;a++)if(F[type+'_'+a])return type+'_'+a;
   return null}
@@ -4453,7 +4455,7 @@ function render(){UCFM=0;U3TMS=0;
         if(e.type==='torre')towerWallStubs(c,e,true,lit);
         if(e.type==='torre'&&(e.lvl||1)===2&&TOWER[2].cat)drawTowerCat(c,e,lit);
         if(lit&&e.garr&&e.garr.length)drawGarrTop(c,e,performance.now()/1000);
-        if((e.lvl||1)>1&&e.type!=='torre')drawLvlDeco(c,e,lit,t);
+        if((e.lvl||1)>1&&e.type!=='torre'&&!(BLD3D.meta.frames&&BLD3D.meta.frames[e.type+'_n'+e.lvl]))drawLvlDeco(c,e,lit,t); // sem arte própria: bandeirolas e escudo
         if(!dirtFreeE(e)){const fr=bldFringe(e);if(fr)c.drawImage(lit?fr.cv:darkOf(fr.cv),p.x-fr.ox,p.y-fr.oy,fr.CW,fr.CH)}
         if(e.d.gate&&!BLDART.ready&&!GATE3D.ready)drawGateDoor(c,e,p);
         if(e.hp<e.max*.6&&lit&&!(e.d.wall&&e.type!=='muralhaMadeira')){ // fogo
