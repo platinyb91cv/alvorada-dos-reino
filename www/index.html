@@ -96,6 +96,7 @@ body:not(.ingame) #grp{display:none}
 .hpbar b{display:block;height:100%;background:linear-gradient(#a8e27a,#5fa83a);border-radius:7px}
 .hpbar.mid b{background:linear-gradient(#f0d36a,#c49a2a)}.hpbar.low b{background:linear-gradient(#f08a7a,#b8392b)}
 .hpbar span{position:absolute;inset:0;font-size:10px;font-weight:700;line-height:13px;text-align:center;color:#fff;text-shadow:0 1px 1px #000}
+.lvtag{font-size:11px;padding:1px 5px;border-radius:4px;background:#5b4422;color:#ffd98a;vertical-align:middle;margin-left:4px}
 .stats2{display:flex;flex-wrap:wrap;gap:4px 9px;color:#e6d6b6;font-weight:700;font-size:12px}.stats2 span{display:inline-flex;align-items:center;gap:3px}.stats2 .ic{color:var(--trim-hi);font-size:13px}
 .queue{display:flex;gap:4px;flex-wrap:wrap}
 .queue button{width:32px;height:32px;border-radius:6px;border:1px solid var(--trim);background:#1a120c;font-size:15px;position:relative;overflow:hidden;padding:0;cursor:pointer}
@@ -809,6 +810,15 @@ const UNITS={
   elefante:{name:'Elefante',icon:'🐘',cls:'animal',hp:240,atk:11,arm:1,range:0,rate:2,speed:1.4,sight:5,age:9,r:.55,gaia:1,meat:600,fight:1},
 };
 const CLSNAME={inf:'infantaria',arch:'arqueiros',cav:'cavalaria',siege:'cerco',ship:'navios',vill:'aldeões'};
+// níveis dos edifícios (Nv.2 na Idade do Bronze, Nv.3 na do Ferro), como no AoE Mobile: mais vida e um bónus por tipo (a torre usa TOWER)
+const BLVL_T={casa:{pop:[0,0,3,6]},centro:{train:[1,1,1.15,1.3]},quartel:{train:[1,1,1.2,1.4]},arquearia:{train:[1,1,1.2,1.4]},estabulo:{train:[1,1,1.2,1.4]},
+  doca:{train:[1,1,1.2,1.4]},oficina:{train:[1,1,1.2,1.4]},armazem:{train:[1,1,1.2,1.4]},mercado:{},ferreiro:{},templo:{}};
+const BLVL_HP=[1,1,1.3,1.65];
+function bLvl(type,l){if(type==='torre')return TOWER[l]||null;if(!BLVL_T[type]||l<2||l>3)return null;const d=BLDS[type],c=d.cost||{},k=l===2?1:2.1,r5=v=>Math.max(5,Math.round(v/5)*5);
+  const cost={wood:r5(((c.wood||0)*.55+40)*k),stone:r5(((c.stone||0)*.5+(l===2?25:55))*k)};if(l===3)cost.gold=r5(40+(c.wood||0)*.2);
+  const T=BLVL_T[type],fx=['vida +'+Math.round((BLVL_HP[l]-1)*100)+'%'];if(T.pop)fx.push('população +'+T.pop[l]);if(T.train)fx.push('treino '+Math.round((T.train[l]-1)*100)+'% mais rápido');
+  return{name:d.name+' Nv.'+l,cost,time:Math.round((d.time||20)*(l===2?.8:1.1)),age:l-1,fx:fx.join(', ')}}
+const lvlTrain=b=>{const T=BLVL_T[b.type];return T&&T.train?T.train[b.lvl||1]:1};
 const TOWER=[null,{name:'Torre de Vigia',atk:5,range:6.5,hp:320,sight:8},{name:'Torre de Catapulta',atk:7,range:7.5,hp:480,sight:10,cost:{stone:80,wood:40},time:30,age:1,cat:{atk:16,range:9,minRange:2,rate:5}},{name:'Torre Fortificada',atk:9,range:8.5,hp:750,sight:10,cost:{stone:150,gold:50},time:40,age:2,shots:2}];
 const BLDS={
   centro:{name:'Centro da Vila',icon:'🏛️',w:3,h:3,art:1.2,hp:700,cost:{wood:275,stone:60},time:60,age:1,pop:5,drop:1,train:['aldeao'],techs:['arado','roda'],atk:4,range:6,rate:2,sight:8,proj:'arrow'},
@@ -862,7 +872,7 @@ const CIVS={
 const CIV_KEYS=['mar','montanha','planicies'];
 function civOf(o){return G&&G.civ?G.civ[o]:null}
 function canTrainType(o,t){const d=UNITS[t];return !!d&&!d.king&&(!d.civ||d.civ===civOf(o))}
-function bldHp(o,type,lvl){const d=BLDS[type];let h=type==='torre'?TOWER[lvl||1].hp:d.hp;if(civOf(o)==='montanha'&&(d.wall||d.gate||type==='torre'))h*=1.3;if(P[o]&&P[o].age>=2)h*=1.2;return Math.round(h)}
+function bldHp(o,type,lvl){const d=BLDS[type];let h=type==='torre'?TOWER[lvl||1].hp:d.hp*(BLVL_T[type]?BLVL_HP[lvl||1]:1);if(civOf(o)==='montanha'&&(d.wall||d.gate||type==='torre'))h*=1.3;if(P[o]&&P[o].age>=2)h*=1.2;return Math.round(h)}
 const GATHER={wood:.55,food:.7,farm:.5,pasture:.5,gold:.5,stone:.45,hunt:.9,fish:.7};
 const CARRY=10;
 const POP_MAX=1000; // limite de população (antes era 100): sobe conforme constróis casas/centros
@@ -1890,14 +1900,15 @@ function updBld(b,dt){
     if(q.k==='unit'){
       if(P[b.o].pop>=P[b.o].popCap&&b.qt===0){b.blocked=true;if(b.o===ME)popWarn();return}
       b.blocked=false;
-      b.qt+=dt*(AIs[b.o]?Math.max(1,AIs[b.o].mult):1);
+      b.qt+=dt*(AIs[b.o]?Math.max(1,AIs[b.o].mult):1)*lvlTrain(b);
       if(b.qt>=UNITS[q.t].time){
         if(P[b.o].pop>=P[b.o].popCap){b.blocked=true;if(b.o===ME)popWarn();return}
         b.qt=0;b.queue.shift();spawnUnit(b,q.t);if(b.o===ME)uiDirty=true;
       }
     }else if(q.k==='up'){
       b.qt+=dt;
-      if(b.qt>=TOWER[q.l].time){b.qt=0;b.queue.shift();const T2=TOWER[q.l];const f=b.hp/b.max;b.lvl=q.l;b.max=bldHp(b.o,'torre',q.l);b.hp=Math.max(b.hp,b.max*f);
+      const T2=bLvl(b.type,q.l);if(b.qt>=T2.time){b.qt=0;b.queue.shift();const f=b.hp/b.max;b.lvl=q.l;b.max=bldHp(b.o,b.type,q.l);b.hp=Math.max(b.hp,b.max*f);recount();
+        if(b.type!=='torre'){fx.push({t:0,life:1.4,type:'lvlup',x:b.tx+b.w/2,y:b.ty+b.h/2,b:b.id});chunkDirtyBld(b)}
         if(b.o===ME){toast('Melhoria concluída: '+T2.name);snd('research',null,null,{force:1});uiDirty=true}}
     }else if(q.k==='tech'){
       b.qt+=dt*(AIs[b.o]?Math.max(1,AIs[b.o].mult):1);
@@ -1918,7 +1929,7 @@ function freeNearWater(b){
   return null;
 }
 function queueUpgrade(b,silent){
-  const l=(b.lvl||1)+1;const T2=TOWER[l];if(!T2)return false;if(b.queue.length)return false;
+  const l=(b.lvl||1)+1;const T2=bLvl(b.type,l);if(!T2||!b.done)return false;if(b.queue.length)return false;
   if(P[b.o].age<T2.age){if(!silent)toast('Requer '+AGES[T2.age],true);return false}
   if(!canAfford(b.o,T2.cost)){if(!silent)toast('Recursos insuficientes',true);return false}
   pay(b.o,T2.cost);b.queue.push({k:'up',l});if(b.o===ME)uiDirty=true;return true;
@@ -1965,7 +1976,7 @@ function queueTech(b,t,silent){
 }
 function cancelQueue(b,i){
   const q=b.queue[i];if(!q)return;b.queue.splice(i,1);if(i===0)b.qt=0;
-  refund(b.o,q.k==='unit'?UNITS[q.t].cost:q.k==='age'?AGE_COST[q.a]:q.k==='up'?TOWER[q.l].cost:TECHS[q.t].cost);uiDirty=true;
+  refund(b.o,q.k==='unit'?UNITS[q.t].cost:q.k==='age'?AGE_COST[q.a]:q.k==='up'?bLvl(b.type,q.l).cost:TECHS[q.t].cost);uiDirty=true;
 }
 function canPlace(type,tx,ty,o,margin,skipVis){
   const d=BLDS[type];
@@ -2005,7 +2016,7 @@ function placeBuilding(o,type,tx,ty,builders,gdir){
 function recount(){
   for(const p of P){p.pop=0;p.popCap=0}
   const nk=a=>a.reduce((n,u)=>n+(u.d&&u.d.king?0:1),0); // o Rei não ocupa população
-  for(const e of ents){if(e.kind==='u'){if(!e.d.king)P[e.o].pop++;if(e.cargo)P[e.o].pop+=nk(e.cargo)}else if(e.kind==='b'){if(e.garr)P[e.o].pop+=nk(e.garr);if(e.done&&e.d.pop)P[e.o].popCap+=e.d.pop}}
+  for(const e of ents){if(e.kind==='u'){if(!e.d.king)P[e.o].pop++;if(e.cargo)P[e.o].pop+=nk(e.cargo)}else if(e.kind==='b'){if(e.garr)P[e.o].pop+=nk(e.garr);if(e.done&&e.d.pop)P[e.o].popCap+=e.d.pop+(BLVL_T[e.type]&&BLVL_T[e.type].pop?BLVL_T[e.type].pop[e.lvl||1]:0)}}
   for(const p of P)p.popCap=Math.min(POP_MAX,p.popCap);
 }
 
@@ -2377,6 +2388,8 @@ function botWalls(AI,me,home,p,vills,threat){if(p.age<1||vills.length<14||AI.t<3
     if(!inb(x,y)||!canPlace(wt,x,y,me,0,true)||!canAfford(me,BLDS[wt].cost))continue;
     let res=0;for(let dy=-1;dy<=1;dy++)for(let dx=-1;dx<=1;dx++)if(inb(x+dx,y+dy)&&resAt[idx(x+dx,y+dy)])res++;if(res>=3)continue;
     if(placeBuilding(me,wt,x,y,[]))n++}
+  if(p.age>=1&&rnd()<.25){const pri=['casa','centro','quartel','arquearia','armazem','estabulo'];for(const ty of pri){const t=ents.find(e=>e.o===me&&e.type===ty&&e.done&&!e.queue.length&&(e.lvl||1)<p.age+1);if(!t)continue;const L2=bLvl(ty,(t.lvl||1)+1);
+    if(L2&&p.age>=L2.age&&Object.entries(L2.cost).every(([k,v])=>p.res[k]>=v*2.2)){if(me===ME)try{act('up',{b:t.id})}catch(e){}else queueUpgrade(t,true);break}}}
   if(p.age>=2)for(const t of ents)if(t.o===me&&t.type==='torre'&&t.done&&(t.lvl||1)<3&&!t.queue.length&&p.age>=TOWER[(t.lvl||1)+1].age&&canAfford(me,TOWER[(t.lvl||1)+1].cost||{})){if(me===ME)try{act('up',{b:t.id})}catch(e){}break}}
 function aiWallRing(me,home){
   const R0=11,gateT=P[me].res.stone>=200?'portaoPedra':'portaoMadeira';
@@ -4433,6 +4446,7 @@ function render(){UCFM=0;U3TMS=0;
         if(e.type==='torre')towerWallStubs(c,e,true,lit);
         if(e.type==='torre'&&(e.lvl||1)===2&&TOWER[2].cat)drawTowerCat(c,e,lit);
         if(lit&&e.garr&&e.garr.length)drawGarrTop(c,e,performance.now()/1000);
+        if((e.lvl||1)>1&&e.type!=='torre')drawLvlDeco(c,e,lit,t);
         if(!dirtFreeE(e)){const fr=bldFringe(e);if(fr)c.drawImage(lit?fr.cv:darkOf(fr.cv),p.x-fr.ox,p.y-fr.oy,fr.CW,fr.CH)}
         if(e.d.gate&&!BLDART.ready&&!GATE3D.ready)drawGateDoor(c,e,p);
         if(e.hp<e.max*.6&&lit&&!(e.d.wall&&e.type!=='muralhaMadeira')){ // fogo
@@ -4515,6 +4529,9 @@ function render(){UCFM=0;U3TMS=0;
       if(f.t<3){c.globalAlpha=(1-f.t/3)*.5;c.fillStyle='rgba(130,120,110,.5)';c.beginPath();c.arc(p.x,p.y-20-f.t*30,f.w*14*(1+f.t),0,7);c.fill()}c.globalAlpha=1}
     else if(f.type==='rubble'){c.globalAlpha=a;c.fillStyle='#5a4f45';for(let k=0;k<14;k++){const q=proj(f.x-f.w/2+((k*37)%10)/10*f.w,f.y-f.h/2+((k*53)%10)/10*f.h);c.fillRect(q.x-4,q.y-3,8,5)}
       c.fillStyle='rgba(130,120,110,.5)';c.beginPath();c.arc(p.x,p.y-20-f.t*30,f.w*14*(1+f.t),0,7);c.fill();c.globalAlpha=1}
+    else if(f.type==='lvlup'){const k=f.t/f.life,b=byId.get(f.b),hh=b?BHEIGHT[b.type]||40:40;c.save();c.globalCompositeOperation='lighter';
+      const g=c.createLinearGradient(0,p.y,0,p.y-hh-60);g.addColorStop(0,`rgba(255,214,110,${.5*(1-k)})`);g.addColorStop(1,'rgba(255,214,110,0)');c.fillStyle=g;c.fillRect(p.x-26,p.y-hh-60,52,hh+60);
+      for(let i=0;i<14;i++){const an=i/14*6.283+f.t*2,r=24+k*10,yy=p.y-k*(hh+40)-(i%3)*6;c.fillStyle=`rgba(255,230,140,${1-k})`;c.fillRect(p.x+Math.cos(an)*r-1.5,yy+Math.sin(an)*r*.5-1.5,3,3)}c.restore()}
     else if(f.type==='boom'){c.globalAlpha=a;const g=c.createRadialGradient(p.x,p.y-6,0,p.x,p.y-6,14+f.t*50);g.addColorStop(0,'#ffe8a0');g.addColorStop(.4,'#e8902a');g.addColorStop(1,'rgba(120,60,20,0)');c.fillStyle=g;c.beginPath();c.arc(p.x,p.y-6,14+f.t*50,0,7);c.fill();c.globalAlpha=1}
     else if(f.type==='fishjump'){const k=f.t/f.life,hgt=Math.sin(k*Math.PI)*16;c.fillStyle='#c9d6dc';c.save();c.translate(p.x+f.dir*(k-.5)*14,p.y-hgt);c.rotate(f.dir*(k-.5)*2.2);c.beginPath();c.ellipse(0,0,4.5,1.8,0,0,7);c.fill();c.beginPath();c.moveTo(-f.dir*4,0);c.lineTo(-f.dir*7,-2.2);c.lineTo(-f.dir*7,2.2);c.closePath();c.fill();c.restore();
       if(k<.2||k>.8){c.globalAlpha=.6;c.strokeStyle='#e6f2f7';c.lineWidth=1;c.beginPath();c.ellipse(p.x+f.dir*(k<.5?-7:7),p.y,3+k*6,1.5+k*3,0,0,7);c.stroke();c.globalAlpha=1}}
@@ -4536,6 +4553,19 @@ function render(){UCFM=0;U3TMS=0;
   c.setTransform(DPR,0,0,DPR,0,0);atmosScreen(c,t);
   if(gesture&&gesture.type==='box'){const g=gesture;c.strokeStyle='#e8c170';c.lineWidth=1.5;c.fillStyle='rgba(232,193,112,.12)';const x=Math.min(g.sx,g.cx),y=Math.min(g.sy,g.cy),w=Math.abs(g.cx-g.sx),h=Math.abs(g.cy-g.sy);c.fillRect(x,y,w,h);c.strokeRect(x,y,w,h)}
 }
+// níveis: Nv.2 = dois mastros com bandeirolas da cor do reino nos cantos da frente; Nv.3 = mastros mais altos e escudo dourado
+function drawLvlDeco(c,e,lit,t){const L=e.lvl||1,col=lit?(P[e.o].col||'#3a6fd8'):'#3a3a3a',H0=BHEIGHT[e.type]||40;
+  const poles=[[e.tx+.08,e.ty+e.h-.08],[e.tx+e.w-.08,e.ty+.08]];if(L>=3)poles.push([e.tx+e.w-.08,e.ty+e.h-.08]);
+  for(let k=0;k<poles.length;k++){const q=proj(poles[k][0],poles[k][1]),h=(L>=3?30:22)+(k===2?8:0);
+    c.strokeStyle=lit?'#4a3420':'#222';c.lineWidth=1.6;c.beginPath();c.moveTo(q.x,q.y);c.lineTo(q.x,q.y-h);c.stroke();
+    if(L>=3){c.fillStyle=lit?'#e8c45a':'#555';c.beginPath();c.arc(q.x,q.y-h-1.2,1.6,0,7);c.fill()}
+    const w=(WIND_SX>=0?1:-1),wv=Math.sin(t*5+k*1.7+e.id),fl=9+(L>=3?3:0);
+    c.fillStyle=col;c.beginPath();c.moveTo(q.x,q.y-h+1);c.quadraticCurveTo(q.x+w*fl*.5,q.y-h+1+wv*1.5,q.x+w*fl,q.y-h+3+wv*2);c.lineTo(q.x+w*fl*.55,q.y-h+5+wv);c.lineTo(q.x+w*fl,q.y-h+7+wv*2);c.quadraticCurveTo(q.x+w*fl*.5,q.y-h+8+wv*1.5,q.x,q.y-h+8);c.closePath();c.fill();
+    c.fillStyle='rgba(0,0,0,.18)';c.fillRect(q.x,q.y-h+5,w*fl*.5,1)}
+  // escudo com o número do nível na frente
+  const f=proj(e.tx+e.w,e.ty+e.h);const sx=f.x,sy=f.y-6;c.fillStyle=lit?(L>=3?'#e8c45a':'#c9ced6'):'#555';c.strokeStyle='#2a1c0e';c.lineWidth=1.2;
+  c.beginPath();c.moveTo(sx-6,sy-7);c.lineTo(sx+6,sy-7);c.lineTo(sx+6,sy-1);c.quadraticCurveTo(sx+6,sy+5,sx,sy+8);c.quadraticCurveTo(sx-6,sy+5,sx-6,sy-1);c.closePath();c.fill();c.stroke();
+  c.fillStyle='#2a1c0e';c.font='bold 8px serif';c.textAlign='center';c.fillText(L>=3?'III':'II',sx,sy+2.5)}
 function bar(c,x,y,w,f,o){c.fillStyle='rgba(0,0,0,.75)';c.fillRect(x-1,y-1,w+2,5);c.fillStyle=o===ME?(f>.5?'#7fd05a':f>.25?'#e2c14a':'#e2675a'):'#e2675a';c.fillRect(x,y,w*clamp(f,0,1),3)}
 
 /* ---------------- ambiente: dia e noite, chuva e vento, gaivotas, peixes ---------------- */
@@ -5192,7 +5222,7 @@ const EXEC={
   train(o,d){const b=ownB(o,d.b);if(b&&b.done&&b.d.train&&b.d.train.includes(d.t))queueUnit(b,d.t,o!==ME)},
   age(o,d){const b=ownB(o,d.b);if(!b||b.type!=='centro'||P[o].age>=2)return;if(ents.some(e=>e.kind==='b'&&e.o===o&&e.queue.some(q=>q.k==='age')))return;queueAge(b,o!==ME)},
   tech(o,d){const b=ownB(o,d.b);if(!b||!b.d.techs||!b.d.techs.includes(d.t)||P[o].techs[d.t])return;if(ents.some(e=>e.kind==='b'&&e.o===o&&e.queue.some(q=>q.k==='tech'&&q.t===d.t)))return;queueTech(b,d.t,o!==ME)},
-  up(o,d){const b=ownB(o,d.b);if(b&&b.type==='torre'&&(b.lvl||1)<3&&!b.queue.length)queueUpgrade(b,o!==ME)},
+  up(o,d){const b=ownB(o,d.b);if(b&&bLvl(b.type,(b.lvl||1)+1)&&!b.queue.length)queueUpgrade(b,o!==ME)},
   cancelQ(o,d){const b=ownB(o,d.b);if(b)cancelQueue(b,d.i)},
   gate(o,d){const b=ownB(o,d.b);if(b&&b.d.gate){b.locked=!!d.lock;if(o===ME)uiDirty=true}},
   rally(o,d){const b=ownB(o,d.b);if(!b)return;const e=d.e!=null?byId.get(d.e):null;b.rally={x:d.x,y:d.y,e:e&&!e.dead&&(e.kind==='r'||(e.kind==='b'&&e.o===o))?e:null}},
@@ -5714,6 +5744,7 @@ function buildCmds0(){
       box.appendChild(mkCmd('⏫','<span>'+['','Bronze','Ferro'][a]+'</span>',()=>{if(busy)return;if(!canAfford(ME,AGE_COST[a])){toast('Recursos insuficientes',true);return}act('age',{b:b.id})},busy?'lock':canAfford(ME,AGE_COST[a])?'':'no','Avançar para '+AGES[a]+' — '+costHTML(AGE_COST[a])))}
     if(b.d.techs)for(const t of b.d.techs){if(p.techs[t])continue;const tk=TECHS[t];if(ents.some(e=>e.kind==='b'&&e.o===ME&&e.queue.some(q=>q.k==='tech'&&q.t===t)))continue;const lock=p.age<tk.age;
       box.appendChild(mkCmd(tk.icon,lock?['','Bronze','Ferro'][tk.age]:costText(tk.cost),()=>{if(lock){toast(tk.name+' requer '+AGES[tk.age],true);return}if(!canAfford(ME,tk.cost)){toast('Recursos insuficientes',true);return}act('tech',{b:b.id,t});toast(tk.name+': '+tk.desc)},lock?'lock':canAfford(ME,tk.cost)?'':'no',tk.name+' — '+tk.desc))}
+    if(b.type!=='torre'&&bLvl(b.type,(b.lvl||1)+1)&&!b.queue.length){const L2=(b.lvl||1)+1,T2=bLvl(b.type,L2);const lock=p.age<T2.age;box.appendChild(mkCmd('⬆️','<span>Nv.'+L2+'</span>',()=>{if(lock){toast('Nv.'+L2+' requer '+AGES[T2.age],true);return}if(!canAfford(ME,T2.cost)){toast('Recursos insuficientes',true);return}act('up',{b:b.id});toast('A melhorar para '+T2.name)},lock?'lock':canAfford(ME,T2.cost)?'':'no','Melhorar para '+T2.name+' — '+costHTML(T2.cost)+' · '+T2.fx+(lock?' · requer '+AGES[T2.age]:'')))}
     if(b.type==='torre'&&(b.lvl||1)<3&&!b.queue.length){const T2=TOWER[(b.lvl||1)+1];const lock=p.age<T2.age;box.appendChild(mkCmd('⬆️',lock?['','Bronze','Ferro'][T2.age]:costText(T2.cost),()=>{if(lock){toast('Requer '+AGES[T2.age],true);return}if(!canAfford(ME,T2.cost)){toast('Recursos insuficientes',true);return}act('up',{b:b.id});toast('A melhorar para '+T2.name)},lock?'lock':canAfford(ME,T2.cost)?'':'no','Melhorar para '+T2.name+': ataque '+T2.atk+', alcance '+T2.range))}
     if(b.d.gate)box.appendChild(mkCmd(b.locked?'🔓':'🔒',b.locked?'Abrir':'Fechar',()=>{const lk=!b.locked;act('gate',{b:b.id,lock:lk});toast(lk?'Portão fechado: ninguém passa':'Portão aberto aos aliados')}));
     if(b.d.market){const M=mkt();for(const k of MKT_K){const pr=Math.round(M[k]);box.appendChild(mkCmd(RICON[k]+'⬇','<span>'+pr+'🪙</span>',()=>act('mkt',{k,buy:1}),p.res.gold>=pr?'':'no','Comprar 100 de '+RNAME[k].toLowerCase()+' por '+pr+' de ouro'))}
@@ -5805,7 +5836,7 @@ function infoHTML(){
   if(own&&e.d.train&&G.lastType&&e.d.train.includes(G.lastType))extra+=`<div class="muted">${statsLine(G.lastType)}</div>`;
   if(own&&e.done&&e.d.techs){const dn=e.d.techs.filter(t=>P[ME].techs[t]);if(dn.length)extra+=`<div class="muted">✓ ${dn.map(t=>TECHS[t].name).join(', ')}</div>`}
   if(e.type==='maravilha'&&e.done&&G.wonder&&G.wonder.id===e.id){const s=Math.max(0,Math.ceil(G.wonder.t));extra+=`<div style="color:var(--brass)">Vitória em ${Math.floor(s/60)}:${String(s%60).padStart(2,'0')}</div>`}
-  return `${port}<div class="txt"><h3>${e.type==='torre'?TOWER[e.lvl||1].name:e.d.name}${tag}</h3>${hp}${extra}</div>`;
+  return `${port}<div class="txt"><h3>${e.type==='torre'?TOWER[e.lvl||1].name:e.d.name+(BLVL_T[e.type]?' <span class="lvtag">Nv.'+(e.lvl||1)+'</span>':'')}${tag}</h3>${hp}${extra}</div>`;
 }
 $('info').addEventListener('click',ev=>{const b=ev.target.closest('[data-q]');if(b&&sel[0]&&sel[0].kind==='b'&&sel[0].o===ME){act('cancelQ',{b:sel[0].id,i:+b.dataset.q})}});
 $('info').addEventListener('pointerdown',e=>e.stopPropagation());
