@@ -111,7 +111,7 @@ body:not(.ingame) #grp{display:none}
 .queue button{width:32px;height:32px;border-radius:6px;border:1px solid var(--trim);background:#1a120c;font-size:15px;position:relative;overflow:hidden;padding:0;cursor:pointer}
 .queue button img{width:100%;height:100%;object-fit:contain}
 .queue button span{position:absolute;left:0;bottom:0;height:4px;background:linear-gradient(90deg,var(--trim),var(--trim-hi))}
-.group{display:flex;flex-wrap:wrap;gap:4px}
+.group{display:flex;flex-wrap:wrap;gap:4px}.group span[data-gt]{cursor:pointer}.group span[data-gt]:active{transform:scale(.92)}.group span.gall{width:auto;min-width:46px;padding:0 6px;font:700 11px/1 inherit;color:#ffd27a}.ghint{font-size:11px}
 .group span{position:relative;width:34px;height:34px;border-radius:6px;border:1px solid rgba(184,137,58,.6);background:#1a120c;display:flex;align-items:center;justify-content:center}
 .group span img{width:100%;height:100%;object-fit:contain}.group span em{position:absolute;right:1px;bottom:-1px;font-style:normal;font-size:10px;font-weight:800;color:#fff;text-shadow:0 1px 2px #000}
 .ri{display:inline-flex;width:14px;height:14px;vertical-align:-2px}
@@ -170,7 +170,7 @@ body:has(#objBox:not([hidden])):not(.coaching) #toast div{white-space:normal;tex
   .card{gap:9px}.card h1{font-size:clamp(26px,5.2vw,40px)}.sub{font-size:10.5px}#sMenu .card>p,#sLogin .card>p:not(#lgStatus){font-size:14px}#sMenu .card>p{display:none}
   .big{font-size:14.5px;padding:8px 16px;min-width:104px}.row{gap:7px}.accchip{font-size:14px;padding:3px 10px 3px 3px}.accchip .av{width:26px;height:26px}
   .code{font-size:36px}.pfstats b{font-size:17px}
-  .group{flex-wrap:nowrap;overflow:hidden}.group span{width:31px;height:31px;flex:none}}
+  .group{flex-wrap:nowrap;overflow-x:auto;overflow-y:hidden;scrollbar-width:none}.ghint{display:none}.group span{width:31px;height:31px;flex:none}}
 @media (max-height:340px){.card h1{font-size:24px}.sub{display:none}}
 @media (max-width:760px){.res{min-width:56px;padding-right:7px}.res b{font-size:13px}.res i{width:21px;height:21px;font-size:16px}#ageName{font-size:11px}#clock{display:none}}
 @media (max-width:700px){.agetx{display:none}#agePlate{padding:0 3px}.resbar{gap:4px}.res small{right:-4px}#info{flex-basis:180px;min-width:130px}}
@@ -6118,7 +6118,7 @@ function infoHTML(){
   if(!sel.length){return `<div class="txt"><h3>${AGES[P[ME].age]}</h3><div class="muted">Toca numa unidade ou edifício.</div><div class="stats2"><span>${ri('pop')} Aldeões ${ents.filter(e=>e.kind==='u'&&e.o===ME&&e.type==='aldeao').length}</span><span><i class="ic">${IC.army}</i> Exército ${ents.filter(e=>e.kind==='u'&&e.o===ME&&e.d.mil).length}</span></div><div class="stats2 jobs">${jobSummary(jobCounts(ME))}</div></div>`}
   if(sel.length>1){const g={};for(const e of sel)g[e.type]=(g[e.type]||0)+1;
     const hold=sel.filter(u=>u.stance==='hold').length,def=sel.filter(u=>u.stance==='defend').length,pat=sel.filter(u=>u.patrol).length;
-    const o0=sel[0].o;return `<div class="txt"><h3>${sel.length} unidades</h3><div class="group">${Object.entries(g).map(([t,n])=>`<span title="${UNITS[t]?UNITS[t].name:''}">${UNITS[t]&&portrait('u',t,o0)?`<img src="${portrait('u',t,o0)}" alt="">`:(UNITS[t]?UNITS[t].icon:'')}<em>${n}</em></span>`).join('')}</div><div class="muted">Formação: ${FORMS[G.form||'livre']}${hold?' · '+hold+' a manter':''}${def?' · '+def+' a defender':''}${pat?' · '+pat+' a patrulhar':''}${(()=>{const p1=sel.filter(u=>u.fb&1).length,p2=sel.filter(u=>u.fb&2).length;return (p1?' · 🛡 '+p1+' protegidos':'')+(p2?' · 🧱 '+p2+' em linha':'')})()}</div>${(()=>{const n={};for(const u of sel){const j=villJob(u);if(j)n[j]=(n[j]||0)+1}const h=jobSummary(n);return h?'<div class="stats2 jobs">'+h+'</div>':''})()}</div>`}
+    const o0=sel[0].o;return `<div class="txt"><h3>${sel.length} unidades</h3><div class="group">${selAllBack()?`<span class="gall" data-gt="*" title="Voltar a todas (${selAllBack()})">Todos<em>${selAllBack()}</em></span>`:''}${Object.entries(g).map(([t,n])=>`<span data-gt="${t}" title="Só ${UNITS[t]?UNITS[t].name:''} (${n})">${UNITS[t]&&portrait('u',t,o0)?`<img src="${portrait('u',t,o0)}" alt="">`:(UNITS[t]?UNITS[t].icon:'')}<em>${n}</em></span>`).join('')}</div>${Object.keys(g).length>1?'<div class="muted ghint">Toca num tipo para ficar só com ele</div>':''}<div class="muted">Formação: ${FORMS[G.form||'livre']}${hold?' · '+hold+' a manter':''}${def?' · '+def+' a defender':''}${pat?' · '+pat+' a patrulhar':''}${(()=>{const p1=sel.filter(u=>u.fb&1).length,p2=sel.filter(u=>u.fb&2).length;return (p1?' · 🛡 '+p1+' protegidos':'')+(p2?' · 🧱 '+p2+' em linha':'')})()}</div>${(()=>{const n={};for(const u of sel){const j=villJob(u);if(j)n[j]=(n[j]||0)+1}const h=jobSummary(n);return h?'<div class="stats2 jobs">'+h+'</div>':''})()}</div>`}
   const e=sel[0];
   if(e.kind==='r')return `<div class="txt"><h3>${e.carcass?'Carcaça de '+(['gazela','javali','lobo','ovelha','elefante'][e.var]||'animal'):({wood:'Árvore',food:e.fish?'Cardume':'Arbusto de bagas',gold:'Mina de ouro',stone:'Pedreira'})[e.rk]}</h3><div class="stats2"><span>${ri(e.rk)} ${RNAME[e.rk]}: ${Math.ceil(e.amt)}</span></div></div>`;
   const own=e.o===ME;const tag=own?'':e.o===2?(e.kind==='b'?' <span class="muted">(neutra)</span>':' <span class="muted">(animal)</span>'):' <span style="color:var(--bad)">(inimigo)</span>';
@@ -6384,6 +6384,13 @@ let idleIdx=0;
 $('bIdle').onclick=()=>{const l=ents.filter(e=>e.kind==='u'&&e.o===ME&&e.type==='aldeao'&&e.state==='idle');if(!l.length){toast('Sem aldeões ociosos');return}const u=l[idleIdx++%l.length];setSel([u]);centerCam(u.x,u.y)};
 $('bStuck').onclick=locateBlocked;
 let idleBIdx=0;$('bIdleB').onclick=()=>{const l=idleProducers(ME);if(!l.length){toast('Todos os edifícios estão a produzir');return}const b=l[idleBIdx++%l.length];setSel([b]);const q=centerOf(b);centerCam(q.x,q.y);toast(b.d.name+' parado: escolhe o que produzir')};
+// grupo: tocar num tipo deixa só essas unidades selecionadas; "Todos" volta ao grupo anterior
+const SELG={ids:null};
+function selAllBack(){if(!SELG.ids)return 0;const all=SELG.ids.map(i=>byId.get(i)).filter(u=>u&&!u.dead&&u.o===ME);if(all.length<=sel.length||!sel.every(u=>SELG.ids.includes(u.id))){return 0}return all.length}
+$('info').addEventListener('click',ev=>{const sp=ev.target.closest('[data-gt]');if(!sp||sel.length<1)return;const t=sp.dataset.gt;
+  if(t==='*'){const all=(SELG.ids||[]).map(i=>byId.get(i)).filter(u=>u&&!u.dead&&u.o===ME);if(all.length){setSel(all);SELG.ids=null;sfx&&sfx('click')}return}
+  const only=sel.filter(u=>u.type===t);if(!only.length||only.length===sel.length)return;SELG.ids=sel.map(u=>u.id);setSel(only);SELG.keep=1;sfx&&sfx('click');
+  toast(only.length+' × '+(UNITS[t]?UNITS[t].name:t))});
 $('bArmy').onclick=()=>{const l=ents.filter(e=>e.kind==='u'&&e.o===ME&&e.d.mil);if(!l.length){toast('Ainda não tens exército');return}setSel(l);const c=l[0];centerCam(c.x,c.y)};
 $('bHome').onclick=()=>{const tc=ents.find(e=>e.kind==='b'&&e.o===ME&&e.type==='centro');if(tc){setSel([tc]);centerCam(tc.tx+1.5,tc.ty+1.5)}else if(G.lastAttack)centerCam(G.lastAttack.x,G.lastAttack.y)};
 $('bChat').onclick=()=>{const b=$('chatBox');b.hidden=!b.hidden;if(!b.hidden)setTimeout(()=>$('chatIn').focus(),50)};
