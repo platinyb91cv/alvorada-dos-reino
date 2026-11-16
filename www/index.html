@@ -97,6 +97,9 @@ body:not(.ingame) #grp{display:none}
 .hpbar.mid b{background:linear-gradient(#f0d36a,#c49a2a)}.hpbar.low b{background:linear-gradient(#f08a7a,#b8392b)}
 .hpbar span{position:absolute;inset:0;font-size:10px;font-weight:700;line-height:13px;text-align:center;color:#fff;text-shadow:0 1px 1px #000}
 .queue button{position:relative}.queue .qn{position:absolute;right:1px;bottom:0;font-size:10px;line-height:1;padding:1px 2px;border-radius:3px;background:rgba(0,0,0,.7);color:#ffe7a8}.queue .qtot{align-self:center;font-size:11px;color:var(--muted);margin-left:4px}
+.contbtn{display:flex;align-items:center;gap:12px;width:100%;margin:0 0 6px;padding:10px 14px;border-radius:14px;border:1px solid var(--trim-hi);background:linear-gradient(160deg,#4a3726,#2a1d13);color:var(--parch);cursor:pointer;text-align:left;box-shadow:0 0 18px rgba(243,212,136,.25)}
+.contbtn img{width:44px;height:44px;border-radius:50%;object-fit:cover;background:#1a120c;flex:none}.contbtn span{display:flex;flex-direction:column;min-width:0;flex:1}.contbtn b{font-size:16px}.contbtn small{font-size:12px;color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.contbtn i{font-style:normal;font-weight:700;color:var(--trim-hi);white-space:nowrap}
 .lvtag{font-size:11px;padding:1px 5px;border-radius:4px;background:#5b4422;color:#ffd98a;vertical-align:middle;margin-left:4px}
 .stats2{display:flex;flex-wrap:wrap;gap:4px 9px;color:#e6d6b6;font-weight:700;font-size:12px}.stats2 span{display:inline-flex;align-items:center;gap:3px}.stats2 .ic{color:var(--trim-hi);font-size:13px}
 .queue{display:flex;gap:4px;flex-wrap:wrap}
@@ -445,8 +448,10 @@ input{font-family:inherit;-webkit-user-select:text;user-select:text;touch-action
         <p class="tag">Da Idade da Pedra à Idade do Ferro, uma aldeia de cada vez.</p>
       </div>
       <div class="panel">
-        <h2>Entra para jogar</h2>
-        <p>A tua conta guarda a pontuação, os amigos e as partidas online.</p>
+        <button class="contbtn" id="lgCont" hidden><img id="lgContImg" alt=""><span><b id="lgContName"></b><small id="lgContMail"></small></span><i>Continuar ▸</i></button>
+        <button type="button" class="lglink" id="lgOther" hidden>Usar outra conta Google</button>
+        <h2 id="lgTitle">Entra para jogar</h2>
+        <p id="lgSub">A tua conta guarda a pontuação, os amigos e as partidas online.</p>
         <button class="gbtn" id="lgGoogle"><svg viewBox="0 0 48 48" aria-hidden="true"><path fill="#EA4335" d="M24 9.5c3.5 0 6.6 1.2 9.1 3.6l6.8-6.8C35.8 2.4 30.3 0 24 0 14.6 0 6.6 5.4 2.7 13.3l7.9 6.1C12.5 13.6 17.8 9.5 24 9.5z"/><path fill="#4285F4" d="M46.1 24.5c0-1.6-.1-3.1-.4-4.5H24v9h12.4c-.5 2.9-2.2 5.3-4.6 6.9l7.4 5.8c4.3-4 6.9-9.9 6.9-17.2z"/><path fill="#FBBC05" d="M10.6 28.6c-.5-1.4-.8-3-.8-4.6s.3-3.2.8-4.6l-7.9-6.1C1 16.6 0 20.2 0 24s1 7.4 2.7 10.7l7.9-6.1z"/><path fill="#34A853" d="M24 48c6.5 0 11.9-2.1 15.8-5.8l-7.4-5.8c-2.1 1.4-4.8 2.3-8.4 2.3-6.2 0-11.5-4.1-13.4-9.8l-7.9 6.1C6.6 42.6 14.6 48 24 48z"/></svg><span>Continuar com Google</span></button>
         <p id="lgStatus" role="status"></p>
         <button type="button" class="lglink" id="lgEmailT">Entrar com email e palavra-passe</button>
@@ -5640,7 +5645,7 @@ function isPreviewHost(){try{const h=location.hostname;return location.protocol=
 function accStorageKey(){try{return 'sb-'+new URL(ALV_CFG.supabaseUrl).hostname.split('.')[0]+'-auth-token'}catch(e){return ''}}
 function loginStatus(t,bad){const el=$('lgStatus');el.textContent=t||'';el.style.color=bad?'var(--bad)':''}
 const inFrame=(()=>{try{return window.top!==window.self}catch(e){return true}})();
-function showLogin(msg){menuBgStart();for(const id of ['sMenu','sOnline','sProfile','sRank','sFriends','sHelp'])$(id).hidden=true;$('sLogin').hidden=false;$('lgPreview').hidden=!isPreviewHost();$('lgGoogle').disabled=!ACC.sb||inFrame;
+function showLogin(msg){menuBgStart();try{accContShow()}catch(e){}for(const id of ['sMenu','sOnline','sProfile','sRank','sFriends','sHelp'])$(id).hidden=true;$('sLogin').hidden=false;$('lgPreview').hidden=!isPreviewHost();$('lgGoogle').disabled=!ACC.sb||inFrame;
   // o Google recusa abrir o login dentro de uma moldura (iframe): explica em vez de mostrar "conteúdo bloqueado"
   loginStatus(inFrame&&!msg?'O login Google não funciona dentro desta pré-visualização. Usa a app Android ou abre o jogo em jogo.krioldns.uk.':msg||'',inFrame&&!msg)}
 // Guarda a sessão no armazenamento nativo (Capacitor Preferences) além do localStorage.
@@ -5654,6 +5659,28 @@ function accStore(){
     setItem:async(k,v)=>{try{await P.set({key:k,value:String(v)})}catch(e){}try{localStorage.setItem(k,v)}catch(e){}},
     removeItem:async k=>{try{await P.remove({key:k})}catch(e){}try{localStorage.removeItem(k)}catch(e){}}
   }}
+// conta lembrada no aparelho (nome, email, foto): "Continuar como …" no ecrã de entrada, sem escolher a conta outra vez
+const ACC_LAST_K='alv_conta';
+function accLast(){try{return JSON.parse(localStorage.getItem(ACC_LAST_K)||'null')}catch(e){return null}}
+async function accLastLoad(){if(accLast())return accLast();const P=isNative()&&capPlugin('Preferences');if(!P)return null;try{const r=await P.get({key:ACC_LAST_K});if(r&&r.value){localStorage.setItem(ACC_LAST_K,r.value);return JSON.parse(r.value)}}catch(e){}return null}
+function accLastSave(){if(!ACC.user)return;const m=ACC.user.user_metadata||{};const v=JSON.stringify({id:ACC.user.id,email:ACC.user.email||m.email||'',name:(ACC.profile&&ACC.profile.username)||m.full_name||m.name||'',avatar:(ACC.profile&&ACC.profile.avatar_url)||m.avatar_url||m.picture||''});
+  try{localStorage.setItem(ACC_LAST_K,v)}catch(e){}const P=isNative()&&capPlugin('Preferences');if(P)P.set({key:ACC_LAST_K,value:v}).catch(()=>{})}
+const accNetErr=e=>!navigator.onLine||!!e&&(e.name==='AuthRetryableFetchError'||e.status===0||/fetch|network|timeout|Failed|ECONN|abort/i.test(e.message||''));
+// recupera a sessão guardada: tenta várias vezes (na abertura a rede pode ainda não estar pronta) e, se o token expirou, renova com o refresh guardado
+async function accRestore(){let netFail=false;const N=navigator.onLine?2:1,W=k=>new Promise(z=>setTimeout(z,navigator.onLine?700*(k+1):0));
+  for(let k=0;k<N;k++){try{const r=await ACC.sb.auth.getSession();if(r.data&&r.data.session)return {session:r.data.session};if(!r.error)break;if(accNetErr(r.error)){netFail=true;await W(k);continue}break}catch(e){if(accNetErr(e)){netFail=true;await W(k);continue}break}}
+  let raw=null;try{const st=accStore();const k=accStorageKey();raw=JSON.parse((st?await st.getItem(k):localStorage.getItem(k))||'null')}catch(e){}
+  const rt=raw&&(raw.refresh_token||(raw.currentSession&&raw.currentSession.refresh_token));
+  if(rt&&!(netFail&&!navigator.onLine))try{const r=await ACC.sb.auth.refreshSession({refresh_token:rt});if(r.data&&r.data.session)return {session:r.data.session};if(r.error&&accNetErr(r.error))netFail=true}catch(e){if(accNetErr(e))netFail=true}
+  return {session:null,netFail,stored:raw&&(raw.user||(raw.currentSession&&raw.currentSession.user))}}
+// sem rede: tenta recuperar a sessão em segundo plano até conseguir
+function accRetryLater(){clearTimeout(ACC.rt);ACC.rt=setTimeout(async()=>{if(!ACC.offline)return;const r=await accRestore();if(r.session){ACC.offline=false;ACC.user=r.session.user;toast('Ligação recuperada: sessão ativa');accAfterLogin()}else accRetryLater()},15000)}
+function accContShow(){const L=accLast(),b=$('lgCont');if(!b)return;const on=!!(L&&L.id)&&!inFrame;b.hidden=!on;$('lgOther').hidden=!on;$('lgTitle').textContent=on?'Ou entra com':'Entra para jogar';$('lgSub').hidden=on;
+  if(on){$('lgContName').textContent=L.name||'A tua conta';$('lgContMail').textContent=L.email||'';const im=$('lgContImg');if(L.avatar){im.src=L.avatar;im.hidden=false}else im.hidden=true}}
+async function accContinue(){const L=accLast();loginStatus('A entrar…');
+  if(ACC.sb){const r=await accRestore();if(r.session){ACC.user=r.session.user;await accAfterLogin();return}
+    if(r.netFail&&r.stored){ACC.user=r.stored;ACC.offline=true;ACC.profile=accCachedProfile();accEnterMenu();toast('Sem internet: podes jogar contra o computador');accRetryLater();return}}
+  accGoogle({hint:L&&L.email})}
 async function accInit(){
   if(!window.supabase||!ALV_CFG.supabaseUrl){ACC.sb=null;showLogin(isPreviewHost()?'O login não está disponível nesta página de pré-visualização.':'Sem ligação ao serviço de contas. Verifica a internet.');return}
   ACC.sb=window.supabase.createClient(ALV_CFG.supabaseUrl,ALV_CFG.supabaseKey,{auth:{storage:accStore(),storageKey:accStorageKey()||undefined,flowType:'pkce',persistSession:true,autoRefreshToken:true,detectSessionInUrl:!isNative()}});
@@ -5669,21 +5696,20 @@ async function accInit(){
       if(err)loginStatus(err,true);else if(code){loginStatus('A entrar…');const {error}=await ACC.sb.auth.exchangeCodeForSession(code);if(error)loginStatus(error.message,true)}}
     catch(e){loginStatus('Não foi possível concluir o login',true)}
     try{await capPlugin('Browser').close()}catch(e){}});
-  showLogin('A verificar a sessão…');
-  let session=null;try{const r=await ACC.sb.auth.getSession();session=r.data&&r.data.session}catch(e){}
-  if(session&&session.user){ACC.user=session.user;await accAfterLogin()}
-  else{
-    // sem internet mas com sessão guardada → deixa jogar contra o computador
-    let stored=null;try{stored=JSON.parse(localStorage.getItem(accStorageKey())||'null')}catch(e){}
-    if(stored&&stored.user&&!navigator.onLine){ACC.user=stored.user;ACC.offline=true;ACC.profile=accCachedProfile();accEnterMenu();toast('Sem internet: podes jogar contra o computador')}
-    else if(!ACC.user)showLogin('')}}
-async function accGoogle(){
+  // ao ir para segundo plano pára a renovação automática do token e retoma ao voltar (evita renovar a meio e perder a sessão)
+  if(app&&ACC.sb.auth.startAutoRefresh)app.addListener('appStateChange',({isActive})=>{try{isActive?ACC.sb.auth.startAutoRefresh():ACC.sb.auth.stopAutoRefresh()}catch(e){}});
+  await accLastLoad();showLogin('A entrar…');
+  const r=await accRestore();
+  if(r.session&&r.session.user){ACC.user=r.session.user;await accAfterLogin()}
+  else if(r.netFail&&r.stored){ACC.user=r.stored;ACC.offline=true;ACC.profile=accCachedProfile();accEnterMenu();toast('Sem internet: podes jogar contra o computador');accRetryLater()} // sem rede: entra com a conta guardada
+  else if(!ACC.user)showLogin('')}
+async function accGoogle(o){o=o||{};const qp=o.hint&&!o.other?{login_hint:o.hint}:{prompt:'select_account'};
   if(!ACC.sb||inFrame)return;loginStatus('A abrir o Google…');
   try{
     if(isNative()){const br=capPlugin('Browser');if(!br){loginStatus('Falta o módulo do navegador na app (npx cap sync).',true);return}
-      const {data,error}=await ACC.sb.auth.signInWithOAuth({provider:'google',options:{redirectTo:ALV_CFG.scheme+'://login-callback',skipBrowserRedirect:true,queryParams:{prompt:'select_account'}}});
+      const {data,error}=await ACC.sb.auth.signInWithOAuth({provider:'google',options:{redirectTo:ALV_CFG.scheme+'://login-callback',skipBrowserRedirect:true,queryParams:qp}});
       if(error)throw error;await br.open({url:data.url,presentationStyle:'popover'})}
-    else{const {error}=await ACC.sb.auth.signInWithOAuth({provider:'google',options:{redirectTo:location.origin+location.pathname,queryParams:{prompt:'select_account'}}});if(error)throw error}
+    else{const {error}=await ACC.sb.auth.signInWithOAuth({provider:'google',options:{redirectTo:location.origin+location.pathname,queryParams:qp}});if(error)throw error}
   }catch(e){loginStatus('Não foi possível abrir o login: '+(e.message||e),true)}}
 function accPreview(){cloudInvalidate();ACC.preview=true;ACC.user=null;ACC.profile={username:'Visitante',rating:1000,avatar_url:null,wins:0,losses:0,games:0,sp_wins:0,sp_losses:0,friend_code:'—'};accEnterMenu();toast('Modo de pré-visualização: sem conta, sem online nem pontuação')}
 async function accToken(){if(!ACC.sb||ACC.preview)return null;try{const {data}=await ACC.sb.auth.getSession();return data.session?data.session.access_token:null}catch(e){return null}}
@@ -5697,7 +5723,7 @@ async function accAfterLogin(){
   if(ACC.loading)return;ACC.loading=true;
   try{loginStatus('A carregar o perfil…');await accLoadProfile();if(!ACC.profile)throw new Error('Perfil não encontrado')}
   catch(e){ACC.profile=accCachedProfile();if(!ACC.profile){ACC.loading=false;showLogin('Não foi possível carregar o perfil: '+(e.message||e));return}}
-  ACC.loading=false;accEnterMenu();netEnsure()}
+  ACC.loading=false;accLastSave();accEnterMenu();netEnsure()}
 function accEnterMenu(){$('sLogin').hidden=true;accChip();if(!running)showMenu()}
 function accChip(){const p=ACC.profile;const el=$('accChip');if(!p){el.hidden=true;return}el.hidden=false;setTimeout(()=>{const av=el.querySelector('.av');if(av){av.classList.remove('fr1','fr2','fr3');const f=myFrame();if(f)av.classList.add(f)}},0);
   el.innerHTML=`${avatarHTML({name:p.username,avatar:p.avatar_url})}<span class="nm">${esc(p.username)}</span><span class="rt" title="Pontuação online">${p.rating}</span>`}
@@ -6200,7 +6226,7 @@ document.querySelector('#coach .ch-skip').onclick=()=>tutEnd(!(G&&G.tut&&TUT_STE
 $('bBuild').onclick=()=>{sfx('click');mobileLandscape();netLeaveGame();gameMode='build';const sd=Math.floor(Math.random()*1e9);startGame(sd,{...setupOpts(sd),vic:'classico'})};
 $('bOnline').onclick=()=>{sfx('click');mobileLandscape();lobbyOpen()};
 $('olCreate').onclick=()=>lobbyGo('create');$('olRefresh').onclick=()=>lobbyGo('list');
-$('lgGoogle').onclick=()=>accGoogle();$('lgEmailT').onclick=()=>{const f=$('lgEmailF');f.hidden=!f.hidden;if(!f.hidden)$('lgEmail').focus()};
+$('lgGoogle').onclick=()=>{const L=accLast();accGoogle({hint:L&&L.email})};$('lgCont').onclick=()=>accContinue();$('lgOther').onclick=()=>accGoogle({other:true});$('lgEmailT').onclick=()=>{const f=$('lgEmailF');f.hidden=!f.hidden;if(!f.hidden)$('lgEmail').focus()};
 $('lgEmailF').onsubmit=async ev=>{ev.preventDefault();if(!ACC.sb){loginStatus('Sem ligação ao servidor de contas',true);return}loginStatus('A entrar…');try{const {error}=await ACC.sb.auth.signInWithPassword({email:$('lgEmail').value.trim(),password:$('lgPass').value});if(error)throw error;$('lgPass').value=''}catch(e){loginStatus(/invalid/i.test(e.message||'')?'Email ou palavra-passe errados':'Não foi possível entrar: '+(e.message||e),true)}};$('lgPreview').onclick=()=>accPreview();$('accChip').onclick=()=>profileOpen();
 $('bFriends').onclick=()=>friendsOpen();$('bRank').onclick=()=>rankOpen();
 for(const id of ['pfBack','rkBack','frBack'])$(id).onclick=()=>{$('sProfile').hidden=$('sRank').hidden=$('sFriends').hidden=true;showMenu()};
