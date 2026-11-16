@@ -100,6 +100,11 @@ body:not(.ingame) #grp{display:none}
 .contbtn{display:flex;align-items:center;gap:12px;width:100%;margin:0 0 6px;padding:10px 14px;border-radius:14px;border:1px solid var(--trim-hi);background:linear-gradient(160deg,#4a3726,#2a1d13);color:var(--parch);cursor:pointer;text-align:left;box-shadow:0 0 18px rgba(243,212,136,.25)}
 .contbtn img{width:44px;height:44px;border-radius:50%;object-fit:cover;background:#1a120c;flex:none}.contbtn span{display:flex;flex-direction:column;min-width:0;flex:1}.contbtn b{font-size:16px}.contbtn small{font-size:12px;color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .contbtn i{font-style:normal;font-weight:700;color:var(--trim-hi);white-space:nowrap}
+.r-hap{cursor:pointer;border:0;font:inherit;color:inherit}.r-hap .hf{font-size:15px;margin-right:2px}.r-hap.sad b{color:#ff8a7a}.r-hap.glad b{color:#9be37f}
+.taxc{max-width:420px;width:min(420px,92vw)}.taxhap{display:flex;align-items:center;gap:10px;margin:10px 0}.taxhap>span{font-size:28px}.taxhap .bar{flex:1;min-width:180px;display:block;height:12px;border-radius:7px;background:rgba(255,255,255,.12);position:relative;overflow:hidden}
+.taxhap .bar i{position:absolute;inset:0 auto 0 0;background:linear-gradient(90deg,#d9534f,#f0c04a 45%,#6fcf5a);border-radius:7px}.taxhap .bar b{position:absolute;top:-2px;bottom:-2px;width:2px;background:#fff}
+.taxbtns{display:grid;grid-template-columns:repeat(5,1fr);gap:5px}.taxbtns button{padding:8px 2px;border-radius:9px;border:1px solid rgba(255,220,150,.3);background:rgba(0,0,0,.25);color:inherit;font:inherit;font-size:12px;cursor:pointer}
+.taxbtns button.on{background:linear-gradient(180deg,#f6c75e,#c7862c);color:#2b1706;font-weight:700}.taxinfo{font-size:13px;line-height:1.5;margin:10px 0;color:var(--parch)}.taxinfo .g{color:#9be37f}.taxinfo .r{color:#ff9a8a}
 .lvtag{font-size:11px;padding:1px 5px;border-radius:4px;background:#5b4422;color:#ffd98a;vertical-align:middle;margin-left:4px}
 .stats2{display:flex;flex-wrap:wrap;gap:4px 9px;color:#e6d6b6;font-weight:700;font-size:12px}.stats2 span{display:inline-flex;align-items:center;gap:3px}.stats2 .ic{color:var(--trim-hi);font-size:13px}
 .queue{display:flex;gap:4px;flex-wrap:wrap}
@@ -455,6 +460,7 @@ input{font-family:inherit;-webkit-user-select:text;user-select:text;touch-action
       <span class="res r-gold" id="rs_gold" title="Ouro"><i data-ic="gold"></i><b id="r_gold">0</b><small id="w_gold"></small></span>
       <span class="res r-stone" id="rs_stone" title="Pedra"><i data-ic="stone"></i><b id="r_stone">0</b><small id="w_stone"></small></span>
       <span class="res r-pop" id="rs_pop" title="População"><i data-ic="pop"></i><b id="r_pop">0/0</b></span>
+      <button id="rs_hap" class="res r-hap" title="Felicidade do povo e impostos"><span class="hf">🙂</span><b id="r_hap">60</b></button>
       <span id="wonderT" class="res r-wonder" hidden><i data-ic="star"></i><span></span></span>
       <button id="modeT" class="res r-mode" hidden><span class="mi"></span><span class="mt"></span></button>
     </div>
@@ -689,6 +695,13 @@ input{font-family:inherit;-webkit-user-select:text;user-select:text;touch-action
     </div>
   </div>
 
+  <div id="mTax" class="modal" hidden role="dialog" aria-label="Impostos e felicidade">
+    <div class="mcard taxc"><div class="sub">Impostos e felicidade do povo</div>
+      <div class="taxhap"><span id="txFace">🙂</span><div class="bar"><i id="txBar"></i><b id="txTgt"></b></div><b id="txVal">60</b></div>
+      <div class="taxbtns" id="txBtns"></div>
+      <div class="taxinfo" id="txInfo"></div>
+      <div class="row"><button class="big" id="txClose">Fechar</button></div></div>
+  </div>
   <div id="invite" class="modal" hidden role="dialog" aria-label="Convite">
     <div class="mcard"><div class="sub">Convite para jogar</div><div class="who"></div>
       <div class="row"><button class="big pri" id="ivYes">Aceitar</button><button class="big" id="ivNo">Recusar</button></div></div>
@@ -710,6 +723,8 @@ input{font-family:inherit;-webkit-user-select:text;user-select:text;touch-action
         <b>Caravanas:</b> carroças com soldados por perto à chegada ganham +25% de ouro; destruir a caravana do rival dá parte do ouro da viagem (emboscada).<br>
         <b>Vida da aldeia:</b> constrói um Curral e manda um aldeão para lá: conduz até 8 ovelhas próximas e depois pastoreia. Traça Estradas pelo menu Construir: 2 pedra por segmento e +20% velocidade em terra. O botão ⚠ localiza aldeões bloqueados; o botão de ociosos continua a procurar trabalhadores parados.<br>
         <b>Tecnologias:</b> no Armazém (machado, picareta), no Centro (arado, roda) e no Ferreiro (forja, pontas de ferro, cota de malha).<br>
+        <b>Impostos e felicidade:</b> toca na carinha 🙂 da barra de cima. O imposto rende ouro por aldeão mas deixa o povo descontente; os habitantes acima dos 10 comem comida e os soldados recebem soldo em ouro. Povo feliz (75+) recolhe 10% mais depressa; descontente (35 ou menos) recolhe 15% mais devagar; muito descontente (20 ou menos) começa a abandonar a vila. Templos, mercados, casas com espaço e comida nos celeiros deixam o povo contente.<br>
+        <b>Níveis dos edifícios:</b> avançar de idade já não muda os edifícios sozinhos — cada um melhora-se à parte (⬆ Nv.2 na Idade do Bronze, Nv.3 na do Ferro). O castelo aparece quando o Centro da Vila chega ao Nv.3.<br>
         <b>Templo:</b> sacerdotes curam aliados por perto e convertem inimigos para o teu lado. Depois de converter, precisam de recuperar a fé.<br>
         <b>O teu Rei:</b> no Reino e no online tens um Rei herói. Sobe de nível nas batalhas perto dele (até 10), fortalece os soldados à volta e ganha poderes — 📯 Grito de guerra, ✨ Bênção real e 🛡️ Guarda real. Se cair, renasce no Centro da Vila (no Regicídio não). Escolhe o nome, a coroa e a capa em O meu Reino → 👑 O teu Rei. O botão 👑 no ecrã de jogo mostra-te onde ele está.<br><b>O meu Reino:</b> uma só cidade que nunca recomeça. As missões seguem-se umas às outras (lobos, saqueadores, um reino rival, o Rei, a Maravilha) e depois vêm capítulos sem fim — fortes, campeões, cercos — cada vez mais difíceis. Grava sozinho; se o reino cair, recomeças do último capítulo cumprido. O desafio diário também se joga dentro do teu reino.<br><b>Modos:</b> <b>Clássico</b> (destrói o Centro da Vila e o exército do rival, ou defende uma Maravilha 5 minutos), <b>Guerra total</b> (só acaba quando um reino perder todos os edifícios e aldeões — grava e continua outro dia), <b>Regicídio</b> (protege o teu Rei) e <b>Sobreviver</b> (vagas de invasores). Também há a <b>Campanha</b> (6 missões) e o <b>Desafio diário</b> (o mesmo mapa para todos, ganha quem vencer mais depressa).<br>
         <b>Reinos:</b> Mar (barcos e pesca melhores, Corsário), Montanha (ouro, pedra e muralhas mais fortes, Besteiro Pesado), Planícies (cavalaria rápida, caça e quintas, Cavaleiro de Lança).<br>
@@ -902,6 +917,34 @@ function bLvl(type,l){if(type==='torre')return TOWER[l]||null;if(!BLVL_T[type]||
   const cost={wood:r5(((c.wood||0)*.55+40)*k),stone:r5(((c.stone||0)*.5+(l===2?25:55))*k)};if(l===3)cost.gold=r5(40+(c.wood||0)*.2);
   const T=BLVL_T[type],fx=['vida +'+Math.round((BLVL_HP[l]-1)*100)+'%'];if(T.pop)fx.push('população +'+T.pop[l]);if(T.train)fx.push('treino '+Math.round((T.train[l]-1)*100)+'% mais rápido');
   return{name:d.name+' Nv.'+l,cost,time:Math.round((d.time||20)*(l===2?.8:1.1)),age:l-1,fx:fx.join(', ')}}
+// aspeto do edifício: os que têm níveis só mudam quando são melhorados um a um (Nv.1 = Pedra, Nv.2 = Bronze, Nv.3 = Ferro), nunca sozinhos ao avançar de idade
+const bAge=e=>{const a=P[e.o]?P[e.o].age:0;return BLVL_T[e.type]?Math.min(a,(e.lvl||1)-1):a};
+/* ---------- impostos, sustento e felicidade (desde a Idade da Pedra) ----------
+   Pensado para jogos longos: o povo come (comida) e os soldados recebem soldo (ouro); o imposto rende ouro por aldeão mas
+   deixa o povo descontente. Felicidade alta acelera a recolha; muito baixa faz aldeões abandonarem a vila. Os primeiros
+   10 de população não comem (o início do jogo fica igual). Só para jogadores humanos (a IA não paga nem perde gente). */
+const TAX_N=['Isento','Baixo','Normal','Alto','Muito alto'],TAX_G=[0,.8,1.6,2.6,3.8],TAX_H=[22,10,0,-14,-30];
+const ECON={FREE:10,FOOD:2.4,SOLDO:.7}; // por minuto: comida por habitante (acima dos 10), ouro por soldado
+function econOf(o){G.econ=G.econ||{};let e=G.econ[o];if(!e)e=G.econ[o]={tax:2,hap:60,lt:0,hungry:0,unpaid:0,warn:0};return e}
+const econOn=o=>!!G&&o!=null&&o<2&&!AIs[o]&&P[o];
+function econRates(o){const p=P[o],e=econOf(o);let vil=0,mil=0;
+  for(const u of ents)if(u.kind==='u'&&u.o===o&&!u.d.king){if(u.type==='aldeao')vil++;else if(u.d.mil)mil++}
+  const food=Math.max(0,p.pop-ECON.FREE)*ECON.FOOD,soldo=mil*ECON.SOLDO,tax=vil*TAX_G[e.tax];
+  let tem=0,mer=0;for(const b of ents)if(b.kind==='b'&&b.o===o&&b.done){if(b.type==='templo')tem+=5+3*((b.lvl||1)-1);else if(b.type==='mercado')mer+=4}
+  const parts=[['Base',55],['Imposto '+TAX_N[e.tax].toLowerCase(),TAX_H[e.tax]]];if(tem)parts.push(['Templos',Math.min(20,tem)]);if(mer)parts.push(['Mercados',Math.min(8,mer)]);
+  if(e.hungry)parts.push(['Fome',-35]);if(e.unpaid)parts.push(['Soldo em atraso',-15]);
+  if(p.popCap-p.pop>=5)parts.push(['Casas com espaço',5]);else if(p.pop>=p.popCap&&p.popCap>0)parts.push(['Casas cheias',-5]);
+  const target=Math.max(0,Math.min(100,parts.reduce((a,x)=>a+x[1],0)));return{vil,mil,food,soldo,tax,target,parts}}
+const hapMult=o=>{if(!econOn(o))return 1;const h=econOf(o).hap;return h>=75?1.1:h<=35?.85:1};
+function econTick(dt){if(!G||G.over)return;
+  for(let o=0;o<P.length;o++){if(!econOn(o))continue;const p=P[o],e=econOf(o),r=econRates(o);
+    p.res.food-=r.food/60*dt;if(p.res.food<0){p.res.food=0;if(!e.hungry&&o===ME){toast('Os celeiros estão vazios: o povo passa fome!',true);voz('comida')}e.hungry=1}else if(p.res.food>5)e.hungry=0;
+    p.res.gold+=(r.tax-r.soldo)/60*dt;if(p.res.gold<0){p.res.gold=0;if(!e.unpaid&&o===ME)toast('Não há ouro para o soldo dos soldados',true);e.unpaid=1}else if(p.res.gold>5)e.unpaid=0;
+    const d=r.target-e.hap;e.hap+=Math.sign(d)*Math.min(Math.abs(d),dt/3);
+    if(o===ME){if(e.hap<=35&&!e.warn){e.warn=1;toast('O povo está descontente: baixa o imposto, constrói templos ou dá-lhe comida',true)}else if(e.hap>45)e.warn=0}
+    if(e.hap<=20){e.lt+=dt;if(e.lt>=40){e.lt=0;const vs=ents.filter(u=>u.kind==='u'&&u.o===o&&u.type==='aldeao'&&!u.dead);
+        if(vs.length>3){const u=vs.find(v=>v.state==='idle')||vs[vs.length-1];u.dead=true;byId.delete(u.id);const i=ents.indexOf(u);if(i>=0)ents.splice(i,1);
+          fx.push({t:0,life:1,type:'dust',x:u.x,y:u.y});if(o===ME){toast('Um aldeão abandonou a vila por descontentamento',true);resDirty=true}}}}else e.lt=0}}
 const lvlTrain=b=>{const T=BLVL_T[b.type];return T&&T.train?T.train[b.lvl||1]:1};
 const TOWER=[null,{name:'Torre de Vigia',atk:5,range:6.5,hp:320,sight:8},{name:'Torre de Catapulta',atk:7,range:7.5,hp:480,sight:10,cost:{stone:80,wood:40},time:30,age:1,cat:{atk:16,range:9,minRange:2,rate:5}},{name:'Torre Fortificada',atk:9,range:8.5,hp:750,sight:10,cost:{stone:150,gold:50},time:40,age:2,shots:2}];
 const BLDS={
@@ -956,7 +999,7 @@ const CIVS={
 const CIV_KEYS=['mar','montanha','planicies'];
 function civOf(o){return G&&G.civ?G.civ[o]:null}
 function canTrainType(o,t){const d=UNITS[t];return !!d&&!d.king&&(!d.civ||d.civ===civOf(o))}
-function bldHp(o,type,lvl){const d=BLDS[type];let h=type==='torre'?TOWER[lvl||1].hp:d.hp*(BLVL_T[type]?BLVL_HP[lvl||1]:1);if(civOf(o)==='montanha'&&(d.wall||d.gate||type==='torre'))h*=1.3;if(P[o]&&P[o].age>=2)h*=1.2;return Math.round(h)}
+function bldHp(o,type,lvl){const d=BLDS[type];let h=type==='torre'?TOWER[lvl||1].hp:d.hp*(BLVL_T[type]?BLVL_HP[lvl||1]:1);if(civOf(o)==='montanha'&&(d.wall||d.gate||type==='torre'))h*=1.3;if(P[o]&&P[o].age>=2&&!BLVL_T[type])h*=1.2;return Math.round(h)} // os edifícios com níveis ganham vida só ao serem melhorados
 const GATHER={wood:.55,food:.7,farm:.5,pasture:.5,gold:.5,stone:.45,hunt:.9,fish:.7};
 const CARRY=10;
 const POP_MAX=1000; // limite de população (antes era 100): sobe conforme constróis casas/centros
@@ -1868,7 +1911,7 @@ function updUnit(u,dt){
     u.anim+=dt*6;
     let rate=r.kind==='b'?GATHER.farm:isPasture(r)?GATHER.pasture:r.fish?GATHER.fish:r.carcass?GATHER.hunt:GATHER[k];
     const tch=P[u.o].techs;if(k==='wood'&&tch.machado)rate*=1.2;if((k==='gold'||k==='stone')&&tch.picareta)rate*=1.2;if(r.kind==='b'&&tch.arado)rate*=1.25;
-    if(P[u.o].age>=1)rate*=1.1;if(P[u.o].age>=2)rate*=1.1;if(AIs[u.o])rate*=AIs[u.o].mult;
+    if(P[u.o].age>=1)rate*=1.1;if(P[u.o].age>=2)rate*=1.1;if(AIs[u.o])rate*=AIs[u.o].mult;if(typeof hapMult==='function')rate*=hapMult(u.o);
     {const cv=civOf(u.o);if(cv==='montanha'&&(k==='gold'||k==='stone'))rate*=1.2;else if(cv==='mar'&&r.fish)rate*=1.3;else if(cv==='planicies'&&(r.carcass||r.kind==='b'||isPasture(r)))rate*=1.2}
     u.work+=dt*rate;
     while(u.work>=1){u.work-=1;if(!renewableFood(r))r.amt--;u.carry++;u.ctype=k;
@@ -2000,7 +2043,7 @@ function updBld(b,dt){
         if(b.o===ME){toast('Tecnologia concluída: '+TECHS[q.t].name);voz('pesquisa');snd('research',null,null,{force:1});uiDirty=true}}
     }else if(q.k==='age'){
       b.qt+=dt;
-      if(b.qt>=AGE_TIME[q.a]){b.qt=0;b.queue.shift();P[b.o].age=q.a;CHUNKS.clear();if(b.o===ME)voz('idade');trackEv(b.o,(b.o===ME?'Entrámos':'O rival entrou')+' na '+AGES[q.a]);
+      if(b.qt>=AGE_TIME[q.a]){b.qt=0;b.queue.shift();P[b.o].age=q.a;CHUNKS.clear();if(b.o===ME){voz('idade');setTimeout(()=>toast('Os edifícios não mudam sozinhos: melhora-os um a um (⬆ no painel de cada edifício)'),2500)}trackEv(b.o,(b.o===ME?'Entrámos':'O rival entrou')+' na '+AGES[q.a]);
         for(const e of ents)if(e.kind==='b'&&e.o===b.o&&q.a===2){const nm=bldHp(e.o,e.type,e.lvl);e.hp=e.hp*nm/e.max;e.max=nm}
         if(b.o===ME){toast('Entrámos na '+AGES[q.a]+'!');snd('age_up',null,null,{force:1});uiDirty=true;resDirty=true}else{toast('O reino rival entrou na '+AGES[q.a],true);snd('age_rival',null,null,{force:1})}
       }
@@ -2774,10 +2817,10 @@ function groundChunk(i,j){
   for(let y=Math.max(0,y0-7);y<Math.min(H,y1+6);y++)for(let x=Math.max(0,x0-6);x<Math.min(W,x1+7);x++){const e=resAt[idx(x,y)];if(!e||e.rk!=='wood')continue;
     const q=proj(x+.5,y+.5);if(q.x<X0-200||q.x>X0+CHW+50||q.y<Y0-60||q.y>Y0+CHH+170)continue;const sp=treeSprite(e),sh=shadowOf(sp,sp.ay-5);c.drawImage(sh.cv,q.x-sp.ax-sh.pad,q.y+4-sp.ay,sh.w,sh.h)}
   // sombras dos edifícios (refeitas quando um edifício acaba, cai ou é avistado)
-  c.globalAlpha=.38*SH_A[SHB];for(const e of cb){if(!e.done)continue;const p=proj(e.tx,e.ty);const sp=bldSprite(e.type,P[e.o].age,e.o,bldVariant(e)),sh=shadowOf(sp,sp.oy+(e.w+e.h)*HH*.86);
+  c.globalAlpha=.38*SH_A[SHB];for(const e of cb){if(!e.done)continue;const p=proj(e.tx,e.ty);const sp=bldSprite(e.type,bAge(e),e.o,bldVariant(e)),sh=shadowOf(sp,sp.oy+(e.w+e.h)*HH*.86);
     const dx=p.x-sp.ox-sh.pad,dy=p.y-sp.oy;if(dx>X0+CHW||dx+sh.w<X0||dy>Y0+CHH||dy+sh.h<Y0)continue;c.drawImage(sh.cv,dx,dy,sh.w,sh.h)}
   // edifícios sem chão: sombra de contacto com a forma do próprio edifício (silhueta achatada e esbatida), sem losango à volta
-  c.globalAlpha=.62*(SHB===3?.6:1);for(const e of cb){if(!e.done||!dirtFreeE(e))continue;const p=proj(e.tx,e.ty);const sp=bldSprite(e.type,P[e.o].age,e.o,bldVariant(e)),ct=contactOf(sp,sp.oy+(e.w+e.h)*HH*.5);
+  c.globalAlpha=.62*(SHB===3?.6:1);for(const e of cb){if(!e.done||!dirtFreeE(e))continue;const p=proj(e.tx,e.ty);const sp=bldSprite(e.type,bAge(e),e.o,bldVariant(e)),ct=contactOf(sp,sp.oy+(e.w+e.h)*HH*.5);
     const dx=p.x-sp.ox-ct.pad,dy=p.y-sp.oy-ct.pad;if(dx>X0+CHW||dx+ct.w<X0||dy>Y0+CHH||dy+ct.h<Y0)continue;c.drawImage(ct.cv,dx,dy,ct.w,ct.h)}
   c.globalAlpha=1;
   CHUNKS.set(key,{cv,t:performance.now(),cs,b:cv.width*cv.height*4});
@@ -2836,7 +2879,7 @@ let FENCES=false;const PFENCE=new Map();
 // edifícios com sprite SEM chão (pintados sem terra): assentam direto na relva — sem anel de terra batida nem desgaste, só sombra de contacto
 // o centro na Idade do Ferro (castelo pintado antigo) ainda traz base própria
 const dirtFree=(t,age)=>DIRTFREE.has(t)&&!(t==='centro'&&age>=2);
-const dirtFreeE=e=>dirtFree(e.type,P[e.o]?P[e.o].age:0);
+const dirtFreeE=e=>dirtFree(e.type,P[e.o]?bAge(e):0);
 const DIRTFREE=new Set(['casa','armazem','quartel','oficina','centro','mercado','ferreiro','templo','estabulo','arquearia','torre','maravilha','doca']);
 function plotFence(e){
   const key=e.w+'x'+e.h;let r=PFENCE.get(key);if(r)return r;
@@ -3143,7 +3186,7 @@ function gateDirAt(tx,ty,gd){let m=0;const nb=(x,y)=>{if(!inb(x,y))return false;
 const BLDART={wide:true,ready:false,img:null,meta:{"quinta|0":{"xl":0.0,"xr":395.67,"yb":266.66996,"yl":142.08096,"f":[2,2,396,267]},"quinta|1":{"xl":0.0,"xr":395.73913,"yb":261.73878,"yl":136.61615,"f":[400,2,396,262]},"ruina|0":{"xl":0.0,"xr":263.77759,"yb":160.77762,"yl":90.06215,"f":[400,271,264,161]},"ruina|1":{"xl":0.0,"xr":395.74809,"yb":238.74816,"yl":130.83298,"f":[2,271,396,239]}},teams:new Map(),cache:new Map()};
 (()=>{const im=new Image();im.onload=()=>{BLDART.img=im;BLDART.ready=true;for(const k in BCACHE)delete BCACHE[k];try{PORTS.clear();FCACHE.clear();CHUNKS.clear()}catch(e){}uiDirty=true;setTimeout(bldWarm,50)};im.src='assets/edificios-v2/bld-atlas-leve.webp?v=2d3a4dec7714'})();
 // prepara os edifícios da partida em curso (equipas e idades presentes) para não haver quebras no primeiro desenho
-function bldWarm(){if(!BLDART.ready||!P||!ents)return;const seen=new Set();for(const e of ents){if(e.kind!=='b')continue;const k=e.type+'|'+P[e.o].age+'|'+e.o+'|'+bldVariant(e);if(seen.has(k))continue;seen.add(k);try{bldSprite(e.type,P[e.o].age,e.o,bldVariant(e))}catch(_){}}
+function bldWarm(){if(!BLDART.ready||!P||!ents)return;const seen=new Set();for(const e of ents){if(e.kind!=='b')continue;const k=e.type+'|'+bAge(e)+'|'+e.o+'|'+bldVariant(e);if(seen.has(k))continue;seen.add(k);try{bldSprite(e.type,bAge(e),e.o,bldVariant(e))}catch(_){}}
   for(let o=0;o<2;o++)if(P[o])for(const t of ['casa','quinta','armazem','quartel','torre','muralhaMadeira','portaoMadeira'])try{bldSprite(t,P[o].age,o,t==='torre'?1:t==='portaoMadeira'?'x':0)}catch(_){}}
 function bldArtKey(type,age,vr){const M=BLDART.meta;
   if(type==='torre')return M['torre|'+(vr||1)]?'torre|'+(vr||1):'torre|1';
@@ -3631,7 +3674,7 @@ function padSoften(cv,Tx,Ty,fw,fh){try{const c=cv.getContext('2d'),W2=cv.width,H
 // do canto de cima da pegada. O Rei fica no terraço da torre de menagem; os soldados nas torres, na casa do portão e nos caminhos de ronda.
 const CASTLE_STAND={"rei":[-0.6,-37.7],"t_frente":[1.0,-7.0],"t_esq":[-63.7,-28.8],"t_dir":[64.0,-30.4],"portao":[-29.7,-15.1],"m_fe2":[-15.2,-10.2],"m_fd1":[22.0,-11.8],"m_fe1":[-47.5,-21.5],"m_fd2":[44.6,-21.5],"t_tras":[-0.6,-53.9],"m_te":[-36.2,-42.5],"m_td":[34.9,-42.5]};
 const CASTLE_ORDER=['t_frente','t_esq','t_dir','portao','m_fe2','m_fd1','m_fe1','m_fd2','t_tras','m_te','m_td'];
-function castleTop(e){return e.type==='centro'&&e.done&&P[e.o]&&P[e.o].age>=2&&BLD3D.ready&&bld3dKey('centro',P[e.o].age,0)==='centro_2'}
+function castleTop(e){return e.type==='centro'&&e.done&&P[e.o]&&bAge(e)>=2&&BLD3D.ready&&bld3dKey('centro',bAge(e),0)==='centro_2'}
 function drawCastleTop(c,e,t){const p0=proj(e.tx,e.ty),cx=e.tx+e.w/2,cy=e.ty+e.h/2,tg=alive(e.target)?centerOf(e.target):null,S=CASTLE_STAND,list=[];
   const king=e.garr.find(u=>u.d.king);if(king&&S.rei)list.push([king,S.rei,'rei']);
   const mil=e.garr.filter(u=>u.d.mil&&!u.d.king);mil.forEach((u,i)=>{const k=CASTLE_ORDER[i];if(k&&S[k])list.push([u,S[k],k])});
@@ -4398,7 +4441,7 @@ function shAlphaAt(sh,x,y){let m=SHMAP.get(sh);if(!m){const k=sh.cv.width/sh.w,W
 function unitShade(u,p){if(GFX!=='alto'||u.o===2||u.d.naval||!G)return 1;const tx=u.x|0,ty=u.y|0;let best=0,seen=null;
   for(let y=ty-6;y<=ty+2;y++)for(let x=tx-2;x<=tx+6;x++){if(!inb(x,y))continue;const id=bldAt[idx(x,y)];if(!id||seen===id)continue;seen=id;const b=byId.get(id);if(!b||!b.done||b.d.walk||b.d.wall||b.d.gate||!(b.o===ME||b.seen))continue;
     if(u.x>=b.tx&&u.x<b.tx+b.w&&u.y>=b.ty&&u.y<b.ty+b.h)continue;
-    const q=proj(b.tx,b.ty),sp=bldSprite(b.type,P[b.o].age,b.o,bldVariant(b)),sh=shadowOf(sp,sp.oy+(b.w+b.h)*HH*.86);
+    const q=proj(b.tx,b.ty),sp=bldSprite(b.type,bAge(b),b.o,bldVariant(b)),sh=shadowOf(sp,sp.oy+(b.w+b.h)*HH*.86);
     const a=shAlphaAt(sh,p.x-(q.x-sp.ox-sh.pad),p.y-(q.y-sp.oy));if(a>best)best=a}
   return best<30?1:1-.34*(best/255)*SH_A[SHB]}
 function drawUnit(c,u,px,py){
@@ -4515,7 +4558,7 @@ function render(){UCFM=0;U3TMS=0;
   {const i0=Math.floor((cam.x+H*HW)/CHW),i1=Math.floor((cam.x+vw/cam.z+H*HW)/CHW),j0=Math.floor(cam.y/CHH),j1=Math.floor((cam.y+vh/cam.z)/CHH);
     for(let j=Math.max(0,j0);j<=j1;j++)for(let i=Math.max(0,i0);i<=i1;i++){if(-H*HW+i*CHW>W*HW||j*CHH>(W+H)*HH)continue;c.drawImage(groundChunk(i,j),-H*HW+i*CHW-.5,j*CHH-.5,CHW+1,CHH+1)}}
   for(const e of ents)if(e.kind==='b'&&e.d.walk&&seenBy0(e)){const q=proj(e.tx,e.ty);if(!onScreen(q.x,q.y+48,160))continue;
-    if(BLDART.ready||e.d.pasture){const s2=bldSprite(e.type,P[e.o].age,e.o,'');c.globalAlpha=e.done?1:.35+.6*e.prog;c.drawImage(e.done||!visibleTo0(e)?s2.cv:darkOf(s2.cv),q.x-s2.ox,q.y-s2.oy,s2.CW,s2.CH);c.globalAlpha=1}
+    if(BLDART.ready||e.d.pasture){const s2=bldSprite(e.type,bAge(e),e.o,'');c.globalAlpha=e.done?1:.35+.6*e.prog;c.drawImage(e.done||!visibleTo0(e)?s2.cv:darkOf(s2.cv),q.x-s2.ox,q.y-s2.oy,s2.CW,s2.CH);c.globalAlpha=1}
     else c.drawImage(farmSprite(e),q.x-e.h*HW,q.y,(e.w+e.h)*HW,(e.w+e.h)*HH)}
   drawTufts(c,performance.now()/1000,V,z);flat();
   ground(GT);waterFx(c,V.x0,V.y0,V.x1,V.y1);
@@ -4572,7 +4615,7 @@ function render(){UCFM=0;U3TMS=0;
         c.drawImage(img,0,h0*sw,img.width,(s.h-h0)*sw,x0,y0+h0,s.w,s.h-h0);c.drawImage(img,0,0,img.width,h0*sw,x0+dx,y0,s.w,h0)}
       else c.drawImage(lit?s.cv:darkOf(s.cv),p.x-s.ax,p.y+4-s.ay,s.w,s.h);
     }else if(k===1){
-      const s=(e.d.gate&&e.done&&gate3dSprite(e.type,P[e.o].age,e.o,bldVariant(e),Math.round((e.open||0)*2)))||bldSprite(e.type,P[e.o].age,e.o,bldVariant(e));const lit=visibleTo0(e);
+      const s=(e.d.gate&&e.done&&gate3dSprite(e.type,P[e.o].age,e.o,bldVariant(e),Math.round((e.open||0)*2)))||bldSprite(e.type,bAge(e),e.o,bldVariant(e));const lit=visibleTo0(e);
       const dx=p.x-s.ox,dy=p.y-s.oy;
       if(!e.done){
         const fh=(e.w+e.h)*HH+34,rev=fh+(s.CH-fh)*e.prog;
@@ -4590,7 +4633,7 @@ function render(){UCFM=0;U3TMS=0;
         if(e.type==='torre'&&(e.lvl||1)===2&&TOWER[2].cat)drawTowerCat(c,e,lit);
         if(lit&&e.garr&&e.garr.length)drawGarrTop(c,e,performance.now()/1000);
         if(lit&&dirtFreeE(e))drawBaseTufts(c,e,t);
-        if((e.lvl||1)>1&&e.type!=='torre'&&!(BLD3D.meta.frames&&BLD3D.meta.frames[e.type+'_n'+e.lvl]&&!(e.type==='centro'&&P[e.o].age>=2)))drawLvlDeco(c,e,lit,t); // sem arte própria: bandeirolas e escudo
+        if((e.lvl||1)>1&&e.type!=='torre'&&!(BLD3D.meta.frames&&BLD3D.meta.frames[e.type+'_n'+e.lvl]&&!(e.type==='centro'&&bAge(e)>=2)))drawLvlDeco(c,e,lit,t); // sem arte própria: bandeirolas e escudo
         if(!dirtFreeE(e)){const fr=bldFringe(e);if(fr)c.drawImage(lit?fr.cv:darkOf(fr.cv),p.x-fr.ox,p.y-fr.oy,fr.CW,fr.CH)}
         if(e.d.gate&&!BLDART.ready&&!GATE3D.ready)drawGateDoor(c,e,p);
         if(e.hp<e.max*.6&&lit&&!(e.d.wall&&e.type!=='muralhaMadeira')){ // fogo
@@ -5379,6 +5422,7 @@ const EXEC={
   train(o,d){const b=ownB(o,d.b);if(b&&b.done&&b.d.train&&b.d.train.includes(d.t))queueUnit(b,d.t,o!==ME)},
   age(o,d){const b=ownB(o,d.b);if(!b||b.type!=='centro'||P[o].age>=2)return;if(ents.some(e=>e.kind==='b'&&e.o===o&&e.queue.some(q=>q.k==='age')))return;queueAge(b,o!==ME)},
   tech(o,d){const b=ownB(o,d.b);if(!b||!b.d.techs||!b.d.techs.includes(d.t)||P[o].techs[d.t])return;if(ents.some(e=>e.kind==='b'&&e.o===o&&e.queue.some(q=>q.k==='tech'&&q.t===d.t)))return;queueTech(b,d.t,o!==ME)},
+  tax(o,d){if(econOn(o)){econOf(o).tax=Math.max(0,Math.min(4,d.v|0));if(o===ME)toast('Imposto: '+TAX_N[econOf(o).tax])}},
   up(o,d){const b=ownB(o,d.b);if(b&&bLvl(b.type,(b.lvl||1)+1)&&!b.queue.length)queueUpgrade(b,o!==ME)},
   cancelQ(o,d){const b=ownB(o,d.b);if(b)cancelQueue(b,d.i)},
   gate(o,d){const b=ownB(o,d.b);if(b&&b.d.gate){b.locked=!!d.lock;if(o===ME)uiDirty=true}},
@@ -5854,6 +5898,7 @@ function updateTop(){
   for(const k of KINDS){const v=Math.floor(p.res[k]);const el=$('r_'+k);if(HUDV[k]!==v){const box=$('rs_'+k);if(HUDV[k]!=null){box.classList.remove('up','down');void box.offsetWidth;box.classList.add(v>HUDV[k]?'up':'down');clearTimeout(box._t);box._t=setTimeout(()=>box.classList.remove('up','down'),450)}HUDV[k]=v;el.textContent=v}
     $('w_'+k).textContent=work[k]?'×'+work[k]:''}
   $('r_pop').textContent=p.pop+'/'+p.popCap;$('rs_pop').classList.toggle('full',p.pop>=p.popCap&&p.popCap>0);
+  hapHud();
   $('ageName').textContent=AGES[p.age];$('ageEmb').textContent=['I','II','III'][p.age];
   let aq=null;for(const e of ents)if(e.kind==='b'&&e.o===ME&&e.queue.length&&e.queue[0].k==='age'){aq=e;break}
   $('ageBar').hidden=!aq;if(aq)$('ageBar').firstChild.style.width=Math.min(100,aq.qt/AGE_TIME[aq.queue[0].a]*100)+'%';
@@ -6253,6 +6298,18 @@ $('bQuit').onclick=()=>{if(NET.on){if(!G.over){netReport(false,'resign');act('re
 $('bSave').onclick=()=>{sfx('click');const res=saveGame(false);saveBtnFlash(res);if(res.ok)cloudSave(false)};
 let netSaveArm=0;$('bNetSave').onclick=()=>{if(!NET.on||G.over)return;if(Date.now()-netSaveArm>2500){netSaveArm=Date.now();toast('Toca outra vez: a partida fica gravada nos dois telemóveis e termina por agora');return}netSaveArm=0;act('savequit',{});$('sPause').hidden=true};
 $('bDN').onclick=()=>{DAYNIGHT=!DAYNIGHT;$('bDN').textContent='Dia e noite: '+(DAYNIGHT?'sim':'não');try{localStorage.setItem('alv_dn',DAYNIGHT?'1':'0')}catch(e){}};$('bDN').textContent='Dia e noite: '+(DAYNIGHT?'sim':'não');
+const hapFace=h=>h>=75?'😄':h>=50?'🙂':h>=35?'😐':h>=20?'😟':'😠';
+function hapHud(){const b=$('rs_hap');if(!b)return;const on=econOn(ME);b.hidden=!on;if(!on)return;const e=econOf(ME),h=Math.round(e.hap);$('r_hap').textContent=h;b.querySelector('.hf').textContent=hapFace(h);
+  b.classList.toggle('sad',h<=35);b.classList.toggle('glad',h>=75);if(!$('mTax').hidden)taxRender()}
+function taxRender(){const e=econOf(ME),r=econRates(ME),h=Math.round(e.hap),f=x=>(Math.round(x*10)/10).toString().replace('.',',');
+  $('txFace').textContent=hapFace(h);$('txVal').textContent=h;$('txBar').style.width=h+'%';$('txTgt').style.left=r.target+'%';
+  $('txBtns').innerHTML=TAX_N.map((n,i)=>`<button data-t="${i}" class="${i===e.tax?'on':''}">${n}<br><small>+${f(TAX_G[i])} ${RICON.gold}</small></button>`).join('');
+  const eff=h>=75?'<span class="g">Povo feliz: recolha +10%</span>':h<=20?'<span class="r">Muito descontente: aldeões abandonam a vila!</span>':h<=35?'<span class="r">Descontente: recolha −15%</span>':'Povo tranquilo';
+  $('txInfo').innerHTML=`<b>Por minuto</b>: impostos <span class="g">+${f(r.tax)} ${RICON.gold}</span> · soldo <span class="r">−${f(r.soldo)} ${RICON.gold}</span> · comida do povo <span class="r">−${f(r.food)} ${RICON.food}</span><br>
+    <small>${r.vil} aldeões pagam imposto · ${r.mil} soldados recebem soldo · os primeiros ${ECON.FREE} habitantes não comem</small><br>
+    <b>Felicidade</b> (a caminho de ${r.target}): ${r.parts.map(([n,v])=>n+' '+(v>=0?'<span class="g">+'+v:'<span class="r">'+v)+'</span>').join(' · ')}<br>${eff}`}
+$('rs_hap').onclick=()=>{sfx&&sfx('click');$('mTax').hidden=false;taxRender()};$('txClose').onclick=()=>{$('mTax').hidden=true};
+$('txBtns').addEventListener('click',ev=>{const b=ev.target.closest('[data-t]');if(b){act('tax',{v:+b.dataset.t});setTimeout(taxRender,50)}});
 function resUI(){const b=$('bRes');if(b)b.textContent=RES==='hd'?'Resolução: HD':'Resolução: auto (poupa bateria)'}
 $('bRes').onclick=()=>{sfx('click');RES=RES==='hd'?'auto':'hd';try{for(const t of Object.keys(UNIT3D_HD_DATA))if(UNIT3D[t]&&!!UNIT3D[t].hd!==unit3dHdOn())loadUnit3dPreferred(t,UNIT3D[t])}catch(e){}try{for(const t of Object.keys(UNIT3D_CAVHD_DATA))if(UNIT3D[t]&&!!UNIT3D[t].hd!==unit3dHdOn())cavLoad(t)}catch(e){}try{localStorage.setItem('alv_res',RES)}catch(e){}DPRCAP=devDPR();try{localStorage.setItem('alv_dpr',String(DPRCAP))}catch(e){}PERF.good=0;PERF.ema=17;resize();resUI();if(typeof resetChunks==='function'&&running)resetChunks();toast(RES==='hd'?'Resolução HD: nítido, à resolução do ecrã':'Resolução automática: baixa um pouco se o jogo ficar lento')};resUI();
 $('bGfx').onclick=()=>{GFX=GFX==='alto'?'leve':'alto';document.body.classList.toggle('gfx-leve',GFX==='leve');$('bGfx').textContent='Gráficos: '+GFX;try{localStorage.setItem('alv_gfx',GFX)}catch(e){}};$('bGfx').textContent='Gráficos: '+GFX;document.body.classList.toggle('gfx-leve',GFX==='leve');
@@ -6379,7 +6436,7 @@ function spawnFauna(){
 const SAVE_KEY='alv_save_v1';
 function normalSaveKey(){return ukey(SAVE_KEY)} // mesma separação por conta usada pelo Reino, com migração da gravação antiga
 // campos extra de G que viajam no gravar/continuar e na sincronização online
-const GX=['map','vic','civ','camp','daily','reino','hero','surv','sdiff','bell','tradeGold','alertAt','islands','obj','relics','tod','weather','achv','track','king','mkt','regrow','sheepT','relicT','roads'];
+const GX=['map','vic','civ','camp','daily','reino','hero','surv','sdiff','bell','tradeGold','alertAt','islands','obj','relics','tod','weather','achv','track','king','mkt','regrow','sheepT','relicT','roads','econ'];
 function gExtra(){const o={};for(const k of GX)if(G[k]!==undefined)o[k]=G[k];return JSON.parse(JSON.stringify(o))}
 function serialize(){
   const ref=x=>x&&!x.dead?x.id:null;
@@ -7527,7 +7584,7 @@ $('endTabs').addEventListener('click',ev=>{const b=ev.target.closest('button');i
 
 /* ---------------- ciclo principal ---------------- */
 function step(dt){
-  G.time+=dt;
+  G.time+=dt;econTick(dt);
   for(const e of ents.slice()){if(e.dead)continue;if(e.kind==='u')updUnit(e,dt);else if(e.kind==='b')updBld(e,dt)}
   separate(dt);
   for(const e of ents){if(e.kind!=='u')continue;if(e.lx!=null){const vx=(e.x-e.lx)/dt,vy=(e.y-e.ly)/dt;if(vx*vx+vy*vy>36){e.vx=0;e.vy=0}else{e.vx=(e.vx||0)*.5+vx*.5;e.vy=(e.vy||0)*.5+vy*.5}}else{e.vx=0;e.vy=0}e.lx=e.x;e.ly=e.y}
