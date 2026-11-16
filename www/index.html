@@ -1009,9 +1009,9 @@ const POP_MAX=1000; // limite de população (antes era 100): sobe conforme cons
 // Dificuldade da IA: mult = ritmo de recolha/obra; first = 1.º ataque (s); wave/grow/waveMax = tamanho das vagas;
 // raid = primeiro assalto pequeno (aos 'at' s com 'n' soldados) para o início não ficar parado; armyMax = exército máximo; gap = pausa entre ataques; vills = aldeões por idade; maxAge = idade máxima
 const DIFF=[
-  {name:'Fácil',mult:.5,first:1200,raid:{at:660,n:2},wave:3,grow:1,waveMax:6,armyMax:8,gap:[420,540],vills:[9,12,14],maxAge:1,wall:false,siege:false,towers:false,techs:false,bonus:0},
-  {name:'Normal',mult:.75,first:780,raid:{at:510,n:3},wave:5,grow:2,waveMax:14,armyMax:22,gap:[260,380],vills:[12,17,22],maxAge:2,wall:true,siege:true,towers:true,techs:true,bonus:0},
-  {name:'Difícil',mult:1.15,first:420,raid:{at:330,n:4},wave:7,grow:3,waveMax:28,armyMax:60,gap:[140,220],vills:[14,22,28],maxAge:2,wall:true,siege:true,towers:true,techs:true,bonus:150}];
+  {name:'Fácil',mult:.5,first:1200,raid:{at:660,n:2},wave:3,grow:1,waveMax:6,armyMax:8,gap:[420,540],vills:[9,12,14],maxAge:1,wall:false,siege:false,towers:false,techs:false,bonus:0,smart:0},
+  {name:'Normal',mult:.75,first:780,raid:{at:510,n:3},wave:5,grow:2,waveMax:14,armyMax:22,gap:[260,380],vills:[12,17,22],maxAge:2,wall:true,siege:true,towers:true,techs:true,bonus:0,smart:1},
+  {name:'Difícil',mult:1.15,first:420,raid:{at:330,n:4},wave:7,grow:3,waveMax:28,armyMax:60,gap:[140,220],vills:[14,22,28],maxAge:2,wall:true,siege:true,towers:true,techs:true,bonus:150,smart:2}];
 let gameMode='normal'; // 'normal' ou 'build' (só construir, sem rival)
 // opções da próxima partida (ecrã «Nova partida»)
 const MAPS={rios:{name:'Rios e Mar',desc:'Mar num canto, rio navegável até ao lago central. Equilibrado.'},continental:{name:'Terra firme',desc:'Pouca água e muitos recursos: guerra em terra, sem barcos.'},lagos:{name:'Lagos',desc:'Um grande lago no centro e muitos lagos pequenos. Peixe e docas contam.'},arquipelago:{name:'Arquipélago',desc:'Cada reino na sua ilha. Precisas de barcos de transporte para atacar.'},reino:{name:'Mundo do Reino',desc:'Mundo grande com mar aberto e ilhas para explorar.'},aleatorio:{name:'Aleatório',desc:'Um dos quatro mapas, à sorte.'}};
@@ -1594,7 +1594,7 @@ function applyDmg(t,dmg,src,ranged){
     else{const ax=t.x-src.x,ay=t.y-src.y,l=hyp(ax,ay)||1;moveTo(t,clamp(t.x+ax/l*5,1,W-2),clamp(t.y+ay/l*5,1,H-2));t.scan=3}
     return}
   if(t.kind==='u'&&src&&src.kind==='u'&&alive(src)){
-    if(t.d.mil&&(t.state==='idle'||(t.state==='move'&&t.amove)))orderAttack(t,src);
+    if(t.d.mil&&!(t.fleeT>G.time)&&(t.state==='idle'||(t.state==='move'&&t.amove)))orderAttack(t,src);
     else if(t.type==='aldeao'&&t.state!=='attack'&&src.d.range===0&&AIs[t.o]&&rnd()<.5){orderAttack(t,src)}
   }
 }
@@ -1853,7 +1853,7 @@ function updUnit(u,dt){
     if(d.fish&&u.scan<=0){u.scan=2;const r=findRes('food',u.x,u.y,24,u.o,true);if(r){orderGather(u,r)}break}
     if(u.scan<=0){u.scan=.5;
       if(u.patrol){const pt=u.patrol;moveTo(u,pt.b.x,pt.b.y);u.amove=true;u.patrol=pt;break}
-      if(d.mil){const rad=u.stance==='hold'?(d.range>0?rangeOf(u):1.2):d.siege?Math.max(rangeOf(u),3):d.sight;const t=scanFor(u,rad,false);if(t){orderAttack(u,t);break}}
+      if(d.mil&&!(u.fleeT>G.time)){const rad=u.stance==='hold'?(d.range>0?rangeOf(u):1.2):d.siege?Math.max(rangeOf(u),3):d.sight;const t=scanFor(u,rad,false);if(t){orderAttack(u,t);break}}
       if(u.stance==='defend'&&u.guard&&hyp(u.guard.x-u.x,u.guard.y-u.y)>1.5){const st=u.stance,g=u.guard;moveTo(u,g.x,g.y);u.stance=st;u.guard=g}
     }
     break}
@@ -2353,7 +2353,7 @@ function aiRun(AI,dt){
   for(const b of blds){if(b.done)continue;b.aiAge=(b.aiAge||0)+1;
     const builders=vills.filter(v=>v.state==='build'&&v.bld===b).length;
     const wl=b.d.wall||b.d.gate;
-    if(!wl&&(b.aiAge>90&&b.prog<.05||b.aiAge>240&&b.prog<.5)||wl&&b.aiAge>900&&b.prog<.05){refund(me,b.d.cost);kill(b);p.stats.lost--;continue}
+    if(!wl&&b.type!=='maravilha'&&(b.aiAge>90&&b.prog<.05||b.aiAge>240&&b.prog<.5)||wl&&b.aiAge>900&&b.prog<.05){refund(me,b.d.cost);kill(b);p.stats.lost--;continue}
     if(wl){if(!builders&&wallB<3){const c=vills.filter(v=>v.state==='gather'&&v.gkind==='wood').sort((a,c)=>hyp(a.x-b.tx,a.y-b.ty)-hyp(c.x-b.tx,c.y-b.ty))[0];if(c){orderBuild(c,b);wallB++}}continue}
     if(!builders){const c=vills.filter(v=>v.state==='idle'||(v.state==='gather'&&v.gkind==='wood')).sort((a,c)=>hyp(a.x-b.tx,a.y-b.ty)-hyp(c.x-b.tx,c.y-b.ty))[0];if(c)orderBuild(c,b)}}
   // reconstruir centro
@@ -2374,13 +2374,15 @@ function aiRun(AI,dt){
     for(const [t,a,mv,want] of plan){if(p.age>=a&&vills.length>=mv&&count(t)<want){if(t==='torre'&&(p.res.stone<100||!D.towers))continue;if(t==='oficina'&&!D.siege)continue;aiBuild(me,t,vills,home.x,home.y);break}}
   // idades
   if(tc&&p.age<D.maxAge&&!tc.queue.some(q=>q.k==='age')){
-    if(p.age===0&&vills.length>=Math.min(12,D.vills[0])&&count('quartel')>0)queueAge(tc,true);
+    const armyOk0=!D.smart||AI.bot||army.length>=Math.min(3,AI.wave)||AI.t>900;
+    if(p.age===0&&vills.length>=Math.min(12,D.vills[0])&&count('quartel')>0&&armyOk0)queueAge(tc,true);
     else if(p.age===1&&vills.length>=Math.min(18,D.vills[1])&&p.res.food>=800&&p.res.gold>=350)queueAge(tc,true);
   }
-  const threat=ents.find(e=>e.o===en&&e.kind==='u'&&!e.d.naval&&hyp(e.x-home.x,e.y-home.y)<15);
+  const threat=aiThreat(AI,me,en,home,blds,vills);
   // repartição económica
   let ratio=[{food:.55,wood:.45,gold:0,stone:0},{food:.45,wood:.32,gold:.17,stone:.06},{food:.4,wood:.3,gold:.25,stone:.05}][p.age];
   if(AI.bot){ratio={...ratio};if(p.age>=1)ratio.stone=AI.wallNeed?.22:.1;const f=AI.need&&AI.need.res;if(f&&(p.age>0||f==='food'||f==='wood'))ratio[f]+=.25}
+  if(AI.upGoal&&!AI.bot){ratio={...ratio};for(const k of KINDS)if((AI.upGoal.cost[k]||0)>p.res[k])ratio[k]=(ratio[k]||0)+.12}
   const cnt={food:0,wood:0,gold:0,stone:0};for(const v of vills)if(v.gkind&&(v.state==='gather'||v.state==='return'))cnt[v.gkind]++;
   for(const v of vills){
     if(v.state!=='idle'){v.aiIdle=0;continue}
@@ -2407,7 +2409,7 @@ function aiRun(AI,dt){
   }
   // reequilíbrio: recurso a sobrar → mudar recolectores para o que falta
   AI.rebT=(AI.rebT||0)-1;
-  if(AI.rebT<=0){AI.rebT=30;const R0=p.res;const rich=KINDS.filter(k=>R0[k]>1800),poor=KINDS.filter(k=>R0[k]<200&&k!=='stone');
+  if(AI.rebT<=0){AI.rebT=D.smart?20:30;const R0=p.res,hi=D.smart?900:1800,lo=D.smart?150:200;const rich=KINDS.filter(k=>R0[k]>hi),poor=KINDS.filter(k=>R0[k]<lo&&k!=='stone');
     for(const k of rich)for(const q of poor){const g=vills.filter(v=>v.state==='gather'&&v.gkind===k).slice(0,3);for(const v of g){const rr=findRes(q,v.x,v.y,60,me);if(rr)orderGather(v,rr)}}}
   // mercado: vende o que sobra, compra o que falta
   AI.mktT=(AI.mktT||0)-1;if(AI.mktT<=0&&blds.some(b=>b.done&&b.d.market)){AI.mktT=15;const R0=p.res;
@@ -2429,13 +2431,17 @@ function aiRun(AI,dt){
   // militares
   const aging=tc&&tc.queue.some(q=>q.k==='age');
   const wallSave=D.wall&&!AI.walled&&p.age>=1&&vills.length>=Math.min(18,D.vills[1])&&AI.t>480&&!threat;
-  const saving=!aging&&p.age<D.maxAge&&vills.length>=(p.age===0?Math.min(12,D.vills[0]):Math.min(18,D.vills[1]))&&!threat;
+  // Normal/Difícil: não poupar para a idade sem um mínimo de exército nem quando o rival tem um exército muito maior (evita ficar indefeso)
+  const armyOk=!D.smart||AI.bot||(army.length>=Math.min(p.age===0?3:5,AI.wave)&&aiArmyStr(en)<Math.max(400,army.reduce((t,a)=>t+aiStr(a),0))*2.5);
+  const saving=!aging&&p.age<D.maxAge&&vills.length>=(p.age===0?Math.min(12,D.vills[0]):Math.min(18,D.vills[1]))&&!threat&&armyOk;
   const reserve=saving?{food:AGE_COST[p.age+1].food+60,gold:(AGE_COST[p.age+1].gold||0)+40}:{food:p.age===0?60:120,gold:p.age===2?60:0};
+  if(AI.upGoal&&!saving&&!threat&&!AI.bot)for(const k of ['food','gold','wood'])reserve[k]=Math.max(reserve[k]||0,AI.upGoal.cost[k]||0);
   const keepR=AI.bot&&AI.need&&AI.need.res?AI.need.res:null; // missão "Juntar N de X": não gastar esse recurso
   if(keepR==='gold'||keepR==='food')reserve[keepR]=Math.max(reserve[keepR],(AI.need.resN||0)+50);
   if(!saving&&!threat&&(D.techs||p.age>0))for(const b of blds){if(!b.done||!b.d.techs||b.queue.length)continue;if(!D.techs&&b.type!=='armazem'&&b.type!=='centro')continue;
-    for(const t of b.d.techs){if(p.techs[t])continue;const tk=TECHS[t];if(p.age<tk.age)continue;if(t==='arado'&&count('quinta')<3)continue;
+    for(const t of (D.smart?aiTechOrder(b.d.techs,army.length):b.d.techs)){if(p.techs[t])continue;const tk=TECHS[t];if(p.age<tk.age)continue;if(t==='arado'&&count('quinta')<3)continue;
       if(KINDS.every(k=>p.res[k]-(tk.cost[k]||0)>=(k===keepR?(AI.need.resN||0)+50:k==='food'?60:k==='wood'?40:0))){queueTech(b,t,true);break}}}
+  aiSmart(AI,me,en,p,D,vills,army,blds,tc,home,threat,saving);
   let picks=aiPicks(me,en,p,blds,army);if(!D.siege)picks=picks.filter(t=>!UNITS[t].siege);
   const ewOn=G.wonder&&G.wonder.o===en&&byId.get(G.wonder.id);
   if(ewOn&&D.siege){if(!blds.some(b=>b.type==='oficina'))aiBuild(me,'oficina',vills,home.x,home.y);picks=['ariete',p.age>=2?'trebuchet':'catapulta',...picks].filter((x,i,a)=>a.indexOf(x)===i).slice(0,3)}
@@ -2444,7 +2450,7 @@ function aiRun(AI,dt){
   for(const b of blds){if(!b.done||!b.d.train||b.type==='centro'||b.d.dock||b.queue.length>=2)continue;
     let t=b.d.train.find(x=>picks.includes(x)&&p.age>=UNITS[x].age&&canAfford(me,UNITS[x].cost));
     if(!t&&b.type==='templo'&&priests<3&&army.length>=6)t='sacerdote';
-    if(!t&&(b.type==='quartel'||b.type==='arquearia')&&!b.d.train.some(x=>picks.includes(x)&&canAfford(me,UNITS[x].cost))){ // recurso em falta: unidade alternativa que se consiga pagar
+    if(!t&&(b.type==='quartel'||b.type==='arquearia'||b.type==='estabulo')&&!b.d.train.some(x=>picks.includes(x)&&canAfford(me,UNITS[x].cost))){ // recurso em falta: unidade alternativa que se consiga pagar
       const alt=b.d.train.filter(x=>p.age>=UNITS[x].age&&canAfford(me,UNITS[x].cost)&&!UNITS[x].siege).sort((a,c)=>(UNITS[a].cost.gold||0)-(UNITS[c].cost.gold||0));
       if(alt.length&&(army.length<AI.wave*1.5||!picks.length))t=alt[0]}
     if(!t||p.age<UNITS[t].age)continue;
@@ -2452,7 +2458,7 @@ function aiRun(AI,dt){
     if(t==='sacerdote'&&priests>=3)continue;if(UNITS[t].siege&&siegeN>=5)continue;
     const c=UNITS[t].cost;
     const rushing=D.raid&&!AI.raided&&AI.t>=D.raid.at-150&&army.length<D.raid.n; // treina já os soldados do primeiro assalto
-    if(ewOn||rushing?canAfford(me,c):(p.res.food-(c.food||0)>=reserve.food&&p.res.gold-(c.gold||0)>=reserve.gold&&p.res.wood-(c.wood||0)>=(wallSave?300:30)))queueUnit(b,t,true);
+    if(ewOn||rushing?canAfford(me,c):(p.res.food-(c.food||0)>=reserve.food&&p.res.gold-(c.gold||0)>=reserve.gold&&p.res.wood-(c.wood||0)>=(wallSave?300:Math.max(30,reserve.wood||0))))queueUnit(b,t,true);
   }
   aiNaval(AI,me,en,p,vills,navy,blds,count);
   if(!AI.landLink)aiSea(AI,me,en,army,blds,p,home);
@@ -2463,8 +2469,8 @@ function aiRun(AI,dt){
   // rei: fica junto ao centro e esconde-se lá dentro se houver perigo
   {const k=mine.find(e=>e.kind==='u'&&e.d.king);if(k&&tc){const c=centerOf(tc);if(threat&&garrSpace(tc)>0&&k.state!=='enter'){orderEnter(k,tc)}else if(k.state==='idle'&&hyp(k.x-c.x,k.y-c.y)>5){moveTo(k,c.x+1,c.y+2.5)}}}
   // defesa
-  if(threat){for(const a of army){if(a.state==='idle'||(a.state==='move'&&!AI.attacking))orderAttack(a,threat)}
-    if(threat.d.mil&&army.length<3){const sh=blds.filter(b=>b.done&&b.d.garr&&b.type!=='casa');const foes=ents.filter(e=>e.o===en&&e.kind==='u'&&e.d.mil&&hyp(e.x-home.x,e.y-home.y)<15).length;
+  if(threat){if(D.smart)aiDefend(AI,me,en,army,threat,home);else for(const a of army){if(a.state==='idle'||(a.state==='move'&&!AI.attacking))orderAttack(a,threat)}
+    if(threat.d.mil&&army.length<3){const sh=blds.filter(b=>b.done&&b.d.garr&&b.type!=='casa');const foes=ents.filter(e=>e.o===en&&e.kind==='u'&&e.d.mil&&hyp(e.x-threat.x,e.y-threat.y)<8).length;
       for(const v of vills){if(hyp(v.x-threat.x,v.y-threat.y)>(foes>=3?9:4)||v.state==='attack'||v.state==='enter')continue;
         const b=foes>=3?sh.filter(b=>garrSpace(b)>0).sort((a,c)=>hyp(a.tx-v.x,a.ty-v.y)-hyp(c.tx-v.x,c.ty-v.y))[0]:null;if(b){const keep=v.gres?{id:v.gres.id}:null;orderEnter(v,b);v.prevG=keep}else orderAttack(v,threat)}}}
   if(!threat){AI.calm=(AI.calm||0)+1;if(AI.calm===20)for(const b of blds)if(b.garr&&b.garr.length)ungarrison(b,true,true)}else AI.calm=0;
@@ -2483,7 +2489,7 @@ function aiRun(AI,dt){
     if(!tgt)tgt=aiTarget(en,home);
     if(tgt&&grp.length){const c=tgt.kind==='u'?{x:tgt.x,y:tgt.y}:centerOf(tgt);groupMove(grp,c.x,c.y,true,'livre');for(const a of grp)a.raid=1;if(en===ME)setTimeout(()=>{try{voz('inimigo')}catch(e){}},0)}}
   // ataque
-  else if(!ew&&AI.t>=AI.nextAttack&&((army.length>=AI.wave&&(!enemyWalled||siegeN>0||army.length>=AI.wave*1.6))||(AI.t>AI.nextAttack+240&&army.length>=Math.max(5,AI.wave*.5))||(AI.t>2700&&army.length>=Math.min(4,AI.wave)))){
+  else if(!ew&&AI.t>=AI.nextAttack&&aiCanAttack(AI,me,en,army,D)&&((army.length>=AI.wave&&(!enemyWalled||siegeN>0||army.length>=AI.wave*1.6))||(AI.t>AI.nextAttack+240&&army.length>=Math.max(5,AI.wave*.5))||(AI.t>2700&&army.length>=Math.min(4,AI.wave)))){
     const w0=AI.wave;AI.attacking=true;AI.nextAttack=AI.t+D.gap[0]+rnd()*(D.gap[1]-D.gap[0]);AI.wave=Math.min(D.waveMax,AI.wave+D.grow);
     if(AI.landLink){const tgt=aiTarget(en,home);if(tgt){const c=centerOf(tgt);groupMove(army,c.x,c.y,true,'linha')}}
     else if(!AI.inv&&!aiInvade(AI,me,army)){
@@ -2497,6 +2503,85 @@ function aiRun(AI,dt){
     if(army.length===0||!AI.landLink&&!AI.inv&&!army.some(a=>landOf(a.x,a.y)!==landOf(home.x,home.y)))AI.attacking=false;
   }
 }
+// ---------- IA: decisões (níveis, ameaças em todo o território, reparação, recuo, avaliação de forças, Maravilha) ----------
+// Fácil (smart 0): melhora edifícios e defende-se, mas ataca sem avaliar e não repara nem recua.
+// Normal (smart 1): avalia forças antes de atacar, recua em desvantagem, repara, defende com a força necessária.
+// Difícil (smart 2): o mesmo com limiares mais exigentes, retira feridos, concentra-se em alvos fracos, prioriza tecnologias e tenta a Maravilha.
+const aiStr=u=>u.dead?0:Math.max(1,u.hp)*Math.max(1,(u.d.atk||1)+(u.d.cat?u.d.cat.atk*.3:0))/Math.max(.6,u.d.rate||1);
+function aiBldStr(b){if(!b.done||b.dead)return 0;if(b.type==='torre'){const T=TOWER[b.lvl||1]||TOWER[1];return 320*(T.atk||5)*(1+((b.garr&&b.garr.length)||0)*.25)}if(b.type==='centro')return 600*(1+((b.garr&&b.garr.length)||0)*.2);return 0}
+function aiLocal(o,x,y,r){let s=0;for(const e of ents){if(e.o!==o||e.dead)continue;if(e.kind==='u'){if(!e.d.mil||e.d.naval||e.d.king||e.d.convert)continue;if(hyp(e.x-x,e.y-y)<r)s+=aiStr(e)}else if(e.kind==='b'){const v=aiBldStr(e);if(v){const c=centerOf(e);if(hyp(c.x-x,c.y-y)<r)s+=v}}}return s}
+function aiArmyStr(o){let s=0;for(const e of ents)if(e.o===o&&e.kind==='u'&&e.d.mil&&!e.d.naval&&!e.d.king&&!e.d.convert&&!e.dead)s+=aiStr(e);return s}
+// ameaça: inimigo junto ao Centro, a qualquer edifício (5 casas) ou a aldeões a trabalhar (4 casas); devolve o mais urgente
+function aiThreat(AI,me,en,home,blds,vills){let best=null,bs=1e9;
+  for(const e of ents){if(e.o!==en||e.kind!=='u'||e.d.naval||e.dead)continue;if(!e.d.mil&&e.state!=='attack')continue;
+    let sc=hyp(e.x-home.x,e.y-home.y);if(sc>=15){let m=1e9;for(const b of blds){const c=centerOf(b);const d=hyp(c.x-e.x,c.y-e.y)-Math.max(b.w,b.h)/2;if(d<m)m=d}
+      if(m<5)sc=15+m;else{let mv=1e9;for(const v of vills){const d=hyp(v.x-e.x,v.y-e.y);if(d<mv)mv=d}sc=mv<4?20+mv:1e9}}
+    if(sc>=1e9)continue;if(e.state==='attack'&&e.target&&e.target.o===me)sc-=3;
+    if(sc<bs){bs=sc;best=e}}
+  if(best)AI.lastThreat={x:best.x,y:best.y,t:AI.t};return best}
+// defesa com a força necessária: as unidades mais próximas até 1,5× a força inimiga local (o resto continua o que fazia)
+function aiDefend(AI,me,en,army,threat,home){const es=aiLocal(en,threat.x,threat.y,8);let got=0,n=0;
+  const nearHome=hyp(threat.x-home.x,threat.y-home.y)<15;
+  const av=army.filter(a=>!a.d.convert&&!a.d.king&&(a.state==='idle'||a.state==='move'&&!a.raid||nearHome&&a.state!=='attack')).sort((a,b)=>hyp(a.x-threat.x,a.y-threat.y)-hyp(b.x-threat.x,b.y-threat.y));
+  for(const a of army)if(a.state==='attack'&&a.target&&a.target.o===en&&!a.target.dead&&hyp(a.target.x-threat.x,a.target.y-threat.y)<10){got+=aiStr(a);n++} // já a caminho ou a lutar
+  for(const a of av){if(got>=es*1.5&&n>=2)break;orderAttack(a,threat);got+=aiStr(a);n++}
+  // casa em perigo e exército fora: chama-o de volta
+  if(nearHome&&AI.attacking&&got<es){const away=army.filter(a=>hyp(a.x-home.x,a.y-home.y)>18&&!a.d.convert);if(away.length){groupMove(away,threat.x,threat.y,true,'livre');AI.attacking=false;AI.recalls=(AI.recalls||0)+1}}}
+// avaliação de forças antes de lançar uma vaga
+function aiCanAttack(AI,me,en,army,D){if(!D.smart)return true;if(AI.wonderMine)return false;if(AI.t<(AI.noAtk||0))return false;
+  const mine=army.reduce((s,a)=>s+(a.d.convert?0:aiStr(a)),0);let theirs=aiArmyStr(en);
+  const etc=ents.find(e=>e.o===en&&e.type==='centro'&&e.done);if(etc){const c=centerOf(etc);for(const e of ents)if(e.o===en&&e.kind==='b'){const v=aiBldStr(e);if(v){const q=centerOf(e);if(hyp(q.x-c.x,q.y-c.y)<10)theirs+=v*.6}}} // torres e Centro da base inimiga
+  const need=D.smart>=2?1.25:1.1,late=AI.t>AI.nextAttack+600?.85:1;AI.lastEval={mine:Math.round(mine),theirs:Math.round(theirs)};
+  return mine>=theirs*need*late}
+function aiTechOrder(list,armyN){const eco=['roda','machado','picareta','arado'],mil=['forja','cota','flechas'];const o=armyN>=12?[...mil,...eco]:[...eco,...mil];
+  return [...list].sort((a,b)=>(o.indexOf(a)+1||99)-(o.indexOf(b)+1||99))}
+const AI_UP=['centro','casa','quartel','arquearia','estabulo','armazem','ferreiro','mercado','oficina','templo','doca'];
+function aiSmart(AI,me,en,p,D,vills,army,blds,tc,home,threat,saving){
+  // 1) níveis dos edifícios: o Centro primeiro (castelo no Nv.3), depois casas e edifícios militares.
+  //    O próximo nível vira objetivo: a IA junta os recursos (reserva no treino e mais recolectores do que falta) em vez de os gastar todos em soldados.
+  const homeThreat=threat&&hyp(threat.x-home.x,threat.y-home.y)<15;
+  if(AI.upGoal&&(homeThreat||AI.t-AI.upGoal.t>(AI.upGoal.wonder?900:240))){AI.upGoal=null;AI.upPause=AI.t+90}
+  AI.upT=(AI.upT||0)-1;
+  if(AI.upT<=0&&!homeThreat&&!(saving&&p.age<D.maxAge)&&AI.t>=(AI.upPause||0)&&!(AI.upGoal&&AI.upGoal.wonder)){AI.upT=[30,10,6][D.smart]||10;
+    const busy=blds.filter(b=>b.queue.some(q=>q.k==='up')).length;
+    if(busy<(D.smart?2:1)){let goal=null;
+      for(const ty of AI_UP){const c=blds.filter(b=>b.type===ty&&b.done&&!b.queue.length).sort((a,b)=>(a.lvl||1)-(b.lvl||1))[0];if(!c)continue;
+        const L2=bLvl(ty,(c.lvl||1)+1);if(!L2||p.age<L2.age)continue;goal={b:c,cost:L2.cost};break}
+      if(goal){const m=D.smart>=2?0:25;
+        if(KINDS.every(k=>p.res[k]-(goal.cost[k]||0)>=(goal.cost[k]?m:0))){if(queueUpgrade(goal.b,true)){AI.ups=(AI.ups||0)+1;AI.upGoal=null}}
+        else if(!AI.upGoal||AI.upGoal.id!==goal.b.id)AI.upGoal={id:goal.b.id,cost:goal.cost,t:AI.t}}else AI.upGoal=null}}
+  // 2) reparação: edifícios abaixo de 60% quando não há perigo por perto
+  if(D.smart&&!threat){AI.repT=(AI.repT||0)-1;if(AI.repT<=0){AI.repT=5;
+    const hurt=blds.filter(b=>b.done&&b.hp<b.max*.6&&!b.d.wall).sort((a,b)=>(a.type==='centro'||a.type==='maravilha'?0:1)-(b.type==='centro'||b.type==='maravilha'?0:1)||a.hp/a.max-b.hp/b.max).slice(0,3);
+    for(const b of hurt){const on=vills.filter(v=>v.state==='build'&&v.bld===b).length;if(on>=2)continue;
+      const c=vills.filter(v=>v.state==='idle'||v.state==='gather'&&(v.gkind==='wood'||v.gkind==='food')).sort((x,y)=>hyp(x.x-b.tx,x.y-b.ty)-hyp(y.x-b.tx,y.y-b.ty)).slice(0,2-on);
+      for(const v of c){orderBuild(v,b);AI.reps=(AI.reps||0)+1}}}}
+  // 3) recuo: o grupo fora de casa em clara desvantagem volta para trás em vez de morrer
+  if(D.smart&&AI.attacking){const away=army.filter(a=>!a.d.convert&&!a.d.king&&hyp(a.x-home.x,a.y-home.y)>16);
+    if(away.length){let cx=0,cy=0;for(const a of away){cx+=a.x;cy+=a.y}cx/=away.length;cy/=away.length;
+      const ms=away.reduce((s,a)=>s+aiStr(a),0),es=aiLocal(en,cx,cy,11);AI.wave0=AI.wave0||away.length;
+      if(es>0&&ms<es*(D.smart>=2?.7:.55)){const r=aiRally(home,en);groupMove(away,r.x,r.y,false,'livre');for(const a of away){a.raid=0;a.fleeT=G.time+10}
+        AI.attacking=false;AI.retreats=(AI.retreats||0)+1;AI.noAtk=AI.t+90;AI.nextAttack=Math.max(AI.nextAttack,AI.t+90)}}}
+  if(!AI.attacking)AI.wave0=0;
+  // 4) Difícil: feridos saem do combate; alvos: o inimigo mais fraco ao alcance
+  if(D.smart>=2){for(const a of army){if(a.d.convert||a.d.king||a.state!=='attack')continue;
+      if(a.hp<a.max*.25&&hyp(a.x-home.x,a.y-home.y)>10){const r=aiRally(home,en);moveTo(a,r.x,r.y);continue}
+      const t=a.target;if(t&&t.kind==='u'&&!a.d.siege&&a.d.range>0){let bt=null,bh=t.hp;for(const e of ents){if(e.o!==en||e.kind!=='u'||e.dead||e.d.naval)continue;if(hyp(e.x-a.x,e.y-a.y)<=a.d.range+.5&&e.hp<bh){bh=e.hp;bt=e}}if(bt)a.target=bt}}}
+  // 5) reorganizar: soldados parados longe de casa voltam a um ponto de reunião
+  AI.rgT=(AI.rgT||0)-1;if(D.smart&&AI.rgT<=0&&!AI.attacking&&!threat){AI.rgT=15;const r=AI.wonderMine?centerOf(byId.get(AI.wonderMine)||{tx:home.x,ty:home.y,w:0,h:0}):aiRally(home,en);
+    const lost=army.filter(a=>a.state==='idle'&&!a.vilaGo&&!a.d.convert&&!a.d.king&&hyp(a.x-r.x,a.y-r.y)>8);if(lost.length)groupMove(lost,r.x,r.y,false,lost.length>3?'linha':'livre')}
+  // 6) Maravilha (Clássico): o Difícil tenta-a quando tem economia folgada; o Normal só com grande excedente e partida longa
+  const myW=ents.find(e=>e.o===me&&e.type==='maravilha'&&!e.dead);AI.wonderMine=myW&&myW.done?myW.id:0;
+  if(myW&&!myW.done){const on=vills.filter(v=>v.state==='build'&&v.bld===myW).length;if(on<(D.smart>=2?6:4)){const c=vills.filter(v=>v.state==='gather'&&(v.gkind==='wood'||v.gkind==='stone'||v.gkind==='gold')).sort((x,y)=>hyp(x.x-myW.tx,x.y-myW.ty)-hyp(y.x-myW.tx,y.y-myW.ty))[0];if(c)orderBuild(c,myW)}}
+  if(!myW&&D.smart&&p.age>=2&&!homeThreat&&(G.vic==='classico'||!G.vic)&&!G.reino&&G.camp==null&&!ents.some(e=>e.type==='maravilha'&&!e.dead)&&vills.length>=Math.min(18,D.vills[2])&&army.length>=6&&AI.t>(D.smart>=2?1200:2100)){
+    const c=BLDS.maravilha.cost;
+    if(KINDS.every(k=>p.res[k]>=(c[k]||0))){if(aiBuild(me,'maravilha',vills,home.x,home.y)){AI.wonderTry=(AI.wonderTry||0)+1;AI.upGoal=null}}
+    else if(!AI.upGoal)AI.upGoal={id:-1,cost:c,t:AI.t,wonder:true}}
+  else if(AI.upGoal&&AI.upGoal.wonder&&(myW||homeThreat))AI.upGoal=null}
+function aiRally(home,en){const ex=G.starts[en]||home;const dx=ex.x-home.x,dy=ex.y-home.y,d=Math.max(1,hyp(dx,dy));const x0=Math.round(home.x+dx/d*6),y0=Math.round(home.y+dy/d*6);
+  // ponto de reunião numa casa livre e alcançável (o reachMap da IA é calculado a partir do Centro a cada decisão)
+  for(let r=0;r<8;r++)for(let y=y0-r;y<=y0+r;y++)for(let x=x0-r;x<=x0+r;x++){if(Math.max(Math.abs(x-x0),Math.abs(y-y0))!==r||!inb(x,y))continue;const i=idx(x,y);if(reachMap[i]&&!blk[i]&&!bldAt[i])return{x:x+.5,y:y+.5}}
+  return{x:home.x+.5,y:home.y+3.5}}
 function aiPicks(me,en,p,blds,army){
   const E={inf:0,arch:0,cav:0,siege:0};for(const e of ents)if(e.o===en&&e.kind==='u'&&e.d.mil&&E[e.d.cls]!=null)E[e.d.cls]++;
   const defs=ents.filter(e=>e.o===en&&e.kind==='b'&&(e.type==='torre'||e.d.wall||e.d.gate)).length;
