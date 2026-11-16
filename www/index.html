@@ -230,6 +230,62 @@ body.ingame #menuBg{display:none}
 .panel>p{margin:0;color:rgba(242,228,212,.78);font-size:15.5px;line-height:1.45}
 .panel .gbtn{min-width:0;width:100%;height:52px;border-radius:14px;font-size:16.5px;margin-top:4px;box-shadow:0 8px 22px rgba(0,0,0,.3)}
 #lgStatus:empty{display:none}
+/* ---------- capa nova: imagem do próprio jogo (vila do Ferro à hora dourada) ---------- */
+#keyart{position:absolute;inset:0;z-index:19;overflow:hidden;background:#1a130d;display:none}
+body.keyart #keyart{display:block}body.keyart #menuBg,body.ingame #keyart{display:none}
+.ka-img{position:absolute;inset:-5%;background:var(--ka,none) center 42%/cover no-repeat;transform-origin:44% 46%;animation:kaPan 48s ease-in-out infinite alternate;will-change:transform}
+@keyframes kaPan{from{transform:scale(1.03) translate(0,0)}to{transform:scale(1.13) translate(-2.4%,1.6%)}}
+.ka-rays{position:absolute;inset:-40%;background:repeating-conic-gradient(from 205deg at 18% 8%,rgba(255,214,140,.2) 0deg 2.4deg,transparent 2.4deg 8.5deg);mix-blend-mode:screen;opacity:.6;
+  -webkit-mask-image:radial-gradient(ellipse 60% 55% at 22% 10%,#000 0%,transparent 70%);mask-image:radial-gradient(ellipse 60% 55% at 22% 10%,#000 0%,transparent 70%);animation:kaRays 26s ease-in-out infinite alternate}
+@keyframes kaRays{from{transform:rotate(-2deg)}to{transform:rotate(5deg)}}
+/* zona escura suave atrás do logótipo (lê-se sobre a vila) */
+.ka-shade{position:absolute;inset:0;background:
+  radial-gradient(ellipse 42% 30% at 50% 19%,rgba(12,7,2,.62),transparent 72%),
+  radial-gradient(ellipse 70% 60% at 20% -8%,rgba(255,186,104,.38),transparent 60%),
+  linear-gradient(180deg,rgba(18,10,4,.78) 0%,rgba(18,10,4,.25) 26%,rgba(18,10,4,0) 46%,rgba(14,8,3,.35) 70%,rgba(10,6,2,.9) 100%),
+  radial-gradient(ellipse 85% 85% at 50% 48%,transparent 58%,rgba(6,3,1,.6) 100%)}
+#kaFx{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+@media (prefers-reduced-motion:reduce){.ka-img,.ka-rays{animation:none}}
+/* logótipo dourado */
+body.keyart .logo .l1{background:linear-gradient(100deg,#b9782a 0%,#f6d27e 18%,#fff4cf 30%,#e9b45a 44%,#a8681f 58%,#f3cc74 74%,#fff1c4 86%,#c4862f 100%);background-size:220% 100%;
+  -webkit-background-clip:text;background-clip:text;color:transparent;animation:kaShine 9s ease-in-out infinite;
+  filter:drop-shadow(0 2px 0 #4a2a0c) drop-shadow(0 4px 0 rgba(30,14,2,.75)) drop-shadow(0 14px 22px rgba(0,0,0,.6))}
+@keyframes kaShine{0%,55%{background-position:100% 0}85%,100%{background-position:0 0}}
+body.keyart .logo .l2{color:#f6e2b4;text-shadow:0 2px 0 rgba(40,20,4,.8),0 0 18px rgba(0,0,0,.7)}
+body.keyart .tag{color:rgba(255,240,214,.92);text-shadow:0 2px 10px rgba(0,0,0,.9);font-style:italic}
+body.keyart .crest{filter:drop-shadow(0 4px 0 rgba(40,20,4,.6)) drop-shadow(0 0 18px rgba(255,190,100,.55))}
+/* ecrã de entrada: logótipo ao centro em cima, entrada ao centro em baixo */
+body.keyart #sLogin .hero{flex-direction:column;justify-content:space-between;align-items:center;max-width:none;gap:10px}
+body.keyart #sLogin .brand{align-self:center;text-align:center;margin-top:0;max-width:none}
+body.keyart #sLogin .crest{margin:0 auto 2px;width:clamp(40px,8vh,68px);height:clamp(40px,8vh,68px)}
+body.keyart #sLogin .logo .l1{font-size:clamp(46px,15vh,128px)}
+body.keyart #sLogin .logo .l2{display:flex;align-items:center;justify-content:center;gap:.7em;margin:.3em 0 0;letter-spacing:.34em;font-size:clamp(15px,3.6vh,30px)}
+body.keyart #sLogin .logo .l2::before,body.keyart #sLogin .logo .l2::after{content:"";height:2px;width:clamp(30px,9vw,110px);background:linear-gradient(90deg,transparent,#f3d488 60%,#fff1c4);border-radius:2px;box-shadow:0 1px 0 rgba(40,20,4,.6)}
+body.keyart #sLogin .logo .l2::after{transform:scaleX(-1);margin-left:-.34em}
+body.keyart #sLogin .tag{margin:6px auto 0;font-size:clamp(12px,2.6vh,17px);max-width:none}
+body.keyart #sLogin .panel{width:min(430px,92vw);background:none;border:0;box-shadow:none;-webkit-backdrop-filter:none;backdrop-filter:none;padding:0;gap:8px;text-align:center;overflow:visible;animation:kaUp 1s .4s both cubic-bezier(.2,.7,.2,1)}
+@keyframes kaUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
+body.keyart #sLogin .panel h2{font-size:15px;letter-spacing:.12em;color:#f3d9a6;text-shadow:0 2px 8px #000}
+body.keyart #sLogin .panel>p{color:#f1e2c6;text-shadow:0 2px 8px #000;font-size:14px}
+body.keyart #lgCont:not([hidden])~#lgTitle,body.keyart #lgCont:not([hidden])~.gbtn{display:none}
+body.keyart #lgCont:not([hidden])~.lglink{font-size:13px;margin-top:-2px}
+body.keyart .contbtn{min-height:60px;border-radius:16px;padding:9px 18px 9px 10px;border:1px solid #fff0bf;color:#2b1706;
+  background:linear-gradient(180deg,#fff0bb 0%,#f6c75e 42%,#d9932f 100%);box-shadow:0 5px 0 #7c4a14,0 16px 34px rgba(0,0,0,.55),inset 0 2px 0 rgba(255,255,240,.9);animation:kaGlow 2.6s ease-in-out infinite}
+body.keyart .contbtn:active{transform:translateY(3px);box-shadow:0 2px 0 #7c4a14,0 8px 18px rgba(0,0,0,.5),inset 0 2px 0 rgba(255,255,240,.9)}
+@keyframes kaGlow{50%{box-shadow:0 5px 0 #7c4a14,0 16px 34px rgba(0,0,0,.55),0 0 26px rgba(255,212,120,.75),inset 0 2px 0 rgba(255,255,240,.9)}}
+body.keyart .contbtn img{border:2px solid #7c4a14;width:42px;height:42px}body.keyart .contbtn b{font-size:18px;font-family:var(--f-display);font-weight:800}
+body.keyart .contbtn small{color:#5d3a10}body.keyart .contbtn i{color:#3a1f05;font-size:15px}
+body.keyart #sLogin .gbtn{height:46px;font-size:15.5px;border-radius:13px}
+body.keyart #lgCont:not([hidden])~.gbtn{background:rgba(22,14,8,.62);color:#f6e7c8;border:1px solid rgba(255,220,150,.38);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px)}
+body.keyart #sLogin .lglink{color:#f3dcb0;text-shadow:0 1px 6px #000}
+body.keyart #lgStatus{text-shadow:0 1px 6px #000;color:#fbe9c9}
+.kaVer{position:absolute;left:max(14px,env(safe-area-inset-left));bottom:max(8px,env(safe-area-inset-bottom));font-size:11px;color:rgba(255,236,200,.55);z-index:21;display:none;letter-spacing:.04em}
+body.keyart:not(.ingame) #sLogin:not([hidden]) .kaVer{display:block}
+/* menu: o mesmo fundo; painel em vidro escuro e dourado */
+body.keyart #sMenu{background:linear-gradient(90deg,rgba(12,7,2,.66) 0%,rgba(12,7,2,.35) 32%,transparent 52%)}
+body.keyart .panel{background:linear-gradient(180deg,rgba(34,22,12,.74),rgba(16,10,5,.86));border:1px solid rgba(243,212,136,.38);box-shadow:0 26px 64px rgba(0,0,0,.55),inset 0 1px 0 rgba(255,236,200,.16)}
+@media (max-height:430px){body.keyart #sLogin .logo .l1{font-size:clamp(40px,14vh,72px)}body.keyart .contbtn{min-height:52px}body.keyart #sLogin .gbtn{height:40px}}
+
 #lgStatus{font-size:14px;line-height:1.4;padding:10px 12px;border-radius:12px;background:rgba(229,87,106,.13);border:1px solid rgba(229,87,106,.35)}
 .lglink{background:none;border:0;color:rgba(242,228,212,.7);font:600 13px var(--f-body);text-decoration:underline;cursor:pointer;padding:2px}.lgemail{display:flex;flex-direction:column;gap:6px;width:100%}.lgemail input{height:40px;border-radius:10px;border:1px solid rgba(255,220,170,.28);background:rgba(0,0,0,.25);color:#f5e3c8;padding:0 12px;font:500 15px var(--f-body)}
 .ghostbtn{height:44px;border-radius:12px;border:1px solid rgba(255,220,170,.28);background:rgba(255,255,255,.04);color:#f5e3c8;font:700 15px var(--f-body);cursor:pointer}
@@ -439,6 +495,7 @@ input{font-family:inherit;-webkit-user-select:text;user-select:text;touch-action
   </div>
 
   <canvas id="menuBg" aria-hidden="true"></canvas>
+  <div id="keyart" aria-hidden="true"><div class="ka-img"></div><div class="ka-rays"></div><div class="ka-shade"></div><canvas id="kaFx"></canvas></div>
   <div id="sLoad" hidden><i></i><div>A preparar o mapa…</div></div>
   <div class="screen scenic" id="sLogin">
     <div class="hero">
@@ -459,6 +516,7 @@ input{font-family:inherit;-webkit-user-select:text;user-select:text;touch-action
         <button class="ghostbtn" id="lgPreview" hidden>Experimentar sem conta</button>
       </div>
     </div>
+    <div class="kaVer">Alvorada dos Reinos · versão de teste</div>
   </div>
 
   <div class="screen scenic" id="sMenu" hidden>
@@ -5676,7 +5734,9 @@ async function accRestore(){let netFail=false;const N=navigator.onLine?2:1,W=k=>
 // sem rede: tenta recuperar a sessão em segundo plano até conseguir
 function accRetryLater(){clearTimeout(ACC.rt);ACC.rt=setTimeout(async()=>{if(!ACC.offline)return;const r=await accRestore();if(r.session){ACC.offline=false;ACC.user=r.session.user;toast('Ligação recuperada: sessão ativa');accAfterLogin()}else accRetryLater()},15000)}
 function accContShow(){const L=accLast(),b=$('lgCont');if(!b)return;const on=!!(L&&L.id)&&!inFrame;b.hidden=!on;$('lgOther').hidden=!on;$('lgTitle').textContent=on?'Ou entra com':'Entra para jogar';$('lgSub').hidden=on;
-  if(on){$('lgContName').textContent=L.name||'A tua conta';$('lgContMail').textContent=L.email||'';const im=$('lgContImg');if(L.avatar){im.src=L.avatar;im.hidden=false}else im.hidden=true}}
+  if(on){$('lgContName').textContent=L.name||'A tua conta';$('lgContMail').textContent=L.email||'';const im=$('lgContImg');const ini=((L.name||L.email||'?').trim()[0]||'?').toUpperCase();
+    const svg="data:image/svg+xml,"+encodeURIComponent(`<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 48 48'><circle cx='24' cy='24' r='24' fill='#5b3412'/><text x='24' y='32' font-family='Georgia,serif' font-size='24' font-weight='700' text-anchor='middle' fill='#ffe3a3'>${ini}</text></svg>`);
+    im.onerror=()=>{im.onerror=null;im.src=svg};im.src=L.avatar||svg;im.hidden=false}}
 async function accContinue(){const L=accLast();loginStatus('A entrar…');
   if(ACC.sb){const r=await accRestore();if(r.session){ACC.user=r.session.user;await accAfterLogin();return}
     if(r.netFail&&r.stored){ACC.user=r.stored;ACC.offline=true;ACC.profile=accCachedProfile();accEnterMenu();toast('Sem internet: podes jogar contra o computador');accRetryLater();return}}
@@ -6383,7 +6443,20 @@ function mobileLandscape(){if(isNative())return;try{if(!matchMedia('(pointer:coa
 
 /* ---------------- capa dos menus: alvorada sobre o mar, com a aldeia feita dos sprites do jogo ---------------- */
 const MBG={cv:null,g:null,W:0,H:0,dpr:1,L:null,t0:0,raf:0,on:false,still:false,last:0};
-function menuBgStart(){
+// capa nova: carrega a imagem (leve em ecrãs pequenos); se falhar fica a capa desenhada antiga
+const KA={on:false,raf:0,p:[],last:0};
+(function kaLoad(){const big=Math.max(innerWidth,innerHeight)*(window.devicePixelRatio||1)>1800;const url='assets/menu/'+(big?'fundo':'fundo-leve')+'.webp?v=1';const im=new Image();
+  im.onload=()=>{const el=document.querySelector('.ka-img');if(el)el.style.setProperty('--ka',"url('"+url+"')");document.body.classList.add('keyart');if(!document.body.classList.contains('ingame'))kaStart()};im.src=url})();
+function kaStart(){const cv=$('kaFx');if(!cv||KA.on)return;let still=false;try{still=matchMedia('(prefers-reduced-motion: reduce)').matches}catch(e){}if(still)return;KA.on=true;KA.raf=requestAnimationFrame(kaFrame)}
+function kaFrame(ts){if(document.body.classList.contains('ingame')||!document.body.classList.contains('keyart')){KA.on=false;return}KA.raf=requestAnimationFrame(kaFrame);if(document.hidden||ts-KA.last<33)return;const dt=Math.min(.1,(ts-(KA.last||ts))/1000);KA.last=ts;
+  const cv=$('kaFx'),d=Math.min(2,window.devicePixelRatio||1),W=innerWidth,H=innerHeight;if(cv.width!==Math.round(W*d)){cv.width=Math.round(W*d);cv.height=Math.round(H*d)}const g=cv.getContext('2d');g.setTransform(d,0,0,d,0,0);g.clearRect(0,0,W,H);
+  const N=Math.round(Math.min(70,W*H/16000));while(KA.p.length<N)KA.p.push({x:Math.random()*W,y:H*(.35+Math.random()*.75),v:10+Math.random()*26,r:.6+Math.random()*1.8,ph:Math.random()*6.28,ember:Math.random()<.45,life:0});
+  g.globalCompositeOperation='lighter';const t=ts/1000;
+  for(const q of KA.p){q.y-=q.v*dt;q.x+=Math.sin(t*.7+q.ph)*12*dt+6*dt;q.life+=dt;if(q.y<-10||q.x>W+10){q.x=Math.random()*W*.9;q.y=H+10;q.life=0}
+    const a=Math.min(1,q.life*.8)*(.35+.35*Math.sin(t*2.2+q.ph))*Math.min(1,q.y/(H*.35));if(a<=0)continue;const R=q.r*(q.ember?2.6:4);
+    const gr=g.createRadialGradient(q.x,q.y,0,q.x,q.y,R*2.4);gr.addColorStop(0,q.ember?`rgba(255,196,110,${a})`:`rgba(255,240,200,${a*.6})`);gr.addColorStop(1,'rgba(255,150,60,0)');g.fillStyle=gr;g.beginPath();g.arc(q.x,q.y,R*2.4,0,7);g.fill()}
+  g.globalCompositeOperation='source-over'}
+function menuBgStart(){if(document.body.classList.contains('keyart')){kaStart();return}
   const cv=$('menuBg');if(!cv)return;MBG.cv=cv;MBG.g=cv.getContext('2d');
   try{MBG.still=matchMedia('(prefers-reduced-motion: reduce)').matches}catch(e){}
   if(!MBG.L||MBG.W!==innerWidth||MBG.H!==innerHeight){try{menuBgBuild()}catch(e){MBG.L=null;return}}
