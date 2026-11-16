@@ -183,6 +183,7 @@ body:has(#objBox:not([hidden])):not(.coaching) #toast div{white-space:normal;tex
 .res.up{box-shadow:inset 0 0 0 1px rgba(151,209,108,.8),0 0 10px rgba(151,209,108,.35)}.res.down{box-shadow:inset 0 0 0 1px rgba(226,103,90,.85)}
 #agePlate{background:var(--hud-glass);border-color:var(--hud-rim)}
 #clock{text-shadow:0 1px 2px #000;color:#e6d6b6}
+#goal{position:absolute;left:calc(12px + env(safe-area-inset-left,0px));top:calc(62px + env(safe-area-inset-top,0px));z-index:6;max-width:min(380px,calc(100% - 170px));display:flex;gap:6px;align-items:center;padding:5px 11px;border-radius:999px;border:1px solid rgba(255,210,122,.45);background:rgba(28,20,12,.78);color:#f3e6c8;font:600 12.5px/1.25 inherit;text-align:left;box-shadow:0 2px 8px rgba(0,0,0,.4)}#goal[hidden]{display:none}#goal .gt{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}body.hudoff #goal,body.coaching #goal{display:none}
 #dayIc{width:22px;height:22px;display:inline-block;flex:none;filter:drop-shadow(0 1px 2px #000)}#dayIc svg{width:22px;height:22px;display:block}
 #bottom{background:none;box-shadow:none;pointer-events:none;align-items:flex-end}
 #bottom:before{display:none}
@@ -471,6 +472,7 @@ input{font-family:inherit;-webkit-user-select:text;user-select:text;touch-action
       <button id="btnMenu" aria-label="Menu"><i data-ic="menu"></i></button>
     </div>
   </div>
+  <button id="goal" hidden title="Próximo objetivo (toca para esconder)"><span class="gi">🎯</span><span class="gt"></span></button>
   <div id="side">
     <button id="bHud" title="Esconder a interface (ver só o jogo)" aria-label="Esconder a interface"><i data-ic="eye"></i></button>
     <button id="bBox" title="Seleção em caixa (arrasta para selecionar)"><i data-ic="box"></i></button>
@@ -754,7 +756,7 @@ input{font-family:inherit;-webkit-user-select:text;user-select:text;touch-action
       <h2>Jogo pausado</h2>
       <div class="row"><button class="big pri" id="bResume">Continuar</button><button class="big" id="bRestart">Recomeçar</button><button class="big" id="bQuit">Menu principal</button></div>
       <div class="row"><button class="big" id="bSave">Guardar jogo</button><button class="big bot" id="bBot" hidden>🤖 Bot: desligado</button><button class="big" id="bErros" hidden>⚠️ Copiar erros</button><button class="big ad" id="bAdGold" hidden>🎬 +100 ouro</button><button class="big" id="bNetSave" hidden>Gravar e sair</button><button class="big" id="bSound">Som: ligado</button><button class="big" id="bVib">Vibração: ligada</button><button class="big" id="bVoz">Voz: ligada</button><button class="big" id="bGfx">Gráficos: alto</button><button class="big" id="bRes">Resolução: HD</button><button class="big" id="bDN">Dia e noite: sim</button></div>
-      <div class="row audio"><label>🎵 Música<input type="range" id="vMusic" min="0" max="100" value="40"></label><label>🔊 Efeitos<input type="range" id="vSfx" min="0" max="100" value="85"></label><label>🌿 Ambiente<input type="range" id="vAmb" min="0" max="100" value="55"></label></div>
+      <div class="row audio"><label>🎵 Música<input type="range" id="vMusic" min="0" max="100" value="40"></label><label>🔊 Efeitos<input type="range" id="vSfx" min="0" max="100" value="85"></label><label>🌿 Ambiente<input type="range" id="vAmb" min="0" max="100" value="55"></label><label>🗣️ Conselheiro<input type="range" id="vVoz" min="0" max="100" value="90"></label></div>
     </div>
   </div>
 
@@ -3721,7 +3723,7 @@ function wall3dSprite(type,o,m){if(CMOD.ready&&CMOD_KIND[type]){const base=CMOD_
   const cv=mkCanvas(CW*SS,CH*SS),c=cv.getContext('2d');c.scale(SS,SS);c.imageSmoothingEnabled=true;c.imageSmoothingQuality='high';c.drawImage(tintCrop(WALL3D,team,sx,sy,w,h),0,0,w,h,1,1,w*k,h*k);
   const r={cv,ox:ax*k+1,oy:ay*k+1,CW,CH};BCACHE[key]=r;return r}
 // edifícios 3D (Blender, arte/edificios-3d): casas, quartel, Centro da Vila… por idade (torre: por nível), mesma câmara e luz dos portões
-const BLD3D_DATA={"file":"edificios-3d.webp","scale":1.5,"atlasSha256":"e5d0c3c82995643d37c721e4cd92677a9c36e8553a6f8b6f15224568d9ea96d4","frames":{"armazem_0":[1118,1532,184,184,92.0,88.0],"armazem_1":[1304,1532,184,184,92.0,88.0],"armazem_2":[1490,1532,184,184,92.0,88.0],"armazem_n2":[1856,1326,184,192,92.0,96.0],"armazem_n3":[2,1532,184,189,92.0,93.0],"arquearia_0":[1578,1076,276,204,138.0,60.0],"arquearia_1":[2,1326,276,204,138.0,60.0],"arquearia_2":[280,1326,276,204,138.0,60.0],"arquearia_n2":[2,1076,276,248,138.0,104.0],"arquearia_n3":[841,782,276,256,138.0,112.0],"casa_0":[560,1723,184,173,92.0,77.0],"casa_1":[746,1723,184,173,92.0,77.0],"casa_2":[932,1723,184,173,92.0,77.0],"casa_n2":[374,1723,184,176,92.0,80.0],"casa_n3":[188,1723,184,182,92.0,86.0],"centro_0":[2,432,276,348,138.0,204.0],"centro_1":[280,432,276,348,138.0,204.0],"centro_2":[2,782,281,292,140.82,132.8],"centro_n2":[1763,2,276,350,138.0,206.0],"doca_0":[374,1532,184,185,92.0,89.0],"doca_1":[560,1532,184,185,92.0,89.0],"doca_2":[746,1532,184,185,92.0,89.0],"doca_n2":[558,1326,184,199,92.0,103.0],"doca_n3":[1392,1076,184,213,92.0,117.0],"estabulo_0":[280,1076,276,243,138.0,99.0],"estabulo_1":[558,1076,276,243,138.0,99.0],"estabulo_2":[836,1076,276,243,138.0,99.0],"estabulo_n2":[285,782,276,272,138.0,128.0],"estabulo_n3":[563,782,276,267,138.0,123.0],"ferreiro_0":[1676,1532,184,183,92.0,87.0],"ferreiro_1":[1862,1532,184,183,92.0,87.0],"ferreiro_2":[2,1723,184,183,92.0,87.0],"ferreiro_n2":[932,1532,184,185,92.0,89.0],"ferreiro_n3":[188,1532,184,189,92.0,93.0],"maravilha_2":[558,2,369,403,184.5,211.0],"mercado_1":[744,1326,276,198,138.0,54.0],"mercado_2":[1022,1326,276,198,138.0,54.0],"mercado_n2":[1114,1076,276,243,138.0,99.0],"mercado_n3":[1119,782,276,252,138.0,108.0],"oficina_1":[1300,1326,276,197,138.0,53.0],"oficina_2":[1578,1326,276,197,138.0,53.0],"oficina_n2":[1397,782,276,252,138.0,108.0],"oficina_n3":[1675,782,276,252,138.0,108.0],"quartel_0":[558,432,276,346,138.0,202.0],"quartel_1":[836,432,276,346,138.0,202.0],"quartel_2":[1114,432,276,346,138.0,202.0],"quartel_n2":[1392,432,276,339,138.0,195.0],"quartel_n3":[1485,2,276,355,138.0,211.0],"templo_1":[929,2,276,395,138.0,251.0],"templo_2":[1207,2,276,395,138.0,251.0],"templo_n2":[280,2,276,404,138.0,260.0],"templo_n3":[2,2,276,428,138.0,284.0],"torre_1":[1670,432,113,320,56.5,224.0],"torre_2":[1785,432,113,320,56.5,224.0],"torre_3":[1900,432,113,320,56.5,224.0]}};
+const BLD3D_DATA={"file":"edificios-3d.webp","scale":1.5,"atlasSha256":"3aed8f3b216a622955862c16fa517b116000b00e2eee7488b776f49bc991dc08","frames":{"armazem_0":[1118,1532,184,184,92.0,88.0],"armazem_1":[1304,1532,184,184,92.0,88.0],"armazem_2":[1490,1532,184,184,92.0,88.0],"armazem_n2":[1856,1326,184,192,92.0,96.0],"armazem_n3":[2,1532,184,189,92.0,93.0],"arquearia_0":[1575,1076,276,204,138.0,60.0],"arquearia_1":[2,1326,276,204,138.0,60.0],"arquearia_2":[280,1326,276,204,138.0,60.0],"arquearia_n2":[2,1076,276,248,138.0,104.0],"arquearia_n3":[839,782,276,256,138.0,112.0],"casa_0":[560,1723,184,173,92.0,77.0],"casa_1":[746,1723,184,173,92.0,77.0],"casa_2":[932,1723,184,173,92.0,77.0],"casa_n2":[374,1723,184,176,92.0,80.0],"casa_n3":[188,1723,184,182,92.0,86.0],"centro_0":[2,432,276,348,138.0,204.0],"centro_1":[280,432,276,348,138.0,204.0],"centro_2":[2,782,281,292,140.82,132.8],"centro_n2":[1763,2,276,350,138.0,206.0],"doca_0":[374,1532,184,185,92.0,89.0],"doca_1":[560,1532,184,185,92.0,89.0],"doca_2":[746,1532,184,185,92.0,89.0],"doca_n2":[558,1326,184,199,92.0,103.0],"doca_n3":[1389,1076,184,213,92.0,117.0],"estabulo_0":[558,1076,275,242,144.0,98.0],"estabulo_1":[835,1076,275,242,144.0,98.0],"estabulo_2":[1112,1076,275,242,144.0,98.0],"estabulo_n2":[285,782,275,273,143.0,129.0],"estabulo_n3":[562,782,275,268,141.0,124.0],"ferreiro_0":[1676,1532,184,183,92.0,87.0],"ferreiro_1":[1862,1532,184,183,92.0,87.0],"ferreiro_2":[2,1723,184,183,92.0,87.0],"ferreiro_n2":[932,1532,184,185,92.0,89.0],"ferreiro_n3":[188,1532,184,189,92.0,93.0],"maravilha_2":[558,2,369,403,184.5,211.0],"mercado_1":[744,1326,276,198,138.0,54.0],"mercado_2":[1022,1326,276,198,138.0,54.0],"mercado_n2":[280,1076,276,243,138.0,99.0],"mercado_n3":[1117,782,276,252,138.0,108.0],"oficina_1":[1300,1326,276,197,138.0,53.0],"oficina_2":[1578,1326,276,197,138.0,53.0],"oficina_n2":[1395,782,276,252,138.0,108.0],"oficina_n3":[1673,782,276,252,138.0,108.0],"quartel_0":[558,432,276,346,138.0,202.0],"quartel_1":[836,432,276,346,138.0,202.0],"quartel_2":[1114,432,276,346,138.0,202.0],"quartel_n2":[1392,432,276,339,138.0,195.0],"quartel_n3":[1485,2,276,355,138.0,211.0],"templo_1":[929,2,276,395,138.0,251.0],"templo_2":[1207,2,276,395,138.0,251.0],"templo_n2":[280,2,276,404,138.0,260.0],"templo_n3":[2,2,276,428,138.0,284.0],"torre_1":[1670,432,113,320,56.5,224.0],"torre_2":[1785,432,113,320,56.5,224.0],"torre_3":[1900,432,113,320,56.5,224.0]}};
 const BLD3D={ready:false,img:null,wide:true,teams:new Map(),meta:BLD3D_DATA};
 (()=>{if(!BLD3D_DATA.file)return;const im=new Image();im.onload=()=>{BLD3D.img=im;BLD3D.ready=true;for(const k in BCACHE)delete BCACHE[k];try{PORTS.clear()}catch(e){}try{if(typeof MBG!=='undefined'&&MBG.L&&!document.body.classList.contains('ingame')){MBG.L=null;menuBgStart()}}catch(e){}};im.src='assets/edificios-extra/'+BLD3D_DATA.file})();
 function bld3dKey(type,age,vr){const F=BLD3D.meta.frames;if(!F)return null;
@@ -4940,7 +4942,7 @@ function renderMini(){
    Barramentos: master → música / efeitos / ambiente. Posição 3D simplificada (volume + pan
    pelo ecrã), só se ouve o que o jogador vê, limite de vozes e de sons por frame. */
 const ASR=24000;
-const AUD={ctx:null,master:null,bus:{},on:true,vol:{master:.9,music:.4,sfx:.85,amb:.55},buf:new Map(),voices:0,last:{},fnew:0,
+const AUD={ctx:null,master:null,bus:{},on:true,vol:{master:.9,music:.4,sfx:.85,amb:.55,voz:.9},buf:new Map(),voices:0,last:{},fnew:0,
   stats:{played:0,culled:0,limited:0,made:0,by:{}},combat:0,warm:[],amb:null,unlocked:false,dk:0};
 function arng(s){return()=>{s|=0;s=s+0x6D2B79F5|0;let t=Math.imul(s^s>>>15,1|s);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
 const SINT=new Float32Array(4096);for(let i=0;i<4096;i++)SINT[i]=Math.sin(i/4096*Math.PI*2);
@@ -5329,7 +5331,7 @@ function audioGameStart(){if(!audioInit())return;ambStop();setTimeout(()=>{if(ru
   MUS.want='paz';AUD.combat=0;if(MUS.mood==null||MUS.mood==='menu'){MUS.mood='paz';musNewPiece(true)}audioPause(false)}
 function audioToMenu(){ambStop();MUS.want='menu';audioPause(false)}
 function audioSave(){try{localStorage.setItem('alv_audio',JSON.stringify({on:AUD.on,...AUD.vol}))}catch(e){}}
-function audioLoad(){try{const s=JSON.parse(localStorage.getItem('alv_audio')||'null');if(s){AUD.on=s.on!==false;for(const k of ['master','music','sfx','amb'])if(typeof s[k]==='number')AUD.vol[k]=clamp(s[k],0,1)}else if(localStorage.getItem('alv_sound')==='0')AUD.on=false}catch(e){}soundOn=AUD.on}
+function audioLoad(){try{const s=JSON.parse(localStorage.getItem('alv_audio')||'null');if(s){AUD.on=s.on!==false;for(const k of ['master','music','sfx','amb','voz'])if(typeof s[k]==='number')AUD.vol[k]=clamp(s[k],0,1)}else if(localStorage.getItem('alv_sound')==='0')AUD.on=false}catch(e){}soundOn=AUD.on}
 // ---------- amostra para ouvir fora do jogo (testes) ----------
 async function audioRenderDemo(plan,secs){
   const off=new OfflineAudioContext(2,Math.ceil(secs*ASR),ASR);AUD.offline=true;const save={ctx:AUD.ctx,master:AUD.master,bus:AUD.bus,mood:MUS.mood,want:MUS.want};
@@ -5393,7 +5395,7 @@ function voz(id,force){try{
   const pb=vozBuf(id);if(!pb)return;
   pb.then(buf=>{if(!buf||!AUD.ctx)return;const c=AUD.ctx;
     if(VOZ.cur){try{VOZ.cur.stop()}catch(e){}}
-    const src=c.createBufferSource();src.buffer=buf;const g=c.createGain();g.gain.value=1.15*Math.max(.35,AUD.vol.sfx);src.connect(g);g.connect(AUD.master);
+    const src=c.createBufferSource();src.buffer=buf;const g=c.createGain();g.gain.value=1.15*(AUD.vol.voz??.9);src.connect(g);g.connect(AUD.master);
     src.start();VOZ.cur=src;VOZ.curPri=pri;VOZ.until=performance.now()/1000+buf.duration;musDuck(buf.duration+.6);
     src.onended=()=>{try{g.disconnect()}catch(e){}if(VOZ.cur===src)VOZ.cur=null}});
   if(VOZ_TXT[id]&&/^(rei_ferido|edificio|inimigo|exercito|comida)$/.test(id))toast('🗣️ '+VOZ_TXT[id],true); // legenda só para as falas sem aviso próprio
@@ -5994,7 +5996,7 @@ function updateTop(){
   for(const k of KINDS){const v=Math.floor(p.res[k]);const el=$('r_'+k);if(HUDV[k]!==v){const box=$('rs_'+k);if(HUDV[k]!=null){box.classList.remove('up','down');void box.offsetWidth;box.classList.add(v>HUDV[k]?'up':'down');clearTimeout(box._t);box._t=setTimeout(()=>box.classList.remove('up','down'),450)}HUDV[k]=v;el.textContent=v}
     $('w_'+k).textContent=work[k]?'×'+work[k]:''}
   $('r_pop').textContent=p.pop+'/'+p.popCap;$('rs_pop').classList.toggle('full',p.pop>=p.popCap&&p.popCap>0);
-  hapHud();
+  hapHud();try{goalHud(.5)}catch(e){}
   $('ageName').textContent=AGES[p.age];$('ageEmb').textContent=['I','II','III'][p.age];
   let aq=null;for(const e of ents)if(e.kind==='b'&&e.o===ME&&e.queue.length&&e.queue[0].k==='age'){aq=e;break}
   $('ageBar').hidden=!aq;if(aq)$('ageBar').firstChild.style.width=Math.min(100,aq.qt/AGE_TIME[aq.queue[0].a]*100)+'%';
@@ -6395,6 +6397,26 @@ $('bSave').onclick=()=>{sfx('click');const res=saveGame(false);saveBtnFlash(res)
 let netSaveArm=0;$('bNetSave').onclick=()=>{if(!NET.on||G.over)return;if(Date.now()-netSaveArm>2500){netSaveArm=Date.now();toast('Toca outra vez: a partida fica gravada nos dois telemóveis e termina por agora');return}netSaveArm=0;act('savequit',{});$('sPause').hidden=true};
 $('bDN').onclick=()=>{DAYNIGHT=!DAYNIGHT;$('bDN').textContent='Dia e noite: '+(DAYNIGHT?'sim':'não');try{localStorage.setItem('alv_dn',DAYNIGHT?'1':'0')}catch(e){}};$('bDN').textContent='Dia e noite: '+(DAYNIGHT?'sim':'não');
 const hapFace=h=>h>=75?'😄':h>=50?'🙂':h>=35?'😐':h>=20?'😟':'😠';
+// próximo objetivo (depois do tutorial): uma frase curta conforme o estado do reino, de 2 em 2 s
+let GOAL_OFF=false,GOAL_T=0;
+function goalText(){const o=ME,p=P[o];if(!p)return null;const v=cntU(o,'aldeao'),army=ents.filter(e=>e.o===o&&e.kind==='u'&&e.d.mil&&!e.d.king).length;
+  const has=t=>ents.some(e=>e.o===o&&e.type===t&&e.kind==='b'),c=ents.find(e=>e.o===o&&e.type==='centro'&&e.done),e=econOn(o)?econOf(o):null;
+  if(e&&e.hungry)return 'Há fome: põe aldeões a recolher comida (bagas, caça, quintas)';
+  if(e&&e.hap<=35)return 'O povo está descontente: baixa o imposto (🙂) ou constrói um Templo';
+  if(p.popCap-p.pop<=1&&p.popCap<POP_MAX)return 'Sem espaço: constrói uma Casa';
+  if(v<10)return 'Treina aldeões no Centro da Vila ('+v+'/10)';
+  if(!has('quartel'))return 'Constrói um Quartel para treinar soldados';
+  if(p.age===0)return 'Junta comida e avança para a Idade do Bronze (Centro da Vila → ⏫)';
+  if(c&&(c.lvl||1)<2)return 'Melhora o Centro da Vila para o Nv.2 (⬆ no painel do Centro)';
+  if(!has('torre'))return 'Defende a vila: constrói uma Torre de Vigia (aldeão → Defesas)';
+  if(army<8)return 'Reforça o exército ('+army+'/8 soldados)';
+  if(p.age===1)return 'Avança para a Idade do Ferro (Centro da Vila → ⏫)';
+  if(c&&(c.lvl||1)<3)return 'Melhora o Centro da Vila para o Nv.3: ganhas o castelo';
+  if(!has('ferreiro'))return 'Constrói um Ferreiro e pesquisa armas e armaduras';
+  if(G.mode==='build')return 'Faz crescer a cidade: melhora casas e edifícios até ao Nv.3';
+  return G.vic==='sobrevivencia'?'Aguenta as vagas: mais torres, muralhas e soldados':'Derruba o Centro da Vila do rival ou constrói uma Maravilha'}
+function goalHud(dt){const b=$('goal');if(!b)return;GOAL_T-=dt||0;if(GOAL_T>0)return;GOAL_T=2;const show=running&&G&&!G.over&&!G.tut&&!GOAL_OFF&&G.camp==null;
+  if(!show){if(!b.hidden)b.hidden=true;return}const t=goalText();if(!t){b.hidden=true;return}const el=b.querySelector('.gt');if(el.textContent!==t){el.textContent=t;b.title='Próximo objetivo: '+t+' (toca para esconder)'}b.hidden=false}
 function hapHud(){const b=$('rs_hap');if(!b)return;const on=econOn(ME);b.hidden=!on;if(!on)return;const e=econOf(ME),h=Math.round(e.hap);$('r_hap').textContent=h;b.querySelector('.hf').textContent=hapFace(h);
   b.classList.toggle('sad',h<=35);b.classList.toggle('glad',h>=75);if(!$('mTax').hidden)taxRender()}
 function taxRender(){const e=econOf(ME),r=econRates(ME),h=Math.round(e.hap),f=x=>(Math.round(x*10)/10).toString().replace('.',',');
@@ -6404,7 +6426,8 @@ function taxRender(){const e=econOf(ME),r=econRates(ME),h=Math.round(e.hap),f=x=
   $('txInfo').innerHTML=`<b>Por minuto</b>: impostos <span class="g">+${f(r.tax)} ${RICON.gold}</span> · soldo <span class="r">−${f(r.soldo)} ${RICON.gold}</span> · comida do povo <span class="r">−${f(r.food)} ${RICON.food}</span><br>
     <small>${r.vil} aldeões pagam imposto · ${r.mil} soldados recebem soldo · os primeiros ${ECON.FREE} habitantes não comem</small><br>
     <b>Felicidade</b> (a caminho de ${r.target}): ${r.parts.map(([n,v])=>n+' '+(v>=0?'<span class="g">+'+v:'<span class="r">'+v)+'</span>').join(' · ')}<br>${eff}`}
-$('rs_hap').onclick=()=>{sfx&&sfx('click');$('mTax').hidden=false;taxRender()};$('txClose').onclick=()=>{$('mTax').hidden=true};
+$('goal').onclick=()=>{GOAL_OFF=true;$('goal').hidden=true;toast('Objetivos escondidos (voltam na próxima partida)')};
+$('rs_hap').onclick=()=>{sfx&&sfx('click');$('mTax').hidden=false;taxRender();if(G&&G.tut)G.tut.tax=1};$('txClose').onclick=()=>{$('mTax').hidden=true};
 $('txBtns').addEventListener('click',ev=>{const b=ev.target.closest('[data-t]');if(b){act('tax',{v:+b.dataset.t});setTimeout(taxRender,50)}});
 function resUI(){const b=$('bRes');if(b)b.textContent=RES==='hd'?'Resolução: HD':'Resolução: auto (poupa bateria)'}
 $('bRes').onclick=()=>{sfx('click');RES=RES==='hd'?'auto':'hd';try{for(const t of Object.keys(UNIT3D_HD_DATA))if(UNIT3D[t]&&!!UNIT3D[t].hd!==unit3dHdOn())loadUnit3dPreferred(t,UNIT3D[t])}catch(e){}try{for(const t of Object.keys(UNIT3D_CAVHD_DATA))if(UNIT3D[t]&&!!UNIT3D[t].hd!==unit3dHdOn())cavLoad(t)}catch(e){}try{localStorage.setItem('alv_res',RES)}catch(e){}DPRCAP=devDPR();try{localStorage.setItem('alv_dpr',String(DPRCAP))}catch(e){}PERF.good=0;PERF.ema=17;resize();resUI();if(typeof resetChunks==='function'&&running)resetChunks();toast(RES==='hd'?'Resolução HD: nítido, à resolução do ecrã':'Resolução automática: baixa um pouco se o jogo ficar lento')};resUI();
@@ -6427,7 +6450,7 @@ document.addEventListener('visibilitychange',()=>{if(document.hidden){pointers.c
   if(running&&!G.over){if(placing){placing=null;uiDirty=true;return}if(menuMode){menuMode=null;uiDirty=true;return}togglePause();return}
   if(A.minimizeApp)A.minimizeApp()})}
 $('bSound').onclick=()=>{AUD.on=soundOn=!AUD.on;$('bSound').textContent='Som: '+(AUD.on?'ligado':'desligado');audioApplyVol();audioSave();try{localStorage.setItem('alv_sound',AUD.on?'1':'0')}catch(e){}};
-for(const [id,k] of [['vMusic','music'],['vSfx','sfx'],['vAmb','amb']]){const el=$(id);el.oninput=()=>{AUD.vol[k]=el.value/100;audioApplyVol()};el.onchange=()=>{audioSave();if(k==='sfx'){audioPause(false);snd('ui_click',null,null,{force:1});if(paused)setTimeout(()=>{if(paused)audioPause(true)},250)}}}
+for(const [id,k] of [['vMusic','music'],['vSfx','sfx'],['vAmb','amb'],['vVoz','voz']]){const el=$(id);el.oninput=()=>{AUD.vol[k]=el.value/100;audioApplyVol()};el.onchange=()=>{audioSave();if(k==='voz'){try{if(G)voz('construido',true)}catch(e){}}if(k==='sfx'){audioPause(false);snd('ui_click',null,null,{force:1});if(paused)setTimeout(()=>{if(paused)audioPause(true)},250)}}}
 document.querySelectorAll('#diffRow button').forEach(b=>b.onclick=()=>{difficulty=+b.dataset.d;document.querySelectorAll('#diffRow button').forEach(x=>x.classList.toggle('sel',x===b));try{localStorage.setItem('alv_diff',difficulty)}catch(e){}});
 $('bPlay').onclick=()=>{sfx('click');setupShow()};
 function setupShow(){$('sMenu').hidden=true;$('sSetup').hidden=false;setupRender()}
@@ -6470,10 +6493,10 @@ document.addEventListener('click',ev=>{if(!ev.isTrusted||loadBusy)return;const b
   requestAnimationFrame(()=>requestAnimationFrame(()=>setTimeout(()=>{try{b.click()}catch(e){console.warn(e)}done()},0)))},true);
 $('bEndMenu').onclick=()=>{if(NET.on||NET.room)netEndMatch();netLeaveGame();$('sEnd').hidden=true;showMenu()};
 try{const d=localStorage.getItem('alv_diff');if(d!=null){difficulty=+d;document.querySelectorAll('#diffRow button').forEach(x=>x.classList.toggle('sel',+x.dataset.d===difficulty))}}catch(e){}
-audioLoad();$('bSound').textContent='Som: '+(AUD.on?'ligado':'desligado');$('vMusic').value=Math.round(AUD.vol.music*100);$('vSfx').value=Math.round(AUD.vol.sfx*100);$('vAmb').value=Math.round(AUD.vol.amb*100);
+audioLoad();$('bSound').textContent='Som: '+(AUD.on?'ligado':'desligado');$('vMusic').value=Math.round(AUD.vol.music*100);$('vSfx').value=Math.round(AUD.vol.sfx*100);$('vAmb').value=Math.round(AUD.vol.amb*100);$('vVoz').value=Math.round((AUD.vol.voz??.9)*100);
 
 /* ---------------- início / fim ---------------- */
-function startGame(seed,opts){BOT.on=false;BOT.cam=null;document.body.classList.remove('bot');
+function startGame(seed,opts){GOAL_OFF=false;BOT.on=false;BOT.cam=null;document.body.classList.remove('bot');
   const mode=NET.on?'normal':gameMode;seed=seed??Math.floor(Math.random()*1e9);
   const O=opts||(NET.on?{}:setupOpts(seed));
   G={seed,time:0,starts:null,amoveNext:false,over:false,fishRespawn:[],form:'livre',cmdMode:null,mode,
@@ -6720,7 +6743,15 @@ const TUT_STEPS=[
   {t:'Junta <b>400 de comida</b>, toca no Centro da Vila e em <b>Avançar de Idade</b> para chegar à Idade do Bronze.',ok:()=>P[ME].age>=1||ents.some(e=>e.o===ME&&e.kind==='b'&&e.queue&&e.queue.some(q=>q.k==='age')),ui:'⏫',need:()=>selT('centro')&&P[ME].res.food>=400,tgAlt:()=>P[ME].res.food>=400?myB('centro'):null,prog:()=>Math.min(1,P[ME].res.food/400),rw:{wood:120,stone:80}},
   {t:'Na Idade do Bronze os edifícios sobem de nível. Toca numa <b>Casa</b> e depois em <b>⬆ Nv.2</b>: mais vida e mais população.',wait:()=>P[ME].age<1?'A avançar para a Idade do Bronze… continua a recolher recursos.':null,
     ok:()=>ents.some(e=>e.o===ME&&e.type==='casa'&&((e.lvl||1)>=2||e.queue.some(q=>q.k==='up'))),ui:'⬆️',need:()=>selT('casa'),tgAlt:()=>myB('casa'),pan:1,rw:{gold:100}},
-  {t:'Excelente! Faz crescer a aldeia e o exército, melhora os edifícios e derruba o <b>Centro da Vila</b> do rival. O rival começa a atacar daqui a pouco.',ok:()=>false,end:1}];
+  // ---- passos novos: impostos e felicidade, defesa (torre), sino, crescimento económico e militar ----
+  {t:'O povo paga <b>impostos</b> e precisa de comida. Toca na <b>carinha</b> 🙂 na barra de cima para veres a felicidade e escolheres o imposto.',ok:()=>!!(G.tut&&G.tut.tax),sel:'#rs_hap',rw:{stone:100,wood:30}},
+  {t:'Agora defende a vila. Escolhe um <b>aldeão</b> e toca em <b>🛡️ Defesas</b>.',ok:()=>menuMode==='def'||(!!placing&&placing.type==='torre')||!!myB('torre'),ui:'🛡️',need:()=>selT('aldeao'),tgAlt:()=>idleVil()},
+  {t:'Toca em <b>Torre de Vigia</b> e coloca-a perto da aldeia. As torres disparam flechas contra os inimigos (melhoram de nível como os edifícios).',ok:()=>!!myB('torre'),ui:'b:torre',need:()=>menuMode==='def'||(!!placing&&placing.type==='torre'),tgAlt:()=>placing?tutSpot('torre'):null},
+  {t:'Quando o inimigo atacar, toca no <b>Centro da Vila</b> e no <b>🔔 Sino</b>: os aldeões escondem-se e disparam flechas. Experimenta agora.',ok:()=>!!(G.bell&&G.bell[ME]),ui:'🔔',need:()=>selT('centro'),tgAlt:()=>myB('centro'),pan:1},
+  {t:'Toca outra vez no sino (<b>Fim alarme</b>) para os aldeões voltarem ao trabalho.',ok:()=>!(G.bell&&G.bell[ME]),ui:'🔔',need:()=>selT('centro'),tgAlt:()=>myB('centro'),rw:{food:100,gold:50}},
+  {t:'Faz crescer o reino: <b>15 aldeões</b> e <b>5 soldados</b>. Lembra-te: o povo come comida e os soldados recebem soldo em ouro.',ok:()=>cntU(ME,'aldeao')>=15&&ents.filter(e=>e.o===ME&&e.kind==='u'&&e.d.mil&&!e.d.king).length>=5,
+    prog:()=>Math.min(1,(Math.min(15,cntU(ME,'aldeao'))+Math.min(5,ents.filter(e=>e.o===ME&&e.kind==='u'&&e.d.mil&&!e.d.king).length))/20),rw:{food:150,wood:100}},
+  {t:'Excelente! A partir de agora segue o <b>próximo objetivo</b> no topo do ecrã: melhora os edifícios, avança até à Idade do Ferro e derruba o <b>Centro da Vila</b> do rival.',ok:()=>false,end:1}];
 // recurso perto do Centro que um toque no ponto da mão acerta mesmo (não fica atrás de edifícios nem debaixo de unidades)
 const resPt=r=>{const s=w2s(r.tx+.5,r.ty+.5);return{x:s.x,y:s.y-(r.rk==='wood'?30:12)*cam.z}};
 function tutRes(f){const T=G.tut;if(T&&T.res&&!T.res.dead&&T.res.amt>0){const q=resPt(T.res);if(pickAt(q.x,q.y,true)===T.res)return T.res}
@@ -6733,7 +6764,7 @@ function tutSpot(t){const tc=myB('centro');if(!tc)return null;const T=G.tut;if(T
 function myB(t){return ents.find(e=>e.o===ME&&e.kind==='b'&&e.type===t)||null}
 function vil(f){return ents.some(e=>e.o===ME&&e.type==='aldeao'&&f(e))}
 function nearRes(f){const tc=myB('centro');if(!tc)return null;let best=null,bd=1e9;for(const r of byId.values()){if(r.kind!=='r'||!f(r)||!vis[idx(r.tx,r.ty)])continue;const d=hyp(r.tx-tc.tx,r.ty-tc.ty);if(d<bd){bd=d;best=r}}return best}
-function tutStart(){if(!G||NET.on)return;G.tut={i:0,t:0,done:0,panAt:performance.now()};sel=[];uiDirty=true;if(AI){AI.nextAttack=Math.max(AI.nextAttack,99999)}tutShow();try{localStorage.setItem('alv_tut','1')}catch(e){}}
+function tutStart(){if(!G||NET.on)return;G.tut={i:0,t:0,done:0,panAt:performance.now()};sel=[];uiDirty=true;if(AI){AI.nextAttack=Math.max(AI.nextAttack,99999);AI.raided=true}tutShow();try{localStorage.setItem('alv_tut','1')}catch(e){}}
 function tutEnd(skip){if(!G||!G.tut)return;G.tut=null;tutHide();$('coach').hidden=true;document.body.classList.remove('coaching');if(AI)AI.nextAttack=AI.t+(skip?240:300);if(skip)toast('Tutorial terminado. O rival vai começar a preparar-se.')}
 function tutShow(){const T=G&&G.tut;const el=$('coach');document.body.classList.toggle('coaching',!!T);if(!T){el.hidden=true;return}const st=TUT_STEPS[T.i];el.hidden=false;el.classList.toggle('done',!!st.end);
   el.querySelector('.ch-step').textContent=st.end?'Tutorial concluído':'Passo '+(T.i+1)+' de '+(TUT_STEPS.length-1);
@@ -6750,8 +6781,8 @@ function tutHide(){$('tutHand').hidden=true;$('tutRing').hidden=true}
 function tutArrow(c,t){const T=G&&G.tut;const hand=$('tutHand'),ring=$('tutRing');if(!T){if(!hand.hidden)tutHide();return}const st=TUT_STEPS[T.i];
   if(!st||st.end||(st.wait&&st.wait())||!$('sSetup').hidden){tutHide();return}
   const R=cv.getBoundingClientRect();let ux=null,uy=null,el=null;
-  const useUI=st.ui&&(!st.need||st.need());
-  if(useUI){el=document.querySelector('#cmds button[data-k="'+st.ui+'"]');if(el){const b=el.getBoundingClientRect();if(b.width>0&&b.right>0&&b.left<innerWidth){ux=b.left+b.width/2;uy=b.top+b.height*.55;
+  const useUI=(st.ui||st.sel)&&(!st.need||st.need());
+  if(useUI){el=document.querySelector(st.sel||('#cmds button[data-k="'+st.ui+'"]'));if(el){const b=el.getBoundingClientRect();if(b.width>0&&b.right>0&&b.left<innerWidth){ux=b.left+b.width/2;uy=b.top+b.height*.55;
     ring.hidden=false;ring.style.left=(b.left-4)+'px';ring.style.top=(b.top-4)+'px';ring.style.width=(b.width+8)+'px';ring.style.height=(b.height+8)+'px'}else el=null}}
   if(!el){ring.hidden=true;const e=useUI?null:(st.need&&!st.need()&&st.tgAlt?st.tgAlt():st.tg?st.tg():null)||(st.tgAlt&&(!st.need||!st.need())?st.tgAlt():null);
     if(e){const cx=e.kind==='b'?e.tx+e.w/2:e.kind==='u'?e.x:e.tx+.5,cy=e.kind==='b'?e.ty+e.h/2:e.kind==='u'?e.y:e.ty+.5;const sp=w2s(cx,cy);ux=R.left+sp.x;uy=R.top+sp.y-(e.kind==='u'?14:e.kind==='r'?(e.rk==='wood'?30:12):0)*cam.z;
