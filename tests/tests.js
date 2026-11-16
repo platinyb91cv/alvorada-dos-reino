@@ -14,7 +14,7 @@ function clearArea(cx,cy,r){const s=S();for(let y=cy-r;y<=cy+r;y++)for(let x=cx-
 try{
   const s=fresh(21);const h=home(0);
   const made={};
-  for(const bt of ['quartel','arquearia','estabulo','oficina','templo','mercado']){const sp=freeSpot(bt,0,h.x,h.y,5);const b=mkBld(0,bt,sp.x,sp.y,true);
+  for(const bt of ['quartel','arquearia','estabulo','oficina','templo','mercado','armazem']){const sp=freeSpot(bt,0,h.x,h.y,5);const b=mkBld(0,bt,sp.x,sp.y,true);
     for(const t of BLDS[bt].train){b.queue=[];s.P[0].res.food=s.P[0].res.wood=s.P[0].res.gold=s.P[0].res.stone=20000;queueUnit(b,t,true);sim(UNITS[t].time+1);made[t]=s.ents.filter(e=>e.o===0&&e.type===t).length}}
   // doca junto ao lago central
   const L=s.G.lake;let dock=null;for(let r=0;r<16&&!dock;r++)for(let y=Math.floor(L.y)-r-10;y<=L.y+r+10&&!dock;y++)for(let x=Math.floor(L.x)-r-10;x<=L.x+r+10;x++){if(canPlace('doca',x,y,0,0,true)){dock=mkBld(0,'doca',x,y,true);break}}
@@ -201,7 +201,7 @@ try{
   const snap=()=>{const s=S();recount();return JSON.stringify({n:s.ents.length,types:s.ents.map(e=>e.type).sort().join(','),res:s.P.map(p=>Object.values(p.res).map(Math.floor)),age:s.P.map(p=>p.age),techs:Object.keys(s.P[0].techs).sort(),
     walls:s.ents.filter(e=>e.d.wall||e.d.gate).length,locked:s.ents.filter(e=>e.locked).length,lvl:s.ents.filter(e=>e.type==='torre').map(e=>e.lvl),cargo:s.ents.filter(e=>e.cargo).map(e=>e.cargo.length),
     fish:[...s.byId.values()].filter(r=>r.fish).length,animals:s.ents.filter(e=>e.o===2).length,wonder:s.G.wonder&&Math.round(s.G.wonder.t),queue:tc&&s.ents.find(e=>e.id===tc.id).queue.length,pop:s.P.map(p=>p.pop),stance:s.ents.filter(e=>e.stance==='hold').length,hp:Math.round(s.ents.reduce((a,e)=>a+e.hp,0))})};
-  const A=snap();saveGame(true);const raw=localStorage.getItem('alv_save_v1');startGame(99);loadGame();const B=snap();
+  const A=snap();saveGame(true);const raw=localStorage.getItem(normalSaveKey());startGame(99);loadGame();const B=snap();
   let parsed=true;try{JSON.parse(raw)}catch(e){parsed=false}
   rec('Save',parsed&&raw.length>1000,'tamanho '+raw.length+' bytes');
   rec('Load',A===B,A===B?'estado idêntico (unidades, edifícios, carga, peixes, fila, Maravilha, posturas)':'antes '+A+'\ndepois '+B);

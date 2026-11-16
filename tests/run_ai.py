@@ -1,6 +1,7 @@
 import asyncio, json, sys
 from playwright.async_api import async_playwright
-GAME="file:///home/claude/alvorada/www/index.html"
+import os
+GAME=os.environ.get("ALV_URL","http://localhost:8777/index.html?bot=teste")  # servidor: python3 -m http.server 8777 --directory www
 SEEDS=[int(x) for x in sys.argv[1:]] or [101,202,303,404]
 JS=r"""
 (seed)=>{
@@ -28,10 +29,10 @@ JS=r"""
       }else{if(e.hp>e.max+.01||!(e.max>0))st.bad++;if((e.d.wall||e.d.gate)&&e.done&&e.o<2)st.wallsBuilt[e.o]=Math.max(st.wallsBuilt[e.o],s.ents.filter(w=>w.o===e.o&&(w.d.wall||w.d.gate)&&w.done).length);if((e.d.wall||e.d.gate)&&e.hp<e.max)st.dmgWall=1}
     }
     for(let o=0;o<2;o++){for(const k in s.P[o].res)if(s.P[o].res[k]<-0.001)st.neg++;
-      let n=0;for(const e of s.ents)if(e.o===o){if(e.kind==='u'){n++;if(e.cargo)n+=e.cargo.length}else if(e.garr)n+=e.garr.length}if(n!==s.P[o].pop)st.pop++;
+      let n=0;const nk=a=>a.filter(x=>!(x.d&&x.d.king)).length;for(const e of s.ents)if(e.o===o){if(e.kind==='u'){if(!e.d.king)n++;if(e.cargo)n+=nk(e.cargo)}else if(e.garr)n+=nk(e.garr)}if(n!==s.P[o].pop)st.pop++;
       st.techs[o]=Object.keys(s.P[o].techs).length;st.ages[o]=s.P[o].age;}
     st.maxEnts=Math.max(st.maxEnts,s.ents.length);
-    if(sec===900){const A=JSON.stringify({n:s.ents.length,res:s.P.map(p=>Object.values(p.res).map(Math.floor))});saveGame(true);const raw=localStorage.getItem('alv_save_v1');loadGame();
+    if(sec===900){const A=JSON.stringify({n:s.ents.length,res:s.P.map(p=>Object.values(p.res).map(Math.floor))});saveGame(true);const raw=localStorage.getItem(normalSaveKey());loadGame();
       s=__S();const s2=s;const B=JSON.stringify({n:s2.ents.length,res:s2.P.map(p=>Object.values(p.res).map(Math.floor))});st.saveOk=A===B?'ok':'diff '+A+' / '+B;
       // depois de carregar, s aponta para o estado novo
       last.clear();idleSince.clear();}
@@ -58,7 +59,7 @@ async def main():
         b = await p.chromium.launch()
         pg = await b.new_page(viewport={"width":844,"height":390})
         errs=[]; pg.on("pageerror", lambda e: errs.append(str(e)[:300]))
-        await pg.goto(GAME); await pg.click("#lgPreview"); await pg.click("#bPlay"); await pg.click("#bSetupGo"); await pg.wait_for_timeout(300)
+        await pg.goto(GAME); await pg.wait_for_timeout(4000); await pg.evaluate("startGame(7,{map:'rios',vic:'classico'})"); await pg.wait_for_timeout(300)
         for sd in SEEDS:
             r=await pg.evaluate(JS, sd)
             print("SEED",sd,json.dumps(r,ensure_ascii=False))
