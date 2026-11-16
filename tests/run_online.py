@@ -34,7 +34,7 @@ RANDOM_ORDERS=r"""(n)=>{const s=__S();const mine=s.ents.filter(e=>e.kind==='u'&&
 async def main():
   env=dict(os.environ,PORT=str(PORT),HOST='127.0.0.1',FAKE_LAG=str(LAG),SUPABASE_URL=f'http://127.0.0.1:{MOCK}',SUPABASE_KEY='sb_publishable_teste',ALV_SERVER_SECRET='s3cr3t',FORFEIT_MS='12000',MOCK_MIN_DUR='30',MOCK_PORT=str(MOCK))
   mock=subprocess.Popen(['node','mock_supabase.js'],env=env,stdout=subprocess.DEVNULL)
-  srv=subprocess.Popen(['node','../server/server.js'],env=env,stdout=open('/tmp/claude-0/-home-claude/415342e0-77a1-5a94-8f8a-71375aa47804/scratchpad/srv.log','w'),stderr=subprocess.STDOUT)
+  srv=subprocess.Popen(['node','../server/server.js'],env=env,stdout=open(os.path.join(os.environ.get('TMPDIR','/tmp'),'alv_srv.log'),'w'),stderr=subprocess.STDOUT)
   time.sleep(1)
   try:
    async with async_playwright() as p:
@@ -44,7 +44,7 @@ async def main():
     # -1 sem sessão: ecrã de login obrigatório
     ctxN=await b.new_context(viewport={"width":900,"height":420});await ctxN.add_init_script(init(None));N=await ctxN.new_page();await N.goto(URL);await N.wait_for_timeout(1200)
     st=await N.evaluate("()=>({login:!document.getElementById('sLogin').hidden,menu:!document.getElementById('sMenu').hidden,prev:!document.getElementById('lgPreview').hidden,btn:!document.getElementById('lgGoogle').disabled})")
-    await N.screenshot(path='/tmp/claude-0/-home-claude/415342e0-77a1-5a94-8f8a-71375aa47804/scratchpad/acc_login.png');await ctxN.close()
+    await N.screenshot(path=os.environ.get('TMPDIR','/tmp')+'/acc_login.png');await ctxN.close()
     rep(st['login'] and not st['menu'] and not st['prev'] and st['btn'],'Login obrigatório',f"sem sessão: ecrã de login visível, menu escondido, botão Google ativo, sem atalho 'sem conta' no site oficial")
     A=await ctxA.new_page();B=await ctxB.new_page();errs=[]
     for pg,n in ((A,'A'),(B,'B')):pg.on("pageerror",lambda e,n=n:errs.append(n+': '+str(e)[:300]))
@@ -115,7 +115,7 @@ async def main():
     hs=await asyncio.gather(*[pg.evaluate("()=>({my:[...NET.myHash],me:ME})") for pg in (A,B)])
     com=sorted(set(dict(hs[0]['my']))&set(dict(hs[1]['my'])));same=bool(com) and dict(hs[0]['my'])[com[-1]]==dict(hs[1]['my'])[com[-1]]
     rep(vis and ok and same and hs[1]['me']==1,'Fechar e reabrir a app',f"botão 'Voltar à partida' visível={vis}; retomou como jogador {hs[1]['me']}; sincronizado={same}")
-    await B.screenshot(path='/tmp/claude-0/-home-claude/415342e0-77a1-5a94-8f8a-71375aa47804/scratchpad/online_guest.png');await A.screenshot(path='/tmp/claude-0/-home-claude/415342e0-77a1-5a94-8f8a-71375aa47804/scratchpad/online_host.png')
+    await B.screenshot(path=os.environ.get('TMPDIR','/tmp')+'/online_guest.png');await A.screenshot(path=os.environ.get('TMPDIR','/tmp')+'/online_host.png')
     # 7 desistir → vitória do outro → revanche
     await B.evaluate("()=>act('resign',{})");await asyncio.sleep(2)
     ta=await A.evaluate("()=>document.getElementById('endTitle').textContent+' — '+document.getElementById('endText').textContent")
@@ -138,11 +138,11 @@ async def main():
     rep(len(stt['M'])==2 and reasons==['resign','abandono'],'Registo das partidas',f"partidas registadas no Supabase: {reasons}; pontos: "+', '.join(f"{p['username']} {p['rating']} ({p['wins']}V/{p['losses']}D)" for p in stt['P']))
     await A.click('#bEndMenu');await A.wait_for_timeout(400);await A.click('#accChip');await A.wait_for_timeout(1200)
     hist=await A.evaluate("()=>document.getElementById('pfHist').innerText.split(String.fromCharCode(10)).join(' ')")
-    await A.screenshot(path='/tmp/claude-0/-home-claude/415342e0-77a1-5a94-8f8a-71375aa47804/scratchpad/acc_profile.png')
+    await A.screenshot(path=os.environ.get('TMPDIR','/tmp')+'/acc_profile.png')
     rep('Vitória' in hist and 'Rui' in hist,'Perfil e histórico',hist[:120])
     await A.click('#pfBack');await A.click('#bRank');await A.wait_for_timeout(1000)
     rk=await A.evaluate("()=>[...document.querySelectorAll('#rkList .krow')].map(r=>r.innerText.split(String.fromCharCode(10)).join(' '))")
-    await A.screenshot(path='/tmp/claude-0/-home-claude/415342e0-77a1-5a94-8f8a-71375aa47804/scratchpad/acc_rank.png')
+    await A.screenshot(path=os.environ.get('TMPDIR','/tmp')+'/acc_rank.png')
     rep(len(rk)==2 and 'Ana' in rk[0],'Classificação',' | '.join(rk))
     # amigos: pedido, aceitar, ver ligado, convidar e jogar
     await A.click('#rkBack');await A.click('#bFriends');await A.wait_for_timeout(500);await A.fill('#frCode','bbbbbb');await A.click('#frAdd');await A.wait_for_timeout(800)
@@ -150,10 +150,10 @@ async def main():
     inc=await B.evaluate("()=>document.getElementById('frList').innerText");await B.click('[data-ok]');await B.wait_for_timeout(800)
     await A.click('#frBack');await A.click('#bFriends');await A.wait_for_timeout(1800)
     fl=await A.evaluate("()=>document.getElementById('frList').innerText.split(String.fromCharCode(10)).join(' ')")
-    await A.screenshot(path='/tmp/claude-0/-home-claude/415342e0-77a1-5a94-8f8a-71375aa47804/scratchpad/acc_friends.png')
+    await A.screenshot(path=os.environ.get('TMPDIR','/tmp')+'/acc_friends.png')
     rep('Ana' in inc and 'Rui' in fl and 'ligado' in fl,'Amigos',f"Rui recebeu o pedido e aceitou; a Ana vê: {fl[:80]}")
     await A.click('[data-inv]');ok=await wait(B,"()=>!document.getElementById('invite').hidden",8000)
-    await B.screenshot(path='/tmp/claude-0/-home-claude/415342e0-77a1-5a94-8f8a-71375aa47804/scratchpad/acc_invite.png')
+    await B.screenshot(path=os.environ.get('TMPDIR','/tmp')+'/acc_invite.png')
     await B.click('#ivYes');ok2=await wait(A,"()=>NET.peerOnline&&!document.getElementById('olStart').disabled",8000);await A.click('#olStart')
     ok3=await wait(B,"()=>NET.game&&running&&NET.turn>10",10000)
     rep(ok and ok2 and ok3,'Convidar um amigo',f"convite chegou={ok}; amigo entrou na sala={ok2}; partida começou={ok3}")
@@ -164,7 +164,7 @@ async def main():
     # (a mesma conta noutro aparelho vê a lista de salas)
     await F.goto(URL);await F.wait_for_timeout(1500);await F.click('#bOnline');await F.wait_for_timeout(1000)
     rl=await F.evaluate("()=>document.getElementById('olRooms').innerText.split(String.fromCharCode(10)).join(' ')")
-    await F.screenshot(path='/tmp/claude-0/-home-claude/415342e0-77a1-5a94-8f8a-71375aa47804/scratchpad/acc_rooms.png')
+    await F.screenshot(path=os.environ.get('TMPDIR','/tmp')+'/acc_rooms.png')
     rep('Eva' in rl and '1200' in rl,'Salas públicas',rl[:80])
     # Eva não é amiga da Ana: não vê se está ligada nem a pode convidar
     pres=await E.evaluate("async()=>{NET.presence=null;netSend({type:'presence',ids:['u-ana','u-rui']});await new Promise(r=>setTimeout(r,800));return NET.presence}")

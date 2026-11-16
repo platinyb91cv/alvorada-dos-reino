@@ -5376,6 +5376,14 @@ function vozRec(){try{voz(G&&P[ME].res.wood<80?'madeira':'recursos')}catch(e){}}
 function vozTick(){if(!G||G.over||!VOZ.on)return;const n=ents.reduce((k,e)=>k+(e.o===ME&&e.type==='aldeao'&&!e.dead&&villJob(e)==='ocioso'?1:0),0);
   if(n>=3){VOZ.idleT=(VOZ.idleT||0)+1;if(VOZ.idleT>=4){voz('ocioso');VOZ.idleT=0}}else VOZ.idleT=0}
 setInterval(()=>{try{if(running&&!paused)vozTick()}catch(e){}},5000);
+// ecrã ligado só durante a partida (Android: plugin nativo Ecra; navegador: Screen Wake Lock quando existe). Nos menus, em pausa ou no fim, o ecrã pode apagar-se.
+const ECRA={on:null,lock:null};
+function ecraQuer(){return !!(running&&G&&!G.over&&!paused&&!document.hidden)}
+function ecraSync(){const want=ecraQuer();if(want===ECRA.on)return;ECRA.on=want;
+  try{const E=window.Capacitor&&Capacitor.Plugins&&Capacitor.Plugins.Ecra;if(E&&E.ligado){E.ligado({on:want}).catch(()=>{});return}}catch(e){}
+  try{if(want&&navigator.wakeLock&&!ECRA.lock)navigator.wakeLock.request('screen').then(l=>{ECRA.lock=l;l.addEventListener('release',()=>{ECRA.lock=null;ECRA.on=null})}).catch(()=>{});
+    else if(!want&&ECRA.lock){ECRA.lock.release().catch(()=>{});ECRA.lock=null}}catch(e){}}
+setInterval(()=>{try{ecraSync()}catch(e){}},1000);document.addEventListener('visibilitychange',()=>{try{ecraSync()}catch(e){}});
 function voz(id,force){try{
   if(!VOZ.on||!AUD.on||!G||(G.over&&id!=='vitoria'&&id!=='derrota'))return;
   const now=performance.now()/1000,pri=VOZ_PRI[id]||1;
@@ -5584,7 +5592,7 @@ function netTick(raw){
   netWaitUI(NET.waitT>.6,NET.peerOnline?'À espera de '+(NET.peer||'adversário')+'…':(NET.peer||'O adversário')+' desligou-se — à espera que volte…');
   if(!NET.peerOnline&&NET.lostT&&Date.now()-NET.lostT>90000&&!G.over){G.over=true;netRelay({g:'bye'});endGame(true,false,'forfeit')}
 }
-function netCmpHash(t){const a=NET.myHash.get(t),b=NET.peerHash.get(t);if(a==null||b==null)return;if(a!==b){NET.desync++;console.warn('dessincronização no turno',t);if(NET.slot===0)NET.wantSnap=true}}
+function netCmpHash(t){const a=NET.myHash.get(t),b=NET.peerHash.get(t);if(a==null||b==null)return;if(a!==b){NET.desync++;console.warn('dessincronização no turno',t);if(NET.slot===0)NET.wantSnap=true;if(NET.desync===1)toast('Os dois jogos divergiram: a partida foi ressincronizada. Se voltar a acontecer, não conta para a pontuação.',true)}}
 // ---------- resumo do estado ----------
 function stateHash(){
   const dv=new DataView(new ArrayBuffer(8));let h=0x811c9dc5|0;
@@ -5738,7 +5746,7 @@ function netBegin(seed,opts){
   startGame(seed,opts||{map:'rios',vic:'classico',civ:['mar','planicies']});toast('Partida online contra '+(NET.peer||'adversário')+'. Boa sorte!')}
 function netReport(win,why){if(!NET.on||NET.reported)return;NET.reported=true;netSend({type:'result',winner:win?ME:1-ME,reason:why||'normal',dur:Math.round(G.time)})}
 function netEndMatch(){if(NET.game&&NET.ws){netRelay({g:'bye'})}if(NET.ws)netSend({type:'leave'});NET.token='';NET.room='';NET.peer='';NET.peerUser=null;NET.peerOnline=false;netSave();netLeaveGame()}
-function ratedShow(m){const el=$('endRate');if(!el)return;if(m.disputed||m.unrated){el.textContent=({disputa:'Resultado em disputa: a pontuação não mudou.',curta:'Partida com menos de 3 minutos: não conta para a pontuação.',limite_diario:'Já jogaram 3 partidas com pontos hoje um contra o outro: esta não conta.',ressincronizacoes:'Ligação muito instável nesta partida: não conta para a pontuação.',sem_vencedor:'Partida sem vencedor: a pontuação não mudou.'})[m.why||(m.disputed?'disputa':'')]||'Esta partida não conta para a pontuação.';el.hidden=false;return}
+function ratedShow(m){const el=$('endRate');if(!el)return;if(m.disputed||m.unrated){el.textContent=({disputa:'Resultado em disputa: a pontuação não mudou.',curta:'Partida com menos de 3 minutos: não conta para a pontuação.',limite_diario:'Já jogaram 3 partidas com pontos hoje um contra o outro: esta não conta.',ressincronizacoes:'Ligação muito instável nesta partida: não conta para a pontuação.',dessincronizacao:'Os dois jogos divergiram várias vezes (o servidor confirmou): a partida não conta para a pontuação.',sem_vencedor:'Partida sem vencedor: a pontuação não mudou.'})[m.why||(m.disputed?'disputa':'')]||'Esta partida não conta para a pontuação.';el.hidden=false;return}
   const d=m.delta|0;el.innerHTML=`Pontuação: <b>${m.rating}</b> <span class="${d>=0?'up':'down'}">${d>=0?'+':''}${d}</span>`;el.hidden=false;if(ACC.profile){ACC.profile.rating=m.rating;accChip()}}
 // ---------- interface: sala ----------
 function lobbyOptsRender(){const box=$('olOpts');if(!box)return;box.classList.toggle('guest',NET.slot!==0);NET.myCiv=CIVS[NET.myCiv]||NET.myCiv==='aleatorio'?NET.myCiv:(CIVS[SETUP.civ]?SETUP.civ:'aleatorio');const O={vic:'classico',map:'rios',...(NET.opts||{})};if(!VICS[O.vic])O.vic='classico';if(!MAPS[O.map])O.map='rios';

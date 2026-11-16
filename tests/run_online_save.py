@@ -31,7 +31,7 @@ RANDOM_ORDERS=r"""(n)=>{const s=__S();const mine=s.ents.filter(e=>e.kind==='u'&&
 async def main():
   env=dict(os.environ,PORT=str(PORT),HOST='127.0.0.1',FAKE_LAG=str(LAG),SUPABASE_URL=f'http://127.0.0.1:{MOCK}',SUPABASE_KEY='sb_publishable_teste',ALV_SERVER_SECRET='s3cr3t',FORFEIT_MS='12000',MOCK_MIN_DUR='30',MOCK_PORT=str(MOCK))
   mock=subprocess.Popen(['node','mock_supabase.js'],env=env,stdout=subprocess.DEVNULL)
-  srv=subprocess.Popen(['node','../server/server.js'],env=env,stdout=open('/tmp/claude-0/-home-claude/415342e0-77a1-5a94-8f8a-71375aa47804/scratchpad/srv.log','w'),stderr=subprocess.STDOUT)
+  srv=subprocess.Popen(['node','../server/server.js'],env=env,stdout=open(os.path.join(os.environ.get('TMPDIR','/tmp'),'alv_srv.log'),'w'),stderr=subprocess.STDOUT)
   time.sleep(1)
   try:
    async with async_playwright() as p:
@@ -41,7 +41,7 @@ async def main():
     # -1 sem sessão: ecrã de login obrigatório
     ctxN=await b.new_context(viewport={"width":900,"height":420});await ctxN.add_init_script(init(None));N=await ctxN.new_page();await N.goto(URL);await N.wait_for_timeout(1200)
     st=await N.evaluate("()=>({login:!document.getElementById('sLogin').hidden,menu:!document.getElementById('sMenu').hidden,prev:!document.getElementById('lgPreview').hidden,btn:!document.getElementById('lgGoogle').disabled})")
-    await N.screenshot(path='/tmp/claude-0/-home-claude/415342e0-77a1-5a94-8f8a-71375aa47804/scratchpad/acc_login.png');await ctxN.close()
+    await N.screenshot(path=os.environ.get('TMPDIR','/tmp')+'/acc_login.png');await ctxN.close()
     rep(st['login'] and not st['menu'] and not st['prev'] and st['btn'],'Login obrigatório',f"sem sessão: ecrã de login visível, menu escondido, botão Google ativo, sem atalho 'sem conta' no site oficial")
     A=await ctxA.new_page();B=await ctxB.new_page();errs=[]
     for pg,n in ((A,'A'),(B,'B')):pg.on("pageerror",lambda e,n=n:errs.append(n+': '+str(e.stack)[:500]))

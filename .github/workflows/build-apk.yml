@@ -21,7 +21,9 @@ jobs:
           node-version: 22
 
       - name: Regressão JavaScript
-        run: for test in tests/*.cjs; do node "$test" || exit 1; done
+        run: |
+          npm ci --prefix server --no-audit --no-fund
+          for test in tests/*.cjs; do node "$test" || exit 1; done
 
       - uses: actions/setup-python@v5
         with:
@@ -42,6 +44,8 @@ jobs:
           python tests/e2e/atlas_leve.py test-results
           python tests/e2e/reino_save.py test-results
           python tests/e2e/estabilidade.py test-results
+          python tests/e2e/ia_cenarios.py test-results
+          python tests/e2e/sistemas.py test-results
 
       - uses: actions/upload-artifact@v4
         if: always()

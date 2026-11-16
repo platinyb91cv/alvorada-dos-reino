@@ -16,6 +16,7 @@ const DEV=!SB_URL;                                        // sem Supabase: modo 
 const FORFEIT_MS=+process.env.FORFEIT_MS||90000;        // um resultado de um só jogador só conta se o outro estiver desligado há tanto tempo
 const LONE_MAX_MS=+process.env.LONE_MAX_MS||600000;      // se o outro continuar ligado e calado, a partida fica em disputa (sem Elo)
 const FRIENDS_TTL=60000;
+const DESYNC_MAX=+process.env.DESYNC_MAX||2;               // divergências de estado confirmadas pelo servidor acima das quais a partida não conta para o Elo
 const ROOM_TTL=10*60*1000,REJOIN_MS=3*60*1000,MAX_ROOMS=500;
 const ABC='ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
 const rooms=new Map();
@@ -36,20 +37,23 @@ const pub=u=>u?{id:u.id,name:u.name,avatar:u.avatar,rating:u.rating}:null;
 const REASON=r=>/^resign/.test(r)?'resign':r==='peer_quit'||r==='forfeit'||r==='abandono'?'abandono':r==='wonder'?'wonder':'normal';
 async function recordMatch(r,winnerSlot,reason,disputed){
   const M=r.match;if(!M||M.done)return;M.done=true;clearTimeout(M.timer);
+  // o servidor compara os resumos de estado dos dois jogadores: com divergências repetidas não dá para saber qual estava certo
+  // (na ressincronização o anfitrião impõe o seu estado), por isso a partida fica sem Elo
+  if(!disputed&&(M.desyncs||0)>DESYNC_MAX){disputed=true;reason='disputa'}
   const dur=Math.round((Date.now()-M.t0)/1000);
   const host=M.host,guest=M.guest;let res={host_delta:0,guest_delta:0,host_rating:host.rating,guest_rating:guest.rating};
   if(!DEV&&SB_SECRET){
-    const body={p_secret:SB_SECRET,p_room:r.code,p_host:host.id,p_guest:guest.id,p_winner:winnerSlot==null?null:(winnerSlot===0?host.id:guest.id),p_reason:REASON(reason),p_duration:dur,p_seed:M.seed||0,p_disputed:!!disputed,p_resyncs:M.snaps||0};
+    const body={p_secret:SB_SECRET,p_room:r.code,p_host:host.id,p_guest:guest.id,p_winner:winnerSlot==null?null:(winnerSlot===0?host.id:guest.id),p_reason:REASON(reason),p_duration:dur,p_seed:M.seed||0,p_disputed:!!disputed,p_resyncs:Math.max(M.snaps||0,M.desyncs||0)};
     try{res=await sbFetch('/rest/v1/rpc/record_match',{method:'POST',body:JSON.stringify(body)})}
     catch(e){
       // base de dados ainda sem a migração nova (sem p_resyncs): tenta a versão antiga
       if(/p_resyncs|function|not find/i.test(e.message)){try{delete body.p_resyncs;res=await sbFetch('/rest/v1/rpc/record_match',{method:'POST',body:JSON.stringify(body)})}catch(e2){log('erro ao registar partida',r.code,e2.message);return}}
       else{log('erro ao registar partida',r.code,e.message);return}}
-  }else{res.rated=!disputed&&winnerSlot!=null&&dur>=180;if(!res.rated)res.why=disputed?'disputa':dur<180?'curta':'sem_vencedor'
+  }else{res.rated=!disputed&&winnerSlot!=null&&dur>=180;if(!res.rated)res.why=disputed?((M.desyncs||0)>DESYNC_MAX?'dessincronizacao':'disputa'):dur<180?'curta':'sem_vencedor'
   }
-  log('partida registada',r.code,'vencedor',winnerSlot,REASON(reason),disputed?'(disputa)':'','duração',dur+'s','ressincronizações',M.snaps||0,JSON.stringify(res));
+  log('partida registada',r.code,'vencedor',winnerSlot,REASON(reason),disputed?'(disputa)':'','duração',dur+'s','ressincronizações',M.snaps||0,'divergências',M.desyncs||0,JSON.stringify(res));
   const out=[[0,res.host_delta,res.host_rating],[1,res.guest_delta,res.guest_rating]];
-  for(const [s,delta,rating] of out){const p=r.p[s];if(p&&p.user)p.user.rating=rating;if(p&&p.ws)send(p.ws,{type:'rated',delta,rating,disputed:!!disputed,unrated:res.rated===false,why:res.why||null})}}
+  for(const [s,delta,rating] of out){const p=r.p[s];if(p&&p.user)p.user.rating=rating;if(p&&p.ws)send(p.ws,{type:'rated',delta,rating,disputed:!!disputed,unrated:res.rated===false,why:res.why||null,desyncs:M.desyncs||0})}}
 function onResult(r,slot,m){
   const M=r.match;if(!M||M.done)return;const w=m.winner===0||m.winner===1?m.winner:null;
   M.reports[slot]={w,reason:String(m.reason||'normal'),at:Date.now()};
@@ -139,6 +143,10 @@ wss.on('connection',(ws,req)=>{
       // partida guardada retomada: o anfitrião envia o estado completo em vez de 'start'
       else if(m.d&&m.d.g==='snap'&&m.d.resume&&ws.slot===0&&r.p[1]&&!r.started){r.started=true;r.public=false;r.match={t0:Date.now(),seed:0,host:r.p[0].user,guest:r.p[1].user,reports:[null,null],done:false,resumed:true}}
       if(m.d&&m.d.g==='snap'&&r.match&&!r.match.done)r.match.snaps=(r.match.snaps||0)+1;
+      // resumos de estado: cada cliente envia o seu; o servidor guarda os dois por turno e conta divergências (não depende do anfitrião)
+      if(m.d&&m.d.g==='hash'&&r.match&&!r.match.done&&Number.isInteger(m.d.t)){const H=r.match.hashes||(r.match.hashes=new Map());const k=m.d.t+'|'+(m.d.ep|0);let e=H.get(k);if(!e){e=[null,null];H.set(k,e)}
+        if(e[ws.slot]==null){e[ws.slot]=m.d.h>>>0;if(e[0]!=null&&e[1]!=null){if(e[0]!==e[1]){r.match.desyncs=(r.match.desyncs||0)+1;log('divergência confirmada',r.code,'turno',m.d.t,'total',r.match.desyncs)}H.delete(k)}}
+        if(H.size>200){for(const kk of H.keys()){H.delete(kk);if(H.size<=100)break}}}
       if(o&&o.ws){const out=JSON.stringify({type:'relay',d:m.d});if(LAG)setTimeout(()=>send(o.ws,out),LAG);else send(o.ws,out)}
       break}
     // «Gravar e sair»: a partida fica suspensa (sem vencedor nem derrota por abandono)
