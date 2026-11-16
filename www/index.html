@@ -2198,10 +2198,12 @@ function aiUpdate(dt){for(const a of AIs)if(a)aiRun(a,dt)}
 // ---------- Bot que joga sozinho (só na conta do criador do jogo, para transmissões em direto) ----------
 // Usa a mesma IA do computador, mas pelo jogador (sem bónus: mult 1), só contra o computador ou no Reino/campanha, nunca online.
 // A câmara vai sozinha para onde há ação (combate, obras, Centro da Vila). As partidas com o bot não contam para a pontuação nem conquistas.
-const BOT_EMAILS=['fabispaty46@gmail.com'];
+// conta autorizada guardada só como SHA-256 do email (minúsculas): o endereço já não vai em texto no APK; o resumo calcula-se no aparelho e não é enviado
+const BOT_SHA=['12504ae753da6cee46353b09723399bbd1a1dc428f2f6b0893b473b32744e662'];const BOTCK={email:null,ok:false};
+function botHash(email){BOTCK.email=email;BOTCK.ok=false;try{crypto.subtle.digest('SHA-256',new TextEncoder().encode(email)).then(d=>{if(BOTCK.email!==email)return;const hx=[...new Uint8Array(d)].map(x=>x.toString(16).padStart(2,'0')).join('');BOTCK.ok=BOT_SHA.includes(hx);try{botUI()}catch(e){}}).catch(()=>{})}catch(e){}}
 const BOT={on:false,cam:null,next:0};
 function botAllowed(){try{if(location.hostname==='localhost'&&new URLSearchParams(location.search).get('bot')==='teste')return true}catch(e){}
-  return !!(ACC&&ACC.user&&ACC.user.email&&BOT_EMAILS.includes(String(ACC.user.email).toLowerCase()))}
+  const em=ACC&&ACC.user&&ACC.user.email?String(ACC.user.email).toLowerCase():null;if(!em)return false;if(BOTCK.email!==em)botHash(em);return BOTCK.ok}
 function botSet(on){if(on&&(!botAllowed()||NET.on||!running))return;BOT.on=!!on;document.body.classList.toggle('bot',BOT.on);
   if(BOT.on){const A=mkAI(ME,DIFF[2]);A.mult=1;A.bot=true;A.nextAttack=Math.min(A.nextAttack,600);AIs[ME]=A;G.botUsed=true;BOT.next=0;toast('🤖 Bot ligado: o reino joga sozinho')}
   else{AIs[ME]=null;BOT.cam=null;toast('Bot desligado: voltas a jogar tu')}
