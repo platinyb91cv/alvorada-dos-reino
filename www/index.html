@@ -2606,24 +2606,29 @@ function buildTerrain(){
   if(!TX)for(let k=0;k<26000*W*H/6400;k++){const x=r()*CW,y=r()*CW;const t=terr[idx((x/S)|0,(y/S)|0)];if(t===1)continue;
     c.strokeStyle=r()<.5?'rgba(30,60,10,.32)':'rgba(190,210,120,.22)';c.lineWidth=1;c.beginPath();c.moveTo(x,y);c.lineTo(x+(r()-.5)*3,y-2-r()*3);c.stroke()}
   // água e areia: campo contínuo (margens orgânicas em vez de degraus)
-  const FR=8,FW=W*FR,FH=H*FR,wf=new Float32Array(FW*FH),sf=new Float32Array(FW*FH);
+  const FR=W*H<=150*150?12:8,FW=W*FR,FH=H*FR,wf=new Float32Array(FW*FH),sf=new Float32Array(FW*FH);
   for(let y=0;y<FH;y++)for(let x=0;x<FW;x++){const t=terr[idx((x/FR)|0,(y/FR)|0)];wf[y*FW+x]=t===1?1:0;sf[y*FW+x]=t===2?1:0}
   const blur=(a,rad)=>{const tmp=new Float32Array(a.length),n=rad*2+1;
     for(let y=0;y<FH;y++){let acc=0;const o=y*FW;for(let x=-rad;x<=rad;x++)acc+=a[o+clamp(x,0,FW-1)];for(let x=0;x<FW;x++){tmp[o+x]=acc/n;acc+=a[o+Math.min(FW-1,x+rad+1)]-a[o+Math.max(0,x-rad)]}}
     for(let x=0;x<FW;x++){let acc=0;for(let y=-rad;y<=rad;y++)acc+=tmp[clamp(y,0,FH-1)*FW+x];for(let y=0;y<FH;y++){a[y*FW+x]=acc/n;acc+=tmp[Math.min(FH-1,y+rad+1)*FW+x]-tmp[Math.max(0,y-rad)*FW+x]}}};
-  blur(wf,6);blur(wf,6);blur(sf,5);blur(sf,5);
+  const BR=FR/8;blur(wf,Math.round(6*BR));blur(wf,Math.round(6*BR));blur(sf,Math.round(5*BR));blur(sf,Math.round(5*BR));
   const nc=vnoise(G.seed+9,22),nd=vnoise(G.seed+10,64);
   const wl=mkCanvas(FW,FH),wc=wl.getContext('2d'),wi=wc.createImageData(FW,FH),D=wi.data;const sm=TX?mkCanvas(FW,FH):null,smc=sm&&sm.getContext('2d'),smi=sm&&smc.createImageData(FW,FH);
   const ss=(a,b,x)=>{const t=clamp((x-a)/(b-a),0,1);return t*t*(3-2*t)},mix=(a,b,t)=>a+(b-a)*t;
   WFIELD={FR,FW,FH,f:new Float32Array(FW*FH)};
   for(let y=0;y<FH;y++)for(let x=0;x<FW;x++){const i=y*FW+x,u=x/FW,v=y/FH,nz=(nc(u,v)-.5)*.2+(nd(u,v)-.5)*.07;
     const F=wf[i]+nz*Math.min(1,wf[i]*4),Sd=sf[i]+nz*.8;WFIELD.f[i]=F;let R=0,Gc=0,B=0,A=0;
-    if(F>.5){const d=ss(.5,.95,F),sh=ss(.5,.6,F);R=mix(mix(84,46,sh),22,d);Gc=mix(mix(176,122,sh),70,d);B=mix(mix(178,162,sh),112,d);A=255;
-      const rip=(nd(u*3%1,v*3%1)-.5)*14*d;R+=rip*.4;Gc+=rip*.7;B+=rip}
-    else if(F>.465){const t=(F-.465)/.035;R=mix(232,120,t*t);Gc=mix(238,190,t*t);B=mix(226,190,t*t);A=255} // espuma
+    if(F>.5){const d=ss(.55,.97,F),sh=ss(.5,.74,F);R=mix(mix(104,52,sh),20,d);Gc=mix(mix(196,138,sh),72,d);B=mix(mix(186,168,sh),118,d);A=255;
+      const rip=(nd(u*3%1,v*3%1)-.5)*14*d;void 0;R+=rip*.4;Gc+=rip*.7;B+=rip}
+    else if(F>.465){const t=(F-.465)/.035;R=mix(176,108,t);Gc=mix(196,192,t);B=mix(170,184,t);A=255} // orla molhada (a espuma é animada no ecrã)
     else if(F>.43){R=136;Gc=116;B=78;A=255} // areia molhada
     else{const sand=Math.max(ss(.14,.3,F),ss(.38,.55,Sd));if(sand>0){const wet=ss(.3,.43,F);R=mix(214,158,wet);Gc=mix(190,134,wet);B=mix(132,90,wet);const g2=(nd(u*2%1,v*2%1)-.5)*16;R+=g2;Gc+=g2;B+=g2*.6;A=255*sand*.96;if(smi)smi.data[i*4+3]=255*sand*(1-wet)*.9}}
     const o=i*4;D[o]=R;D[o+1]=Gc;D[o+2]=B;D[o+3]=A}
+  // pontos da linha de costa (para a espuma animada): células de água com vizinho em terra, normal a apontar para a água
+  {const pts=[],F=WFIELD.f,ST=Math.max(1,Math.round(FR/5));for(let y=1;y<FH-1;y+=ST)for(let x=1;x<FW-1;x+=ST){const i=y*FW+x;if(F[i]<.5)continue;if(F[i-1]>=.5&&F[i+1]>=.5&&F[i-FW]>=.5&&F[i+FW]>=.5)continue;
+      let nx=F[i+1]-F[i-1],ny=F[i+FW]-F[i-FW];const l=Math.hypot(nx,ny)||1;nx/=l;ny/=l;pts.push([x/FR,y/FR,nx,ny,(Math.sin(x/FR*.9)+Math.sin(y/FR*1.3+1.7)+Math.sin((x+y)/FR*.37))*1.4])} // fase suave ao longo da costa: as ondas formam linhas contínuas
+    const map=new Int32Array(W*H+1),by=pts.map(p=>idx(Math.min(W-1,p[0]|0),Math.min(H-1,p[1]|0)));const ord=pts.map((p,k)=>k).sort((a,b)=>by[a]-by[b]);let k=0;
+    const sp=ord.map(o=>pts[o]);for(let t=0;t<W*H;t++){map[t]=k;while(k<sp.length&&by[ord[k]]===t)k++}map[W*H]=sp.length;WFIELD.shore={pts:sp,map}}
   wc.putImageData(wi,0,0);c.imageSmoothingEnabled=true;if(TL)TL.wl=wl;else c.drawImage(wl,0,0,CW,CW);
   if(sm){smc.putImageData(smi,0,0);TL.sm=sm}
   // brilhos estáticos só em água funda
@@ -2915,7 +2920,17 @@ function waterFx(c,x0,y0,x1,y1){
     const h=(x*73856093^y*19349663)>>>0;const ph=(h%628)/100;const a=Math.sin(t*1.6+ph);if(a<.2)continue;
     const cx=(x+.5+((h>>8)%40-20)/60)*GT,cy=(y+.5+((h>>14)%40-20)/60)*GT;
     if(WFIELD){const fx0=(cx/GT*WFIELD.FR)|0,fy0=(cy/GT*WFIELD.FR)|0;if(WFIELD.f[fy0*WFIELD.FW+fx0]<.56)continue}
-    c.strokeStyle=`rgba(225,240,255,${(a-.2)*.35})`;c.lineWidth=1.5;c.beginPath();c.moveTo(cx-6,cy);c.quadraticCurveTo(cx,cy-3+a,cx+6,cy);c.stroke()}
+    c.strokeStyle=`rgba(225,240,255,${(a-.2)*.35})`;c.lineWidth=1.5;c.beginPath();c.moveTo(cx-6,cy);c.quadraticCurveTo(cx,cy-3+a,cx+6,cy);c.stroke();
+    // brilho do sol a cintilar na água funda
+    if(GFX==='alto'&&WFIELD&&h%5===0){const tw=Math.sin(t*3.1+ph*2.3);if(tw>.75){const gx=(x+.5+((h>>3)%30-15)/40)*GT,gy=(y+.5+((h>>9)%30-15)/40)*GT,fz=(gy/GT*WFIELD.FR|0)*WFIELD.FW+(gx/GT*WFIELD.FR|0);
+      if(WFIELD.f[fz]>.75){const al=(tw-.75)*4*(1-nightAmt()*.8);c.fillStyle=`rgba(255,252,230,${al*.85})`;const r=1.3+al*1.4;c.beginPath();c.moveTo(gx,gy-r*2);c.lineTo(gx+r*.5,gy);c.lineTo(gx,gy+r*2);c.lineTo(gx-r*.5,gy);c.closePath();c.fill();c.fillRect(gx-r*2,gy-.4,r*4,.8)}}}}
+  // ondas a bater na margem: linhas de espuma que nascem na água, chegam à areia e desaparecem
+  const S=WFIELD&&WFIELD.shore;if(!S||GFX==='baixo')return;const P=S.pts,M=S.map;c.lineCap='round';
+  for(let y=Math.max(0,y0);y<=Math.min(H-1,y1);y++)for(let x=Math.max(0,x0);x<=Math.min(W-1,x1);x++){const i=idx(x,y);const a=M[i],b=M[i+1];if(a===b||!vis[i])continue;
+    for(let k=a;k<b;k++){const [px,py,nx,ny,ph]=P[k];const cyc=((t*.3+ph*.12)%1+1)%1,off=(1-cyc)*.42,al=Math.sin(cyc*Math.PI)*.3*(1-nightAmt()*.5);if(al<.03)continue;
+      const cx=(px+nx*off)*GT,cy=(py+ny*off)*GT,tx=-ny*GT*.2,ty=nx*GT*.2;
+      c.strokeStyle=`rgba(236,248,246,${al})`;c.lineWidth=2.2+cyc*1.6;c.beginPath();c.moveTo(cx-tx,cy-ty);c.quadraticCurveTo(cx-nx*GT*.04,cy-ny*GT*.04,cx+tx,cy+ty);c.stroke();
+      if(cyc>.75){c.strokeStyle=`rgba(255,255,255,${al*.5})`;c.lineWidth=1;c.beginPath();c.moveTo(px*GT-tx*.6,py*GT-ty*.6);c.lineTo(px*GT+tx*.6,py*GT+ty*.6);c.stroke()}}}
 }
 
 /* ---------------- sprites: natureza ---------------- */
