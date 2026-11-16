@@ -96,6 +96,7 @@ body:not(.ingame) #grp{display:none}
 .hpbar b{display:block;height:100%;background:linear-gradient(#a8e27a,#5fa83a);border-radius:7px}
 .hpbar.mid b{background:linear-gradient(#f0d36a,#c49a2a)}.hpbar.low b{background:linear-gradient(#f08a7a,#b8392b)}
 .hpbar span{position:absolute;inset:0;font-size:10px;font-weight:700;line-height:13px;text-align:center;color:#fff;text-shadow:0 1px 1px #000}
+.queue button{position:relative}.queue .qn{position:absolute;right:1px;bottom:0;font-size:10px;line-height:1;padding:1px 2px;border-radius:3px;background:rgba(0,0,0,.7);color:#ffe7a8}.queue .qtot{align-self:center;font-size:11px;color:var(--muted);margin-left:4px}
 .lvtag{font-size:11px;padding:1px 5px;border-radius:4px;background:#5b4422;color:#ffd98a;vertical-align:middle;margin-left:4px}
 .stats2{display:flex;flex-wrap:wrap;gap:4px 9px;color:#e6d6b6;font-weight:700;font-size:12px}.stats2 span{display:inline-flex;align-items:center;gap:3px}.stats2 .ic{color:var(--trim-hi);font-size:13px}
 .queue{display:flex;gap:4px;flex-wrap:wrap}
@@ -1948,6 +1949,7 @@ function freeNearWater(b){
   for(let r=1;r<6;r++){const cand=[];for(let y=b.ty-r;y<b.ty+b.h+r;y++)for(let x=b.tx-r;x<b.tx+b.w+r;x++){if(inb(x,y)&&blk[idx(x,y)]===1&&!resAt[idx(x,y)])cand.push({x,y})}if(cand.length)return cand[Math.floor(rnd()*cand.length)]}
   return null;
 }
+const QMAX=25;let TRAIN_N=1; // fila de treino por edifício; TRAIN_N: unidades por toque (1 ou 5)
 function queueUpgrade(b,silent){
   const l=(b.lvl||1)+1;const T2=bLvl(b.type,l);if(!T2||!b.done)return false;if(b.queue.length)return false;
   if(P[b.o].age<T2.age){if(!silent)toast('Requer '+AGES[T2.age],true);return false}
@@ -1976,12 +1978,12 @@ function refund(o,cost){for(const k in cost)P[o].res[k]+=cost[k];if(o===ME)resDi
 function queueUnit(b,type,silent){
   const d=UNITS[type];const o=b.o;if(!canTrainType(o,type))return false;
   if(P[o].age<d.age)return false;
-  if(b.queue.length>=5){if(!silent)toast('Fila cheia (máx. 5)',true);return false}
+  if(b.queue.length>=QMAX){if(!silent)toast('Fila cheia (máx. '+QMAX+')',true);return false}
   if(!canAfford(o,d.cost)){if(!silent)toast('Recursos insuficientes',true);return false}
   pay(o,d.cost);b.queue.push({k:'unit',t:type});if(o===ME)uiDirty=true;return true;
 }
 function queueAge(b,silent){
-  const o=b.o;const a=P[o].age+1;if(a>2||b.queue.length>=5)return false;
+  const o=b.o;const a=P[o].age+1;if(a>2||b.queue.length>=QMAX)return false;
   if(ents.some(e=>e.kind==='b'&&e.o===o&&e.queue.some(q=>q.k==='age')))return false;
   if(!canAfford(o,AGE_COST[a])){if(!silent)toast('Recursos insuficientes',true);return false}
   pay(o,AGE_COST[a]);b.queue.push({k:'age',a});if(o===ME)uiDirty=true;return true;
@@ -1990,7 +1992,7 @@ function queueTech(b,t,silent){
   const o=b.o,tk=TECHS[t];
   if(P[o].techs[t]||ents.some(e=>e.kind==='b'&&e.o===o&&e.queue.some(q=>q.k==='tech'&&q.t===t)))return false;
   if(P[o].age<tk.age){if(!silent)toast('Requer '+AGES[tk.age],true);return false}
-  if(b.queue.length>=5){if(!silent)toast('Fila cheia (máx. 5)',true);return false}
+  if(b.queue.length>=QMAX){if(!silent)toast('Fila cheia (máx. '+QMAX+')',true);return false}
   if(!canAfford(o,tk.cost)){if(!silent)toast('Recursos insuficientes',true);return false}
   pay(o,tk.cost);b.queue.push({k:'tech',t});if(o===ME)uiDirty=true;return true;
 }
@@ -5826,7 +5828,8 @@ function buildCmds0(){
   }
   const b=own[0];
   if(own.length===1&&b.kind==='b'&&b.done){
-    if(b.d.train)for(const t of b.d.train){if(!canTrainType(ME,t))continue;const d=UNITS[t];const lock=p.age<d.age;box.appendChild(mkCmd('u:'+t,lock?['','Bronze','Ferro'][d.age]:costText(d.cost),()=>{G.lastType=t;if(lock){toast(d.name+' requer '+AGES[d.age],true);return}if(!canAfford(ME,d.cost)){toast('Recursos insuficientes',true);return}act('train',{b:b.id,t})},lock?'lock':canAfford(ME,d.cost)?'':'no',statsLine(t)))}
+    if(b.d.train)for(const t of b.d.train){if(!canTrainType(ME,t))continue;const d=UNITS[t];const lock=p.age<d.age;box.appendChild(mkCmd('u:'+t,lock?['','Bronze','Ferro'][d.age]:costText(d.cost),()=>{G.lastType=t;if(lock){toast(d.name+' requer '+AGES[d.age],true);return}if(!canAfford(ME,d.cost)){toast('Recursos insuficientes',true);return}const R={...P[ME].res},q0=b.queue.length;let n=0;for(let k=0;k<TRAIN_N&&q0+n<QMAX;k++){if(!Object.entries(d.cost).every(([r,v])=>R[r]>=v))break;for(const [r,v] of Object.entries(d.cost))R[r]-=v;act('train',{b:b.id,t});n++}if(n>1)toast(n+'× '+d.name+' na fila')},lock?'lock':canAfford(ME,d.cost)?'':'no',statsLine(t)))}
+    if(b.d.train&&b.d.train.some(t=>canTrainType(ME,t))){const on=TRAIN_N>1;box.appendChild(mkCmd('⏩','<span>×'+(on?5:1)+'</span>',()=>{TRAIN_N=TRAIN_N>1?1:5;toast(TRAIN_N>1?'Cada toque treina 5':'Cada toque treina 1');uiDirty=true},on?'on':'','Unidades por toque: 1 ou 5 (fila até '+QMAX+')'))}
     if(b.type==='centro'&&p.age<2){const a=p.age+1;const busy=ents.some(e=>e.kind==='b'&&e.o===ME&&e.queue.some(q=>q.k==='age'));
       box.appendChild(mkCmd('⏫','<span>'+['','Bronze','Ferro'][a]+'</span>',()=>{if(busy)return;if(!canAfford(ME,AGE_COST[a])){toast('Recursos insuficientes',true);return}act('age',{b:b.id})},busy?'lock':canAfford(ME,AGE_COST[a])?'':'no','Avançar para '+AGES[a]+' — '+costHTML(AGE_COST[a])))}
     if(b.d.techs)for(const t of b.d.techs){if(p.techs[t])continue;const tk=TECHS[t];if(ents.some(e=>e.kind==='b'&&e.o===ME&&e.queue.some(q=>q.k==='tech'&&q.t===t)))continue;const lock=p.age<tk.age;
@@ -5910,7 +5913,8 @@ function infoHTML(){
   else if(e.d.farm)extra='<div class="muted">Comida ilimitada ∞ · Trabalhadores: '+farmWorkers(e)+'</div>';
   if(own&&e.queue.length){
     const q0=e.queue[0];const tot=q0.k==='unit'?UNITS[q0.t].time:q0.k==='age'?AGE_TIME[q0.a]:q0.k==='up'?TOWER[q0.l].time:TECHS[q0.t].time;
-    extra+=`<div class="queue">${e.queue.map((q,i)=>`<button data-q="${i}" title="Cancelar">${q.k==='unit'?iconHTML('u:'+q.t):q.k==='age'?IC.ageup:q.k==='up'?IC.up:TECHS[q.t].icon}${i===0?`<span style="width:${e.qt/tot*100}%"></span>`:''}</button>`).join('')}</div>`;
+    const grp=[];e.queue.forEach((q,i)=>{const g=grp[grp.length-1];if(g&&i>0&&q.k==='unit'&&g.q.k==='unit'&&g.q.t===q.t&&g.first>0){g.n++;g.last=i}else grp.push({q,first:i,last:i,n:1})});
+    extra+=`<div class="queue">${grp.map(g=>{const q=g.q;return `<button data-q="${g.last}" title="Cancelar">${q.k==='unit'?iconHTML('u:'+q.t):q.k==='age'?IC.ageup:q.k==='up'?IC.up:TECHS[q.t].icon}${g.first===0?`<span style="width:${e.qt/tot*100}%"></span>`:''}${g.n>1?`<b class="qn">×${g.n}</b>`:''}</button>`}).join('')}${e.queue.length>1?`<small class="qtot">${e.queue.length}/${QMAX}</small>`:''}</div>`;
     if(e.blocked)extra+='<div style="color:var(--bad)">Sem espaço de população</div>';
     else if(q0.k==='age')extra+=`<div class="muted">A avançar para ${AGES[q0.a]}…</div>`;
     else if(q0.k==='tech')extra+=`<div class="muted">A pesquisar ${TECHS[q0.t].name}…</div>`;
