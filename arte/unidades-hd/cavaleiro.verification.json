@@ -1,0 +1,12 @@
+{
+ "unit": "cavaleiro",
+ "source": "arte/cavalaria-3d (montar_cavalaria.py: Horse.blend CC0 + cavaleiro de arte/unidades-armadas)",
+ "rigSha256": "684d1e760374585eb531455222cb176ba013ce193ac13a43e3ac67cb28de9505",
+ "renderResolution": 512,
+ "cyclesSamples": 16,
+ "h": 96,
+ "downscaleFactor": 0.6852791878172588,
+ "atlasSha256": "6392d0f7aa40950e3f6752ce38c69f4f5b1d8dd5f9f48e419713a330d5749519",
+ "encoding": "lossless",
+ "additionalMeshyCredits": 0
+}

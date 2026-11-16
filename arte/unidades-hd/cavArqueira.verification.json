@@ -1,0 +1,12 @@
+{
+ "unit": "cavArqueira",
+ "source": "arte/cavalaria-3d (montar_cavalaria.py: Horse.blend CC0 + cavaleiro de arte/unidades-armadas)",
+ "rigSha256": "e27319d4ed2b5fcf5694f2b15590114f0dd42ebe26da72741e4d606326c383c2",
+ "renderResolution": 512,
+ "cyclesSamples": 16,
+ "h": 96,
+ "downscaleFactor": 0.7621502209131076,
+ "atlasSha256": "ec2386df74373a5ec776f8a68519dbf645847acd1ebbfd4109afe30447a8e3f9",
+ "encoding": "lossless",
+ "additionalMeshyCredits": 0
+}

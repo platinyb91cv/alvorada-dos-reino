@@ -10,3 +10,11 @@ Aldeão (h=96, 576 quadros com todas as tarefas), guerreiro, lanceiro, espadachi
 - Teste: `tests/check_unit3d_hd.cjs` (hashes, mesmo GLB, h=128, redução, orçamento de memória < 24 M píxeis).
 
 Refazer: `python3 renderizar_hd.py unit=<nome> [res=640]` → `python3 empacotar_hd.py <nome> lossless` → `python3 integrar_hd.py`.
+
+## Cavalaria HD (h=96)
+
+Cavalaria, cavalaria pesada e cavalaria arqueira: rigs montados com `arte/cavalaria-3d/scripts/montar_cavalaria.py`
+(cavalo CC0 + espadachim/lanceiro/arqueiro; a pesada com `ARMOR=1`), renderizados com `renderizar_cav_hd.py` (512 px, mesma luz)
+e empacotados com `empacotar_cav_hd.py`: ponto de apoio relativo copiado do atlas atual (mesmo sítio no jogo), escala para h=96.
+Carregam só quando a unidade aparece (`cavLoad`), com recurso ao atlas atual se falharem. 96 e não 128: o cavalo é largo
+(a 128 seriam ~10 M píxeis por atlas).
