@@ -1,4 +1,4 @@
-# id|frase   (voz do conselheiro, em português de Portugal)
+# id|frase   (voz do conselheiro, português de Portugal; gravações em mp3-grok/, geradas no Grok)
 ataque|Meu senhor, a cidade está a ser atacada!
 centro|O Centro da Vila está sob ataque! Defendei-o!
 rei|Protegei o Rei! O Rei está a ser atacado!
@@ -14,3 +14,11 @@ idade|Entrámos numa nova idade. O reino prospera!
 missao|Uma nova missão aguarda-vos, meu senhor.
 vitoria|Vitória! O inimigo rendeu-se!
 derrota|O Rei caiu. O reino está perdido.
+construido|A construção está concluída, meu senhor.
+recursos|Não temos recursos suficientes.
+pesquisa|Os nossos sábios concluíram a pesquisa.
+melhoria|O edifício foi melhorado, meu senhor.
+ocioso|Há aldeões sem trabalho, meu senhor.
+aliado|Um aliado precisa da nossa ajuda!
+torre|A nossa torre está a ser atacada!
+madeira|Precisamos de mais madeira, meu senhor.
