@@ -43,10 +43,10 @@
     "Walk": 7.227063179016113e-09,
     "Idle": 5.364418029785156e-09
   },
-  "sha256": "928859d4f159ac2ec962e033c500fc6099676c315580981d248feaf85f426606",
+  "sha256": "e7716400244cc6d47fd7f18ed496d660cce42729638b1e2c1a06000ef249b94f",
   "sourceSha256": "5c685f633dd5f366b5fb6f66c7ce299630bca10e612c0e919ad807ce31d247fe",
   "bodyTriangles": 100079,
-  "bytes": 24199240,
+  "bytes": 24024272,
   "additionalMeshyCredits": 0,
   "supportHandMaximumResidualMetres": 0,
   "source": "Existing Meshy models and motions; local posture/hand layers and villager retarget; no paid requests",
@@ -57,7 +57,7 @@
     "Walk": 1.375,
     "Idle": 1.375
   },
-  "atlasSha256": "e5e41e3f51a171730d2caccac0b657853f884fdfd1e6cf369166bf7d6ae91947",
+  "atlasSha256": "550759d02b0e6a99c800d0231e2cae193314be40b60f24ca2b9782880c1b314e",
   "locomotion": {
     "walk": {
       "phaseScale": 2.14864628551409,
@@ -2231,5 +2231,6 @@
     ],
     "resolution": 128,
     "cpuSamples": 2
-  }
+  },
+  "weapon": "espada de uma mão (malha da espada do espadachim, 0,8×, presa ao osso RightHand); antes: machado"
 }

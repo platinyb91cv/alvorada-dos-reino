@@ -4,7 +4,7 @@ Cinco soldados Meshy existentes e o aldeão Meshy já criado, com equipamento e 
 
 ## Âmbito e fontes
 
-- Guerreiro: machado Meshy; guarda e pulso adaptados localmente.
+- Guerreiro: espada de uma mão (malha da espada do espadachim a 0,8×, presa ao osso RightHand; scripts/guerreiro_espada.py); antes tinha machado Meshy.
 - Lanceiro: lança Meshy; apoio das duas mãos adaptado ao movimento.
 - Espadachim: variante com a guarda aprovada; caminhada reutilizada sem criar poses novas.
 - Arqueiro: arco Meshy; ataque existente alinhado para a direção correta.
