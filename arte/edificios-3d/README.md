@@ -37,3 +37,15 @@ DESSAT_TELHADO=1 python3 arte/edificios-3d/scripts/trocar_no_atlas.py /tmp/merc 
 - `DESSAT_TELHADO=1` tira o azul acinzentado do telhado, para que só os toldos levem a cor da equipa.
 
 O GLB original (56 MB) não está no repositório; só o render entra no atlas.
+
+## Vistas da câmara rodada (botão ⟳)
+Os edifícios pintados não têm modelo 3D: nas vistas de lado o jogo desenha-os ao espelho. Para terem os 4 lados de verdade:
+1. Gerar um modelo GLB a partir da pintura (ex.: `arte/edificios-3d/niveis/casa_nv2.png` no Meshy/Tripo, Image to 3D).
+2. Renderizar os 4 lados com a câmara do jogo (sem sombra embutida; a vista k é o modelo rodado −90°·k):
+```
+GLB=/caminho/casa.glb NOME=casa_n2 W=2 H=2 OUT=/tmp/casa4 SAMPLES=48 python3 arte/edificios-3d/scripts/render_4vistas.py
+```
+   `ROT0=90` (graus) se a porta do modelo não ficar virada como na pintura (comparar com `casa_n2_r0.png`).
+3. Juntar as vistas ao atlas: `python3 arte/edificios-3d/scripts/trocar_no_atlas.py /tmp/casa4 . casa_n2_r1 casa_n2_r2 casa_n2_r3`
+   (juntar também `casa_n2_r0` só se se quiser trocar a pintura da vista normal pelo render).
+No jogo, `bld3dSprite` usa `<quadro>_rN` quando a câmara está na vista N e esse quadro existe; aí o edifício deixa de ser espelhado.
