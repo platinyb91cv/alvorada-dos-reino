@@ -1178,6 +1178,7 @@ function mkBld(o,type,tx,ty,done){
   for(let y=ty;y<ty+d.h;y++)for(let x=tx;x<tx+d.w;x++){const i=idx(x,y);bldAt[i]=b.id;if(!d.walk)blk[i]=d.gate&&done?4:3}
   if(type==='torre')b.lvl=1;if(d.gate){b.locked=false;b.open=0}if(d.garr)b.garr=[];
   ents.push(b);byId.set(b.id,b);chunkDirtyBld(b);
+  if(d.wall||d.gate||type==='torre')syncGateFlanks();
   if(!d.walk)evictUnits(b);
   return b;
 }
@@ -1273,6 +1274,7 @@ function kill(e,src){
   if(e.kind==='b'){if(e.type==='vila'&&src&&src.o!=null&&src.o<2&&src.o!==e.o&&P[src.o]){P[src.o].res.gold+=150;P[src.o].res.food+=100;if(src.o===ME){resDirty=true;toast('Vila saqueada: +150 ouro e +100 comida')}else if(e.o===ME)toast('O rival saqueou uma vila nossa!',true)}
     if(e.garr&&e.garr.length){const keep=e.garr.slice();e.garr=[];for(const u of keep){const p=freeNear(e.tx,e.ty,e.w,e.h)||{x:e.tx,y:e.ty};u.x=p.x+.5;u.y=p.y+.5;u.inBoat=null;u.inBld=0;u.state='idle';u.path=null;u.hp=Math.max(1,u.hp*.7);ents.push(u);byId.set(u.id,u)}}chunkDirtyBld(e);
     for(let y=e.ty;y<e.ty+e.h;y++)for(let x=e.tx;x<e.tx+e.w;x++){const j=idx(x,y);bldAt[j]=0;if(blk[j]===3||blk[j]===4)blk[j]=0}
+    if(e.d.wall||e.d.gate||e.type==='torre')syncGateFlanks();
     fx.push({t:0,life:BLDART.ready&&!e.d.wall?16:2.5,type:'rubble',x:e.tx+e.w/2,y:e.ty+e.h/2,w:e.w,h:e.h});
     {const n=Math.min(22,6+e.w*e.h*2),stone=P[e.o]&&P[e.o].age>0&&!(e.type==='muralhaMadeira'||e.type==='portaoMadeira');fx.push({t:0,life:2.4,type:'debris',x:e.tx+e.w/2,y:e.ty+e.h/2,n,pw:1+e.w*.25,h0:BHEIGHT[e.type]*.5||20,col:stone?['#cfc6b4','#a69d8a','#7d5a3a','#8f877a']:['#8a6236','#6b4626','#b08a58','#5a3d22'],sd:debrisSeeds(n,1+e.w*.25)})}
   }else{
@@ -1293,6 +1295,14 @@ function kill(e,src){
 /* ---------------- passagem (terra / água / portões) ---------------- */
 const MV={o:-1,nav:0};
 function setMover(u){MV.o=u?u.o:-1;MV.nav=u&&u.d&&u.d.naval?1:0}
+// casa do portão: as torres e os muros desenhados ao lado do portão ocupam casas vizinhas na direção da muralha
+// (portão de pedra: 2 de cada lado; de madeira: 1). Essas casas ficam sólidas (blk 5) para ninguém passar "por dentro" das torres;
+// uma muralha pode ser construída por cima delas. Recalculado sempre que muda uma muralha, portão ou torre (determinístico: só usa o mapa).
+let GFLANK=[];
+function syncGateFlanks(){if(typeof blk==='undefined'||!blk)return;for(const i of GFLANK)if(blk[i]===5)blk[i]=0;GFLANK=[];
+  for(const g of ents){if(g.kind!=='b'||!g.d.gate||!g.done||g.dead)continue;const ax=bldVariant(g),N=g.type==='portaoPedra'?2:1;
+    for(let k=-N;k<=N;k++){if(!k)continue;const x=ax==='y'?g.tx:g.tx+k,y=ax==='y'?g.ty+k:g.ty;if(!inb(x,y))continue;const i=idx(x,y);
+      if(blk[i]===0&&!bldAt[i]&&!resAt[i]&&terr[i]!==1){blk[i]=5;GFLANK.push(i)}}}}
 function okTile(i){const b=blk[i];if(MV.nav)return b===1;if(b===0)return true;if(b===4){const g=byId.get(bldAt[i]);return !!g&&g.o===MV.o&&!g.locked}return false}
 function okXY(x,y){return x>=0&&y>=0&&x<W&&y<H&&okTile(idx(x,y))}
 function stepOK(u,nx,ny){if(u.penId){const pen=pasturePen(u);if(pen&&insidePen(u,pen)&&!insidePen({x:nx,y:ny},pen))return false}setMover(u);const ox=Math.floor(u.x),oy=Math.floor(u.y),tx=Math.floor(nx),ty=Math.floor(ny);if(!okXY(tx,ty))return false;if(tx!==ox&&ty!==oy&&okXY(ox,oy)&&(!okXY(tx,oy)||!okXY(ox,ty)))return false;return true}
@@ -2003,6 +2013,7 @@ function updUnit(u,dt){
 function finishBuilding(b){
   b.done=true;b.hp=Math.max(b.hp,b.max*.98);P[b.o].stats.blds++;chunkDirtyBld(b);
   if(b.d.gate)for(let y=b.ty;y<b.ty+b.h;y++)for(let x=b.tx;x<b.tx+b.w;x++)blk[idx(x,y)]=4;
+  if(b.d.gate||b.d.wall||b.type==='torre')syncGateFlanks();
   if(b.type==='maravilha'&&G.mode==='build'){toast('A Maravilha está de pé! A tua cidade entra para a história.');snd('wonder',null,null,{force:1})}
   else if(b.type==='maravilha'&&!(G.wonder&&byId.get(G.wonder.id))){G.wonder={o:b.o,id:b.id,t:300};toast(b.o===ME?'A Maravilha está de pé! Defende-a durante 5 minutos.':'O rival terminou uma Maravilha! Destrói-a em 5 minutos.',b.o!==ME);snd('wonder',null,null,{force:1})}
   if(b.o===ME&&!b.d.wall){toast('Construção concluída: '+b.d.name);voz('construido');snd('build_done',null,null,{force:1})}
@@ -2120,7 +2131,7 @@ function canPlace(type,tx,ty,o,margin,skipVis){
     const inner=x>=tx&&x<tx+d.w&&y>=ty&&y<ty+d.h;
     if(!inb(x,y)){if(inner)return false;continue}
     const i=idx(x,y);
-    if(inner){if(blk[i]||bldAt[i]||resAt[i])return false;if(o===ME&&!skipVis&&vis[i]===0)return false}
+    if(inner){if((blk[i]&&!(blk[i]===5&&(d.wall||d.gate)))||bldAt[i]||resAt[i])return false;if(o===ME&&!skipVis&&vis[i]===0)return false}
     else if(blk[i]===3||blk[i]===1||bldAt[i])return false;
   }
   return true;
@@ -3683,9 +3694,17 @@ const PGATE={ready:false,img:null,wide:true,teams:new Map(),meta:PGATE_DATA};
 (()=>{if(!GATE3D_DATA.file)return;const im=new Image();im.onload=()=>{GATE3D.img=im;GATE3D.ready=true;for(const k in BCACHE)delete BCACHE[k];try{PORTS.clear()}catch(e){}};im.src='assets/edificios-extra/'+GATE3D_DATA.file})();
 function gate3dKey(type,age){const kind=type==='portaoMadeira'?'madeira':'pedra',F=GATE3D.meta.frames;
   for(let a=age;a>=0;a--)if(F[kind+a+'_x_0'])return kind+a;for(let a=age+1;a<=2;a++)if(F[kind+a+'_x_0'])return kind+a;return null}
+// a casa do portão pintada vinha em pedra cinzenta; as muralhas e torres do castelo modular são de pedra cor de areia.
+// Aquece só os píxeis acinzentados (pedra) para a mesma cor média das muralhas (medido: cinzento 137,131,127 → areia 170,154,130);
+// madeira, ferro e a bandeira da equipa ficam como estão. Feito uma vez por sprite (fica na cache).
+function gateToneSand(cv){try{const g=cv.getContext('2d'),im=g.getImageData(0,0,cv.width,cv.height),d=im.data;
+  for(let i=0;i<d.length;i+=4){if(d[i+3]<8)continue;const r=d[i],gg=d[i+1],b=d[i+2],mx=Math.max(r,gg,b),mn=Math.min(r,gg,b),sat=mx?(mx-mn)/mx:0;
+    const w=Math.max(0,Math.min(1,1-(sat-.08)/.22));if(!w)continue;
+    d[i]=Math.min(255,r*(1+.23*w));d[i+1]=Math.min(255,gg*(1+.16*w));d[i+2]=Math.min(255,b*(1+.02*w))}
+  g.putImageData(im,0,0)}catch(e){}}
 function gate3dSprite(type,age,o,vr,op){
   if(type==='portaoPedra'&&PGATE.ready){const d=vr==='y'?'y':'x',f=PGATE.meta.frames['pedra_'+d+'_'+(op|0)];if(f){const team=P[o]?P[o].col:'#3f86e0',key='pg|'+d+'|'+op+'|'+team;if(BCACHE[key])return BCACHE[key];
-    const [sx,sy,w,h,ax,ay]=f,k=1/PGATE.meta.scale,CW=Math.ceil(w*k)+2,CH=Math.ceil(h*k)+2;const cv=mkCanvas(CW*SS,CH*SS),c=cv.getContext('2d');c.scale(SS,SS);c.imageSmoothingEnabled=true;c.imageSmoothingQuality='high';c.drawImage(tintCrop(PGATE,team,sx,sy,w,h),0,0,w,h,1,1,w*k,h*k);
+    const [sx,sy,w,h,ax,ay]=f,k=1/PGATE.meta.scale,CW=Math.ceil(w*k)+2,CH=Math.ceil(h*k)+2;const cv=mkCanvas(CW*SS,CH*SS),c=cv.getContext('2d');c.scale(SS,SS);c.imageSmoothingEnabled=true;c.imageSmoothingQuality='high';c.drawImage(tintCrop(PGATE,team,sx,sy,w,h),0,0,w,h,1,1,w*k,h*k);gateToneSand(cv);
     const r={cv,ox:ax*k+1,oy:ay*k+1,CW,CH};BCACHE[key]=r;return r}}
   if(!GATE3D.ready)return null;const v=gate3dKey(type,age);if(!v)return null;const team=P[o]?P[o].col:'#3f86e0',d=vr==='y'?'y':'x';
   const key='g3|'+v+'|'+d+'|'+op+'|'+team;if(BCACHE[key])return BCACHE[key];
