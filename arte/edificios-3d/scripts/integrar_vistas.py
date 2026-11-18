@@ -3,7 +3,7 @@
 #   r1 = vista E (o lado que estava à direita-frente passa para a esquerda-frente), r2 = vista S (as traseiras), r3 = vista O.
 # Cada imagem: tira o fundo a partir das bordas, recorta, ajusta a LARGURA à do quadro que já está no jogo (a pegada é quadrada,
 # por isso o losango do chão fica do mesmo tamanho), alinha pelo fundo ao centro e herda a âncora desse quadro.
-# Depois volta a empacotar o atlas e atualiza BLD3D_DATA no www/index.html.
+# Vai para o atlas das vistas www/assets/edificios-extra/edificios-3d-vistas.webp e BLD3DV_DATA no www/index.html (o principal não muda).
 # Ou uma folha com as duas vistas lado a lado: <quadro>_folha.png (esquerda = traseiras _r2, direita = vista E _r1).
 # Uso: python3 integrar_vistas.py <pasta_das_imagens> <repo>   [ACERTAR_COR=1 aproxima a cor média à do quadro original]
 import sys, os, io, json, hashlib, re
@@ -11,9 +11,16 @@ from pathlib import Path
 from PIL import Image, ImageDraw, ImageFilter, ImageChops, ImageStat
 src, repo = Path(sys.argv[1]), Path(sys.argv[2])
 html_p = repo / 'www/index.html'; html = html_p.read_text(encoding='utf-8')
-i = html.index('const BLD3D_DATA='); j = html.index('\n', i); data = json.loads(html[i + 17:html.index(';', i)])
+i = html.index('const BLD3D_DATA='); data = json.loads(html[i + 17:html.index(';', i)])
 atlas_p = repo / 'www/assets/edificios-extra' / data['file']; old = Image.open(atlas_p).convert('RGBA')
-tiles = {n: (old.crop((x, y, x + w, y + h)), ax, ay) for n, (x, y, w, h, ax, ay) in data['frames'].items()}
+# quadros originais (só para ler tamanho, âncora e cor); as vistas novas vão para um atlas À PARTE (edificios-3d-vistas.webp,
+# BLD3DV_DATA) para o atlas principal não passar de 2048 px
+base_tiles = {n: (old.crop((x, y, x + w, y + h)), ax, ay) for n, (x, y, w, h, ax, ay) in data['frames'].items()}
+iv = html.index('const BLD3DV_DATA='); jv = html.index('\n', iv); vdata = json.loads(html[iv + 18:html.rindex(';', iv, jv)])
+vatlas_p = repo / 'www/assets/edificios-extra/edificios-3d-vistas.webp'
+tiles = {}
+if vdata.get('file') and vatlas_p.exists():
+    vold = Image.open(vatlas_p).convert('RGBA'); tiles = {n: (vold.crop((x, y, x + w, y + h)), ax, ay) for n, (x, y, w, h, ax, ay) in vdata['frames'].items()}
 
 def cutout(im):  # fundo claro ligado às bordas -> transparente (as imagens com alfa ficam como estão)
     if im.mode == 'RGBA' and im.getchannel('A').getextrema()[0] < 250: return im
@@ -59,8 +66,8 @@ for name, p in items:
     mt = re.match(r'^(.+)_r([123])\.(png|jpe?g|webp)$', name, re.I)
     if not mt: continue
     base, k = mt.group(1), mt.group(2)
-    if base not in tiles: print('sem quadro original no atlas:', base, '(ignorado)'); continue
-    ref, ax, ay = tiles[base]
+    if base not in base_tiles: print('sem quadro original no atlas:', base, '(ignorado)'); continue
+    ref, ax, ay = base_tiles[base]
     rb = ref.getchannel('A').point(lambda v: 255 if v > 30 else 0).getbbox(); rw = rb[2] - rb[0]
     c = p if isinstance(p, Image.Image) else cutout(Image.open(p)); cb = c.getchannel('A').point(lambda v: 255 if v > 30 else 0).getbbox(); c = c.crop(cb)
     s = rw / c.width; c = c.resize((max(1, round(c.width * s)), max(1, round(c.height * s))), Image.LANCZOS)
@@ -78,7 +85,7 @@ for n in order:
 atlas = Image.new('RGBA', (AW, y + row + gap)); F = {}
 for n, (t, ax, ay) in tiles.items():
     px_, py_ = place[n]; atlas.paste(t, (px_, py_)); F[n] = [px_, py_, t.width, t.height, ax, ay]
-buf = io.BytesIO(); atlas.save(buf, 'WEBP', lossless=True, quality=100, method=6); webp = buf.getvalue(); atlas_p.write_bytes(webp)
-data['atlasSha256'] = hashlib.sha256(webp).hexdigest(); data['frames'] = dict(sorted(F.items()))
-html = html[:i] + 'const BLD3D_DATA=' + json.dumps(data, separators=(',', ':')) + ';' + html[j:]; html_p.write_text(html, encoding='utf-8')
-print('atlas', atlas.size, len(webp) // 1024, 'KB,', len(F), 'quadros; novos:', ', '.join(done))
+buf = io.BytesIO(); atlas.save(buf, 'WEBP', lossless=True, quality=100, method=6); webp = buf.getvalue(); vatlas_p.write_bytes(webp)
+vdata = {'file': vatlas_p.name, 'scale': data['scale'], 'atlasSha256': hashlib.sha256(webp).hexdigest(), 'frames': dict(sorted(F.items()))}
+html = html[:iv] + 'const BLD3DV_DATA=' + json.dumps(vdata, separators=(',', ':')) + ';' + html[jv:]; html_p.write_text(html, encoding='utf-8')
+print('atlas das vistas', atlas.size, len(webp) // 1024, 'KB,', len(F), 'quadros; novos:', ', '.join(done))

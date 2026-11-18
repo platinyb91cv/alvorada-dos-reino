@@ -2847,7 +2847,7 @@ function bAnch(e){const c=bCorner(e.tx,e.ty,e.w,e.h);return proj(c.x,c.y)}
 // arte de cada vista: quadro <base>_rN se existir. Paredes do edifício: frente-esq A (porta), frente-dir B, trás C, D.
 // N = A|B, E = B|C, S = C|D, O = D|A. Sem _r1, a vista E usa as traseiras (_r2 = C|D) ao espelho (D|C: a parede da direita fica certa);
 // sem arte própria, E e O usam a vista N ao espelho e S usa a vista N.  Devolve {suf:'_rN'|'', mir:bool} ou null (sem rotação).
-function rotArt(type,age,vr){if(typeof ROT==='undefined'||!ROT)return null;const F=typeof BLD3D!=='undefined'&&BLD3D.ready&&BLD3D.meta.frames,v=F&&bld3dKey(type,age,vr);
+function rotArt(type,age,vr){if(typeof ROT==='undefined'||!ROT)return null;const F=typeof BLD3DV!=='undefined'&&BLD3DV.ready&&BLD3D.ready&&BLD3DV.meta.frames,v=F&&bld3dKey(type,age,vr);
   if(v&&F[v+'_r'+ROT])return{suf:'_r'+ROT,mir:false};if(ROT===1&&v&&F[v+'_r2'])return{suf:'_r2',mir:true};return{suf:'',mir:(ROT&1)===1}}
 function bRotArt(type,age,vr){const r=rotArt(type,age,vr);return !!r&&!r.mir&&!!r.suf}
 function bMir(e){if((ROT&1)!==1||e.d.wall||e.d.gate||e.type==='torre')return false;const r=rotArt(e.type,bAge(e),bldVariant(e));return !r||r.mir}
@@ -3177,9 +3177,12 @@ function drawBaseTufts(c,e,t){if(!TUF.img||GFX!=='alto'||cam.z<.6||e.type==='doc
   if(!L){L=[];const r=mulberry32(e.id*977+5),sh=[];TUF.K.split('').forEach((k,i)=>{if(k==='c'||k==='a'&&r()<.5)sh.push(i)});
     const add=(x,y)=>{if(!inb(Math.floor(x),Math.floor(y))||terr[idx(Math.floor(x),Math.floor(y))]===1)return;L.push({x,y,f:sh[Math.floor(r()*sh.length)],s:.17+r()*.1,fl:r()<.5?-1:1,ph:r()*6.28})};
     const n=Math.round((e.w+e.h)*2.2);for(let k=0;k<n;k++){const u=r(),o=.02+r()*.16;if(r()<.5)add(e.tx+u*e.w,e.ty+e.h+o);else add(e.tx+e.w+o,e.ty+u*e.h)}
-    L.sort((a,b)=>(a.x+a.y)-(b.x+b.y));BTUF.set(e,L)}
-  const F=TUF.F,dir=Math.sign(WIND_SX)||1,amp=.06+.16*WIND_S;
-  for(const u of L){const [fx,fy,fw,fh]=F[u.f],p=proj(u.x,u.y),S=u.s,sk=dir*amp*(fh/90)*(.5*Math.sin(t*2.3+u.ph)+.8*Math.max(0,Math.sin(t*.85-(u.x+u.y)*.42))+.2);
+    // tufos também nas paredes de trás (−x/−y): só se veem quando a câmara rodada as põe à frente
+    for(let k=0;k<n;k++){const u=r(),o=.02+r()*.16;if(r()<.5)add(e.tx+u*e.w,e.ty-o);else add(e.tx-o,e.ty+u*e.h)}
+    BTUF.set(e,L)}
+  const F=TUF.F,dir=Math.sign(WIND_SX)||1,amp=.06+.16*WIND_S,dc=dep(e.tx+e.w/2,e.ty+e.h/2);
+  const LV=L.filter(u=>dep(u.x,u.y)>dc).sort((a,b)=>dep(a.x,a.y)-dep(b.x,b.y)); // só os tufos à frente do edifício nesta vista
+  for(const u of LV){const [fx,fy,fw,fh]=F[u.f],p=proj(u.x,u.y),S=u.s,sk=dir*amp*(fh/90)*(.5*Math.sin(t*2.3+u.ph)+.8*Math.max(0,Math.sin(t*.85-(u.x+u.y)*.42))+.2);
     c.save();c.translate(p.x,p.y);c.transform(u.fl,0,-sk,1,0,0);c.drawImage(TUF.img,fx,fy,fw,fh,-fw*S/2,-fh*S+1,fw*S,fh*S);c.restore()}}
 function drawTufts(c,t,V,z){
   if(!TUF.img||GFX!=='alto'||cam.z<.55)return;if(!TUF.list)tufBuild();
@@ -3837,7 +3840,11 @@ function wall3dSprite(type,o,m){if(CMOD.ready&&CMOD_KIND[type]){const base=CMOD_
   const r={cv,ox:ax*k+1,oy:ay*k+1,CW,CH};BCACHE[key]=r;return r}
 // edifícios 3D (Blender, arte/edificios-3d): casas, quartel, Centro da Vila… por idade (torre: por nível), mesma câmara e luz dos portões
 const BLD3D_DATA={"file":"edificios-3d.webp","scale":1.5,"atlasSha256":"3aed8f3b216a622955862c16fa517b116000b00e2eee7488b776f49bc991dc08","frames":{"armazem_0":[1118,1532,184,184,92.0,88.0],"armazem_1":[1304,1532,184,184,92.0,88.0],"armazem_2":[1490,1532,184,184,92.0,88.0],"armazem_n2":[1856,1326,184,192,92.0,96.0],"armazem_n3":[2,1532,184,189,92.0,93.0],"arquearia_0":[1575,1076,276,204,138.0,60.0],"arquearia_1":[2,1326,276,204,138.0,60.0],"arquearia_2":[280,1326,276,204,138.0,60.0],"arquearia_n2":[2,1076,276,248,138.0,104.0],"arquearia_n3":[839,782,276,256,138.0,112.0],"casa_0":[560,1723,184,173,92.0,77.0],"casa_1":[746,1723,184,173,92.0,77.0],"casa_2":[932,1723,184,173,92.0,77.0],"casa_n2":[374,1723,184,176,92.0,80.0],"casa_n3":[188,1723,184,182,92.0,86.0],"centro_0":[2,432,276,348,138.0,204.0],"centro_1":[280,432,276,348,138.0,204.0],"centro_2":[2,782,281,292,140.82,132.8],"centro_n2":[1763,2,276,350,138.0,206.0],"doca_0":[374,1532,184,185,92.0,89.0],"doca_1":[560,1532,184,185,92.0,89.0],"doca_2":[746,1532,184,185,92.0,89.0],"doca_n2":[558,1326,184,199,92.0,103.0],"doca_n3":[1389,1076,184,213,92.0,117.0],"estabulo_0":[558,1076,275,242,144.0,98.0],"estabulo_1":[835,1076,275,242,144.0,98.0],"estabulo_2":[1112,1076,275,242,144.0,98.0],"estabulo_n2":[285,782,275,273,143.0,129.0],"estabulo_n3":[562,782,275,268,141.0,124.0],"ferreiro_0":[1676,1532,184,183,92.0,87.0],"ferreiro_1":[1862,1532,184,183,92.0,87.0],"ferreiro_2":[2,1723,184,183,92.0,87.0],"ferreiro_n2":[932,1532,184,185,92.0,89.0],"ferreiro_n3":[188,1532,184,189,92.0,93.0],"maravilha_2":[558,2,369,403,184.5,211.0],"mercado_1":[744,1326,276,198,138.0,54.0],"mercado_2":[1022,1326,276,198,138.0,54.0],"mercado_n2":[280,1076,276,243,138.0,99.0],"mercado_n3":[1117,782,276,252,138.0,108.0],"oficina_1":[1300,1326,276,197,138.0,53.0],"oficina_2":[1578,1326,276,197,138.0,53.0],"oficina_n2":[1395,782,276,252,138.0,108.0],"oficina_n3":[1673,782,276,252,138.0,108.0],"quartel_0":[558,432,276,346,138.0,202.0],"quartel_1":[836,432,276,346,138.0,202.0],"quartel_2":[1114,432,276,346,138.0,202.0],"quartel_n2":[1392,432,276,339,138.0,195.0],"quartel_n3":[1485,2,276,355,138.0,211.0],"templo_1":[929,2,276,395,138.0,251.0],"templo_2":[1207,2,276,395,138.0,251.0],"templo_n2":[280,2,276,404,138.0,260.0],"templo_n3":[2,2,276,428,138.0,284.0],"torre_1":[1670,432,113,320,56.5,224.0],"torre_2":[1785,432,113,320,56.5,224.0],"torre_3":[1900,432,113,320,56.5,224.0]}};
+// vistas da câmara rodada (quadros <base>_rN pintados/renderizados) num atlas à parte: integrar_vistas.py
+const BLD3DV_DATA={"file":"edificios-3d-vistas.webp","scale":1.5,"atlasSha256":"e97c593bb4474797c5481bb970d6fc6ca75cbe29e17482c90198f5514f4b5f06","frames":{"armazem_0_r1":[1672,2,184,186,92.0,90.0],"armazem_0_r2":[1486,2,184,190,92.0,94.0],"casa_0_r1":[1114,2,184,202,92.0,106.0],"casa_0_r2":[1300,2,184,201,92.0,105.0],"centro_0_r1":[558,2,276,348,138.0,204.0],"centro_0_r2":[280,2,276,348,138.0,204.0],"quartel_0_r1":[2,2,276,353,138.0,209.0],"quartel_0_r2":[836,2,276,346,138.0,202.0]}};
 const BLD3D={ready:false,img:null,wide:true,teams:new Map(),meta:BLD3D_DATA};
+const BLD3DV={ready:false,img:null,wide:true,teams:new Map(),meta:BLD3DV_DATA};
+(()=>{if(!BLD3DV_DATA.file)return;const im=new Image();im.onload=()=>{BLD3DV.img=im;BLD3DV.ready=true;for(const k in BCACHE)delete BCACHE[k];try{chunksDirtyAll()}catch(e){}};im.src='assets/edificios-extra/'+BLD3DV_DATA.file})();
 (()=>{if(!BLD3D_DATA.file)return;const im=new Image();im.onload=()=>{BLD3D.img=im;BLD3D.ready=true;for(const k in BCACHE)delete BCACHE[k];try{PORTS.clear()}catch(e){}try{if(typeof MBG!=='undefined'&&MBG.L&&!document.body.classList.contains('ingame')){MBG.L=null;menuBgStart()}}catch(e){}};im.src='assets/edificios-extra/'+BLD3D_DATA.file})();
 function bld3dKey(type,age,vr){const F=BLD3D.meta.frames;if(!F)return null;
   if(type==='torre'){const l=Math.max(1,Math.min(3,vr|0||1));return F['torre_'+l]?'torre_'+l:null}
@@ -3846,10 +3853,10 @@ function bld3dKey(type,age,vr){const F=BLD3D.meta.frames;if(!F)return null;
   for(let a=age+1;a<=2;a++)if(F[type+'_'+a])return type+'_'+a;
   return null}
 function bld3dSprite(type,age,o,vr){if(!BLD3D.ready)return null;let v=bld3dKey(type,age,vr);if(!v)return null;
-  {const r=typeof rotArt==='function'&&typeof BLDS!=='undefined'&&!(BLDS[type]&&(BLDS[type].wall||BLDS[type].gate))?rotArt(type,age,vr):null;if(r&&r.suf)v=v+r.suf} // vista da câmara rodada (render_4vistas.py ou pintada: integrar_vistas.py)
+  let A=BLD3D;{const r=typeof rotArt==='function'&&typeof BLDS!=='undefined'&&!(BLDS[type]&&(BLDS[type].wall||BLDS[type].gate))?rotArt(type,age,vr):null;if(r&&r.suf){v=v+r.suf;A=BLD3DV}} // vista da câmara rodada (atlas das vistas: integrar_vistas.py)
   const team=P[o]?P[o].col:'#3f86e0',key='b3|'+v+'|'+team;if(BCACHE[key])return BCACHE[key];
-  const [sx,sy,w,h,ax,ay]=BLD3D.meta.frames[v],k=1/BLD3D.meta.scale,CW=Math.ceil(w*k)+2,CH=Math.ceil(h*k)+2;
-  const cv=mkCanvas(CW*SS,CH*SS),c=cv.getContext('2d',{willReadFrequently:true});c.scale(SS,SS);c.imageSmoothingEnabled=true;c.imageSmoothingQuality='high';c.drawImage(tintCrop(BLD3D,team,sx,sy,w,h),0,0,w,h,1,1,w*k,h*k);
+  const [sx,sy,w,h,ax,ay]=A.meta.frames[v],k=1/A.meta.scale,CW=Math.ceil(w*k)+2,CH=Math.ceil(h*k)+2;
+  const cv=mkCanvas(CW*SS,CH*SS),c=cv.getContext('2d',{willReadFrequently:true});c.scale(SS,SS);c.imageSmoothingEnabled=true;c.imageSmoothingQuality='high';c.drawImage(tintCrop(A,team,sx,sy,w,h),0,0,w,h,1,1,w*k,h*k);
   if(type!=='doca'&&!dirtFree(type,age))padSoften(cv,(ax*k+1)*SS,(ay*k+1)*SS,BLDS[type].w,BLDS[type].h); // sem chão: não há lote a esbater (cortava a base do edifício)
   else if(type!=='doca')baseShade(c,ax*k+1,ay*k+1,BLDS[type].w,BLDS[type].h);
   if(RES==='hd')sharpenCv(cv,.45);

@@ -46,9 +46,8 @@ Os edifícios pintados não têm modelo 3D: nas vistas de lado o jogo desenha-os
 GLB=/caminho/casa.glb NOME=casa_n2 W=2 H=2 OUT=/tmp/casa4 SAMPLES=48 python3 arte/edificios-3d/scripts/render_4vistas.py
 ```
    `ROT0=90` (graus) se a porta do modelo não ficar virada como na pintura (comparar com `casa_n2_r0.png`).
-3. Juntar as vistas ao atlas: `python3 arte/edificios-3d/scripts/trocar_no_atlas.py /tmp/casa4 . casa_n2_r1 casa_n2_r2 casa_n2_r3`
-   (juntar também `casa_n2_r0` só se se quiser trocar a pintura da vista normal pelo render).
-No jogo, `bld3dSprite` usa `<quadro>_rN` quando a câmara está na vista N e esse quadro existe; aí o edifício deixa de ser espelhado.
+3. Juntar as vistas ao atlas das vistas: `python3 arte/edificios-3d/scripts/integrar_vistas.py /tmp/casa4 .` (lê `casa_n2_r1..r3.png`; a `_r0` fica de fora).
+As vistas vão para um atlas à parte (`www/assets/edificios-extra/edificios-3d-vistas.webp`, `BLD3DV_DATA`), para o principal não passar de 2048 px. No jogo, `bld3dSprite` usa `<quadro>_rN` quando a câmara está na vista N e esse quadro existe; aí o edifício deixa de ser espelhado.
 
 ### Sem modelo 3D: vistas pintadas (Kimi/Grok/ChatGPT)
 Pintar a mesma construção vista de outro lado (fundo branco) e guardar como `<quadro>_r1/_r2/_r3.png`, ou uma folha do Grok com as duas vistas lado a lado `<quadro>_folha.png` (esquerda = traseiras, direita = vista E) (r2 = traseiras; r1 = o lado direito passa para a esquerda; r3 = o esquerdo passa para a direita). Depois:
