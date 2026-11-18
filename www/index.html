@@ -1298,6 +1298,16 @@ function setMover(u){MV.o=u?u.o:-1;MV.nav=u&&u.d&&u.d.naval?1:0}
 // casa do portão: as torres e os muros desenhados ao lado do portão ocupam casas vizinhas na direção da muralha
 // (portão de pedra: 2 de cada lado; de madeira: 1). Essas casas ficam sólidas (blk 5) para ninguém passar "por dentro" das torres;
 // uma muralha pode ser construída por cima delas. Recalculado sempre que muda uma muralha, portão ou torre (determinístico: só usa o mapa).
+const gateSpan=t=>t==='portaoPedra'?2:1;
+// pré-visualização: a casa do portão (arco + torres ao lado, na orientação escolhida) não pode sobrepor uma torre de canto.
+// Torre (edifício) até span+1 casas na mesma linha, ou esquina de muralha (L/T/cruz) dentro do span → vermelho.
+// Muralhas em linha reta nessas casas continuam válidas (é assim que se liga o portão à muralha).
+function gateTowerClash(type,tx,ty,o,gd){const d=BLDS[type];if(!d||!d.gate||!inb(tx,ty))return false;const ax=gateDirAt(tx,ty,gd),N=gateSpan(type);
+  for(let k=-(N+1);k<=N+1;k++){if(!k)continue;const x=ax==='y'?tx:tx+k,y=ax==='y'?ty+k:ty;if(!inb(x,y))continue;const n=byId.get(bldAt[idx(x,y)]);if(!n||n.kind!=='b')continue;
+    if(n.type==='torre')return true;
+    if(Math.abs(k)<=N&&n.d.wall&&n.o===o){const m=bldVariant(n)&15,hasX=(m&5)!==0,hasY=(m&10)!==0;if(hasX&&hasY)return true}}
+  return false}
+const REDG=new WeakMap();function redGhost(s){let r=REDG.get(s.cv);if(r)return r;r=mkCanvas(s.cv.width,s.cv.height);const g=r.getContext('2d');g.drawImage(s.cv,0,0);g.globalCompositeOperation='source-atop';g.fillStyle='rgba(235,60,50,.55)';g.fillRect(0,0,r.width,r.height);REDG.set(s.cv,r);return r}
 let GFLANK=[];
 function syncGateFlanks(){if(typeof blk==='undefined'||!blk)return;for(const i of GFLANK)if(blk[i]===5)blk[i]=0;GFLANK=[];
   for(const g of ents){if(g.kind!=='b'||!g.d.gate||!g.done||g.dead)continue;const ax=bldVariant(g),N=g.type==='portaoPedra'?2:1;
@@ -4685,7 +4695,9 @@ function render(){UCFM=0;U3TMS=0;{const zn=performance.now();if(cam&&cam.z!==ZPR
   // fantasma de construção (chão)
   let ghostOk=false;
   if(placing&&placing.line&&placing.a){for(const [x,y] of lineTiles(placing.a,placing.b||placing.a)){const ok=canPlace(placing.type,x,y,ME);c.fillStyle=ok?'rgba(150,230,120,.4)':'rgba(240,90,80,.45)';c.fillRect(x*GT,y*GT,GT,GT)}}
-  if(placing&&placing.tx!=null&&!placing.line){const d=BLDS[placing.type];ghostOk=canPlace(placing.type,placing.tx,placing.ty,ME);c.fillStyle=ghostOk?'rgba(150,230,120,.35)':'rgba(240,90,80,.45)';c.fillRect(placing.tx*GT,placing.ty*GT,d.w*GT,d.h*GT);c.strokeStyle=ghostOk?'#c8ffa8':'#ff8a7a';c.lineWidth=3;c.strokeRect(placing.tx*GT,placing.ty*GT,d.w*GT,d.h*GT)}
+  if(placing&&placing.tx!=null&&!placing.line){const d=BLDS[placing.type];ghostOk=canPlace(placing.type,placing.tx,placing.ty,ME)&&!gateTowerClash(placing.type,placing.tx,placing.ty,ME,placing.gdir);
+    if(d.gate){const ax=gateDirAt(placing.tx,placing.ty,placing.gdir),N=gateSpan(placing.type);c.fillStyle=ghostOk?'rgba(150,230,120,.18)':'rgba(240,90,80,.38)';for(let k=-N;k<=N;k++)if(k)c.fillRect((ax==='y'?placing.tx:placing.tx+k)*GT,(ax==='y'?placing.ty+k:placing.ty)*GT,GT,GT)}
+    c.fillStyle=ghostOk?'rgba(150,230,120,.35)':'rgba(240,90,80,.45)';c.fillRect(placing.tx*GT,placing.ty*GT,d.w*GT,d.h*GT);c.strokeStyle=ghostOk?'#c8ffa8':'#ff8a7a';c.lineWidth=3;c.strokeRect(placing.tx*GT,placing.ty*GT,d.w*GT,d.h*GT)}
   // decorações e marcas
   flat();
 
@@ -4776,7 +4788,7 @@ function render(){UCFM=0;U3TMS=0;{const zn=performance.now();if(cam&&cam.z!==ZPR
   // fissuras em muralhas de pedra danificadas
   for(const [,k,e,p] of draw){if(k!==1||!visibleTo0(e)||!(e.d.wall||e.d.gate)||!e.done||e.hp>e.max*.65)continue;const q=proj(e.tx+.5,e.ty+.5);c.strokeStyle='rgba(30,20,10,.7)';c.lineWidth=1.2;c.beginPath();c.moveTo(q.x-5,q.y-18);c.lineTo(q.x-1,q.y-12);c.lineTo(q.x-4,q.y-6);c.moveTo(q.x+4,q.y-20);c.lineTo(q.x+2,q.y-14);c.stroke();if(e.hp<e.max*.35){c.fillStyle='rgba(90,80,70,.5)';c.beginPath();c.arc(q.x+5,q.y-26-(t*15)%10,4,0,7);c.fill()}}
   // fantasma do edifício
-  if(placing&&placing.tx!=null&&!placing.line){const s=bldSprite(placing.type,P[ME].age,ME,BLDS[placing.type].gate?gateDirAt(placing.tx,placing.ty,placing.gdir):placing.type==='torre'?1:0);const p=proj(placing.tx,placing.ty);c.globalAlpha=ghostOk?.6:.35;c.drawImage(s.cv,p.x-s.ox,p.y-s.oy,s.CW,s.CH);c.globalAlpha=1}
+  if(placing&&placing.tx!=null&&!placing.line){const s=bldSprite(placing.type,P[ME].age,ME,BLDS[placing.type].gate?gateDirAt(placing.tx,placing.ty,placing.gdir):placing.type==='torre'?1:0);const p=proj(placing.tx,placing.ty);c.globalAlpha=ghostOk?.6:.5;c.drawImage(!ghostOk&&BLDS[placing.type].gate?redGhost(s):s.cv,p.x-s.ox,p.y-s.oy,s.CW,s.CH);c.globalAlpha=1}
   if(placing&&placing.line&&placing.a){const tl=lineTiles(placing.a,placing.b||placing.a);for(const [x,y] of tl){const ok=canPlace(placing.type,x,y,ME);const s=bldSprite(placing.type,P[ME].age,ME,15);const q=proj(x,y);c.globalAlpha=ok?.55:.25;c.drawImage(s.cv,q.x-s.ox,q.y-s.oy,s.CW,s.CH);c.globalAlpha=1}}
   tutArrow(c,t);
   if(GFX==='alto')drawClouds(c,t);
@@ -6314,6 +6326,7 @@ function confirmPlace(){
   if(!placing||placing.tx==null)return;
   const d=BLDS[placing.type];
   if(!canAfford(ME,d.cost)){(toast('Recursos insuficientes',true),vozRec());return}
+  if(gateTowerClash(placing.type,placing.tx,placing.ty,ME,placing.gdir)){toast('A casa do portão ficaria encostada a uma torre de canto: afasta o portão pelo menos 3 casas da torre (ou roda-o)',true);return}
   if(!canPlace(placing.type,placing.tx,placing.ty,ME)){toast(BLDS[placing.type].dock?'A Doca tem de ficar em terra, colada à água (lago ou rio já explorado).':'Não é possível construir aqui',true);return}
   const multi=placing.multi||keys.has('shift');
   act('place',{t:placing.type,tx:placing.tx,ty:placing.ty,u:ids(placing.builders.filter(alive)),q:multi?1:0,g:d.gate?(placing.gdir||'x'):undefined});
