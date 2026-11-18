@@ -358,6 +358,36 @@ body.keyart .panel{background:linear-gradient(180deg,rgba(34,22,12,.74),rgba(16,
   .hero{flex-direction:column;justify-content:flex-start;gap:18px}.brand{align-self:center;text-align:center;max-width:100%;margin-top:2vh}.crest{margin:0 auto 8px}.tag{margin-inline:auto}
   .panel{width:min(420px,100%);margin-top:auto}}
 @media (prefers-reduced-motion:reduce){.brand,.panel{animation:none}}
+/* ---------- menu principal (18/11): painel de madeira escura com moldura dourada, secções, modos iguais, atalhos em grelha 3×2 ---------- */
+#sMenu .panel{width:min(410px,100%);gap:10px;padding:16px 16px 14px;position:relative;isolation:isolate}
+body.keyart #sMenu .panel{background:linear-gradient(180deg,rgba(46,30,16,.9) 0%,rgba(24,15,8,.93) 55%,rgba(16,10,5,.95) 100%);border:1px solid rgba(243,212,136,.55);
+  box-shadow:0 28px 60px rgba(0,0,0,.6),0 0 0 1px rgba(20,10,2,.8),inset 0 1px 0 rgba(255,236,200,.22),inset 0 0 40px rgba(0,0,0,.35)}
+#sMenu .panel::before{content:"";position:absolute;inset:5px;border:1px solid rgba(243,212,136,.16);border-radius:15px;pointer-events:none;z-index:-1}
+#sMenu .panel::after{content:"";position:absolute;inset:-1px;border-radius:20px;pointer-events:none;
+  background:linear-gradient(135deg,#f3d488 0 14px,transparent 14px) top left/22px 22px no-repeat,linear-gradient(225deg,#f3d488 0 14px,transparent 14px) top right/22px 22px no-repeat,
+  linear-gradient(45deg,#f3d488 0 14px,transparent 14px) bottom left/22px 22px no-repeat,linear-gradient(315deg,#f3d488 0 14px,transparent 14px) bottom right/22px 22px no-repeat;
+  -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude;padding:2px;opacity:.85}
+#sMenu .cta{height:58px;border-radius:13px;background:linear-gradient(180deg,#fff0bb 0%,#f6c75e 45%,#d9932f 100%);color:#2b1706;border:1px solid #fff0bf;
+  box-shadow:0 4px 0 #7c4a14,0 12px 26px rgba(0,0,0,.45),inset 0 2px 0 rgba(255,255,240,.85);font:800 19px var(--f-display);letter-spacing:.02em}
+#sMenu .cta>span{display:flex;flex-direction:column;align-items:flex-start;line-height:1.05}#sMenu .ctasub{font:600 11.5px var(--f-body);letter-spacing:0;color:#6a4312;margin-top:3px}
+#sMenu .cta:active{transform:translateY(3px);box-shadow:0 1px 0 #7c4a14,0 6px 14px rgba(0,0,0,.4),inset 0 2px 0 rgba(255,255,240,.85)}
+#sMenu .cta.alt{height:44px;background:rgba(255,210,140,.08);color:#ffd994;border:1px solid rgba(255,200,120,.6);box-shadow:none;font:700 16px var(--f-body)}
+.psec{display:flex;align-items:center;gap:8px;margin:2px 2px -2px;font:700 10.5px var(--f-body);letter-spacing:.2em;text-transform:uppercase;color:#e7c98c}
+.psec::before,.psec::after{content:"";flex:1;height:1px;background:linear-gradient(90deg,transparent,rgba(243,212,136,.45))}.psec::after{transform:scaleX(-1)}
+#sMenu .tiles{gap:8px}
+#sMenu .tile{min-height:58px;padding:8px 10px;border-radius:12px;border:1px solid rgba(243,212,136,.26);background:linear-gradient(180deg,rgba(255,240,210,.07),rgba(0,0,0,.2));transition:border-color .15s,background .15s}
+#sMenu .tile:hover{border-color:rgba(243,212,136,.7);background:linear-gradient(180deg,rgba(255,240,210,.12),rgba(0,0,0,.18))}
+#sMenu .tile i{width:36px;height:36px;border-radius:50%;box-shadow:0 0 0 2px rgba(20,10,2,.7),0 0 0 3px rgba(243,212,136,.55),0 3px 8px rgba(0,0,0,.4)}
+#sMenu .tile b{font:700 14.5px var(--f-body);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}#sMenu .tile small{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:12px;opacity:.78}
+#sMenu .t-camp,#sMenu .t-daily,#sMenu .t-build,#sMenu .t-online{border-color:rgba(243,212,136,.26)}
+#sMenu .links{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;border-top:0;padding-top:0;margin-top:0}
+#sMenu .links button{flex-direction:row;justify-content:flex-start;gap:7px;padding:7px 8px;border-radius:10px;border:1px solid rgba(243,212,136,.2);background:rgba(255,255,255,.035);font:600 12.5px var(--f-body);color:#f2e3c6;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#sMenu .links button:hover{border-color:rgba(243,212,136,.55);background:rgba(255,255,255,.07)}#sMenu .links i{flex:none;display:inline-flex;color:#f3d488}#sMenu .links i svg{width:17px;height:17px}
+#sMenu .panel .accchip{border-color:rgba(243,212,136,.35);background:linear-gradient(90deg,rgba(243,212,136,.12),rgba(255,255,255,.03))}
+@media (max-height:430px){#sMenu .panel{width:min(380px,100%);padding:10px 12px;gap:6px}#sMenu .cta{height:46px;font-size:17px}#sMenu .ctasub{font-size:10.5px;margin-top:1px}
+  #sMenu .tile{min-height:46px;padding:5px 8px}#sMenu .tile i{width:28px;height:28px}#sMenu .tile b{font-size:13.5px}#sMenu .tile small{font-size:11px}
+  #sMenu .links button{padding:4px 7px;font-size:12px}.psec{font-size:9.5px;margin:0 2px -3px}#sMenu .cta.alt{height:36px;font-size:14.5px}}
+
 #grade{position:absolute;inset:0;pointer-events:none;z-index:1;display:none;
   background:radial-gradient(ellipse at 50% 48%,rgba(10,8,20,0) 52%,rgba(10,8,20,.34) 100%),linear-gradient(225deg,rgba(255,214,150,.09),rgba(255,214,150,0) 45%,rgba(40,40,90,.09))}
 body.ingame:not(.gfx-leve) #grade{display:block}
@@ -543,13 +573,15 @@ input{font-family:inherit;-webkit-user-select:text;user-select:text;touch-action
       <div class="panel">
         <button id="accChip" class="accchip" hidden title="O teu perfil"></button>
         <button class="cta alt" id="bCont" hidden><i data-ic="resume"></i><span>Continuar partida</span></button>
-        <button class="cta" id="bPlay"><i data-ic="play"></i><span>Novo jogo</span></button>
+        <button class="cta" id="bPlay"><i data-ic="play"></i><span>Novo jogo<small class="ctasub">Mapa, reino e dificuldade</small></span></button>
+        <div class="psec"><span>Modos de jogo</span></div>
         <div class="tiles">
-          <button class="tile t-camp" id="bCamp"><i data-ic="flag"></i><span><b>O meu Reino</b><small id="campSub">A tua cidade para sempre</small></span></button>
+          <button class="tile t-camp" id="bCamp"><i data-ic="flag"></i><span><b>O meu Reino</b><small id="campSub">A tua cidade</small></span></button>
           <button class="tile t-daily" id="bDaily"><i data-ic="trophy"></i><span><b>Desafio diário</b><small id="dailySub">Mapa do dia</small></span></button>
           <button class="tile t-build" id="bBuild"><i data-ic="build"></i><span><b>Só construir</b><small>Sem inimigos</small></span></button>
           <button class="tile t-online" id="bOnline"><i data-ic="army"></i><span><b>Jogar online</b><small>Contra amigos</small></span></button>
         </div>
+        <div class="psec"><span>Comunidade e ajuda</span></div>
         <nav class="links">
           <button id="bFriends"><i data-ic="friends"></i>Amigos</button>
           <button id="bRank"><i data-ic="trophy"></i>Classificação</button>
@@ -6987,7 +7019,7 @@ function tutArrow(c,t){const T=G&&G.tut;const hand=$('tutHand'),ring=$('tutRing'
       // câmara: no início do passo vai suavemente até ao alvo se estiver longe do centro
       if(st.pan&&T.panAt&&performance.now()-T.panAt<1600){const dx=sp.x-vw/2,dy=sp.y-(vh-70)/2;if(Math.hypot(dx,dy)>vw*.18){cam.x+=dx*.08/cam.z;cam.y+=dy*.08/cam.z;clampCam()}else T.panAt=0}}}
   if(ux==null){hand.hidden=true;return}hand.hidden=false;hand.style.left=ux+'px';hand.style.top=uy+'px'}
-function showMenu(){try{tutHide()}catch(e){}try{dailySub();const M=reinoMeta();$('campSub').textContent=M&&reinoHas()?(M.n<6?'Missão ':'Capítulo ')+(M.n+1)+' · ⭐ '+(M.gl||0):'A tua cidade para sempre'}catch(e){}$('sSetup').hidden=true;$('sCamp').hidden=true;menuBgStart();$('coach').hidden=true;document.body.classList.remove('coaching');document.body.classList.remove('ingame');if(!ACC.user&&!ACC.preview){showLogin();return}accChip();$('sMenu').hidden=false;$('bCont').hidden=!hasSave();if(hasSave()){delete $('bCont').dataset.cloud;$('bCont').lastChild.textContent='Continuar partida'}else cloudCheck();audioToMenu()}
+function showMenu(){try{tutHide()}catch(e){}try{dailySub();const M=reinoMeta();$('campSub').textContent=M&&reinoHas()?(M.n<6?'Missão ':'Capítulo ')+(M.n+1)+' · ⭐ '+(M.gl||0):'A tua cidade'}catch(e){}$('sSetup').hidden=true;$('sCamp').hidden=true;menuBgStart();$('coach').hidden=true;document.body.classList.remove('coaching');document.body.classList.remove('ingame');if(!ACC.user&&!ACC.preview){showLogin();return}accChip();$('sMenu').hidden=false;$('bCont').hidden=!hasSave();if(hasSave()){delete $('bCont').dataset.cloud;$('bCont').lastChild.textContent='Continuar partida'}else cloudCheck();audioToMenu()}
 // procura uma unidade de o, mesmo dentro de edifícios ou barcos
 function hasUnitWhere(o,f){for(const e of ents){if(e.o!==o)continue;if(e.kind==='u'&&f(e))return true;const inn=e.garr||e.cargo;if(inn)for(const u of inn)if(!u.dead&&f(u))return true}return false}
 // o Rei de o caiu (só conta para quem começou com Rei)
