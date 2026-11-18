@@ -32,6 +32,11 @@ CASES = {
    return {vida:Math.round(c.hp/c.max*100),estado:v.state}"""),
  'combate_basico': js(17, """const h=G.starts[0];const q=ents.find(e=>e.o===1&&e.type==='centro');const m=centerOf(q);const x0=(h.x+m.x)/2,y0=(h.y+m.y)/2;const a=mkUnit(0,'lanceiro',x0,y0),a2=mkUnit(0,'lanceiro',x0,y0+.6),b=mkUnit(1,'cavaleiro',x0+.6,y0);orderAttack(a,b);orderAttack(a2,b);orderAttack(b,a);run(25);
    return {custo:'2 lanceiros (120) contra 1 cavalaria (125)',lanceiro_vivo:!a.dead||!a2.dead,cavaleiro_vivo:!b.dead}"""),
+ # mercado: o preço mostrado (mktQuote) é o que se paga/recebe em várias trocas seguidas; os preços voltam devagar ao normal
+ 'mercado': js(19, """const h=G.starts[0];P[0].age=1;for(const k of KINDS)P[0].res[k]=2000;let sp=null;for(let r=4;r<14&&!sp;r++)for(let a=0;a<16&&!sp;a++){const x=Math.round(h.x+Math.cos(a)*r),y=Math.round(h.y+Math.sin(a)*r);if(canPlace('mercado',x,y,0,1,true))sp={x,y}}
+   mkBld(0,'mercado',sp.x,sp.y,true);G.mkt={food:100,wood:100,stone:130};const q=mktQuote('wood',5,1),g0=P[0].res.gold;EXEC.mkt(0,{k:'wood',buy:1,n:5});const pago=g0-P[0].res.gold;
+   const qs=mktQuote('stone',5,0),g1=P[0].res.gold;EXEC.mkt(0,{k:'stone',buy:0,n:5});const recebido=P[0].res.gold-g1;const sobe=G.mkt.wood;
+   G.mkt.food=24;run(180);return {pago,cotado:q,recebido,cotado_venda:qs,madeira_apos_compras:sobe,comida_3min:Math.round(G.mkt.food)}"""),
  'gravar_carregar': js(18, """const e=econOf(0);EXEC.tax(0,{v:3});e.hap=42.5;const c=ents.find(x=>x.o===0&&x.type==='centro');c.lvl=2;run(5);const A=JSON.stringify({tax:e.tax,hap:Math.round(e.hap*100),n:ents.length,lvl:c.lvl});
    const r=saveGame(true);loadGame();const e2=econOf(0);const c2=ents.find(x=>x.o===0&&x.type==='centro');const B=JSON.stringify({tax:e2.tax,hap:Math.round(e2.hap*100),n:ents.length,lvl:c2.lvl});return {gravou:r.ok,igual:A===B,antes:A,depois:B}"""),
 }
@@ -59,6 +64,7 @@ async def main():
           'idade_nao_muda_edificios': r['idade_nao_muda_edificios']['idade'] == 2 and r['idade_nao_muda_edificios']['nivel_centro'] == 1 and not r['idade_nao_muda_edificios']['castelo'],
           'reparacao_jogador': r['reparacao_jogador']['vida'] >= 60,
           'combate_basico': r['combate_basico']['lanceiro_vivo'] and not r['combate_basico']['cavaleiro_vivo'],
+          'mercado': r['mercado']['pago'] == r['mercado']['cotado'] and r['mercado']['recebido'] == r['mercado']['cotado_venda'] and r['mercado']['madeira_apos_compras'] == 125 and 50 < r['mercado']['comida_3min'] < 100,
           'gravar_carregar': r['gravar_carregar']['gravou'] and r['gravar_carregar']['igual'],
           'campanha': len(r['campanha']) > 0 and all(('falhou' not in c) and c['erros'] == 0 and c['objs_ok'] for c in r['campanha']),
           'sobrevivencia': r['sobrevivencia']['primeira_vaga_s'] is not None and r['sobrevivencia']['erros'] == 0,

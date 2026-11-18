@@ -104,6 +104,11 @@ body:not(.ingame) #grp{display:none}
 .taxc{max-width:420px;width:min(420px,92vw)}.taxhap{display:flex;align-items:center;gap:10px;margin:10px 0}.taxhap>span{font-size:28px}.taxhap .bar{flex:1;min-width:180px;display:block;height:12px;border-radius:7px;background:rgba(255,255,255,.12);position:relative;overflow:hidden}
 .taxhap .bar i{position:absolute;inset:0 auto 0 0;background:linear-gradient(90deg,#d9534f,#f0c04a 45%,#6fcf5a);border-radius:7px}.taxhap .bar b{position:absolute;top:-2px;bottom:-2px;width:2px;background:#fff}
 .taxbtns{display:grid;grid-template-columns:repeat(5,1fr);gap:5px}.taxbtns button{padding:8px 2px;border-radius:9px;border:1px solid rgba(255,220,150,.3);background:rgba(0,0,0,.25);color:inherit;font:inherit;font-size:12px;cursor:pointer}
+#mMkt{z-index:60}#mMkt .mcard{max-width:460px;width:min(460px,94vw);max-height:96vh;overflow:auto;gap:6px;padding:12px 18px}#mMkt .mcard>*{width:100%}#mMkt .row{justify-content:center}
+@media (max-height:480px){#mMkt .mcard{padding:8px 14px;gap:4px}#mMkt .mkrow{padding:3px 0}#mMkt .mkrow button{padding:4px 3px}#mMkt .mkinfo{font-size:11px;line-height:1.35;margin-top:2px}#mMkt .row .big{padding:6px 22px}#mMkt .mkgold{margin:2px 0 4px}}
+.mkgold{display:flex;justify-content:space-between;align-items:center;margin:6px 0 10px;font-size:14px}.mkqty{display:flex;gap:4px}.mkqty button{padding:4px 10px;border-radius:8px;border:1px solid rgba(255,220,150,.3);background:rgba(0,0,0,.25);color:inherit;font:inherit;font-size:12px;cursor:pointer}.mkqty button.on{background:linear-gradient(180deg,#f6c75e,#c7862c);color:#2b1706;font-weight:700}
+.mkrow{display:grid;grid-template-columns:1.25fr 1fr 1fr;gap:6px;align-items:center;padding:7px 0;border-top:1px solid rgba(255,220,150,.14)}.mkres{display:flex;flex-direction:column;gap:2px;font-size:13px}.mkres b{font-size:14px}.mkres small{opacity:.8}.mktag{font-size:11px;padding:1px 6px;border-radius:6px;align-self:flex-start}.mktag.cheap{background:rgba(110,200,90,.25);color:#b8f09e}.mktag.dear{background:rgba(230,100,80,.25);color:#ffb3a6}.mktag.norm{background:rgba(255,255,255,.1)}
+.mkrow button{padding:8px 4px;border-radius:9px;border:1px solid rgba(255,220,150,.35);background:rgba(0,0,0,.28);color:inherit;font:inherit;font-size:12px;cursor:pointer;line-height:1.25}.mkrow button b{font-size:14px}.mkrow button.buy b{color:#ffb3a6}.mkrow button.sell b{color:#b8f09e}.mkrow button:disabled{opacity:.38;cursor:not-allowed}.mkinfo{font-size:12px;line-height:1.5;color:var(--parch);opacity:.9;margin-top:8px}
 .taxbtns button.on{background:linear-gradient(180deg,#f6c75e,#c7862c);color:#2b1706;font-weight:700}.taxinfo{font-size:13px;line-height:1.5;margin:10px 0;color:var(--parch)}.taxinfo .g{color:#9be37f}.taxinfo .r{color:#ff9a8a}
 .lvtag{font-size:11px;padding:1px 5px;border-radius:4px;background:#5b4422;color:#ffd98a;vertical-align:middle;margin-left:4px}
 .stats2{display:flex;flex-wrap:wrap;gap:4px 9px;color:#e6d6b6;font-weight:700;font-size:12px}.stats2 span{display:inline-flex;align-items:center;gap:3px}.stats2 .ic{color:var(--trim-hi);font-size:13px}
@@ -704,6 +709,13 @@ input{font-family:inherit;-webkit-user-select:text;user-select:text;touch-action
       <div class="taxbtns" id="txBtns"></div>
       <div class="taxinfo" id="txInfo"></div>
       <div class="row"><button class="big" id="txClose">Fechar</button></div></div>
+  </div>
+  <div id="mMkt" class="modal" hidden role="dialog" aria-label="Mercado">
+    <div class="mcard"><div class="sub">Mercado — trocar recursos por ouro</div>
+      <div class="mkgold"><span>Tens <b id="mkGold">0</b> 🪙</span><span class="mkqty" id="mkQty"><button data-q="1" class="on">×100</button><button data-q="5">×500</button></span></div>
+      <div id="mkRows"></div>
+      <div class="mkinfo" id="mkInfo"></div>
+      <div class="row"><button class="big" id="mkClose">Fechar</button></div></div>
   </div>
   <div id="invite" class="modal" hidden role="dialog" aria-label="Convite">
     <div class="mcard"><div class="sub">Convite para jogar</div><div class="who"></div>
@@ -1726,7 +1738,12 @@ function boardUnit(u,boat){
 }
 // ---------- economia: mercado, comércio, relíquias, natureza que volta a crescer ----------
 const MKT_K=['food','wood','stone'];
-function mkt(){return G.mkt||(G.mkt={food:100,wood:100,stone:130})}
+const MKT_BASE={food:100,wood:100,stone:130};
+function mkt(){return G.mkt||(G.mkt={...MKT_BASE})}
+// os preços voltam devagar ao normal (como no Age of Empires): metade da diferença em ~3 minutos
+function mktTick(dt){if(!G.mkt)return;const a=Math.min(1,dt*.0039);for(const k of MKT_K)G.mkt[k]+=(MKT_BASE[k]-G.mkt[k])*a}
+// custo/ganho de n trocas seguidas (cada uma mexe o preço 5)
+function mktQuote(k,n,buy){const M=mkt();let p=M[k],t=0;for(let i=0;i<n;i++){if(buy){t+=Math.round(p);p=Math.min(300,p+5)}else{t+=Math.floor(p*.7);p=Math.max(20,p-5)}}return t}
 function mktBuy(o,k){const M=mkt(),pr=Math.round(M[k]);if(P[o].res.gold<pr){if(o===ME)toast('Ouro insuficiente',true);return false}P[o].res.gold-=pr;P[o].res[k]+=100;M[k]=Math.min(300,M[k]+5);if(o===ME){resDirty=true;uiDirty=true;sfx('click')}return true}
 function mktSell(o,k){const M=mkt();if(P[o].res[k]<100){if(o===ME)toast('Precisas de 100 '+RNAME[k].toLowerCase(),true);return false}P[o].res[k]-=100;const g=Math.floor(M[k]*.7);P[o].res.gold+=g;P[o].stats.gathered+=0;M[k]=Math.max(20,M[k]-5);if(o===ME){resDirty=true;uiDirty=true;sfx('click')}return true}
 function orderTrade(u,dest){const own=ents.filter(e=>e.kind==='b'&&e.o===u.o&&e.done&&e.d.market&&e!==dest);if(!own.length){if(u.o===ME)toast('Precisas de dois mercados: a carroça vai e volta entre eles',true);return}
@@ -5655,7 +5672,7 @@ const EXEC={
   garrison(o,d){const b=ownB(o,d.b);if(!b||!b.done||!b.d.garr)return;let sp=garrSpace(b);for(const u of own(o,d.u)){if(sp<=0)break;if(u.kind!=='u'||u.d.naval||u.d.siege)continue;orderEnter(u,b);sp--}if(o===ME)toast('A entrar: '+b.d.name)},
   ungarrison(o,d){const b=ownB(o,d.b);if(b)ungarrison(b,o!==ME)},
   bell(o,d){ringBell(o,!!d.on)},
-  mkt(o,d){if(!ents.some(e=>e.kind==='b'&&e.o===o&&e.done&&e.d.market)||!MKT_K.includes(d.k))return;if(d.buy)mktBuy(o,d.k);else mktSell(o,d.k)},
+  mkt(o,d){if(!ents.some(e=>e.kind==='b'&&e.o===o&&e.done&&e.d.market)||!MKT_K.includes(d.k))return;const n=Math.max(1,Math.min(5,d.n|0||1));for(let i=0;i<n;i++)if(!(d.buy?mktBuy(o,d.k):mktSell(o,d.k)))break},
   wallup(o,d){wallUpgrade(o,own(o,d.u).filter(b=>b.kind==='b'))},
   async savequit(o,d){if(!NET.on||G.over)return;G.over=true;const who=o===ME?'Gravaste':(NET.peer||'O adversário')+' gravou';const ok=await netSaveMatch();
     netWaitUI(false);if(NET.ws){netSend({type:'suspend'});netSend({type:'leave'})}NET.token='';NET.room='';netSave();netLeaveGame();running=false;paused=false;$('sPause').hidden=true;document.body.classList.remove('ingame');showMenu();
@@ -6222,8 +6239,7 @@ function buildCmds0(){
     if(b.type!=='torre'&&bLvl(b.type,(b.lvl||1)+1)&&!b.queue.length){const L2=(b.lvl||1)+1,T2=bLvl(b.type,L2);const lock=p.age<T2.age;box.appendChild(mkCmd('⬆️','<span>Nv.'+L2+'</span>',()=>{if(lock){toast('Nv.'+L2+' requer '+AGES[T2.age],true);return}if(!canAfford(ME,T2.cost)){(toast('Recursos insuficientes',true),vozRec());return}act('up',{b:b.id});toast('A melhorar para '+T2.name)},lock?'lock':canAfford(ME,T2.cost)?'':'no','Melhorar para '+T2.name+' — '+costHTML(T2.cost)+' · '+T2.fx+(lock?' · requer '+AGES[T2.age]:'')))}
     if(b.type==='torre'&&(b.lvl||1)<3&&!b.queue.length){const T2=TOWER[(b.lvl||1)+1];const lock=p.age<T2.age;box.appendChild(mkCmd('⬆️',lock?['','Bronze','Ferro'][T2.age]:costText(T2.cost),()=>{if(lock){toast('Requer '+AGES[T2.age],true);return}if(!canAfford(ME,T2.cost)){(toast('Recursos insuficientes',true),vozRec());return}act('up',{b:b.id});toast('A melhorar para '+T2.name)},lock?'lock':canAfford(ME,T2.cost)?'':'no','Melhorar para '+T2.name+': ataque '+T2.atk+', alcance '+T2.range))}
     if(b.d.gate)box.appendChild(mkCmd(b.locked?'🔓':'🔒',b.locked?'Abrir':'Fechar',()=>{const lk=!b.locked;act('gate',{b:b.id,lock:lk});toast(lk?'Portão fechado: ninguém passa':'Portão aberto aos aliados')}));
-    if(b.d.market){const M=mkt();for(const k of MKT_K){const pr=Math.round(M[k]);box.appendChild(mkCmd(RICON[k]+'⬇','<span>'+pr+'🪙</span>',()=>act('mkt',{k,buy:1}),p.res.gold>=pr?'':'no','Comprar 100 de '+RNAME[k].toLowerCase()+' por '+pr+' de ouro'))}
-      for(const k of MKT_K){const g=Math.floor(M[k]*.7);box.appendChild(mkCmd(RICON[k]+'⬆','<span>+'+g+'🪙</span>',()=>act('mkt',{k,buy:0}),p.res[k]>=100?'':'no','Vender 100 de '+RNAME[k].toLowerCase()+' por '+g+' de ouro'))}}
+    if(b.d.market&&b.done)box.appendChild(mkCmd('⚖️','Negociar',()=>mktOpen(),'','Comprar e vender comida, madeira e pedra por ouro'));
     if(WALL_UP[b.type]){const nt=WALL_UP[b.type],d2=BLDS[nt];const all=ents.filter(e=>e.kind==='b'&&e.o===ME&&e.type===b.type&&e.done);const lock=p.age<d2.age;
       box.appendChild(mkCmd('🧱',lock?['','Bronze','Ferro'][d2.age]:costText(d2.cost),()=>act('wallup',{u:[b.id]}),lock?'lock':canAfford(ME,d2.cost)?'':'no','Reforçar este segmento: '+d2.name));
       if(all.length>1)box.appendChild(mkCmd('🏰',lock?'':'Todos ('+all.length+')',()=>act('wallup',{u:ids(all)}),lock?'lock':'','Reforçar todos os segmentos iguais ('+all.length+')'))}
@@ -6305,7 +6321,7 @@ function infoHTML(){
     else if(q0.k==='age')extra+=`<div class="muted">A avançar para ${AGES[q0.a]}…</div>`;
     else if(q0.k==='tech')extra+=`<div class="muted">A pesquisar ${TECHS[q0.t].name}…</div>`;
   }
-  if(e.d.market&&e.done){const M=mkt();extra+=`<div class="muted">Preços (100 un.): ${MKT_K.map(k=>RICON[k]+' '+Math.round(M[k])+'🪙').join(' · ')}</div>`}
+  if(e.d.market&&e.done){const M=mkt();extra+=`<div class="muted">Comprar / vender 100: ${MKT_K.map(k=>RICON[k]+' '+Math.round(M[k])+'/'+Math.floor(M[k]*.7)+'🪙').join(' · ')}</div>`}
   if(e.type==='templo'&&e.done&&G.relics){const n=G.relics.filter(q=>q.t===e.id).length;extra+=`<div class="muted">Relíquias: ${n}${n?' · +'+(n*.5).toFixed(1).replace('.',',')+' ouro/s':' · os sacerdotes podem trazê-las'}</div>`}
   if(e.done&&e.d.garr&&own)extra+=`<div class="muted">🏰 Guarnição: ${e.garr.length}/${e.d.garr}${e.garr.length&&e.d.atk?' · +'+Math.min(6,Math.ceil(e.garr.reduce((a,u)=>a+(u.d.proj==='arrow'?2:1),0)/2))+' flechas':''}</div>`;
   if(e.type==='torre'){const T1=TOWER[e.lvl||1];extra=`<div class="stats2"><span>${IC.sword} ${atkOf(e)}</span><span>${IC.range} ${brange(e).toFixed(1)}</span></div>`+extra}
@@ -6591,6 +6607,21 @@ function taxRender(){const e=econOf(ME),r=econRates(ME),h=Math.round(e.hap),f=x=
     <b>Felicidade</b> (a caminho de ${r.target}): ${r.parts.map(([n,v])=>n+' '+(v>=0?'<span class="g">+'+v:'<span class="r">'+v)+'</span>').join(' · ')}<br>${eff}`}
 $('goal').onclick=()=>{GOAL_OFF=true;$('goal').hidden=true;toast('Objetivos escondidos (voltam na próxima partida)')};
 function taxOpen(){if(!G||!econOn(ME)){toast('Os impostos só existem numa partida contra o computador ou online');return}sfx&&sfx('click');$('mTax').hidden=false;taxRender();if(G&&G.tut)G.tut.tax=1;G.taxSeen=1}
+let MKQ=1;
+function mktOpen(){if(!G)return;sfx&&sfx('click');$('mMkt').hidden=false;mktRender()}
+function mktRender(){if($('mMkt').hidden||!G)return;const p=P[ME],M=mkt();$('mkGold').textContent=Math.floor(p.res.gold);
+  $('mkQty').querySelectorAll('button').forEach(b=>b.classList.toggle('on',+b.dataset.q===MKQ));const n=MKQ,amt=n*100;
+  $('mkRows').innerHTML=MKT_K.map(k=>{const r=M[k]/MKT_BASE[k],tag=r<.8?'<span class="mktag cheap">barato</span>':r>1.25?'<span class="mktag dear">caro</span>':'<span class="mktag norm">normal</span>';
+    const cb=mktQuote(k,n,1),cs=mktQuote(k,n,0);
+    return `<div class="mkrow"><div class="mkres"><b>${RICON[k]} ${RNAME[k]}</b><small>tens ${Math.floor(p.res[k])}</small>${tag}</div>
+      <button class="buy" data-k="${k}" data-b="1" ${p.res.gold>=cb?'':'disabled'}>Comprar ${amt} ${RICON[k]}<br><b>−${cb} 🪙</b></button>
+      <button class="sell" data-k="${k}" data-b="0" ${p.res[k]>=amt?'':'disabled'}>Vender ${amt} ${RICON[k]}<br><b>+${cs} 🪙</b></button></div>`}).join('');
+  const nm=ents.filter(e=>e.kind==='b'&&e.o===ME&&e.done&&e.d.market).length,nc=ents.filter(e=>e.kind==='u'&&e.o===ME&&e.d.trade).length;
+  $('mkInfo').innerHTML=`Cada compra sobe o preço e cada venda desce-o; com o tempo os preços voltam ao normal. Compra quando está <b>barato</b>, vende quando está <b>caro</b>.<br>
+    ${nm>=2?`Tens ${nm} mercados e ${nc} carroça(s) de comércio: manda as carroças de um mercado para outro longe para ganhar ouro.`:'Com 2 mercados afastados, as carroças de comércio ganham ouro a ir e vir entre eles.'}`}
+$('mkClose').onclick=()=>{$('mMkt').hidden=true};setInterval(()=>{if(!$('mMkt').hidden)mktRender()},1000);
+$('mkQty').addEventListener('click',ev=>{const b=ev.target.closest('[data-q]');if(b){MKQ=+b.dataset.q;mktRender()}});
+$('mkRows').addEventListener('click',ev=>{const b=ev.target.closest('button[data-k]');if(!b||b.disabled)return;act('mkt',{k:b.dataset.k,buy:+b.dataset.b,n:MKQ});setTimeout(mktRender,60)});
 $('rs_hap').onclick=taxOpen;try{$('bTaxP').onclick=()=>{if(typeof togglePause==='function'&&paused)togglePause();taxOpen()}}catch(e){}$('txClose').onclick=()=>{$('mTax').hidden=true};
 $('txBtns').addEventListener('click',ev=>{const b=ev.target.closest('[data-t]');if(b){act('tax',{v:+b.dataset.t});setTimeout(taxRender,50)}});
 function resUI(){const b=$('bRes');if(b)b.textContent=RES==='hd'?'Resolução: HD':'Resolução: auto (poupa bateria)'}
@@ -6610,6 +6641,7 @@ document.addEventListener('visibilitychange',()=>{if(document.hidden){pointers.c
   const vis_=id=>{const el=$(id);return el&&!el.hidden};
   if(vis_('invite')){$('ivNo').click();return}
   if(vis_('chatBox')){$('chatBox').hidden=true;return}
+  if(vis_('mMkt')){$('mMkt').hidden=true;return}if(vis_('mTax')){$('mTax').hidden=true;return}
   for(const [sc,bt] of [['sSetup','bSetupBack'],['sCamp','bCampBack'],['sAchv','acBack'],['sHelp','bHelpBack'],['sProfile','pfBack'],['sRank','rkBack'],['sFriends','frBack'],['sOnline','olBack'],['sEnd','bEndMenu']])if(vis_(sc)){$(bt).click();return}
   if(running&&!G.over){if(placing){placing=null;uiDirty=true;return}if(menuMode){menuMode=null;uiDirty=true;return}togglePause();return}
   if(A.minimizeApp)A.minimizeApp()})}
@@ -7908,7 +7940,7 @@ function step(dt){
   if(G.tut)tutTick(dt);
   trackTick();if((G.time|0)!==((G.time-dt)|0))achvTick(1);
   if(G.vic==='sobrevivencia'&&!G.over)survTick(dt);
-  relicTick(dt);natureTick(dt);formTick();villageTick(dt);cartTick(dt);atlasGC();
+  relicTick(dt);natureTick(dt);mktTick(dt);formTick();villageTick(dt);cartTick(dt);atlasGC();
   if(G.camp!=null&&!G.over)campTick(dt);
   if(G.hero)heroTick(dt);
   if(G.reino&&!G.over)reinoTick(dt);

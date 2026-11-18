@@ -26,7 +26,7 @@ assert.equal(ctx.caravanLoot(cart),Math.max(40,Math.round(ctx.tradeGain(40)*.6))
 ctx.ents=[cart];assert.equal(ctx.escorted(cart),false);ctx.ents=[cart,U(0,'guerreiro','inf',6,6)];assert.equal(ctx.escorted(cart),true);
 // vilas neutras: definição, regras e ligações no jogo
 assert.ok(html.includes("vila:{name:'Vila neutra',icon:'🏘️',w:3,h:3,hp:600,cost:{},time:0,age:9,sight:5,garr:5,pop:5,neutral:1}"));assert.match(html,/const VILA_CLAIM=20,VILA_SWAP=30,VILA_R=4\.5;/);
-assert.match(html,/relicTick\(dt\);natureTick\(dt\);formTick\(\);villageTick\(dt\);/,'ticks run inside the deterministic step');
+assert.match(html,/relicTick\(dt\);natureTick\(dt\);mktTick\(dt\);formTick\(\);villageTick\(dt\);/,'ticks run inside the deterministic step');
 assert.match(html,/formArm\(t,ranged\)/);assert.match(html,/dmg\+=flankBonus\(src,t\);/);assert.match(html,/spawnVillages\(\);/);
 assert.match(html,/if\(escorted\(u\)\)\{g=Math\.round\(g\*1\.25\)/);assert.match(html,/const g=caravanLoot\(e\);P\[src\.o\]\.res\.gold\+=g;/);
 assert.match(html,/e\.type==='vila'&&\(e\.o===o\|\|e\.o===2\)/,'carts can trade with neutral/allied villages');
