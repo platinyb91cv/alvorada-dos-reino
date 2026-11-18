@@ -2048,7 +2048,7 @@ function updBld(b,dt){
         if(b.o===ME){toast('Tecnologia concluída: '+TECHS[q.t].name);voz('pesquisa');snd('research',null,null,{force:1});uiDirty=true}}
     }else if(q.k==='age'){
       b.qt+=dt;
-      if(b.qt>=AGE_TIME[q.a]){b.qt=0;b.queue.shift();P[b.o].age=q.a;CHUNKS.clear();if(b.o===ME){voz('idade');setTimeout(()=>toast('Os edifícios não mudam sozinhos: melhora-os um a um (⬆ no painel de cada edifício)'),2500)}trackEv(b.o,(b.o===ME?'Entrámos':'O rival entrou')+' na '+AGES[q.a]);
+      if(b.qt>=AGE_TIME[q.a]){b.qt=0;b.queue.shift();P[b.o].age=q.a;chunksDirtyAll();if(b.o===ME){voz('idade');setTimeout(()=>toast('Os edifícios não mudam sozinhos: melhora-os um a um (⬆ no painel de cada edifício)'),2500)}trackEv(b.o,(b.o===ME?'Entrámos':'O rival entrou')+' na '+AGES[q.a]);
         for(const e of ents)if(e.kind==='b'&&e.o===b.o&&q.a===2){const nm=bldHp(e.o,e.type,e.lvl);e.hp=e.hp*nm/e.max;e.max=nm}
         if(b.o===ME){toast('Entrámos na '+AGES[q.a]+'!');snd('age_up',null,null,{force:1});uiDirty=true;resDirty=true}else{toast('O reino rival entrou na '+AGES[q.a],true);snd('age_rival',null,null,{force:1})}
       }
@@ -2852,15 +2852,17 @@ function buildTerrain(){
     if(tN&&r()<.025){decos.push({x:x+.3+r()*.4,y:y+.3+r()*.4,k:'logs',v:(r()*3)|0});continue}
     if(r()<.11){const k=r();decos.push({x:x+.15+r()*.7,y:y+.15+r()*.7,k:terr[i]===2?(k<.5?'shell':'pebble'):k<.4?'tuft':k<.6?'flower':k<.74?'pebble':k<.86?'moss':'shrub',v:(r()*3)|0})}}
 }
-const CHW=512,CHH=256;let CHUNKS=new Map(),CH_CS=1,CH_BUD=99;
+const CHW=512,CHH=256;let CHUNKS=new Map(),CH_CS=1,CH_BUD=99,CH_FR=0;
 function resetChunks(){CHUNKS=new Map();CH_CS=DPR>1?1.5:1}
 // resolução dos pedaços do chão: acompanha o zoom (relva nítida de perto, leve de longe)
-function chunkCS(){const t=cam.z*DPR;return t<=1.05?1:t<=1.6?1.5:t<=2.2?2:t<=2.9||MOB?2.5:3}
+// resolução dos pedaços do chão fixa por aparelho: não depende do zoom, por isso o zoom nunca obriga a refazer o chão
+// (antes cada degrau de zoom refazia todos os pedaços visíveis: 11-30 ms cada num PC, várias vezes isso num telemóvel)
+function chunkCS(){return MOB?(DPR>=1.75?1.5:1.25):(DPR>1.25?2:1.5)}
 const GTEX={K:.62,VS:.72}; // escala da textura do chão no ecrã (VS achata na vertical: perspetiva isométrica)
 let GTMP=null;
 function groundTex(c,img,X0,Y0,cs){const p=c.createPattern(img,'repeat');p.setTransform(new DOMMatrix().translate(-X0*cs,-Y0*cs).scale(cs*GTEX.K,cs*GTEX.K*GTEX.VS));return p}
 function groundChunk(i,j){
-  const key=i+','+j;let ch=CHUNKS.get(key);if(ch&&(ch.cs===CH_CS||CH_BUD<=0)){ch.t=performance.now();return ch.cv}
+  const key=i+','+j;let ch=CHUNKS.get(key);if(ch&&((ch.cs===CH_CS&&!ch.dirty)||CH_BUD<=0)){ch.t=performance.now();return ch.cv}
   CH_BUD--;if(ch)CHUNKS.delete(key);
   // pedaço novo além dos 2 primeiros deste frame (ex.: a câmara saltou para longe): faz já uma versão leve (1/4 dos píxeis ou menos) e a nítida vem nos frames seguintes;
   // antes refazia-os todos de uma vez e o jogo parava 0,3-1 s
@@ -3051,7 +3053,7 @@ function trailsRebuild(){
 function trailsTick(){
   if(!G||!TL||!FLORA.tex.dirt)return;const now=performance.now();if(now-TRAILS.t<1500)return;TRAILS.t=now;
   const sig=trailBuildings().map(e=>e.id+':'+e.tx+','+e.ty).sort().join('|');if(sig===TRAILS.sig&&TRAILS.cv)return;
-  TRAILS.sig=sig;trailsRebuild();CHUNKS.clear()}
+  TRAILS.sig=sig;trailsRebuild();chunksDirtyAll()}
 // ── tufos de relva com vento (folha do Kimi: arte/terreno, 16 tufos a 2x do mundo) ──
 // espalhados em manchas pelo prado, longe de edifícios, caminhos, terra e árvores; ondas de vento atravessam o campo
 const TUF={img:null,F:[[2,48,70,45],[74,42,69,51],[145,54,66,39],[213,48,63,45],[278,6,67,87],[347,2,72,91],[421,6,71,87],[494,10,66,83],[562,24,76,69],[640,27,72,66],[714,23,70,70],[786,36,75,57],[863,33,72,60],[937,30,72,63],[1011,45,72,48],[1085,44,71,49]],K:'ccccaaaafffttscc',list:null,map:null};
@@ -3111,9 +3113,11 @@ function drawClouds(c,t){if(!CLOUDS){CLOUDS={cv:cloudSprite(),list:[]};const r=m
   for(const k of CLOUDS.list){const w=820*k.s,h=w*.55;const x=-H*HW-w+((k.x*(mw+w)+t*9*k.v)%(mw+w)),y=-h*.5+((k.y*(mh+h)+t*3.5*k.v)%(mh+h));
     if(x>cam.x+vw/cam.z||x+w<cam.x||y>cam.y+vh/cam.z||y+h<cam.y)continue;c.drawImage(CLOUDS.cv,x,y,w,h)}
   c.globalAlpha=1}
+function chunkMark(k){const ch=CHUNKS.get(k);if(ch)ch.dirty=1}
+function chunksDirtyAll(){for(const ch of CHUNKS.values())ch.dirty=1}
 function chunkDirtyBld(e){if(!CHUNKS.size)return;const p=proj(e.tx,e.ty),x0=p.x-e.h*HW-60,x1=p.x+e.w*HW+360,y0=p.y-60,y1=p.y+(e.w+e.h)*HH+230;
-  for(let j=Math.floor(y0/CHH);j<=Math.floor(y1/CHH);j++)for(let i=Math.floor((x0+H*HW)/CHW);i<=Math.floor((x1+H*HW)/CHW);i++)CHUNKS.delete(i+','+j)}
-function chunkDirtyAt(x,y){const q=proj(x+.5,y+.5);const i=Math.floor((q.x+H*HW)/CHW),j=Math.floor(q.y/CHH);for(const [a,b] of [[0,0],[1,0],[0,1],[1,1],[-1,0],[0,-1]])CHUNKS.delete((i+a)+','+(j+b))}
+  for(let j=Math.floor(y0/CHH);j<=Math.floor(y1/CHH);j++)for(let i=Math.floor((x0+H*HW)/CHW);i<=Math.floor((x1+H*HW)/CHW);i++)chunkMark(i+','+j)}
+function chunkDirtyAt(x,y){const q=proj(x+.5,y+.5);const i=Math.floor((q.x+H*HW)/CHW),j=Math.floor(q.y/CHH);for(const [a,b] of [[0,0],[1,0],[0,1],[1,1],[-1,0],[0,-1]])chunkMark((i+a)+','+(j+b))}
 const FCACHE=new Map();
 function farmSprite(b){
   const bucket=b.done?6:-1;const key=b.o+'|'+bucket+'|'+b.w;let cv=FCACHE.get(key);if(cv)return cv;
@@ -4648,7 +4652,7 @@ function render(){UCFM=0;U3TMS=0;{const zn=performance.now();if(cam&&cam.z!==ZPR
   const flat=()=>c.setTransform(z,0,0,z,-cam.x*z,-cam.y*z);
   const V=viewTiles();
   // chão
-  flat();c.imageSmoothingEnabled=true;if(!ZOOMING||!CHUNKS.size)CH_CS=chunkCS();CH_BUD=CHUNKS.size?1:99; // ao mudar o zoom, refaz 1 pedaço por frame (os outros esticam até lá)
+  flat();c.imageSmoothingEnabled=true;CH_CS=chunkCS();CH_FR=(CH_FR+1)%(MOB?3:2);CH_BUD=!CHUNKS.size?99:(ZOOMING||CH_FR)?0:1; // ao mudar o zoom, refaz 1 pedaço por frame (os outros esticam até lá)
   {const i0=Math.floor((cam.x+H*HW)/CHW),i1=Math.floor((cam.x+vw/cam.z+H*HW)/CHW),j0=Math.floor(cam.y/CHH),j1=Math.floor((cam.y+vh/cam.z)/CHH);
     for(let j=Math.max(0,j0);j<=j1;j++)for(let i=Math.max(0,i0);i<=i1;i++){if(-H*HW+i*CHW>W*HW||j*CHH>(W+H)*HH)continue;c.drawImage(groundChunk(i,j),-H*HW+i*CHW-.5,j*CHH-.5,CHW+1,CHH+1)}}
   for(const e of ents)if(e.kind==='b'&&e.d.walk&&seenBy0(e)){const q=proj(e.tx,e.ty);if(!onScreen(q.x,q.y+48,160))continue;
