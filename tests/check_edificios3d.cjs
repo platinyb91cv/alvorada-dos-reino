@@ -15,9 +15,10 @@ const proof=JSON.parse(fs.readFileSync(path.join(root,'arte/edificios-3d/verific
 assert.match(html,/if\(BLDS\[type\]\.wall\)\{const w3=wall3dSprite\(type,o,vr\);if\(w3\)return w3\}\n  if\(type==='torre'&&\(vr\|0\)===3&&CMOD\.ready\)\{const t3=cmodSprite\('torre3',o\);if\(t3\)return t3\}\n  \{const b3=bld3dSprite\(type,age,o,vr\);if\(b3\)return b3\}/,'3D building hook before painted art');
 assert.match(html,/if\(type==='torre'\)\{const l=Math\.max\(1,Math\.min\(3,vr\|0\|\|1\)\)/,'tower picks level');
 const step=html.slice(html.indexOf('function step('),html.indexOf('\n}',html.indexOf('function step(')));assert.ok(!/bld3d|BLD3D/.test(step),'drawing only');
-// vistas da câmara rodada: atlas à parte (BLD3DV_DATA), só quadros <quadro base>_r1/_r2/_r3 de quadros que existem no atlas principal
-{const vd=JSON.parse(html.match(/const BLD3DV_DATA=(\{[^\n]+\});/)[1]);assert.equal(vd.scale,data.scale);
-  for(const [k,[x,y,fw,fh,ax,ay]] of Object.entries(vd.frames)){const m=k.match(/^(.+)_r([123])$/);assert.ok(m&&data.frames[m[1]],'view frame '+k);assert.ok(ax>0&&ax<fw&&ay>0&&ay<fh,'anchor inside '+k)}
-  if(vd.file){const vw=fs.readFileSync(path.join(root,'www/assets/edificios-extra',vd.file));assert.equal(crypto.createHash('sha256').update(vw).digest('hex'),vd.atlasSha256);const b2=vw.readUInt32LE(21),w2=(b2&16383)+1,h2=((b2>>>14)&16383)+1;assert.ok(w2<=2048&&h2<=2048,'views atlas within 2048');
-    for(const [k,[x,y,fw,fh]] of Object.entries(vd.frames))assert.ok(x+fw<=w2&&y+fh<=h2,'inside views '+k)}}
+// vistas da câmara rodada: atlas à parte em páginas (BLD3DV_DATA.files), só quadros <quadro base>_r1/_r2/_r3 de quadros do atlas principal
+{const vd=JSON.parse(html.match(/const BLD3DV_DATA=(\{[^\n]+\});/)[1]);assert.equal(vd.scale,data.scale);const dims=(vd.files||[]).map((f,i)=>{const vw=fs.readFileSync(path.join(root,'www/assets/edificios-extra',f));
+    assert.equal(crypto.createHash('sha256').update(vw).digest('hex'),vd.sha256[i]);const b2=vw.readUInt32LE(21);const w2=(b2&16383)+1,h2=((b2>>>14)&16383)+1;assert.ok(w2<=2048&&h2<=2048,'views page within 2048: '+f);return [w2,h2]});
+  for(const [k,[x,y,fw,fh,ax,ay,pg]] of Object.entries(vd.frames)){const m=k.match(/^(.+)_r([123])$/);assert.ok(m&&data.frames[m[1]],'view frame '+k);assert.ok(ax>0&&ax<fw&&ay>0&&ay<fh,'anchor inside '+k);
+    assert.ok(dims[pg]&&x+fw<=dims[pg][0]&&y+fh<=dims[pg][1],'inside views page '+k)}
+  assert.match(html,/ROT=\(ROT\+d\+4\)%4;if\(ROT\)loadBld3dv\(\);/,'views load on first rotation')}
 console.log('PASS: 3D buildings atlas ('+n+' frames, '+w+'x'+h+', '+(webp.length/1024|0)+' KB)');
