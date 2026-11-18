@@ -43,6 +43,8 @@ python3 tests/run_tests.py                        # 31 testes por sistema (produ
 python3 tests/run_ui.py test-results              # pausa, auto-save, continuar, toque longo
 python3 tests/run_ai.py 101 202                   # partidas IA contra IA com verificação de regras
 python3 tests/e2e/ia_partidas.py                  # IA contra IA em várias dificuldades e mapas
+python3 tests/e2e/bugs_rts.py test-results        # 16 cenários de bugs de RTS: muralhas, portões, bolsas, árvores, viagens longas, gravar/carregar
+python3 tests/e2e/invariantes.py                  # caça a bugs: 10 partidas aceleradas (com e sem jogador "caos") e verificação de invariantes a cada segundo
 cd tests && python3 run_online.py                 # online: dois navegadores, servidor real e Supabase imitado (26 testes)
 ```
 O workflow `.github/workflows/build-apk.yml` corre os testes `*.cjs` e os principais testes de navegador antes de compilar.
@@ -153,6 +155,13 @@ Depois de editar: `npx cap sync android` e voltar a compilar.
 - **Áudio:** volume próprio para o conselheiro (menu de pausa); as falas só são descodificadas quando são precisas.
 - **Estábulo:** base corrigida para o losango 2:1 (`arte/edificios-3d/scripts/corrigir_estabulo.py`).
 - **Bot:** a conta autorizada é verificada por SHA-256 do email (o endereço já não vai em texto no código do jogo).
+
+## Versão de 18/11/2026 (caça a bugs)
+Testes novos: `tests/e2e/invariantes.py` corre partidas IA contra IA aceleradas em todos os mapas e verifica a cada segundo unidades presas, ordens sem progresso, NaN, recursos, população, mapa de bloqueios, guarnições e erros; o modo "caos" junta um jogador que dá ordens ao calhas (muralhas, portões, guarnecer, apagar, sino). `tests/e2e/bugs_rts.py` reproduz cada bug corrigido.
+- **Unidades presas numa casa que ficou bloqueada** (portão trancado com alguém no arco, flanco do portão terminado por baixo do construtor): já se conseguem mexer para sair; as casas novas de flanco empurram quem lá está para o lado onde estava; rede de segurança: unidade de terra dentro de uma casa bloqueada há 2 s vai para a casa livre mais perto, e uma ordem de andar tira-a logo de dentro de um edifício.
+- **Lado da muralha:** quem desce do adarve, cai de uma muralha destruída ou é treinado num quartel encostado à muralha aparece do lado de dentro (lado do Centro/ponto de reunião), não ao calhas; quem é empurrado por uma muralha nova fica do lado onde estava.
+- **Bolsas fechadas:** um edifício/muralha que fecha uma bolsa pequena sem depósito (ex.: entre árvores) com unidades lá dentro tira-as para fora; as árvores que voltam a crescer já não fecham corredores, bolsas nem a frente de um portão.
+- **Viagens longas:** à volta de um lago grande o caminho podia sair parcial e a unidade parava a meio; agora continua até ao destino.
 
 ## Compilar
 - `npx cap sync android` e depois Android Studio, ou `npm run apk` com o SDK Android instalado.

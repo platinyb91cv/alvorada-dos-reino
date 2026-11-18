@@ -1180,12 +1180,28 @@ function mkBld(o,type,tx,ty,done){
   if(type==='torre')b.lvl=1;if(d.gate){b.locked=false;b.open=0}if(d.garr)b.garr=[];
   ents.push(b);byId.set(b.id,b);chunkDirtyBld(b);
   if(d.wall||d.gate||type==='torre')syncGateFlanks();
-  if(!d.walk)evictUnits(b);
+  if(!d.walk){evictUnits(b);freePockets(b)}
   return b;
 }
+// edifício novo que fecha uma bolsa pequena (ex.: entre árvores e uma casa/muralha da IA) com unidades lá dentro: tira-as para fora.
+// Bolsa = zona onde se anda com menos de 150 casas e sem nenhum edifício de depósito do dono encostado (um castelo com o Centro lá dentro não conta).
+function pocketOf(u,lim){setMover(u);const s=curTile(u);if(!s)return null;const seen=new Set([idx(s.x,s.y)]),q=[idx(s.x,s.y)];
+  while(q.length){const c=q.pop(),x=c%W,y=(c/W)|0;for(const [dx,dy] of [[1,0],[-1,0],[0,1],[0,-1]]){const nx=x+dx,ny=y+dy;if(!inb(nx,ny))continue;const n=idx(nx,ny);
+    if(seen.has(n))continue;if(!okTile(n)){const b=bldAt[n]&&byId.get(bldAt[n]);if(b&&b.o===u.o&&b.done&&b.d.drop)return null;continue}seen.add(n);if(seen.size>=lim)return null;q.push(n)}}
+  return seen}
+function freePockets(b){
+  // procura a partir das casas livres à volta do edifício novo: se alguma zona ficou fechada (bolsa), tira de lá as unidades desse jogador
+  const per=[];for(let x=b.tx-1;x<=b.tx+b.w;x++)for(const y of [b.ty-1,b.ty+b.h])per.push([x,y]);for(let y=b.ty;y<b.ty+b.h;y++)for(const x of [b.tx-1,b.tx+b.w])per.push([x,y]);
+  for(let o=0;o<2;o++){if(!ents.some(u=>u.kind==='u'&&u.o===o))continue;const done=new Set();
+    for(const [x,y] of per){if(!inb(x,y))continue;const i=idx(x,y);if(blk[i]!==0||done.has(i))continue;const pk=pocketOf({x:x+.5,y:y+.5,o,d:{}},150);if(!pk){done.add(i);continue}for(const k of pk)done.add(k);
+      for(const u of ents){if(u.kind!=='u'||u.o!==o||u.d.naval||!isFinite(u.x))continue;setMover(u);const ct=curTile(u);if(!ct||!pk.has(idx(ct.x,ct.y)))continue;
+        const ox=ct.x,oy=ct.y;let best=null;
+        for(let r=1;r<16&&!best;r++)for(let yy=oy-r;yy<=oy+r&&!best;yy++)for(let xx=ox-r;xx<=ox+r;xx++){if(Math.max(Math.abs(xx-ox),Math.abs(yy-oy))!==r||!inb(xx,yy))continue;const n=idx(xx,yy);if(pk.has(n)||!okTile(n))continue;
+          if(pocketOf({x:xx+.5,y:yy+.5,d:u.d,o},150)===null){best={x:xx,y:yy};break}}
+        if(best){u.x=best.x+.5;u.y=best.y+.5;u.path=null;u.rp=0}}}}}
 function evictUnits(b){
   for(const u of ents){if(u.kind!=='u')continue;const tx=Math.floor(u.x),ty=Math.floor(u.y);
-    if(tx>=b.tx&&tx<b.tx+b.w&&ty>=b.ty&&ty<b.ty+b.h){const p=freeNear(b.tx,b.ty,b.w,b.h);if(p){u.x=p.x+.5;u.y=p.y+.5;u.path=null}}}
+    if(tx>=b.tx&&tx<b.tx+b.w&&ty>=b.ty&&ty<b.ty+b.h){const p=freeNear(b.tx,b.ty,b.w,b.h,{x:u.x,y:u.y,exact:1});if(p){u.x=p.x+.5;u.y=p.y+.5;u.path=null}}}
 }
 // casa livre à frente do edifício (lado da câmara), para o Rei não aparecer “em cima” do telhado
 function freeFront(tx,ty,w,h){const cx=tx+w/2-.5,cy=ty+h/2-.5;
@@ -1197,14 +1213,17 @@ function freeFront(tx,ty,w,h){const cx=tx+w/2-.5,cy=ty+h/2-.5;
       if(sc>bs){bs=sc;best={x,y}}}
     if(best)return best}
   return freeNear(tx,ty,w,h)}
-function freeNear(tx,ty,w,h){
+// ref (opcional): entre as casas livres mais próximas do edifício, a mais perto deste ponto — numa muralha decide o LADO
+// (quem sai do adarve desce para dentro do castelo, quem é empurrado por uma muralha nova fica do lado onde estava)
+function freeNear(tx,ty,w,h,ref){
   for(let r=1;r<12;r++){
     const cand=[];
     for(let y=ty-r;y<ty+h+r;y++)for(let x=tx-r;x<tx+w+r;x++){
       if(x>tx-r&&x<tx+w+r-1&&y>ty-r&&y<ty+h+r-1)continue;
       if(inb(x,y)&&blk[idx(x,y)]===0&&!resAt[idx(x,y)])cand.push({x,y});
     }
-    if(cand.length)return cand[Math.floor(rnd()*cand.length)];
+    if(cand.length){if(!ref)return cand[Math.floor(rnd()*cand.length)];let cc=cand;if(ref.comp){const m=homeComp(ref);const f=cand.filter(c=>m[idx(c.x,c.y)]===HC_GEN);if(f.length)cc=f}
+      const ds=cc.map(c=>hyp(c.x+.5-ref.x,c.y+.5-ref.y)),bd=Math.min(...ds),near=cc.filter((c,i)=>ds[i]<=bd+(ref.exact?.05:1.2));return near[Math.floor(rnd()*near.length)]}
   }
   return null;
 }
@@ -1273,7 +1292,7 @@ function kill(e,src){
   if(e.dead)return;e.dead=true;byId.delete(e.id);sndDeath(e);
   const i=ents.indexOf(e);if(i>=0)ents.splice(i,1);
   if(e.kind==='b'){if(e.type==='vila'&&src&&src.o!=null&&src.o<2&&src.o!==e.o&&P[src.o]){P[src.o].res.gold+=150;P[src.o].res.food+=100;if(src.o===ME){resDirty=true;toast('Vila saqueada: +150 ouro e +100 comida')}else if(e.o===ME)toast('O rival saqueou uma vila nossa!',true)}
-    if(e.garr&&e.garr.length){const keep=e.garr.slice();e.garr=[];for(const u of keep){const p=freeNear(e.tx,e.ty,e.w,e.h)||{x:e.tx,y:e.ty};u.x=p.x+.5;u.y=p.y+.5;u.inBoat=null;u.inBld=0;u.state='idle';u.path=null;u.hp=Math.max(1,u.hp*.7);ents.push(u);byId.set(u.id,u)}}chunkDirtyBld(e);
+    if(e.garr&&e.garr.length){const keep=e.garr.slice();e.garr=[];const ref=homeRef(e);for(const u of keep){const p=freeNear(e.tx,e.ty,e.w,e.h,ref)||{x:e.tx,y:e.ty};u.x=p.x+.5;u.y=p.y+.5;u.inBoat=null;u.inBld=0;u.state='idle';u.path=null;u.hp=Math.max(1,u.hp*.7);ents.push(u);byId.set(u.id,u)}}chunkDirtyBld(e);
     for(let y=e.ty;y<e.ty+e.h;y++)for(let x=e.tx;x<e.tx+e.w;x++){const j=idx(x,y);bldAt[j]=0;if(blk[j]===3||blk[j]===4)blk[j]=0}
     if(e.d.wall||e.d.gate||e.type==='torre')syncGateFlanks();
     fx.push({t:0,life:BLDART.ready&&!e.d.wall?16:2.5,type:'rubble',x:e.tx+e.w/2,y:e.ty+e.h/2,w:e.w,h:e.h});
@@ -1313,10 +1332,12 @@ let GFLANK=[];
 function syncGateFlanks(){if(typeof blk==='undefined'||!blk)return;for(const i of GFLANK)if(blk[i]===5)blk[i]=0;GFLANK=[];
   for(const g of ents){if(g.kind!=='b'||!g.d.gate||!g.done||g.dead)continue;const ax=bldVariant(g),N=g.type==='portaoPedra'?2:1;
     for(let k=-N;k<=N;k++){if(!k)continue;const x=ax==='y'?g.tx:g.tx+k,y=ax==='y'?g.ty+k:g.ty;if(!inb(x,y))continue;const i=idx(x,y);
-      if(blk[i]===0&&!bldAt[i]&&!resAt[i]&&terr[i]!==1){blk[i]=5;GFLANK.push(i)}}}}
+      if(blk[i]===0&&!bldAt[i]&&!resAt[i]&&terr[i]!==1){blk[i]=5;GFLANK.push(i)}}}
+  // quem estava numa casa que passou a flanco (ex.: o aldeão que construiu o portão) sai para a casa livre mais perto, do mesmo lado
+  if(GFLANK.length){const F=new Set(GFLANK);for(const u of ents){if(u.kind!=='u'||u.d.naval||!isFinite(u.x))continue;const i=idx(clamp(u.x|0,0,W-1),clamp(u.y|0,0,H-1));if(!F.has(i))continue;const p=freeNear(i%W,(i/W)|0,1,1,{x:u.x,y:u.y,exact:1});if(p){u.x=p.x+.5;u.y=p.y+.5;u.path=null;u.rp=0}}}}
 function okTile(i){const b=blk[i];if(MV.nav)return b===1;if(b===0)return true;if(b===4){const g=byId.get(bldAt[i]);return !!g&&g.o===MV.o&&!g.locked}return false}
 function okXY(x,y){return x>=0&&y>=0&&x<W&&y<H&&okTile(idx(x,y))}
-function stepOK(u,nx,ny){if(u.penId){const pen=pasturePen(u);if(pen&&insidePen(u,pen)&&!insidePen({x:nx,y:ny},pen))return false}setMover(u);const ox=Math.floor(u.x),oy=Math.floor(u.y),tx=Math.floor(nx),ty=Math.floor(ny);if(!okXY(tx,ty))return false;if(tx!==ox&&ty!==oy&&okXY(ox,oy)&&(!okXY(tx,oy)||!okXY(ox,ty)))return false;return true}
+function stepOK(u,nx,ny){if(u.penId){const pen=pasturePen(u);if(pen&&insidePen(u,pen)&&!insidePen({x:nx,y:ny},pen))return false}setMover(u);const ox=Math.floor(u.x),oy=Math.floor(u.y),tx=Math.floor(nx),ty=Math.floor(ny);if(!okXY(tx,ty))return tx===ox&&ty===oy&&!okXY(ox,oy); /* dentro de uma casa que ficou bloqueada (portão trancado, flanco novo): pode mexer-se para sair */if(tx!==ox&&ty!==oy&&okXY(ox,oy)&&(!okXY(tx,oy)||!okXY(ox,ty)))return false;return true}
 function curTile(u){setMover(u);for(const [ex,ey] of [[0,0],[-.03,0],[.03,0],[0,-.03],[0,.03],[-.03,-.03],[.03,.03],[-.03,.03],[.03,-.03]]){const x=Math.floor(u.x+ex),y=Math.floor(u.y+ey);if(okXY(x,y))return{x,y}}return null}
 function capOf(u){return u.d.carry||CARRY}
 /* ---------------- A* ---------------- */
@@ -1425,11 +1446,20 @@ function obstruct(u){
   let best=null,bd=3;for(const e of ents){if(e.kind!=='b'||e.o===u.o||!(e.d.wall||e.d.gate))continue;const d=hyp(e.tx+.5-u.x,e.ty+.5-u.y);if(d<bd){bd=d;best=e}}
   if(best){if(u.state==='attack'&&u.target)u.after=u.target;orderAttack(u,best);u.fromWall=true}
 }
+// rede de segurança: unidade de terra dentro de uma casa bloqueada (edifício/muralha/rocha) há 2 s → vai para a casa livre mais perto
+  // rede de segurança: unidade de terra dentro de uma casa bloqueada (edifício/muralha/rocha) há 2 s → vai para a casa livre mais perto
+function stuckNet(u,dt){if(!u.d.naval){u.stk=(u.stk||0)-dt;if(u.stk<=0){u.stk=.5;setMover(u);const tx=clamp(u.x|0,0,W-1),ty=clamp(u.y|0,0,H-1);
+    if(!okTile(idx(tx,ty))&&!curTile(u)){u.inBad=(u.inBad||0)+1;if(u.inBad>=4){u.inBad=0;const p=freeNear(tx,ty,1,1,{x:u.x,y:u.y,exact:1});if(p){u.x=p.x+.5;u.y=p.y+.5;u.path=null;u.rp=0;if(u.state==='move'&&u.dest){const am=u.amove;moveTo(u,u.dest.x,u.dest.y);u.amove=am}}}}else u.inBad=0}}}
+// unidade de terra cercada por casas bloqueadas (dentro de um edifício): sai já para a casa livre mais perto (senão não há caminho)
+function unstickNow(u){if(!u||u.d.naval||!isFinite(u.x))return;setMover(u);const ox=clamp(u.x|0,0,W-1),oy=clamp(u.y|0,0,H-1);if(okTile(idx(ox,oy))||curTile(u))return;
+  for(let dy=-1;dy<=1;dy++)for(let dx=-1;dx<=1;dx++)if((dx||dy)&&okXY(ox+dx,oy+dy))return; // há saída ao lado: o caminho trata disso
+  const p=freeNear(ox,oy,1,1,{x:u.x,y:u.y,exact:1});if(p){u.x=p.x+.5;u.y=p.y+.5;u.path=null}}
 function moveTo(u,x,y){
   u.state='move';u.target=null;u.bld=null;u.dest={x,y};
   const tx=Math.floor(x),ty=Math.floor(y);setMover(u);
+  unstickNow(u);
   const inside=inb(tx,ty)&&okTile(idx(tx,ty));
-  u.path=findPath(u.x,u.y,{x:tx,y:ty,w:1,h:1},inside,u);u.pi=0;
+  u.path=findPath(u.x,u.y,{x:tx,y:ty,w:1,h:1},inside,u);u.pi=0;u.mvPart=!PF_REACHED;u.reN=0;u.reX=u.reY=null;
   if(inside&&PF_REACHED){if(u.path.length)u.path[u.path.length-1]={x,y};else u.path=[{x,y}]}
 }
 const FORMS={livre:'Livre',linha:'Linha',coluna:'Coluna',defensiva:'Defensiva',cerco:'Cerco'};
@@ -1789,10 +1819,16 @@ function placeRelics(){G.relics=[];const n=Math.max(3,Math.round(4*W*H/12544));
     if(G.starts.some(s=>hyp(s.x-x,s.y-y)<22))continue;if(G.relics.some(q=>hyp(q.x-x,q.y-y)<14))continue;
     if(G.starts.length===2&&Math.abs(hyp(G.starts[0].x-x,G.starts[0].y-y)-hyp(G.starts[1].x-x,G.starts[1].y-y))>26)continue;
     G.relics.push({x:x+.5,y:y+.5,c:null,t:null})}}
+// árvore nova só onde não fecha uma passagem: à volta da casa, as casas por onde se anda (livres ou portões) têm de formar um só arco
+// (senão a árvore separava dois lados: fechava bolsas com aldeões lá dentro, tapava a frente de um portão ou um corredor entre muralhas)
+function regrowSafe(x,y){const R=[[0,-1],[1,-1],[1,0],[1,1],[0,1],[-1,1],[-1,0],[-1,-1]];const w=R.map(([dx,dy])=>{const nx=x+dx,ny=y+dy;if(!inb(nx,ny))return false;const b=blk[idx(nx,ny)];return b===0||b===4});
+  let arcs=0;for(let k=0;k<8;k++)if(w[k]&&!w[(k+7)%8])arcs++;if(!arcs&&w.every(v=>v))arcs=1;
+  // uma casa de canto só liga às vizinhas de lado; canto livre com os dois lados tapados é um arco à parte (fica tapado ao andar): conta
+  return arcs<=1}
 // árvores voltam a crescer devagar junto a outras árvores; ovelhas reproduzem-se
 function natureTick(dt){
   if(G.regrow&&G.regrow.length)for(let i=G.regrow.length-1;i>=0;i--){const g=G.regrow[i];g.t-=dt;if(g.t>0)continue;G.regrow.splice(i,1);const j=idx(g.x,g.y);
-    if(blk[j]||resAt[j]||bldAt[j]||terr[j]===1)continue;if(ents.some(e=>e.kind==='u'&&Math.abs(e.x-g.x-.5)<1&&Math.abs(e.y-g.y-.5)<1)){g.t=30;G.regrow.push(g);continue}
+    if(blk[j]||resAt[j]||bldAt[j]||terr[j]===1)continue;if(!regrowSafe(g.x,g.y))continue;if(ents.some(e=>e.kind==='u'&&Math.abs(e.x-g.x-.5)<1&&Math.abs(e.y-g.y-.5)<1)){g.t=30;G.regrow.push(g);continue}
     addRes('wood',g.x,g.y);const r=resAt[j];if(r){r.amt=r.max=60}chunkDirtyAt(g.x,g.y)}
   G.sheepT=(G.sheepT||0)+dt;if(G.sheepT<60)return;G.sheepT=0;
   const sheep=ents.filter(e=>e.o===2&&e.type==='ovelha');
@@ -1810,8 +1846,18 @@ function garrisonIn(u,b){if(!alive(b)||!b.done||!b.d.garr||b.o!==u.o||b.garr.len
   if(onWall(b)&&(!u.d.mil||u.d.cls==='cav'||u.d.king))return false;
   const i=ents.indexOf(u);if(i>=0)ents.splice(i,1);byId.delete(u.id);const keep=u.type==='aldeao'&&u.gres?{id:u.gres.id}:null;
   stopUnit(u);u.inBoat=b.id;u.inBld=1;u.prevG=keep;b.garr.push(u);if(sel.includes(u)){sel=sel.filter(x=>x!==u);uiDirty=true}if(b.o===ME)uiDirty=true;return true}
-function ungarrison(b,quiet,onlyV){if(!b.garr||!b.garr.length)return 0;let n=0;const left=[];
-  for(const u of b.garr){if(onlyV&&u.type!=='aldeao'){left.push(u);continue}const p=freeNear(b.tx,b.ty,b.w,b.h);if(!p){left.push(u);continue}
+// casas alcançáveis a pé a partir de ref sem atravessar portões nem muralhas (o "lado de dentro" do castelo); marca com HC_GEN
+let HC_M=null,HC_Q=null,HC_GEN=0;
+function homeComp(ref){if(!HC_M||HC_M.length!==W*H){HC_M=new Int32Array(W*H);HC_Q=new Int32Array(W*H)}HC_GEN++;const sx=clamp(Math.floor(ref.x),0,W-1),sy=clamp(Math.floor(ref.y),0,H-1);
+  let h=0,t=0;const s0=idx(sx,sy);HC_M[s0]=HC_GEN;HC_Q[t++]=s0;const ok=i=>blk[i]===0;
+  // o Centro é um edifício: semear com as casas livres à volta dele
+  if(!ok(s0))for(let r=1;r<4&&t===1;r++)for(let y=sy-r;y<=sy+r;y++)for(let x=sx-r;x<=sx+r;x++){if(!inb(x,y))continue;const i=idx(x,y);if(ok(i)&&HC_M[i]!==HC_GEN){HC_M[i]=HC_GEN;HC_Q[t++]=i}}
+  while(h<t){const c=HC_Q[h++],cx=c%W,cy=(c/W)|0;for(const [dx,dy] of [[1,0],[-1,0],[0,1],[0,-1]]){const nx=cx+dx,ny=cy+dy;if(!inb(nx,ny))continue;const n=idx(nx,ny);if(HC_M[n]===HC_GEN||!ok(n))continue;HC_M[n]=HC_GEN;HC_Q[t++]=n}}
+  return HC_M}
+// ponto de referência do lado de "casa": o ponto de reunião do edifício ou o Centro da Vila mais próximo do mesmo dono
+function homeRef(b){if(b.rally&&isFinite(b.rally.x))return{x:b.rally.x,y:b.rally.y,comp:1};let best=null,bd=1e9;const c=centerOf(b);for(const e of ents){if(e.kind!=='b'||e.o!==b.o||e.type!=='centro'||e===b)continue;const q=centerOf(e),d=hyp(q.x-c.x,q.y-c.y);if(d<bd){bd=d;best=q}}return best&&{x:best.x,y:best.y,comp:1}}
+function ungarrison(b,quiet,onlyV){if(!b.garr||!b.garr.length)return 0;let n=0;const left=[];const ref=homeRef(b);
+  for(const u of b.garr){if(onlyV&&u.type!=='aldeao'){left.push(u);continue}const p=freeNear(b.tx,b.ty,b.w,b.h,ref);if(!p){left.push(u);continue}
     u.x=p.x+.5;u.y=p.y+.5;u.inBoat=null;u.inBld=0;u.state='idle';u.path=null;ents.push(u);byId.set(u.id,u);n++;
     if(u.prevG){const r=byId.get(u.prevG.id);if(r&&!r.dead)orderGather(u,r)}u.prevG=null}
   b.garr=left;if(b.o===ME){uiDirty=true;if(!quiet&&n)toast(n+(n>1?' unidades saíram':' unidade saiu'))}return n}
@@ -1861,6 +1907,7 @@ function updUnit(u,dt){
   // antiencravamento: sem progresso com caminho → deixa de ser empurrado por momentos
   if(u.path&&u.pi<u.path.length){u.pk=(u.pk||0)+dt;if(u.pk>2){u.pk=0;if(u.px!=null&&hyp(u.px-u.x,u.py-u.y)<.15)u.ghost=1.5;u.px=u.x;u.py=u.y}}else{u.pk=0;u.px=null}
   if(u.ghost>0)u.ghost-=dt;
+  if(typeof stuckNet==='function')stuckNet(u,dt);
   if(d.convert&&u.faith<1)u.faith=Math.min(1,u.faith+dt/25);
   // sacerdote: recuar quando ameaçado
   if(d.convert&&u.state!=='attack'){u.fleeT=(u.fleeT||0)-dt;if(u.fleeT<=0){u.fleeT=.7;const th=threatNear(u,2.8);if(th){fleeFrom(u,th,4);u.fleeT=1.5}}}
@@ -1915,6 +1962,8 @@ function updUnit(u,dt){
     if(u.amove){u.scan-=dt;if(u.scan<=0){u.scan=.5;const t=d.convert?(u.faith>=1?pickConvert(u):null):d.mil?scanFor(u,d.siege?Math.max(rangeOf(u)+1,3):d.sight,true):null;if(t){orderAttack(u,t);break}}}
     u.mvT=(u.mvT||0)+dt;if(u.mvT>6){u.mvT=0;if(u.mvX!=null&&hyp(u.mvX-u.x,u.mvY-u.y)<.3){u.path=null}u.mvX=u.x;u.mvY=u.y}
     if(follow(u,dt)){
+      // caminho parcial (o A* parou no limite de procura, ex.: à volta de um lago grande): continuar a partir de onde chegou
+      if(u.mvPart&&u.dest&&hyp(u.dest.x-u.x,u.dest.y-u.y)>1.5&&(u.reN||0)<10&&hyp((u.reX??1e9)-u.x,(u.reY??1e9)-u.y)>.5){const n=(u.reN||0)+1,am=u.amove,pt=u.patrol,st=u.stance,gd=u.guard,cap=u.spdCap;u.reX=u.x;u.reY=u.y;moveTo(u,u.dest.x,u.dest.y);u.reN=n;u.amove=am;u.patrol=pt;u.stance=st;u.guard=gd;u.spdCap=cap;break}
       if(u.amove&&u.dest&&hyp(u.dest.x-u.x,u.dest.y-u.y)>3&&u.fails<3){u.fails++;const pt=u.patrol;moveTo(u,u.dest.x,u.dest.y);u.amove=true;u.patrol=pt}
       else if(u.patrol){const pt=u.patrol;const a=pt.a;pt.a=pt.b;pt.b=a;moveTo(u,pt.b.x,pt.b.y);u.amove=true;u.patrol=pt}
       else if(u.unloadAt){u.unloadAt=false;unloadBoat(u);u.state='idle'}
@@ -2090,7 +2139,7 @@ function queueUpgrade(b,silent){
   pay(b.o,T2.cost);b.queue.push({k:'up',l});if(b.o===ME)uiDirty=true;return true;
 }
 function spawnUnit(b,type){
-  const p=UNITS[type].naval?freeNearWater(b):freeNear(b.tx,b.ty,b.w,b.h);if(!p){if(b.o===ME)toast('Sem espaço para a unidade sair',true);refund(b.o,UNITS[type].cost);return}
+  const p=UNITS[type].naval?freeNearWater(b):freeNear(b.tx,b.ty,b.w,b.h,homeRef(b));if(!p){if(b.o===ME)toast('Sem espaço para a unidade sair',true);refund(b.o,UNITS[type].cost);return}
   const u=mkUnit(b.o,type,p.x+.5,p.y+.5);P[b.o].pop++;P[b.o].stats.trained++;
   if(type==='barcoPesca'){const r=findRes('food',u.x,u.y,24,u.o,true);if(r)orderGather(u,r)}
   if(b.o===ME)snd(type==='aldeao'?'ready_vill':UNITS[type].naval?'ready_ship':'ready_mil',null,null,{force:1});

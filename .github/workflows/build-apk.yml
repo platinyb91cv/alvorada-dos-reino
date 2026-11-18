@@ -46,6 +46,7 @@ jobs:
           python tests/e2e/estabilidade.py test-results
           python tests/e2e/ia_cenarios.py test-results
           python tests/e2e/sistemas.py test-results
+          python tests/e2e/bugs_rts.py test-results
 
       - uses: actions/upload-artifact@v4
         if: always()
