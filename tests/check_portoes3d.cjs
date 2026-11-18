@@ -13,7 +13,7 @@ let n=0;for(const v of ['madeira0','madeira1','madeira2','pedra1','pedra2'])for(
  assert.ok(x>=0&&y>=0&&x+fw<=w&&y+fh<=h,'frame inside atlas');assert.ok(ax>0&&ax<fw&&ay>0&&ay<fh,'anchor inside frame')}
 assert.equal(n,30);assert.equal(Object.keys(data.frames).length,30);
 assert.match(html,/function gate3dSprite\(type,age,o,vr,op\)/);
-assert.match(html,/e\.d\.gate&&e\.done&&gate3dSprite\(e\.type,P\[e\.o\]\.age,e\.o,bldVariant\(e\),Math\.round\(\(e\.open\|\|0\)\*2\)\)/,'door state follows e.open');
+assert.match(html,/e\.d\.gate&&e\.done&&gate3dSprite\(e\.type,P\[e\.o\]\.age,e\.o,vv,Math\.round\(\(e\.open\|\|0\)\*2\)\)/,'door state follows e.open');assert.match(html,/const vv=viewVar\(e\),mr=bMir\(e\)/,'gate axis follows the camera rotation');
 assert.match(html,/if\(BLDS\[type\]\.gate\)\{const g3=gate3dSprite\(type,age,o,vr,0\);if\(g3\)return g3\}/);
 assert.match(html,/if\(e\.d\.gate&&!BLDART\.ready&&!GATE3D\.ready\)drawGateDoor/);
 assert.match(html,/portaoMadeira:66,portaoPedra:80,/,'taller gates');

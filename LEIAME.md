@@ -45,6 +45,7 @@ python3 tests/run_ai.py 101 202                   # partidas IA contra IA com ve
 python3 tests/e2e/ia_partidas.py                  # IA contra IA em várias dificuldades e mapas
 python3 tests/e2e/bugs_rts.py test-results        # 16 cenários de bugs de RTS: muralhas, portões, bolsas, árvores, viagens longas, gravar/carregar
 python3 tests/e2e/invariantes.py                  # caça a bugs: 10 partidas aceleradas (com e sem jogador "caos") e verificação de invariantes a cada segundo
+python3 tests/e2e/camara_rodar.py test-results    # câmara em 4 vistas: toque, seleção, construção, ordem de desenho, simulação igual em todas
 cd tests && python3 run_online.py                 # online: dois navegadores, servidor real e Supabase imitado (26 testes)
 ```
 O workflow `.github/workflows/build-apk.yml` corre os testes `*.cjs` e os principais testes de navegador antes de compilar.
@@ -162,6 +163,11 @@ Testes novos: `tests/e2e/invariantes.py` corre partidas IA contra IA aceleradas 
 - **Lado da muralha:** quem desce do adarve, cai de uma muralha destruída ou é treinado num quartel encostado à muralha aparece do lado de dentro (lado do Centro/ponto de reunião), não ao calhas; quem é empurrado por uma muralha nova fica do lado onde estava.
 - **Bolsas fechadas:** um edifício/muralha que fecha uma bolsa pequena sem depósito (ex.: entre árvores) com unidades lá dentro tira-as para fora; as árvores que voltam a crescer já não fecham corredores, bolsas nem a frente de um portão.
 - **Viagens longas:** à volta de um lago grande o caminho podia sair parcial e a unidade parava a meio; agora continua até ao destino.
+
+## Câmara com 4 vistas (18/11/2026)
+Botão ⟳ na coluna da direita (tecla C; Z ou toque longo roda ao contrário): a câmara roda 90° à volta do centro do ecrã, como no Stronghold. A letra no botão diz a vista (N, E, S, O).
+Só muda o desenho e o toque: a simulação, os caminhos e o jogo online continuam nas coordenadas do mapa (a mesma partida dá o mesmo resultado em qualquer vista).
+Muralhas e portões usam as peças da direção certa (máscara de vizinhos rodada; eixo do portão trocado nas vistas de lado); torres e soldados (8 direções) rodam; os outros edifícios são desenhados ao espelho nas vistas de lado (E e O) e iguais à vista N na vista S — não há arte das traseiras dos edifícios.
 
 ## Compilar
 - `npx cap sync android` e depois Android Studio, ou `npm run apk` com o SDK Android instalado.
