@@ -4,6 +4,7 @@
 # Cada imagem: tira o fundo a partir das bordas, recorta, ajusta a LARGURA à do quadro que já está no jogo (a pegada é quadrada,
 # por isso o losango do chão fica do mesmo tamanho), alinha pelo fundo ao centro e herda a âncora desse quadro.
 # Depois volta a empacotar o atlas e atualiza BLD3D_DATA no www/index.html.
+# Ou uma folha com as duas vistas lado a lado: <quadro>_folha.png (esquerda = traseiras _r2, direita = vista E _r1).
 # Uso: python3 integrar_vistas.py <pasta_das_imagens> <repo>   [ACERTAR_COR=1 aproxima a cor média à do quadro original]
 import sys, os, io, json, hashlib, re
 from pathlib import Path
@@ -31,15 +32,37 @@ def match_color(t, ref):  # média e contraste de cada canal (só píxeis opacos
         k2 = s0[k] / max(1, s1[k]); ch.append(c.point(lambda v, k=k, k2=k2: max(0, min(255, round((v - m1[k]) * k2 + m0[k])))))
     return Image.merge('RGBA', (*ch, a))
 
-done = []
+# folha do Grok com DUAS vistas lado a lado: <quadro>_folha.png -> esquerda = traseiras (_r2), direita = vista E (_r1)
+def split_sheet(path):
+    c = cutout(Image.open(path)); a = c.getchannel('A').point(lambda v: 255 if v > 30 else 0); w, h = a.size
+    cols = [any(a.getpixel((x, y)) for y in range(0, h, 2)) for x in range(w)]
+    segs = []; x = 0
+    while x < w:
+        if cols[x]:
+            x0 = x
+            while x < w and cols[x]: x += 1
+            segs.append((x0, x))
+        x += 1
+    segs = [s for s in segs if s[1] - s[0] > w * .08]  # ignora salpicos
+    if len(segs) < 2:  # sem coluna vazia entre os dois: corta ao meio
+        segs = [(0, w // 2), (w // 2, w)]
+    segs = sorted(sorted(segs, key=lambda s: s[0] - s[1])[:2])
+    return [c.crop((x0, 0, x1, h)) for x0, x1 in segs]
+SHEETS = {}
 for p in sorted(src.iterdir()):
-    mt = re.match(r'^(.+)_r([123])\.(png|jpe?g|webp)$', p.name, re.I)
+    mt = re.match(r'^(.+)_folha\.(png|jpe?g|webp)$', p.name, re.I)
+    if mt:
+        L, Rr = split_sheet(p); SHEETS[mt.group(1) + '_r2'] = L; SHEETS[mt.group(1) + '_r1'] = Rr; print('folha', p.name, '->', mt.group(1) + '_r2 (esq.),', mt.group(1) + '_r1 (dir.)')
+done = []
+items = [(p.name, p) for p in sorted(src.iterdir())] + [(n + '.png', im) for n, im in SHEETS.items()]
+for name, p in items:
+    mt = re.match(r'^(.+)_r([123])\.(png|jpe?g|webp)$', name, re.I)
     if not mt: continue
     base, k = mt.group(1), mt.group(2)
     if base not in tiles: print('sem quadro original no atlas:', base, '(ignorado)'); continue
     ref, ax, ay = tiles[base]
     rb = ref.getchannel('A').point(lambda v: 255 if v > 30 else 0).getbbox(); rw = rb[2] - rb[0]
-    c = cutout(Image.open(p)); cb = c.getchannel('A').point(lambda v: 255 if v > 30 else 0).getbbox(); c = c.crop(cb)
+    c = p if isinstance(p, Image.Image) else cutout(Image.open(p)); cb = c.getchannel('A').point(lambda v: 255 if v > 30 else 0).getbbox(); c = c.crop(cb)
     s = rw / c.width; c = c.resize((max(1, round(c.width * s)), max(1, round(c.height * s))), Image.LANCZOS)
     if os.environ.get('ACERTAR_COR'): c = match_color(c, ref)
     # tela com a largura do original; o fundo do edifício novo assenta no fundo do original (âncora igual); se for mais alto, a tela cresce para cima

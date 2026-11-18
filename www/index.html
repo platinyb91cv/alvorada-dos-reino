@@ -2844,8 +2844,13 @@ function dep(x,y){if(!ROT)return x+y;const q=rotP(x,y);return q.x+q.y} // profun
 function bCorner(tx,ty,w,h){switch(ROT){case 1:return{x:tx,y:ty+h};case 2:return{x:tx+w,y:ty+h};case 3:return{x:tx+w,y:ty};default:return{x:tx,y:ty}}}
 function bAnch(e){const c=bCorner(e.tx,e.ty,e.w,e.h);return proj(c.x,c.y)}
 // há arte própria desta vista (modelo 3D renderizado dos 4 lados)? então não se espelha
-function bRotArt(type,age,vr){if(!ROT||typeof BLD3D==='undefined'||!BLD3D.ready||!BLD3D.meta.frames)return false;const v=bld3dKey(type,age,vr);return !!(v&&BLD3D.meta.frames[v+'_r'+ROT])}
-function bMir(e){return (ROT&1)===1&&!(e.d.wall||e.d.gate||e.type==='torre')&&!bRotArt(e.type,bAge(e),bldVariant(e))}
+// arte de cada vista: quadro <base>_rN se existir. Paredes do edifício: frente-esq A (porta), frente-dir B, trás C, D.
+// N = A|B, E = B|C, S = C|D, O = D|A. Sem _r1, a vista E usa as traseiras (_r2 = C|D) ao espelho (D|C: a parede da direita fica certa);
+// sem arte própria, E e O usam a vista N ao espelho e S usa a vista N.  Devolve {suf:'_rN'|'', mir:bool} ou null (sem rotação).
+function rotArt(type,age,vr){if(typeof ROT==='undefined'||!ROT)return null;const F=typeof BLD3D!=='undefined'&&BLD3D.ready&&BLD3D.meta.frames,v=F&&bld3dKey(type,age,vr);
+  if(v&&F[v+'_r'+ROT])return{suf:'_r'+ROT,mir:false};if(ROT===1&&v&&F[v+'_r2'])return{suf:'_r2',mir:true};return{suf:'',mir:(ROT&1)===1}}
+function bRotArt(type,age,vr){const r=rotArt(type,age,vr);return !!r&&!r.mir&&!!r.suf}
+function bMir(e){if((ROT&1)!==1||e.d.wall||e.d.gate||e.type==='torre')return false;const r=rotArt(e.type,bAge(e),bldVariant(e));return !r||r.mir}
 // matriz da rotação para desenhar camadas do chão (coordenadas do mundo × sc): usar depois da matriz isométrica
 function rotM(sc){switch(ROT){case 1:return[0,1,-1,0,W*sc,0];case 2:return[-1,0,0,-1,W*sc,H*sc];case 3:return[0,-1,1,0,0,H*sc];default:return null}}
 function rotGround(c,sc){const m=rotM(sc);if(m)c.transform(...m)}
@@ -3841,7 +3846,7 @@ function bld3dKey(type,age,vr){const F=BLD3D.meta.frames;if(!F)return null;
   for(let a=age+1;a<=2;a++)if(F[type+'_'+a])return type+'_'+a;
   return null}
 function bld3dSprite(type,age,o,vr){if(!BLD3D.ready)return null;let v=bld3dKey(type,age,vr);if(!v)return null;
-  if(typeof ROT!=='undefined'&&ROT&&BLD3D.meta.frames[v+'_r'+ROT])v=v+'_r'+ROT; // vista da câmara rodada renderizada a partir do modelo 3D (render_4vistas.py)
+  {const r=typeof rotArt==='function'&&typeof BLDS!=='undefined'&&!(BLDS[type]&&(BLDS[type].wall||BLDS[type].gate))?rotArt(type,age,vr):null;if(r&&r.suf)v=v+r.suf} // vista da câmara rodada (render_4vistas.py ou pintada: integrar_vistas.py)
   const team=P[o]?P[o].col:'#3f86e0',key='b3|'+v+'|'+team;if(BCACHE[key])return BCACHE[key];
   const [sx,sy,w,h,ax,ay]=BLD3D.meta.frames[v],k=1/BLD3D.meta.scale,CW=Math.ceil(w*k)+2,CH=Math.ceil(h*k)+2;
   const cv=mkCanvas(CW*SS,CH*SS),c=cv.getContext('2d',{willReadFrequently:true});c.scale(SS,SS);c.imageSmoothingEnabled=true;c.imageSmoothingQuality='high';c.drawImage(tintCrop(BLD3D,team,sx,sy,w,h),0,0,w,h,1,1,w*k,h*k);
@@ -4887,7 +4892,7 @@ function render(){UCFM=0;U3TMS=0;{const zn=performance.now();if(cam&&cam.z!==ZPR
   // fissuras em muralhas de pedra danificadas
   for(const [,k,e,p] of draw){if(k!==1||!visibleTo0(e)||!(e.d.wall||e.d.gate)||!e.done||e.hp>e.max*.65)continue;const q=proj(e.tx+.5,e.ty+.5);c.strokeStyle='rgba(30,20,10,.7)';c.lineWidth=1.2;c.beginPath();c.moveTo(q.x-5,q.y-18);c.lineTo(q.x-1,q.y-12);c.lineTo(q.x-4,q.y-6);c.moveTo(q.x+4,q.y-20);c.lineTo(q.x+2,q.y-14);c.stroke();if(e.hp<e.max*.35){c.fillStyle='rgba(90,80,70,.5)';c.beginPath();c.arc(q.x+5,q.y-26-(t*15)%10,4,0,7);c.fill()}}
   // fantasma do edifício
-  if(placing&&placing.tx!=null&&!placing.line){const D=BLDS[placing.type],gd=D.gate?gateDirAt(placing.tx,placing.ty,placing.gdir):null,s=bldSprite(placing.type,P[ME].age,ME,D.gate?((ROT&1)?(gd==='x'?'y':'x'):gd):placing.type==='torre'?1:0);const cc=bCorner(placing.tx,placing.ty,D.w,D.h),p=proj(cc.x,cc.y),mr=(ROT&1)===1&&!(D.wall||D.gate||placing.type==='torre')&&!bRotArt(placing.type,P[ME].age,0);c.globalAlpha=ghostOk?.6:.5;bImg(c,mr,!ghostOk&&D.gate?redGhost(s):s.cv,p.x,-s.ox,p.y-s.oy,s.CW,s.CH);c.globalAlpha=1}
+  if(placing&&placing.tx!=null&&!placing.line){const D=BLDS[placing.type],gd=D.gate?gateDirAt(placing.tx,placing.ty,placing.gdir):null,s=bldSprite(placing.type,P[ME].age,ME,D.gate?((ROT&1)?(gd==='x'?'y':'x'):gd):placing.type==='torre'?1:0);const cc=bCorner(placing.tx,placing.ty,D.w,D.h),p=proj(cc.x,cc.y),mr=(ROT&1)===1&&!(D.wall||D.gate||placing.type==='torre')&&(r=>!r||r.mir)(rotArt(placing.type,P[ME].age,0));c.globalAlpha=ghostOk?.6:.5;bImg(c,mr,!ghostOk&&D.gate?redGhost(s):s.cv,p.x,-s.ox,p.y-s.oy,s.CW,s.CH);c.globalAlpha=1}
   if(placing&&placing.line&&placing.a){const tl=lineTiles(placing.a,placing.b||placing.a);for(const [x,y] of tl){const ok=canPlace(placing.type,x,y,ME);const s=bldSprite(placing.type,P[ME].age,ME,15);const cc=bCorner(x,y,1,1),q=proj(cc.x,cc.y);c.globalAlpha=ok?.55:.25;c.drawImage(s.cv,q.x-s.ox,q.y-s.oy,s.CW,s.CH);c.globalAlpha=1}}
   tutArrow(c,t);
   if(GFX==='alto')drawClouds(c,t);

@@ -51,7 +51,7 @@ GLB=/caminho/casa.glb NOME=casa_n2 W=2 H=2 OUT=/tmp/casa4 SAMPLES=48 python3 art
 No jogo, `bld3dSprite` usa `<quadro>_rN` quando a câmara está na vista N e esse quadro existe; aí o edifício deixa de ser espelhado.
 
 ### Sem modelo 3D: vistas pintadas (Kimi/Grok/ChatGPT)
-Pintar a mesma construção vista de outro lado (fundo branco) e guardar como `<quadro>_r1/_r2/_r3.png` (r2 = traseiras; r1 = o lado direito passa para a esquerda; r3 = o esquerdo passa para a direita). Depois:
+Pintar a mesma construção vista de outro lado (fundo branco) e guardar como `<quadro>_r1/_r2/_r3.png`, ou uma folha do Grok com as duas vistas lado a lado `<quadro>_folha.png` (esquerda = traseiras, direita = vista E) (r2 = traseiras; r1 = o lado direito passa para a esquerda; r3 = o esquerdo passa para a direita). Depois:
 ```
 ACERTAR_COR=1 python3 arte/edificios-3d/scripts/integrar_vistas.py <pasta_das_imagens> .
 ```
