@@ -74,6 +74,20 @@ body:not(.ingame) #grp{display:none}
 #side button{width:48px;height:48px;border-radius:12px;background:linear-gradient(160deg,rgba(64,47,32,.95),rgba(26,18,12,.95));border:1px solid rgba(184,137,58,.6);box-shadow:0 3px 8px rgba(0,0,0,.45),inset 0 1px 0 rgba(255,255,255,.08);color:#f0dfbd;font-size:24px;cursor:pointer;display:flex;align-items:center;justify-content:center;position:relative;font-family:var(--f-display);font-weight:800}
 #bSpeed{font-size:15px!important;letter-spacing:.02em}
 #side button:active{transform:translateY(1px)}
+/* coluna da direita (18/11): botões em 3 grupos com cápsula de vidro escuro e aro dourado (unidades · câmara · jogo) */
+#side{gap:7px}
+#side .sgrp{display:flex;flex-direction:column;gap:5px;padding:5px;border-radius:15px;background:linear-gradient(180deg,rgba(30,20,11,.62),rgba(12,8,4,.62));border:1px solid rgba(243,212,136,.32);
+  box-shadow:0 6px 16px rgba(0,0,0,.35),inset 0 1px 0 rgba(255,236,200,.1);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px)}
+#side .sgrp:not(:has(button:not([hidden]))){display:none}
+#side .sgrp button{width:44px;height:44px;border-radius:11px;box-shadow:inset 0 1px 0 rgba(255,236,200,.1),0 2px 4px rgba(0,0,0,.35)}
+#side .sgrp button i svg{width:23px;height:23px}
+#side .sgrp #bSpeed{font:800 15px var(--f-display)!important;color:#f3d488}
+#side .badge{top:-5px;right:-5px;min-width:18px;height:18px;font:800 10.5px/14px var(--f-body);border:2px solid #1a120c;box-shadow:0 0 0 1px rgba(243,212,136,.55)}
+#side .badge.n{background:#2b1f12;color:#f3d488}
+#side .badge:empty{display:none}
+@media (max-height:430px){#side{gap:5px}#side .sgrp{padding:4px;gap:4px;border-radius:13px}#side .sgrp button{width:38px;height:38px;border-radius:9px}#side .sgrp button i svg{width:20px;height:20px}#side .sgrp #bSpeed{font-size:13.5px!important}}
+@media (max-height:360px){#side .sgrp button{width:34px;height:34px}#side .sgrp button i svg{width:18px;height:18px}}
+
 #side button.on{background:linear-gradient(160deg,var(--trim-hi),var(--trim));color:#2a1a0c;border-color:var(--trim-hi);box-shadow:0 0 14px rgba(243,212,136,.45)}
 .badge{position:absolute;top:-6px;right:-6px;min-width:19px;height:19px;padding:0 4px;border-radius:10px;background:#c0392b;border:2px solid #1a120c;color:#fff;font:700 11px/15px var(--f-body);text-align:center}
 .badge.n{background:#3a2a1c;color:var(--trim-hi);border-color:#1a120c}
@@ -202,7 +216,7 @@ body.nosel #info{flex:0 0 auto;min-width:0;padding:4px 9px}body.nosel #info h3,b
 #side button{background:var(--hud-glass);border-color:var(--hud-rim)}
 #grp button{background:var(--hud-glass);border-color:var(--hud-rim)}
 /* interface escondida: só fica o botão do olho; minimapa recolhido: só a pega */
-body.hudoff #top,body.hudoff #bottom,body.hudoff #grp,body.hudoff #objBox,body.hudoff #side>button:not(#bHud){display:none!important}
+body.hudoff #top,body.hudoff #bottom,body.hudoff #grp,body.hudoff #objBox,body.hudoff #side button:not(#bHud){display:none!important}body.hudoff #side .sgrp:not(:has(#bHud)){display:none!important}
 body.hudoff #bHud{opacity:.7}
 .mmap{position:relative}
 #bMini{position:absolute;right:-7px;top:-9px;width:22px;height:22px;border-radius:50%;border:1px solid var(--hud-rim);background:#1a120c;color:var(--trim-hi);padding:0;display:flex;align-items:center;justify-content:center;font-size:14px;cursor:pointer;box-shadow:0 1px 4px rgba(0,0,0,.6)}
@@ -509,16 +523,22 @@ input{font-family:inherit;-webkit-user-select:text;user-select:text;touch-action
   </div>
   <button id="goal" hidden title="Próximo objetivo (toca para esconder)"><span class="gi">🎯</span><span class="gt"></span></button>
   <div id="side">
-    <button id="bHud" title="Esconder a interface (ver só o jogo)" aria-label="Esconder a interface"><i data-ic="eye"></i></button>
-    <button id="bBox" title="Seleção em caixa (arrasta para selecionar)"><i data-ic="box"></i></button>
-    <button id="bIdle" title="Aldeão ocioso (.)"><i data-ic="idle"></i><small id="idleN" class="badge"></small></button>
-    <button id="bStuck" title="Localizar aldeão bloqueado" aria-label="Localizar aldeão bloqueado" hidden>⚠<small id="stuckN" class="badge"></small></button>
-    <button id="bIdleB" title="Edifício de produção parado" aria-label="Edifício de produção parado" hidden>🏭<small id="idleBN" class="badge"></small></button>
-    <button id="bArmy" title="Selecionar exército"><i data-ic="army"></i><small id="armyN" class="badge n"></small></button>
-    <button id="bHome" title="Centro da Vila (H)"><i data-ic="home"></i></button>
-    <button id="bRot" title="Rodar a câmara 90° (C; Z para o outro lado; toque longo roda ao contrário)" aria-label="Rodar a câmara"><svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 12a8 8 0 1 1-2.6-5.9"/><path d="M20 3.5v4.8h-4.8"/></svg><small id="rotN" class="badge n" hidden></small></button>
-    <button id="bChat" title="Conversar" hidden><i data-ic="chat"></i></button>
-    <button id="bSpeed" title="Velocidade">1×</button>
+    <div class="sgrp" aria-label="Unidades">
+      <button id="bIdle" title="Aldeão ocioso (.)"><i data-ic="idle"></i><small id="idleN" class="badge"></small></button>
+      <button id="bStuck" title="Localizar aldeão bloqueado" aria-label="Localizar aldeão bloqueado" hidden><i data-ic="alert"></i><small id="stuckN" class="badge"></small></button>
+      <button id="bIdleB" title="Edifício de produção parado" aria-label="Edifício de produção parado" hidden><i data-ic="bldidle"></i><small id="idleBN" class="badge"></small></button>
+      <button id="bArmy" title="Selecionar exército"><i data-ic="army"></i><small id="armyN" class="badge n"></small></button>
+      <button id="bBox" title="Seleção em caixa (arrasta para selecionar)"><i data-ic="box"></i></button>
+    </div>
+    <div class="sgrp" aria-label="Câmara">
+      <button id="bHome" title="Centro da Vila (H)"><i data-ic="home"></i></button>
+      <button id="bRot" title="Rodar a câmara 90° (C; Z para o outro lado; toque longo roda ao contrário)" aria-label="Rodar a câmara"><i data-ic="rotate"></i><small id="rotN" class="badge n" hidden></small></button>
+      <button id="bHud" title="Esconder a interface (ver só o jogo)" aria-label="Esconder a interface"><i data-ic="eye"></i></button>
+    </div>
+    <div class="sgrp" aria-label="Jogo">
+      <button id="bChat" title="Conversar" hidden><i data-ic="chat"></i></button>
+      <button id="bSpeed" title="Velocidade">1×</button>
+    </div>
   </div>
   <div id="rotate" aria-live="polite"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><rect x="7" y="2.5" width="10" height="19" rx="2"/><path d="M11 18.5h2"/></svg><b>Roda o telemóvel</b><span>O jogo joga-se com o ecrã deitado.</span></div>
   <div id="toast"></div>
@@ -5628,6 +5648,9 @@ const IC={
   trophy:SVG('<path d="M8 4h8v5a4 4 0 0 1-8 0z"/><path d="M8 6H4.5c0 3 1.5 4.6 3.8 4.8M16 6h3.5c0 3-1.5 4.6-3.8 4.8"/><path d="M12 13v4M8.5 20.5h7M9.5 17h5"/>'),
   book:SVG('<path d="M12 6.5C10 5 7 4.5 4 5v13.5c3-.5 6 0 8 1.5 2-1.5 5-2 8-1.5V5c-3-.5-6 0-8 1.5z"/><path d="M12 6.5V20"/>'),
   box:SVG('<path d="M4 8V4h4M16 4h4v4M20 16v4h-4M8 20H4v-4" /><path d="M10 4h4M10 20h4M4 10v4M20 10v4" opacity=".55"/>'),
+  alert:SVG('<path d="M12 3.5l9.5 16.5h-19z"/><path d="M12 10v4.5"/><circle cx="12" cy="17.4" r=".6" fill="currentColor"/>'),
+  bldidle:SVG('<path d="M3.5 11L11 4.5l7.5 6.5"/><path d="M5.5 9.5V19h11v-4"/><path d="M17.5 13.5v6M21 13.5v6" stroke-width="2.4"/>'),
+  rotate:SVG('<path d="M20 12a8 8 0 1 1-2.6-5.9"/><path d="M20 3.5v4.8h-4.8"/>'),
   idle:SVG('<circle cx="9" cy="7" r="3.2"/><path d="M3.5 20c0-4 2.4-7 5.5-7s5.5 3 5.5 7"/><path d="M15.5 4.5h4l-4 4.5h4" stroke-width="1.7"/>'),
   army:SVG('<path d="M5 4l9.5 9.5M19 4l-9.5 9.5"/><path d="M5 4h2.5M5 4v2.5M19 4h-2.5M19 4v2.5"/><path d="M12.6 15.6l-2.2 2.2M11.4 15.6l2.2 2.2M7.6 16.4l-3 3M16.4 16.4l3 3"/>'),
   home:SVG('<path d="M3 11l9-7 9 7"/><path d="M5.5 9.5V20h13V9.5"/><path d="M10 20v-5.5h4V20"/><path d="M12 4V1.5l3 1-3 1" stroke-width="1.5"/>'),
