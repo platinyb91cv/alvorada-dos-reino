@@ -100,7 +100,7 @@ body:not(.ingame) #grp{display:none}
 .contbtn{display:flex;align-items:center;gap:12px;width:100%;margin:0 0 6px;padding:10px 14px;border-radius:14px;border:1px solid var(--trim-hi);background:linear-gradient(160deg,#4a3726,#2a1d13);color:var(--parch);cursor:pointer;text-align:left;box-shadow:0 0 18px rgba(243,212,136,.25)}
 .contbtn img{width:44px;height:44px;border-radius:50%;object-fit:cover;background:#1a120c;flex:none}.contbtn span{display:flex;flex-direction:column;min-width:0;flex:1}.contbtn b{font-size:16px}.contbtn small{font-size:12px;color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .contbtn i{font-style:normal;font-weight:700;color:var(--trim-hi);white-space:nowrap}
-.r-hap{cursor:pointer;border:0;font:inherit;color:inherit}.r-hap .hf{font-size:15px;margin-right:2px}.r-hap.sad b{color:#ff8a7a}.r-hap.glad b{color:#9be37f}
+.r-hap{cursor:pointer;border:0;font:inherit;color:inherit;pointer-events:auto}.r-hap .htx{font-size:12px;margin-left:3px;opacity:.9}.r-hap.pulse{animation:hapPulse 1.2s ease-in-out 4}@keyframes hapPulse{50%{box-shadow:0 0 0 3px #ffd27a}}.r-hap .hf{font-size:15px;margin-right:2px}.r-hap.sad b{color:#ff8a7a}.r-hap.glad b{color:#9be37f}
 .taxc{max-width:420px;width:min(420px,92vw)}.taxhap{display:flex;align-items:center;gap:10px;margin:10px 0}.taxhap>span{font-size:28px}.taxhap .bar{flex:1;min-width:180px;display:block;height:12px;border-radius:7px;background:rgba(255,255,255,.12);position:relative;overflow:hidden}
 .taxhap .bar i{position:absolute;inset:0 auto 0 0;background:linear-gradient(90deg,#d9534f,#f0c04a 45%,#6fcf5a);border-radius:7px}.taxhap .bar b{position:absolute;top:-2px;bottom:-2px;width:2px;background:#fff}
 .taxbtns{display:grid;grid-template-columns:repeat(5,1fr);gap:5px}.taxbtns button{padding:8px 2px;border-radius:9px;border:1px solid rgba(255,220,150,.3);background:rgba(0,0,0,.25);color:inherit;font:inherit;font-size:12px;cursor:pointer}
@@ -461,7 +461,7 @@ input{font-family:inherit;-webkit-user-select:text;user-select:text;touch-action
       <span class="res r-gold" id="rs_gold" title="Ouro"><i data-ic="gold"></i><b id="r_gold">0</b><small id="w_gold"></small></span>
       <span class="res r-stone" id="rs_stone" title="Pedra"><i data-ic="stone"></i><b id="r_stone">0</b><small id="w_stone"></small></span>
       <span class="res r-pop" id="rs_pop" title="População"><i data-ic="pop"></i><b id="r_pop">0/0</b></span>
-      <button id="rs_hap" class="res r-hap" title="Felicidade do povo e impostos"><span class="hf">🙂</span><b id="r_hap">60</b></button>
+      <button id="rs_hap" class="res r-hap" title="Impostos e felicidade do povo (toca para gerir)"><span class="hf">🙂</span><b id="r_hap">60</b><span class="htx">💰</span></button>
       <span id="wonderT" class="res r-wonder" hidden><i data-ic="star"></i><span></span></span>
       <button id="modeT" class="res r-mode" hidden><span class="mi"></span><span class="mt"></span></button>
     </div>
@@ -755,6 +755,7 @@ input{font-family:inherit;-webkit-user-select:text;user-select:text;touch-action
     <div class="card">
       <h2>Jogo pausado</h2>
       <div class="row"><button class="big pri" id="bResume">Continuar</button><button class="big" id="bRestart">Recomeçar</button><button class="big" id="bQuit">Menu principal</button></div>
+      <div class="row"><button class="big" id="bTaxP">💰 Impostos e felicidade</button></div>
       <div class="row"><button class="big" id="bSave">Guardar jogo</button><button class="big bot" id="bBot" hidden>🤖 Bot: desligado</button><button class="big" id="bErros" hidden>⚠️ Copiar erros</button><button class="big ad" id="bAdGold" hidden>🎬 +100 ouro</button><button class="big" id="bNetSave" hidden>Gravar e sair</button><button class="big" id="bSound">Som: ligado</button><button class="big" id="bVib">Vibração: ligada</button><button class="big" id="bVoz">Voz: ligada</button><button class="big" id="bGfx">Gráficos: alto</button><button class="big" id="bRes">Resolução: HD</button><button class="big" id="bDN">Dia e noite: sim</button></div>
       <div class="row audio"><label>🎵 Música<input type="range" id="vMusic" min="0" max="100" value="40"></label><label>🔊 Efeitos<input type="range" id="vSfx" min="0" max="100" value="85"></label><label>🌿 Ambiente<input type="range" id="vAmb" min="0" max="100" value="55"></label><label>🗣️ Conselheiro<input type="range" id="vVoz" min="0" max="100" value="90"></label></div>
     </div>
@@ -6115,7 +6116,8 @@ function buildCmds0(){
     if(WALL_UP[b.type]){const nt=WALL_UP[b.type],d2=BLDS[nt];const all=ents.filter(e=>e.kind==='b'&&e.o===ME&&e.type===b.type&&e.done);const lock=p.age<d2.age;
       box.appendChild(mkCmd('🧱',lock?['','Bronze','Ferro'][d2.age]:costText(d2.cost),()=>act('wallup',{u:[b.id]}),lock?'lock':canAfford(ME,d2.cost)?'':'no','Reforçar este segmento: '+d2.name));
       if(all.length>1)box.appendChild(mkCmd('🏰',lock?'':'Todos ('+all.length+')',()=>act('wallup',{u:ids(all)}),lock?'lock':'','Reforçar todos os segmentos iguais ('+all.length+')'))}
-    if(b.type==='centro'){const on=!!(G.bell&&G.bell[ME]);box.appendChild(mkCmd('🔔',on?'Fim alarme':'Sino',()=>act('bell',{on:!on}),on?'on':'',on?'Os aldeões saem e voltam ao trabalho':'Sino da vila: todos os aldeões correm para dentro'))}
+    if(b.type==='centro'){const on=!!(G.bell&&G.bell[ME]);box.appendChild(mkCmd('🔔',on?'Fim alarme':'Sino',()=>act('bell',{on:!on}),on?'on':'',on?'Os aldeões saem e voltam ao trabalho':'Sino da vila: todos os aldeões correm para dentro'));
+      if(econOn(ME))box.appendChild(mkCmd('💰','Impostos',()=>taxOpen(),'','Impostos, comida do povo, soldo e felicidade'))}
     if(b.garr&&b.garr.length)box.appendChild(mkCmd('🚪','Sair ('+b.garr.length+')',()=>act('ungarrison',{b:b.id}),'','Todos saem do edifício'));
     if(b.d.train&&!b.d.dock)box.appendChild(mkCmd('🚩','Reunião',()=>toast('Toca no mapa para definir o ponto de reunião')));
     box.appendChild(mkCmd('🗑️','Demolir',()=>{if(G.delArm&&G.time-G.delArm<2){act('del',{u:[b.id]});G.delArm=0}else{G.delArm=G.time;toast('Toca outra vez para demolir')}}));
@@ -6464,7 +6466,8 @@ function goalText(){const o=ME,p=P[o];if(!p)return null;const v=cntU(o,'aldeao')
   return G.vic==='sobrevivencia'?'Aguenta as vagas: mais torres, muralhas e soldados':'Derruba o Centro da Vila do rival ou constrói uma Maravilha'}
 function goalHud(dt){const b=$('goal');if(!b)return;GOAL_T-=dt||0;if(GOAL_T>0)return;GOAL_T=2;const show=running&&G&&!G.over&&!G.tut&&!GOAL_OFF&&G.camp==null;
   if(!show){if(!b.hidden)b.hidden=true;return}const t=goalText();if(!t){b.hidden=true;return}const el=b.querySelector('.gt');if(el.textContent!==t){el.textContent=t;b.title='Próximo objetivo: '+t+' (toca para esconder)'}b.hidden=false}
-function hapHud(){const b=$('rs_hap');if(!b)return;const on=econOn(ME);b.hidden=!on;if(!on)return;const e=econOf(ME),h=Math.round(e.hap);$('r_hap').textContent=h;b.querySelector('.hf').textContent=hapFace(h);
+function hapHud(){const b=$('rs_hap');if(!b)return;const on=econOn(ME);b.hidden=!on;if(!on)return;
+  if(!G.taxSeen&&!G.taxHint&&P[ME]&&P[ME].pop>10&&!G.tut){G.taxHint=1;b.classList.add('pulse');setTimeout(()=>b.classList.remove('pulse'),5200);toast('O povo já paga impostos e come comida: toca em 🙂💰 lá em cima (ou no Centro da Vila → 💰 Impostos) para escolher o imposto')}const e=econOf(ME),h=Math.round(e.hap);$('r_hap').textContent=h;b.querySelector('.hf').textContent=hapFace(h);
   b.classList.toggle('sad',h<=35);b.classList.toggle('glad',h>=75);if(!$('mTax').hidden)taxRender()}
 function taxRender(){const e=econOf(ME),r=econRates(ME),h=Math.round(e.hap),f=x=>(Math.round(x*10)/10).toString().replace('.',',');
   $('txFace').textContent=hapFace(h);$('txVal').textContent=h;$('txBar').style.width=h+'%';$('txTgt').style.left=r.target+'%';
@@ -6474,7 +6477,8 @@ function taxRender(){const e=econOf(ME),r=econRates(ME),h=Math.round(e.hap),f=x=
     <small>${r.vil} aldeões pagam imposto · ${r.mil} soldados recebem soldo · os primeiros ${ECON.FREE} habitantes não comem</small><br>
     <b>Felicidade</b> (a caminho de ${r.target}): ${r.parts.map(([n,v])=>n+' '+(v>=0?'<span class="g">+'+v:'<span class="r">'+v)+'</span>').join(' · ')}<br>${eff}`}
 $('goal').onclick=()=>{GOAL_OFF=true;$('goal').hidden=true;toast('Objetivos escondidos (voltam na próxima partida)')};
-$('rs_hap').onclick=()=>{sfx&&sfx('click');$('mTax').hidden=false;taxRender();if(G&&G.tut)G.tut.tax=1};$('txClose').onclick=()=>{$('mTax').hidden=true};
+function taxOpen(){if(!G||!econOn(ME)){toast('Os impostos só existem numa partida contra o computador ou online');return}sfx&&sfx('click');$('mTax').hidden=false;taxRender();if(G&&G.tut)G.tut.tax=1;G.taxSeen=1}
+$('rs_hap').onclick=taxOpen;try{$('bTaxP').onclick=()=>{if(typeof togglePause==='function'&&paused)togglePause();taxOpen()}}catch(e){}$('txClose').onclick=()=>{$('mTax').hidden=true};
 $('txBtns').addEventListener('click',ev=>{const b=ev.target.closest('[data-t]');if(b){act('tax',{v:+b.dataset.t});setTimeout(taxRender,50)}});
 function resUI(){const b=$('bRes');if(b)b.textContent=RES==='hd'?'Resolução: HD':'Resolução: auto (poupa bateria)'}
 $('bRes').onclick=()=>{sfx('click');RES=RES==='hd'?'auto':'hd';try{for(const t of Object.keys(UNIT3D_HD_DATA))if(UNIT3D[t]&&!!UNIT3D[t].hd!==unit3dHdOn())loadUnit3dPreferred(t,UNIT3D[t])}catch(e){}try{for(const t of Object.keys(UNIT3D_CAVHD_DATA))if(UNIT3D[t]&&!!UNIT3D[t].hd!==unit3dHdOn())cavLoad(t)}catch(e){}try{localStorage.setItem('alv_res',RES)}catch(e){}DPRCAP=devDPR();try{localStorage.setItem('alv_dpr',String(DPRCAP))}catch(e){}PERF.good=0;PERF.ema=17;resize();resUI();if(typeof resetChunks==='function'&&running)resetChunks();toast(RES==='hd'?'Resolução HD: nítido, à resolução do ecrã':'Resolução automática: baixa um pouco se o jogo ficar lento')};resUI();
