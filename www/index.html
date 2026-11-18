@@ -3818,7 +3818,7 @@ function drawTowerCat(c,e,lit){if(!e.done)return;const p=proj(e.tx,e.ty),x=p.x+T
   u.o=e.o;if(tg){u.face=(tg.x-tg.y)-(e.tx-e.ty)>=0?1:-1;u.dir=kingDirFromDelta(tg.x-(e.tx+1),tg.y-(e.ty+1))}
   u.state=e.cfire!=null&&G.time-e.cfire<.6?'attack':'idle';u.atkT=e.cfire!=null?G.time-e.cfire:9;
   c.save();c.translate(x,y);c.scale(.62,.62);if(!lit)c.filter='brightness(.55)';try{drawUnit(c,u,0,0)}catch(err){}c.restore()}
-function drawGarrTop(c,e,t){if(castleTop(e)){drawCastleTop(c,e,t);return}const mil=e.garr.filter(u=>u.d.mil);if(!mil.length)return;const top3=TOPZ(e);if(!top3)return; // em cima do adarve/terraço: pés à altura do caminho de ronda, pernas escondidas atrás das ameias, viram-se para o alvo e disparam
+function drawGarrTop(c,e,t,redraw){if(castleTop(e)){drawCastleTop(c,e,t);return}const mil=e.garr.filter(u=>u.d.mil);if(!mil.length)return;const top3=TOPZ(e);if(!top3)return; // em cima do adarve/terraço: pés à altura do caminho de ronda, pernas escondidas atrás das ameias, viram-se para o alvo e disparam
   const ZP=HW*2/Math.SQRT2*Math.cos(Math.PI/6); // píxeis do ecrã por unidade de altura (≈39,2; a câmara do Blender agora usa a escala certa)
   const v=bldVariant(e),ax=e.type==='torre'?'q':e.d.gate?(v==='y'?'y':'x'):((v&10)&&!(v&5)?'y':'x');
   const n=Math.min(e.type==='torre'?4:e.d.gate?3:2,mil.length),tg=alive(e.target)?centerOf(e.target):null;
@@ -3829,8 +3829,14 @@ function drawGarrTop(c,e,t){if(castleTop(e)){drawCastleTop(c,e,t);return}const m
     const firing=tg&&u.d.proj&&hyp(tg.x-gx,tg.y-gy)<(u.d.range||5)+1.5,st=src.meta.states;
     const dir=tg?kingDirFromDelta(tg.x-gx,tg.y-gy):Math.floor(t/3+i*3+e.id)%8;
     const fr=firing&&st.attack?st.attack[Math.floor((t*4+i*.7)%st.attack.length)]:st.idle[0];
-    c.save();c.beginPath();c.rect(g.x-40,fy-80,80,80-3);c.clip();c.translate(g.x,fy);c.scale(.72,.72);drawUnit3dFrame(c,src,fr,dir,P[e.o].col,0,0,null,false,false);c.restore()}
+    const sk=e.d.wall&&ax!=='q'?WALL_SINK*ZP:0;c.save();c.beginPath();c.rect(g.x-40,fy-80,80,80);c.clip();c.translate(g.x,fy+sk);c.scale(.72,.72);drawUnit3dFrame(c,src,fr,dir,P[e.o].col,0,0,null,false,false);c.restore()}
+  // como no Stronghold: o soldado fica no caminho de ronda ATRÁS do parapeito da frente — volta-se a pintar só o parapeito e as ameias
+  // do lado da câmara (+y num muro ao longo de x, +x num muro ao longo de y) por cima das pernas e da cintura
+  if(redraw&&e.d.wall&&ax!=='q'){const hw=WALL_T/2,pw=WALL_PW+.02,cx=e.tx+.5,cy=e.ty+.5;c.save();
+    if(ax==='x')clipBox(c,e.tx-.02,e.tx+1.02,cy+hw-pw,cy+hw+.03,top3+WALL_MH,top3-.02);else clipBox(c,cx+hw-pw,cx+hw+.03,e.ty-.02,e.ty+1.02,top3+WALL_MH,top3-.02);
+    redraw();c.restore()}
 }
+const WALL_T=.62,WALL_PW=.075,WALL_MH=.32,WALL_SINK=.1; // espessura do muro, do parapeito e altura parapeito+ameias (arte/castelo-modular/scripts/montar_modular.py); WALL_SINK: no muro o soldado desce um pouco e o corte fica no caminho de ronda, para as ameias o taparem até à cintura (como no Stronghold)
 // recorta o desenho à projeção de uma caixa do mundo (x0..x1, y0..y1, altura 0..z): o muro que entra numa torre redonda só aparece fora dela
 // depuração (?iso=1): grelha das casas à volta da câmara, área ocupada por cada edifício, âncora do sprite (canto de cima da casa, amarelo)
 // e centro da base no chão (ciano); nas muralhas, a linha do meio
@@ -3843,8 +3849,8 @@ function isoDebug(c){const a=s2w(0,0),b=s2w(vw,vh),x0=Math.max(0,Math.floor(Math
     const t=proj(e.tx,e.ty),m=proj(e.tx+e.w/2,e.ty+e.h/2),r=3/cam.z;c.fillStyle='#ffe14a';c.fillRect(t.x-r,t.y-r,2*r,2*r);c.strokeStyle='#30e0ff';c.lineWidth=2/cam.z;c.beginPath();c.moveTo(m.x-2*r,m.y);c.lineTo(m.x+2*r,m.y);c.moveTo(m.x,m.y-2*r);c.lineTo(m.x,m.y+2*r);c.stroke();
     if(e.d.wall){const v=bldVariant(e)&15;c.strokeStyle='rgba(255,60,200,.85)';c.beginPath();if(v&5||!(v&10)){const A=proj(e.tx,e.ty+.5),B2=proj(e.tx+1,e.ty+.5);c.moveTo(A.x,A.y);c.lineTo(B2.x,B2.y)}if(v&10){const A=proj(e.tx+.5,e.ty),B2=proj(e.tx+.5,e.ty+1);c.moveTo(A.x,A.y);c.lineTo(B2.x,B2.y)}c.stroke()}}
   c.restore()}
-function clipBox(c,x0,x1,y0,y1,z){const ZP1=HW*2/Math.SQRT2*Math.cos(Math.PI/6),P=[];
-  for(const x of [x0,x1])for(const y of [y0,y1])for(const h of [0,z]){const q=proj(x,y);P.push([q.x,q.y-h*ZP1])}
+function clipBox(c,x0,x1,y0,y1,z,z0=0){const ZP1=HW*2/Math.SQRT2*Math.cos(Math.PI/6),P=[];
+  for(const x of [x0,x1])for(const y of [y0,y1])for(const h of [z0,z]){const q=proj(x,y);P.push([q.x,q.y-h*ZP1])}
   P.sort((a,b)=>a[0]-b[0]||a[1]-b[1]);const cr=(o,a,b)=>(a[0]-o[0])*(b[1]-o[1])-(a[1]-o[1])*(b[0]-o[0]);const lo=[],up=[];
   for(const p of P){while(lo.length>1&&cr(lo[lo.length-2],lo[lo.length-1],p)<=0)lo.pop();lo.push(p)}
   for(const p of P.slice().reverse()){while(up.length>1&&cr(up[up.length-2],up[up.length-1],p)<=0)up.pop();up.push(p)}
@@ -4761,7 +4767,7 @@ function render(){UCFM=0;U3TMS=0;{const zn=performance.now();if(cam&&cam.z!==ZPR
         else if(pwallOn(e.type)&&(bldVariant(e)&192)){const v=bldVariant(e);c.save();if(v&64)clipBox(c,e.tx+.28,e.tx+1.02,e.ty-.05,e.ty+1.05,2.6);else clipBox(c,e.tx-.05,e.tx+1.05,e.ty+.28,e.ty+1.02,2.6);c.drawImage(lit?s.cv:darkOf(s.cv),dx,dy,s.CW,s.CH);c.restore()}else c.drawImage(lit?s.cv:darkOf(s.cv),dx,dy,s.CW,s.CH);
         if(e.type==='torre')towerWallStubs(c,e,true,lit);
         if(e.type==='torre'&&(e.lvl||1)===2&&TOWER[2].cat)drawTowerCat(c,e,lit);
-        if(lit&&e.garr&&e.garr.length)drawGarrTop(c,e,performance.now()/1000);
+        if(lit&&e.garr&&e.garr.length)drawGarrTop(c,e,performance.now()/1000,e.d.wall?()=>{const v=bldVariant(e);if(PGATE.ready&&(v&256)){c.save();if(pgateWallClip(c,e)!=='skip')c.drawImage(s.cv,dx,dy,s.CW,s.CH);c.restore()}else if(pwallOn(e.type)&&(v&192)){c.save();if(v&64)clipBox(c,e.tx+.28,e.tx+1.02,e.ty-.05,e.ty+1.05,2.6);else clipBox(c,e.tx-.05,e.tx+1.05,e.ty+.28,e.ty+1.02,2.6);c.drawImage(s.cv,dx,dy,s.CW,s.CH);c.restore()}else c.drawImage(s.cv,dx,dy,s.CW,s.CH)}:null);
         if(lit&&dirtFreeE(e))drawBaseTufts(c,e,t);
         if((e.lvl||1)>1&&e.type!=='torre'&&!(BLD3D.meta.frames&&BLD3D.meta.frames[e.type+'_n'+e.lvl]&&!(e.type==='centro'&&bAge(e)>=2)))drawLvlDeco(c,e,lit,t); // sem arte própria: bandeirolas e escudo
         if(!dirtFreeE(e)){const fr=bldFringe(e);if(fr)c.drawImage(lit?fr.cv:darkOf(fr.cv),p.x-fr.ox,p.y-fr.oy,fr.CW,fr.CH)}

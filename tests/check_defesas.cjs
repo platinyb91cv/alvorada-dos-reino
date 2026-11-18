@@ -24,6 +24,9 @@ for(const t of ['pedra','fort','madeira'])for(let m=0;m<16;m++){assert.ok(W[t+'_
 assert.match(html,/if\(\(m&4\)&&gAt\(e\.tx-1,e\.ty,'x'\)\)m\|=64;if\(\(m&8\)&&gAt\(e\.tx,e\.ty-1,'y'\)\)m\|=128;/);
 assert.match(html,/fk=gb&&F\[base\+'_g'\+gb\]\?base\+'_g'\+gb:base/);
 // 5) soldados em cima desenhados com o próprio edifício (as torres da frente tapam-nos)
-assert.match(html,/if\(lit&&e\.garr&&e\.garr\.length\)drawGarrTop\(c,e,performance\.now\(\)\/1000\);/);
+assert.match(html,/if\(lit&&e\.garr&&e\.garr\.length\)drawGarrTop\(c,e,performance\.now\(\)\/1000,e\.d\.wall\?\(\)=>/);
+// estilo Stronghold: soldados no adarve atrás do parapeito da frente (volta-se a pintar parapeito+ameias por cima), descidos WALL_SINK
+assert.match(html,/const WALL_T=\.62,WALL_PW=\.075,WALL_MH=\.32,WALL_SINK=\.1;/);
+assert.match(html,/if\(redraw&&e\.d\.wall&&ax!=='q'\)/);
 assert.match(html,/    if\(top3\)continue; \/\/ desenhados com o próprio edifício/);
 console.log('PASS: defesas (escala da câmara, âncoras, alturas modelo=jogo, muros que param no portão, soldados no adarve)');
