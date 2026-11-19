@@ -1634,17 +1634,19 @@ function pastureAllowed(s,o){const b=pasturePen(s);return !b||b.o===o}
 function penSheep(b){return ents.filter(s=>isPasture(s)&&alive(s)&&s.penId===b.id)}
 function penPoint(b,s){const slot=s.id%8;return{x:b.tx+.65+(slot%3)*.8,y:b.ty+.65+Math.floor(slot/3)*.8}}
 function insidePen(s,b){return s.x>=b.tx+.35&&s.x<=b.tx+b.w-.35&&s.y>=b.ty+.35&&s.y<=b.ty+b.h-.35}
+// pastores: ao acabar o curral (e de 12 em 12 s enquanto ordenham) vão buscar ovelhas livres até PEN_R casas e trazem-nas uma a uma até o curral encher
+const PEN_R=40;
 function orderHerd(u,b,collectOnly=false){
   if(u.type!=='aldeao'||!alive(b)||b.type!=='curral'||!b.done||b.o!==u.o)return false;
   const reserved=ents.filter(v=>v.type==='aldeao'&&v.state==='herd'&&alive(v.target)&&v.bld===b);
   const incoming=reserved.filter(v=>v.target.penId!==b.id).length;
   const free=penSheep(b).length+incoming<b.d.pasture;
   const candidates=ents.filter(s=>isPasture(s)&&alive(s)&&pastureAllowed(s,u.o)&&
-    ((!collectOnly&&s.penId===b.id)||free&&!pasturePen(s))&&!ents.some(v=>v!==u&&v.type==='aldeao'&&((v.state==='herd'&&v.target===s)||(v.state==='gather'||v.state==='return')&&v.gres===s))&&hyp(s.x-(b.tx+1.5),s.y-(b.ty+1.5))<=18);
+    ((!collectOnly&&s.penId===b.id)||free&&!pasturePen(s))&&!ents.some(v=>v!==u&&v.type==='aldeao'&&((v.state==='herd'&&v.target===s)||(v.state==='gather'||v.state==='return')&&v.gres===s))&&hyp(s.x-(b.tx+1.5),s.y-(b.ty+1.5))<=PEN_R);
   candidates.sort((a,c)=>(a.penId===b.id?30:0)+hyp(a.x-u.x,a.y-u.y)-((c.penId===b.id?30:0)+hyp(c.x-u.x,c.y-u.y))||a.id-c.id);
   if(!candidates.length){if(u.o===ME&&!collectOnly)toast('Curral cheio ou sem ovelhas disponíveis por perto');return false}
   stopUnit(u);u.state='herd';u.target=candidates[0];u.bld=b;u.gres=null;u.gkind='food';u.fails=0;u.rp=0;
-  if(u.o===ME)toast('O aldeão vai conduzir a ovelha ao curral');return true;
+  if(u.o===ME&&!collectOnly)toast('O pastor vai buscar ovelhas para o curral');return true;
 }
 function herdTick(u,dt){
   const s=u.target,b=u.bld;
@@ -2079,6 +2081,7 @@ function updUnit(u,dt){
       const k=u.gkind;const nr=k?findRes(k,u.x,u.y,d.naval?24:9,u.o,!!d.naval):null;
       if(nr){orderGather(u,nr);r=nr}else{if(u.carry>0)orderReturn(u);else stopUnit(u);break}
     }
+    if(u.type==='aldeao'&&isPasture(r)&&G.time>=(u.hchk||0)){u.hchk=G.time+12;const pen=pasturePen(r);if(pen&&pen.o===u.o&&penSheep(pen).length<pen.d.pasture&&orderHerd(u,pen,true))break}
     const k=resKind(r);
     if(u.ctype&&u.ctype!==k){u.carry=0;u.ctype=null}
     if(u.carry>=capOf(u)){orderReturn(u);break}
