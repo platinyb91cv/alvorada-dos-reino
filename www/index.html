@@ -1340,7 +1340,13 @@ function projHit(p){const Rr=.16,T=p.target;
   if(best)return best;
   const tx=Math.floor(p.tx),ty=Math.floor(p.ty);if(inb(tx,ty)){const b=byId.get(bldAt[idx(tx,ty)]);if(b&&b.kind==='b'&&b.o!==p.o&&b.o!==2&&!b.d.walk)return b}
   return null}
-function spd(u){let s=u.d.speed;if(!u.d.naval&&G.roads&&G.roads[idx(clamp(u.x|0,0,W-1),clamp(u.y|0,0,H-1))])s*=1.2;if(!u.d.naval&&terr[idx(clamp(u.x|0,0,W-1),clamp(u.y|0,0,H-1))]===2)s*=.88;if(u.relic!=null)s*=.8;if(u.walk)s*=.4;if(u.spdCap&&u.state==='move')s=Math.min(s,u.spdCap);if(u.type==='aldeao'&&P[u.o].techs.roda)s*=1.25;const cv=civOf(u.o);if(cv==='mar'&&u.d.naval)s*=1.2;else if(cv==='planicies'&&u.d.cls==='cav')s*=1.15;return heroSpd(u,s)}
+function spd(u,free){let s=u.d.speed;if(!u.d.naval&&G.roads&&G.roads[idx(clamp(u.x|0,0,W-1),clamp(u.y|0,0,H-1))])s*=1.2;if(!u.d.naval&&terr[idx(clamp(u.x|0,0,W-1),clamp(u.y|0,0,H-1))]===2)s*=.88;if(u.relic!=null)s*=.8;if(u.walk)s*=.4;if(u.spdCap&&u.state==='move')s=Math.min(s,u.spdCap);if(u.type==='aldeao'&&P[u.o].techs.roda)s*=1.25;const cv=civOf(u.o);if(cv==='mar'&&u.d.naval)s*=1.2;else if(cv==='planicies'&&u.d.cls==='cav')s*=1.15;s=heroSpd(u,s);if(!free&&u.mgrp&&u.state==='move')s=Math.min(s,grpCap(u));return s}
+// grupo a andar junto (como no Age of Empires): todos ao passo do mais lento; quem vai à frente abranda e quem ficou para trás
+// apressa-se (até à sua velocidade), para chegarem juntos — a cavalaria não corre sozinha à frente da infantaria
+function grpRem(m){return m.dest?hyp(m.dest.x-m.x,m.dest.y-m.y):0}
+function grpCap(u){const g=u.mgrp;if(g.t!==G.time){g.t=G.time;const ms=g.u.filter(m=>!m.dead&&m.mgrp===g&&m.state==='move').sort((a,b)=>a.id-b.id); /* ordem fixa: a soma em vírgula flutuante tem de dar igual nas duas máquinas online */g.n=ms.length;
+    if(g.n>1){let mn=1e9,sum=0;for(const m of ms){mn=Math.min(mn,spd(m,true));sum+=grpRem(m)}g.min=mn;g.avg=sum/g.n}}
+  if(g.n<2)return 1e9;return g.min*clamp(1+(grpRem(u)-g.avg)*.6,.3,1.8)}
 function rangeOf(u){return u.d.range+(u.d.proj==='arrow'&&P[u.o].techs.flechas?1:0)}
 function convertUnit(t,o){if(t.d.king)return;
   const old=t.o;t.o=o;stopUnit(t);t.stance=null;t.guard=null;t.gres=null;t.gkind=null;t.carry=0;t.healT=null;
@@ -1567,13 +1573,13 @@ function groupMove(units,x,y,amove,form){
     const used=new Map();
     let slots=null;
     if(form!=='livre'&&grp.length>1&&!grp[0].d.naval)slots=formationSlots(grp,x,y,form);
-    const minSp=Math.min(...grp.map(u=>u.d.speed));
+    const mg=grp.length>1&&new Set(grp.map(u=>spd(u,true))).size>1||slots?{id:(G.mgid=(G.mgid||0)+1),u:grp,t:-1}:null; // só junta quem anda a velocidades diferentes (ou em formação)
     grp.forEach((u,i)=>{
       let s;
       if(slots){const q=slots.get(u);s=snapFree(u,q.x,q.y,used)}
       else if(grp.length===1)s={x,y};
       else{const ang=i*2.4,rad=.55*Math.sqrt(i);s=snapFree(u,x+dcos(ang)*rad,y+dsin(ang)*rad,used)}
-      moveTo(u,s.x,s.y);u.unloadAt=false;u.amove=!!amove;u.gres=null;u.patrol=null;u.spdCap=slots?minSp:0;u.form=form;
+      moveTo(u,s.x,s.y);u.unloadAt=false;u.amove=!!amove;u.gres=null;u.patrol=null;u.spdCap=0;u.form=form;u.mgrp=mg;
     });
   }
 }
@@ -1687,7 +1693,7 @@ function orderGather(u,r){if(isPasture(r)&&!pastureAllowed(r,u.o))return;u.state
 function orderBuild(u,b){u.state='build';u.bld=b;u.target=null;u.path=null;u.rp=0;u.fails=0;u.amove=false}
 function orderAttack(u,t){if(u.type==='aldeao'&&isPasture(t)){orderGather(u,t);return}u.state='attack';u.target=t;u.path=null;u.rp=0;u.fails=0}
 function orderReturn(u){u.state='return';u.path=null;u.rp=0;u.fails=0}
-function stopUnit(u){u.unloadAt=false;u.state='idle';u.path=null;u.target=null;u.bld=null;u.amove=false;u.patrol=null;u.after=null;u.spdCap=0}
+function stopUnit(u){u.unloadAt=false;u.state='idle';u.path=null;u.target=null;u.bld=null;u.amove=false;u.patrol=null;u.after=null;u.spdCap=0;u.mgrp=null}
 
 /* ---------------- dano ---------------- */
 function atkOf(u){const p=P[u.o];let a=u.kind==='b'&&u.type==='torre'?TOWER[u.lvl||1].atk:(u.d.atk||0);
@@ -4192,7 +4198,7 @@ function uTier(){const s=cam.z*DPR;return s<1.4?1.25:s<2.6?2:3}
 function hash(n){n=(n^61)^(n>>>16);n=n+(n<<3);n=n^(n>>>4);n=Math.imul(n,0x27d4eb2d);return(n^(n>>>15))>>>0}
 // ---------- primitivas ----------
 function seg(c,x1,y1,x2,y2,w,col){c.strokeStyle=col;c.lineWidth=w;c.beginPath();c.moveTo(x1,y1);c.lineTo(x2,y2);c.stroke()}
-function circ(c,x,y,r,col){c.fillStyle=col;c.beginPath();c.arc(x,y,r,0,7);c.fill()}
+function circ(c,x,y,r,col){if(!(r>0))return;c.fillStyle=col;c.beginPath();c.arc(x,y,r,0,7);c.fill()} // raio negativo (rodas pequenas em escalas baixas) lançava erro
 function ell(c,x,y,rx,ry,col,rot){c.fillStyle=col;c.beginPath();c.ellipse(x,y,rx,ry,rot||0,0,7);c.fill()}
 function pl(c,pts,col,stroke,lw){c.beginPath();pts.forEach((p,i)=>i?c.lineTo(p[0],p[1]):c.moveTo(p[0],p[1]));c.closePath();if(col){c.fillStyle=col;c.fill()}if(stroke){c.strokeStyle=stroke;c.lineWidth=lw||.6;c.stroke()}}
 const OL='rgba(28,16,6,.55)';
@@ -5863,6 +5869,8 @@ function applySnap(S,fresh){KEEP_LOCAL=G&&!fresh?{tradeGold:G.tradeGold||0,alert
   for(const sid in S.E){const src=S.E[sid],o=objs[sid];for(const k in src)o[k]=dec(src[k])}
   byId=new Map();for(const sid of S.order){const e=objs[sid];byId.set(e.id,e)}
   ents=S.eorder.map(sid=>objs[sid]);projs=S.projs.map(dec);nid=S.nid;RNG.s=S.rng;rnd=rndNext;
+  // grupos a andar juntos: o estado chega com uma cópia do grupo por unidade — voltar a partilhar um só objeto por id (igual nas duas máquinas)
+  {const MG=new Map();for(const e of byId.values()){if(e.kind!=='u'||!e.mgrp)continue;let g=MG.get(e.mgrp.id);if(!g){g={id:e.mgrp.id,u:[],t:-1};MG.set(g.id,g)}g.u.push(e);e.mgrp=g}}
   const keepUI=G&&!fresh?{form:G.form,lastType:G.lastType,lastAttack:G.lastAttack}:{};
   G={...S.G,amoveNext:false,cmdMode:null,form:'livre',...keepUI};
   P=S.P;terr=Uint8Array.from(S.terr,ch=>+ch);blk=Uint8Array.from(S.blk);bldAt=Int32Array.from(S.bldAt);
@@ -6806,11 +6814,11 @@ function spawnFauna(){
 const SAVE_KEY='alv_save_v1';
 function normalSaveKey(){return ukey(SAVE_KEY)} // mesma separação por conta usada pelo Reino, com migração da gravação antiga
 // campos extra de G que viajam no gravar/continuar e na sincronização online
-const GX=['map','vic','civ','camp','daily','reino','hero','surv','sdiff','bell','tradeGold','alertAt','islands','obj','relics','tod','weather','achv','track','king','mkt','regrow','sheepT','relicT','roads','econ'];
+const GX=['mgid','map','vic','civ','camp','daily','reino','hero','surv','sdiff','bell','tradeGold','alertAt','islands','obj','relics','tod','weather','achv','track','king','mkt','regrow','sheepT','relicT','roads','econ'];
 function gExtra(){const o={};for(const k of GX)if(G[k]!==undefined)o[k]=G[k];return JSON.parse(JSON.stringify(o))}
 function serialize(){
   const ref=x=>x&&!x.dead?x.id:null;
-  const su=e=>({k:'u',kd:e.d.king||UNIT3D_TYPES.includes(e.type)?e.kingDir:undefined,id:e.id,o:e.o,t:e.type,x:+e.x.toFixed(4),y:+e.y.toFixed(4),hp:e.hp,s:e.state,c:e.carry,ct:e.ctype,gk:e.gkind,pn:e.penId||null,tg:ref(e.target),gr:ref(e.gres),bd:ref(e.bld),de:e.dest,am:e.amove,fa:e.faith,hm:e.home,st:e.stance||null,gu:e.guard||null,pa:e.patrol||null,kp:e.kpost||null,ka:e.kauto||0,pg:e.prevG||null,bq:e.bq&&e.bq.length?e.bq:null,tr:e.d.trade?[e.tradeA,e.tradeB,e.target?e.target.id:null,e.tripFrom||null]:null,rl:e.relic??null,rg:e.relicGo??null,cg:e.cargo?e.cargo.map(su):null,ca:e.cargaN?{c:e.carga,n:e.cargaN,w:e.cwait||0,f:e.cfrom||null}:null});
+  const su=e=>({k:'u',kd:e.d.king||UNIT3D_TYPES.includes(e.type)?e.kingDir:undefined,id:e.id,o:e.o,t:e.type,x:+e.x.toFixed(4),y:+e.y.toFixed(4),hp:e.hp,s:e.state,c:e.carry,ct:e.ctype,gk:e.gkind,pn:e.penId||null,tg:ref(e.target),gr:ref(e.gres),bd:ref(e.bld),de:e.dest,am:e.amove,fa:e.faith,hm:e.home,st:e.stance||null,gu:e.guard||null,pa:e.patrol||null,kp:e.kpost||null,ka:e.kauto||0,pg:e.prevG||null,bq:e.bq&&e.bq.length?e.bq:null,tr:e.d.trade?[e.tradeA,e.tradeB,e.target?e.target.id:null,e.tripFrom||null]:null,rl:e.relic??null,rg:e.relicGo??null,cg:e.cargo?e.cargo.map(su):null,ca:e.cargaN?{c:e.carga,n:e.cargaN,w:e.cwait||0,f:e.cfrom||null}:null,mg:e.mgrp&&e.state==='move'?e.mgrp.id:undefined});
   return JSON.stringify({v:1,difficulty,nid,G:{seed:G.seed,time:G.time,starts:G.starts,wonder:G.wonder||null,fishRespawn:G.fishRespawn||[],lake:G.lake||null,form:G.form||'livre',mode:G.mode||'normal',tut:G.tut||null},X:gExtra(),
     P:P.map(p=>({res:p.res,age:p.age,techs:p.techs,stats:p.stats})),
     mapN:W,terr:Array.from(terr).join(''),vis:Array.from(vis).join(''),
@@ -6859,6 +6867,8 @@ function loadGame(key){
     if(st==='move'){if(e.dest){const am=e.amove;moveTo(e,e.dest.x,e.dest.y);e.amove=am}else st='idle'}
     if(st!=='move')e.state=st;
   }
+  // grupos a andar juntos (groupMove): refazer o objeto partilhado a partir do id gravado (senão as duas máquinas online divergiam)
+  {const MG=new Map();for(const [e,q] of pend){if(e.kind!=='u'||q.mg==null||e.state!=='move')continue;let g=MG.get(q.mg);if(!g){g={id:q.mg,u:[],t:-1};MG.set(q.mg,g)}g.u.push(e);e.mgrp=g}}
   AIs=(d.AIs||[]).map(a=>a?{...a}:null);AI=AIs[1];BOT.on=!!(AIs[ME]&&AIs[ME].bot&&botAllowed());if(AIs[ME]&&AIs[ME].bot&&!BOT.on)AIs[ME]=null;document.body.classList.toggle('bot',BOT.on);
   vis=Uint8Array.from(d.vis,ch=>+ch);
   fogCanvas=mkCanvas(W,H);fogCtx=fogCanvas.getContext('2d');fogImg=fogCtx.createImageData(W,H);
