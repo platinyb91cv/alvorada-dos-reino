@@ -120,6 +120,18 @@ CASES = {
    const b=mkBld(0,'curral',sp.x,sp.y,false);const vs=[];for(let i=0;i<2;i++){const v=mkUnit(0,'aldeao',sp.x-1.5,sp.y+i+.5);stopUnit(v);orderBuild(v,b);vs.push(v)}
    for(let t=0;t<150*30;t++)step(1/30);
    return{dentro:penSheep(b).filter(s=>insidePen(s,b)).length,cap:b.d.pasture,pastores:vs.map(v=>v.state)}}""",
+ # 16) muralha paralela encostada à do castelo (por dentro e por fora) e muralha à frente de uma fila de torres: cada uma é uma linha direita
+ #     (sem cruzamentos de ameias); as junções verdadeiras (T, esquina, torre no meio do muro) continuam ligadas
+ 'muralha_paralela': """()=>{const tc=__new(321);const R=9;const r=__ring(tc,R,'portaoPedra',false);const top=r.cy-R;
+   const line=(y,x0,x1)=>{const a=[];for(let x=x0;x<=x1;x++)a.push(mkBld(0,'muralhaPedra',x,y,true));return a};
+   const dentro=line(top+1,r.cx-6,r.cx+6),fora=line(top-1,r.cx-6,r.cx+6);
+   // muro perpendicular que nasce do anel (T) e vai para dentro, a 2 casas do muro paralelo
+   const tee=[];for(let x=r.cx-R+1;x<=r.cx-R+5;x++)tee.push(mkBld(0,'muralhaPedra',x,r.cy-3,true));
+   recount();const m=b=>bldVariant(b)&15;const reta=a=>a.slice(1,-1).every(b=>m(b)===5);
+   const anel=ents.filter(e=>e.d&&e.d.wall&&e.tx===r.cx&&e.ty===top)[0];
+   const jT=ents.find(e=>e.d&&e.d.wall&&e.tx===r.cx-R&&e.ty===r.cy-3);
+   const cant=ents.find(e=>e.d&&e.d.wall&&e.tx===r.cx-R&&e.ty===top);
+   return{dentro_reta:reta(dentro),fora_reta:reta(fora),anel_reto:m(anel)===5,tee_liga:!!(m(tee[0])&4),canto:m(cant),ligT:!!(m(jT)&1)}}""",
  # 13) viagem longa à volta de um lago grande (o A* devolve caminho parcial): a unidade continua até ao destino em vez de parar a meio
  'viagem_longa_a_volta_do_lago': """()=>{startGame(7,{map:'lagos',vic:'classico',civ:['planicies','planicies']});AIs[0]=null;AIs[1]=null;AI=null;try{tutEnd(true)}catch(e){}
    const a=G.starts[0],b=G.starts[1];const u=mkUnit(0,'guerreiro',a.x+3.5,a.y+3.5);let dst=null;for(let r=3;r<10&&!dst;r++)for(let k=0;k<16&&!dst;k++){const x=Math.round(b.x+Math.cos(k)*r),y=Math.round(b.y+Math.sin(k)*r);if(inb(x,y)&&blk[idx(x,y)]===0)dst={x:x+.5,y:y+.5}}
@@ -157,6 +169,7 @@ async def main():
          'grupo_anda_junto': g('grupo_anda_junto').get('chegaram') == g('grupo_anda_junto').get('de', -1) and g('grupo_anda_junto').get('cavalaria_antes_s', 99) < 8 and g('grupo_anda_junto').get('maior_afastamento', 99) < 8,
          'quinta_limite': max(g('quinta_limite').get('tres_quintas', [99])) <= 5 and sum(g('quinta_limite').get('tres_quintas', [0])) == 15 and g('quinta_limite').get('uma_quinta', 99) <= 5,
          'curral_enche_sozinho': g('curral_enche_sozinho').get('dentro', 0) == g('curral_enche_sozinho').get('cap', -1) and all(x in ('gather', 'return') for x in g('curral_enche_sozinho').get('pastores', ['x'])),
+         'muralha_paralela': (lambda q: q.get('dentro_reta') and q.get('fora_reta') and q.get('anel_reto') and q.get('tee_liga') and q.get('ligT') and q.get('canto') == 3)(g('muralha_paralela')),
          'viagem_longa_a_volta_do_lago': g('viagem_longa_a_volta_do_lago').get('falta', 99) < 1.5,
          'sem_erros': not r['erros'] and not pe}
         r['ok'] = ok

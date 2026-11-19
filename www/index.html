@@ -3460,11 +3460,25 @@ const MATS=[
   {wall:{l:'#e6e0d1',r:'#b9b1a1',t:'#f1ece0',k:'stone'},roof:{c:'#ad452c',d:'#7c2e1d',k:'tile'},found:'#ada597',trim:'#8d8676'},
 ];
 const BHEIGHT={vila:46,curral:28,estrada:2,muralhaMadeira:30,muralhaPedra:58,muralhaFort:66,portaoMadeira:66,portaoPedra:80,doca:28,ferreiro:52,templo:66,maravilha:118,centro:78,casa:50,quinta:6,armazem:46,quartel:56,arquearia:52,estabulo:48,torre:110,oficina:58};
+// duas muralhas paralelas encostadas (uma nova ao lado da do castelo, por dentro ou por fora; ou uma fila de torres junto ao muro):
+// não se ligam de lado a lado — cada uma fica uma linha direita, em vez de cada casa virar um cruzamento cheio de ameias
+function wallOwn(o,x,y){if(!inb(x,y))return null;const n=byId.get(bldAt[idx(x,y)]);return n&&n.o===o&&(n.d.wall||n.d.gate||(n.type==='torre'&&n.done))?n:null}
+function wallAlong(o,x,y,ax){const n=wallOwn(o,x,y);if(!n)return false;const a=ax==='x'?[[n.tx-1,y],[n.tx+n.w,y]]:[[x,n.ty-1],[x,n.ty+n.h]];return a.some(([X,Y])=>!!wallOwn(o,X,Y))}
+function wallRun(o,x,y,dx,dy){let k=0;while(k<4&&wallOwn(o,x+dx*(k+1),y+dy*(k+1)))k++;return k}
+function wallParallel(e,m){const o=e.o,x=e.tx,y=e.ty;if(!((m&5)&&(m&10)))return m;
+  const h=1+wallRun(o,x,y,1,0)+wallRun(o,x,y,-1,0),v=1+wallRun(o,x,y,0,1)+wallRun(o,x,y,0,-1);let r=m;
+  if(h>=v){if((m&2)&&wallAlong(o,x,y+1,'x'))r&=~2;if((m&8)&&wallAlong(o,x,y-1,'x'))r&=~8}
+  else{if((m&1)&&wallAlong(o,x+1,y,'y'))r&=~1;if((m&4)&&wallAlong(o,x-1,y,'y'))r&=~4}
+  return r}
+// o muro n liga-se à torre t? (o pedaço de muro que a torre desenha só aparece se o muro estiver mesmo virado para ela)
+function wallToTower(n,t){if(!n.d.wall)return true;const v=bldVariant(n);if(typeof v!=='number')return true;
+  const b=n.tx<t.tx?1:n.tx>=t.tx+t.w?4:n.ty<t.ty?2:8;return !!(v&b)}
 function bldVariant(e){
   if(e.type==='torre')return e.lvl||1;
   if((e.lvl||1)>1&&BLVL_T[e.type])return 'n'+e.lvl; // edifício com nível: usa a arte Nv.2/Nv.3 se existir
   if(e.d.wall||e.d.gate){let m=0;const nb=(x,y)=>{if(!inb(x,y))return false;const n=byId.get(bldAt[idx(x,y)]);return !!n&&n.o===e.o&&(n.d.wall||n.d.gate||(n.type==='torre'&&n.done))};
     if(nb(e.tx+1,e.ty))m|=1;if(nb(e.tx,e.ty+1))m|=2;if(nb(e.tx-1,e.ty))m|=4;if(nb(e.tx,e.ty-1))m|=8;
+    if(e.d.wall)m=wallParallel(e,m);
     if(e.d.gate)return (m&5)?'x':(m&10)?'y':(e.gdir||'x');
     // muro com a casa do portão do lado −x/−y (e virada para ele): usa a peça cujo braço pára na face do portão (o portão ocupa 0,28 desta casa)
     const gAt=(x,y,d)=>{const n=inb(x,y)&&byId.get(bldAt[idx(x,y)]);return !!n&&n.o===e.o&&n.d.gate&&bldVariant(n)===d};
@@ -4060,7 +4074,7 @@ function viewVar(e){const v=bldVariant(e);if(!ROT)return v;
   return v}
 function towerWallStubs(c,e,near,lit){
   if((e.lvl||1)===3&&CMOD.ready){if(!near)return; // pedaços de muro dentro da torre: já recortados pela torre no Blender (holdout), desenham-se depois dela
-    const at=(x,y)=>{if(!inb(x,y))return null;const n=byId.get(bldAt[idx(x,y)]);return n&&n.o===e.o&&n.done&&CMOD_KIND[n.type]?n:null};
+    const at=(x,y)=>{if(!inb(x,y))return null;const n=byId.get(bldAt[idx(x,y)]);return n&&n.o===e.o&&n.done&&CMOD_KIND[n.type]&&wallToTower(n,e)?n:null};
     const S=[['mx0',e.tx-1,e.ty,0],['mx1',e.tx-1,e.ty+1,1],['my0',e.tx,e.ty-1,0],['my1',e.tx+1,e.ty-1,1],['px0',e.tx+2,e.ty,2],['px1',e.tx+2,e.ty+1,3],['py0',e.tx,e.ty+2,2],['py1',e.tx+1,e.ty+2,3]];
     // câmara rodada: cada vizinho do mundo passa para o lado/posição que ocupa na vista (as peças estão feitas para a vista sem rotação)
     if(ROT){const c0=bCorner(e.tx,e.ty,e.w,e.h),r0=rotP(c0.x,c0.y);for(const q of S){const r=rotP(q[1]+.5,q[2]+.5),vx=Math.floor(r.x)-Math.round(r0.x),vy=Math.floor(r.y)-Math.round(r0.y);
@@ -4069,7 +4083,7 @@ function towerWallStubs(c,e,near,lit){
     return}
   if(!WALL3D.ready)return;
   if((e.lvl||1)===3){ // torre redonda (nível 3) mais estreita que a base: os muros entram até à parede dela
-    const at=(x,y)=>{if(!inb(x,y))return null;const n=byId.get(bldAt[idx(x,y)]);return n&&n.d.wall&&n.done?n:null};
+    const at=(x,y)=>{if(!inb(x,y))return null;const n=byId.get(bldAt[idx(x,y)]);return n&&n.d.wall&&n.done&&wallToTower(n,e)?n:null};
     const R=.85,cx=e.tx+e.w/2,cy=e.ty+e.h/2,T=.55,Z=2.4;
     const put=(n,x,y,m,box)=>{const sp=wall3dSprite(n.type,n.o,m|(pwallOn(n.type)?pwallPhase(x,y):0));if(!sp)return;const q=proj(x,y);c.save();if(box)clipBox(c,...box);c.drawImage(lit?sp.cv:darkOf(sp.cv),q.x-sp.ox,q.y-sp.oy,sp.CW,sp.CH);c.restore()};
     for(let k=0;k<e.h;k++){const y=e.ty+k,d=y+.5-cy,xe=Math.sqrt(Math.max(0,R*R-d*d));
@@ -4077,7 +4091,7 @@ function towerWallStubs(c,e,near,lit){
     for(let k=0;k<e.w;k++){const x=e.tx+k,d=x+.5-cx,ye=Math.sqrt(Math.max(0,R*R-d*d));
       if(!near){const n=at(x,e.ty-1);if(n)put(n,x,e.ty,10,[x+.5-T,x+.5+T,e.ty,cy-ye+.02,Z])}else{const n=at(x,e.ty+e.h);if(n)put(n,x,e.ty+e.h-1,10,[x+.5-T,x+.5+T,cy+ye,e.ty+e.h+.02,Z])}}
     return}
-  const at=(x,y)=>{if(!inb(x,y))return null;const n=byId.get(bldAt[idx(x,y)]);return n&&n.o===e.o&&n.d.wall&&n.done?n:null};
+  const at=(x,y)=>{if(!inb(x,y))return null;const n=byId.get(bldAt[idx(x,y)]);return n&&n.o===e.o&&n.d.wall&&n.done&&wallToTower(n,e)?n:null};
   const put=(n,x,y,m)=>{const s=wall3dSprite(n.type,e.o,m);if(!s)return;const p=proj(x,y);c.drawImage(lit?s.cv:darkOf(s.cv),p.x-s.ox,p.y-s.oy,s.CW,s.CH)};
   for(let k=0;k<e.h;k++){const y=e.ty+k;
     if(!near){const n=at(e.tx-1,y);if(n)put(n,e.tx,y,5)}else{const n=at(e.tx+e.w,y);if(n)put(n,e.tx+e.w-1,y,1)}}
