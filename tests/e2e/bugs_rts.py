@@ -104,6 +104,16 @@ CASES = {
    for(let t=0;t<90*30;t++){step(1/30);if(t%15===0){const mv=us.filter(u=>u.state==='move');if(mv.length>3){const r=mv.map(m=>hyp(m.dest.x-m.x,m.dest.y-m.y));spread=Math.max(spread,Math.max(...r)-Math.min(...r))}}for(const u of us)if(!arr.has(u.id)&&hyp(u.x-dst.x,u.y-dst.y)<3)arr.set(u.id,{t:t/30,cav:u.d.cls==='cav'})}
    const V=[...arr.values()],cav=V.filter(v=>v.cav).map(v=>v.t),inf=V.filter(v=>!v.cav).map(v=>v.t);
    return{chegaram:arr.size,de:us.length,cavalaria_antes_s:+(Math.max(...inf)-Math.min(...cav)).toFixed(1),maior_afastamento:+spread.toFixed(1)}}""",
+ # 14) quinta com limite: 15 aldeões mandados para UMA quinta -> no máximo 5 em cada; os outros vão para as quintas livres ao lado
+ 'quinta_limite': """()=>{startGame(31,{map:'continental',vic:'classico',civ:['planicies','planicies']});AIs[0]=null;AIs[1]=null;AI=null;try{tutEnd(true)}catch(e){};
+   const h=G.starts[0];const spot=()=>{for(let r=5;r<20;r++)for(let a=0;a<32;a++){const x=Math.round(h.x+Math.cos(a/32*6.28)*r),y=Math.round(h.y+Math.sin(a/32*6.28)*r);if(canPlace('quinta',x,y,0,0,true))return {x,y}}};
+   const F=[];for(let i=0;i<3;i++){const s=spot();F.push(mkBld(0,'quinta',s.x,s.y,true))}
+   const vs=[];for(let i=0;i<15;i++){const v=mkUnit(0,'aldeao',h.x+3.5+(i%5)*.6,h.y+4.5+(i/5|0)*.6);stopUnit(v);vs.push(v)}
+   command(vs,F[0],centerOf(F[0]));for(let t=0;t<40*30;t++)step(1/30);
+   const n=F.map(f=>farmWorkers(f));
+   // só uma quinta: os 5 primeiros ficam, os outros não se amontoam
+   for(const f of F.slice(1))kill(f);for(const v of vs)stopUnit(v);command(vs,F[0],centerOf(F[0]));for(let t=0;t<20*30;t++)step(1/30);
+   return{tres_quintas:n,ocupados:vs.filter(v=>v.state==='gather'||v.state==='return').length,uma_quinta:farmWorkers(F[0])}}""",
  # 13) viagem longa à volta de um lago grande (o A* devolve caminho parcial): a unidade continua até ao destino em vez de parar a meio
  'viagem_longa_a_volta_do_lago': """()=>{startGame(7,{map:'lagos',vic:'classico',civ:['planicies','planicies']});AIs[0]=null;AIs[1]=null;AI=null;try{tutEnd(true)}catch(e){}
    const a=G.starts[0],b=G.starts[1];const u=mkUnit(0,'guerreiro',a.x+3.5,a.y+3.5);let dst=null;for(let r=3;r<10&&!dst;r++)for(let k=0;k<16&&!dst;k++){const x=Math.round(b.x+Math.cos(k)*r),y=Math.round(b.y+Math.sin(k)*r);if(inb(x,y)&&blk[idx(x,y)]===0)dst={x:x+.5,y:y+.5}}
@@ -139,6 +149,7 @@ async def main():
          'casa_fecha_bolsa_entre_arvores': g('casa_fecha_bolsa_entre_arvores').get('chegou') is True and g('casa_fecha_bolsa_entre_arvores').get('bolsa_depois') is False,
          'arvores_nao_fecham_passagens': g('arvores_nao_fecham_passagens').get('corredor_livre') is True and g('arvores_nao_fecham_passagens').get('frente_portao_livre') is True and g('arvores_nao_fecham_passagens').get('orla_cresceu') is True,
          'grupo_anda_junto': g('grupo_anda_junto').get('chegaram') == g('grupo_anda_junto').get('de', -1) and g('grupo_anda_junto').get('cavalaria_antes_s', 99) < 8 and g('grupo_anda_junto').get('maior_afastamento', 99) < 8,
+         'quinta_limite': max(g('quinta_limite').get('tres_quintas', [99])) <= 5 and sum(g('quinta_limite').get('tres_quintas', [0])) == 15 and g('quinta_limite').get('uma_quinta', 99) <= 5,
          'viagem_longa_a_volta_do_lago': g('viagem_longa_a_volta_do_lago').get('falta', 99) < 1.5,
          'sem_erros': not r['erros'] and not pe}
         r['ok'] = ok
