@@ -771,7 +771,7 @@ input{font-family:inherit;-webkit-user-select:text;user-select:text;touch-action
   <div id="mConq" class="modal" hidden role="dialog" aria-label="Conquista">
     <div class="mcard"><div class="sub">⚔ Conquista — procurar adversário</div><div id="cqMe" class="cqme"></div><div id="cqOpp" class="cqopp"></div><div id="cqArmy" class="cqarmy"></div>
       <div class="row"><button class="big pri" id="cqGo">⚔ Atacar</button><button class="big" id="cqNext">Próximo</button><button class="big" id="cqX">Fechar</button></div>
-      <p class="cqinfo">Batalha de 3 minutos. ★ 50% destruído · ★ Centro da Vila · ★ 100%. Os soldados que enviares saem do reino até voltarem.</p></div></div>
+      <p class="cqinfo">Os carpinteiros do reino montam aríetes para cada ataque. Batalha de 3 minutos. ★ 50% destruído · ★ Centro da Vila · ★ 100%. Os soldados que enviares saem do reino até voltarem.</p></div></div>
   <div id="mConqEnd" class="modal" hidden role="dialog" aria-label="Resultado do ataque">
     <div class="mcard"><h2 id="cqEndT">Vitória</h2><div id="cqEndS" class="cqstars">★★★</div><div id="cqEndB"></div><div class="row"><button class="big pri" id="cqBack">Voltar ao reino</button></div></div></div>
   <div id="conqHud" hidden></div>
@@ -5649,7 +5649,7 @@ function toast(t,bad){if(bad&&/insuficientes|Não é possível|Requer|requer|Sem
 let lastAlert=-99,lastPop=-99,lastImp=-99,vibrateOn=true;
 function buzz(pat){if(!vibrateOn)return;try{navigator.vibrate&&navigator.vibrate(pat)}catch(e){}}
 function importantHit(t){if(G.time-lastImp>10){lastImp=G.time;toast(t.type==='maravilha'?'A nossa Maravilha está a ser atacada!':'O Centro da Vila está a ser atacado!',true);voz('centro');snd('alarm',null,null,{force:1});buzz([150,80,150,80,150])}}
-function alertAttack(t){if(G.time-lastAlert>15){if(!G.track||!G.track.firstHit){trackEv(ME,'Primeiro ataque à nossa aldeia');if(G.track)G.track.firstHit=1}lastAlert=G.time;G.alertAt=G.time;toast('Estamos a ser atacados!',true);voz(t&&t.type==='torre'?'torre':t&&t.type==='vila'?'aliado':'ataque');snd('alarm',null,null,{force:1});buzz([90,60,90]);const c=centerOf(t);fx.push({t:0,life:2,type:'ping',x:c.x,y:c.y,col:'#ff6b5a'});G.lastAttack=c}}
+function alertAttack(t){if(G.conq)return;if(G.time-lastAlert>15){if(!G.track||!G.track.firstHit){trackEv(ME,'Primeiro ataque à nossa aldeia');if(G.track)G.track.firstHit=1}lastAlert=G.time;G.alertAt=G.time;toast('Estamos a ser atacados!',true);voz(t&&t.type==='torre'?'torre':t&&t.type==='vila'?'aliado':'ataque');snd('alarm',null,null,{force:1});buzz([90,60,90]);const c=centerOf(t);fx.push({t:0,life:2,type:'ping',x:c.x,y:c.y,col:'#ff6b5a'});G.lastAttack=c}}
 function popWarn(){if(G.time-lastPop>12){lastPop=G.time;toast('Precisas de mais casas',true);snd('pop');voz('casas')}}
 
 /* ---------------- voz do conselheiro (estilo Stronghold) ----------------
@@ -8133,28 +8133,31 @@ const CONQ_NOMES=['Ribeira Grande','Pedra Badejo','Tarrafal','Porto Novo','Ponta
 const CONQ_LIGAS=[[0,'Bronze','🥉'],[400,'Prata','🥈'],[900,'Ouro','🥇'],[1600,'Diamante','💎'],[2500,'Lenda','👑']];
 function conqLiga(tr){let L=CONQ_LIGAS[0];for(const l of CONQ_LIGAS)if(tr>=l[0])L=l;return L}
 // o que a cidade de nível L tem (igual no cartão e na batalha)
-function conqDefs(L){return{R:L<=2?0:6+Math.floor((L-3)/3),muro:L>=6?'muralhaPedra':L>=3?'muralhaMadeira':null,portao:L>=6?'portaoPedra':'portaoMadeira',
-  torres:Math.min(8,1+Math.floor(L/3)),tlv:L>=8?3:L>=5?2:1,guardas:2+L,casas:3+L,tc:L>=7?3:L>=4?2:1,idade:L>=7?2:L>=3?1:0}}
+// ataque difícil: os guardas crescem com o exército que mandas (n), muralha dupla a partir do nível 4, arqueiros nas torres e em cima das muralhas
+function conqDefs(L,n){n=Math.max(8,n||12);return{R:7+Math.floor(L/3),muro:L>=10?'muralhaFort':L>=3?'muralhaPedra':'muralhaMadeira',portao:L>=3?'portaoPedra':'portaoMadeira',
+  fora:L>=4?(L>=9?'muralhaPedra':'muralhaMadeira'):null,portaoFora:L>=9?'portaoPedra':'portaoMadeira',
+  torres:Math.min(8,2+Math.floor(L/3)),tlv:L>=9?3:2,guardas:Math.round(n*(.42+L*.035))+2,muroArq:Math.min(12,Math.round(n*.1+L*.8)),casas:3+L,tc:L>=8?3:2,idade:L>=6?2:L>=2?1:0}}
 function conqOpp(n){const d=conqData(),seed0=(G&&G.seed|0)||1;const r=mulberry32(seed0*31+n*7919+d.n*104729);const pick=a=>a.at(Math.floor(r()*a.length));
-  const base=clamp(1+(P[0]?P[0].age:0)*2+Math.floor(d.tr/400),1,10),L=clamp(base+Math.floor(r()*3)-1,1,10);
+  const base=clamp(1+(P[0]?P[0].age:0)*2+Math.floor(d.tr/300),1,10),L=clamp(base+Math.floor(r()*3)-1,1,10);
   const k=.6+r()*.8,loot={food:Math.round((500+L*420)*k),wood:Math.round((500+L*420)*(.6+r()*.8)),gold:Math.round((250+L*300)*(.6+r()*.8)),stone:Math.round(L*160*(.6+r()*.8))};
   return{n,seed:Math.floor(r()*1e9),nome:pick(CONQ_NOMES),ilha:pick(CONQ_ILHAS),L,tr:Math.max(0,d.tr+Math.round((r()-.45)*240)),loot,civ:pick(CIV_KEYS)}}
 function conqArmy(){let a=sel.filter(u=>alive(u)&&u.kind==='u'&&u.o===ME&&u.d.mil&&!u.d.king&&!u.d.naval);
-  if(a.length<3)a=ents.filter(u=>u.kind==='u'&&u.o===ME&&u.d.mil&&!u.d.king&&!u.d.naval&&!u.dead).sort((x,y)=>aiStr(y)-aiStr(x)||x.id-y.id);return a.slice(0,CONQ_ARMY)}
+  if(a.length<3)a=ents.filter(u=>u.kind==='u'&&u.o===ME&&u.d.mil&&!u.d.king&&!u.d.naval&&!u.dead).sort((x,y)=>(y.d.siege?1:0)-(x.d.siege?1:0)||aiStr(y)-aiStr(x)||x.id-y.id);return a.slice(0,CONQ_ARMY)}
 let CONQ_OPP=null;
+const conqRams=L=>2+Math.floor(L/4);
 const conqLootPct=p=>p>=100?.30:p>=70?.20:p>=40?.12:p>0?.05:0;
 function conqOpen(){if(!G||!G.reino||G.reino.demo||G.over||G.conq){toast('A Conquista abre-se a partir do teu reino',true);return}sfx('click');
   if(!CONQ_OPP)CONQ_OPP=conqOpp(0);paused=true;$('mConq').hidden=false;conqRender()}
 function conqClose(){$('mConq').hidden=true;paused=false}
-function conqRender(){const o=CONQ_OPP,d=conqData(),lg=conqLiga(d.tr),df=conqDefs(o.L),army=conqArmy();
+function conqRender(){const o=CONQ_OPP,d=conqData(),lg=conqLiga(d.tr),army=conqArmy(),df=conqDefs(o.L,army.length);
   const cnt={};for(const u of army)cnt[u.type]=(cnt[u.type]||0)+1;
   const ri=k=>`<i class="ri">${IC[k]}</i>`;
   $('cqMe').innerHTML=`${lg[2]} Liga ${lg[1]} · <b>${d.tr}</b> troféus · ${d.w} vitórias`;
   $('cqOpp').innerHTML=`<div class="cqhead"><b>Reino de ${esc(o.nome)}</b><span>${esc(o.ilha)} · Nv ${o.L} · 🏆 ${o.tr}</span></div>
-   <div class="cqdef">${df.muro?(df.muro==='muralhaPedra'?'🧱 Muralha de pedra':'🪵 Paliçada'):'Sem muralha'} · 🗼 ${df.torres} torre${df.torres>1?'s':''} · ⚔ ${df.guardas} guardas</div>
+   <div class="cqdef">${df.fora?'Muralha dupla: ':''}${{muralhaFort:'🏰 fortificada',muralhaPedra:'🧱 pedra',muralhaMadeira:'🪵 paliçada'}[df.muro]}${df.fora?' + '+(df.fora==='muralhaPedra'?'pedra':'paliçada')+' por fora':''} · 🗼 ${df.torres} torres · ⚔ ${df.guardas} guardas · 🏹 ${df.muroArq} nas muralhas</div>
    <div class="cqloot"><small>Saque possível (destruição total)</small><span>${KINDS.map(k=>ri(k)+' '+Math.floor(o.loot[k]*.3)).join(' · ')}</span></div>`;
   $('cqArmy').innerHTML=army.length?`O teu exército: <b>${army.length}</b> soldados — ${Object.entries(cnt).map(([t,n])=>n+' '+(UNITS[t]?UNITS[t].name:t)).join(', ')}`+(sel.some(u=>u.d&&u.d.mil)?'':' <small>(os mais fortes; seleciona soldados antes para escolher)</small>'):'<span class="bad">Não tens soldados para atacar: treina-os no Quartel.</span>';
-  $('cqGo').disabled=army.length<3;$('cqNext').textContent='Próximo ('+CONQ_SKIP+' ouro)'}
+  $('cqArmy').innerHTML+=`<br><small>+ ${conqRams(o.L)} aríetes para romper portões e muralhas</small>`;$('cqGo').disabled=army.length<3;$('cqNext').textContent='Próximo ('+CONQ_SKIP+' ouro)'}
 function conqNext(){if(P[ME].res.gold<CONQ_SKIP){toast('Ouro insuficiente para procurar outro',true);return}P[ME].res.gold-=CONQ_SKIP;resDirty=true;sfx('click');CONQ_OPP=conqOpp(CONQ_OPP.n+1);conqRender()}
 function conqAttack(){const o=CONQ_OPP,army=conqArmy();if(army.length<3){toast('Precisas de pelo menos 3 soldados',true);return}
   const pack=army.map(u=>({t:u.type,hp:+(u.hp/u.max).toFixed(3)}));
@@ -8167,29 +8170,33 @@ function conqClearArea(cx,cy,r){for(let y=cy-r;y<=cy+r;y++)for(let x=cx-r;x<=cx+
 function conqBattle(p){mobileLandscape();netLeaveGame();gameMode='normal';const d0=difficulty;difficulty=1;
   startGame(p.opp.seed,{map:'continental',vic:'classico',civ:[p.civ,p.civ1],conq:{opp:p.opp,ids:[],wt:1,tc:0,pct:0,stars:0}});difficulty=d0;
   AIs[0]=null;AIs[1]=null;AI=null;try{tutEnd(true)}catch(e){}
-  const o=p.opp,df=conqDefs(o.L),c=G.conq;P[0].age=p.age;P[0].techs=p.techs||{};P[1].age=df.idade;for(const k of KINDS){P[0].res[k]=99999;P[1].res[k]=99999}
+  const o=p.opp,df=conqDefs(o.L,p.pack.length),c=G.conq;P[0].age=p.age;P[0].techs=p.techs||{};P[1].age=Math.max(df.idade,p.age);P[1].techs=Object.assign({},p.techs||{});for(const k of KINDS){P[0].res[k]=99999;P[1].res[k]=99999}
   // fauna fora (lobos a meio da batalha só estorvam)
   for(const e of ents.slice())if(e.kind==='u'&&e.o===2&&!e.d.meat){const i=ents.indexOf(e);ents.splice(i,1);byId.delete(e.id)}
-  const s=G.starts[1],cx=clamp(Math.round(s.x),16,W-17),cy=clamp(Math.round(s.y),16,H-24);const R=Math.max(5,df.R);conqClearArea(cx,cy,R+3);
+  const s=G.starts[1],cx=clamp(Math.round(s.x),18,W-19),cy=clamp(Math.round(s.y),18,H-30);const R=Math.max(5,df.R);conqClearArea(cx,cy,R+3);
   const tc=mkBld(1,'centro',cx-1,cy-1,true);tc.lvl=df.tc;
   const rr=mulberry32(o.seed);const put=(t,r0,r1)=>{for(let k=0;k<80;k++){const a=rr()*6.283,d=r0+rr()*(r1-r0),x=Math.round(cx+Math.cos(a)*d),y=Math.round(cy+Math.sin(a)*d);if(canPlace(t,x,y,1,0,true))return mkBld(1,t,x,y,true)}return null};
   const blds=[tc];const lv=b=>{if(b){b.lvl=Math.min(3,1+Math.floor(o.L/4));blds.push(b)}};
   for(let i=0;i<df.casas;i++)lv(put('casa',3,R-1.5));lv(put('quartel',3,R-2));if(o.L>=3)lv(put('arquearia',3,R-2));lv(put('armazem',3,R-2));if(o.L>=4)lv(put('mercado',3,R-2));if(o.L>=5)lv(put('ferreiro',3,R-2));if(o.L>=6)lv(put('templo',3,R-2));
   // muralha com portão virado a sul (de onde vem o atacante)
-  if(df.muro){const RR=R+1,sp=gateSpan(df.portao);for(let k=-RR;k<=RR;k++)for(const [x,y] of [[cx+k,cy-RR],[cx+k,cy+RR],[cx-RR,cy+k],[cx+RR,cy+k]]){if(!inb(x,y)||bldAt[idx(x,y)]||terr[idx(x,y)]===1)continue;
-      if(y===cy+RR&&x===cx){mkBld(1,df.portao,x,y,true);continue}if(y===cy+RR&&Math.abs(x-cx)<=sp)continue;mkBld(1,df.muro,x,y,true)}syncGateFlanks()}
+  const ring=(RR,muro,portao)=>{const sp=gateSpan(portao);for(let k=-RR;k<=RR;k++)for(const [x,y] of [[cx+k,cy-RR],[cx+k,cy+RR],[cx-RR,cy+k],[cx+RR,cy+k]]){if(!inb(x,y)||bldAt[idx(x,y)]||terr[idx(x,y)]===1)continue;
+      if(y===cy+RR&&x===cx){mkBld(1,portao,x,y,true);continue}if(y===cy+RR&&Math.abs(x-cx)<=sp)continue;mkBld(1,muro,x,y,true)}};
+  if(df.fora)conqClearArea(cx,cy,R+5);ring(R+1,df.muro,df.portao);if(df.fora)ring(R+4,df.fora,df.portaoFora);syncGateFlanks();
   const towers=[];const tp=[[-1,-1],[1,1],[1,-1],[-1,1],[0,-1],[-1,0],[1,0],[0,1]];for(let i=0;i<df.torres;i++){const [a,b]=tp.at(i);const x=cx+Math.round(a*(R-1.5))-(a>0?1:0),y=cy+Math.round(b*(R-1.5))-(b>0?1:0);
     let t=canPlace('torre',x,y,1,0,true)?mkBld(1,'torre',x,y,true):put('torre',R-3,R-1);if(t){t.lvl=df.tlv;towers.push(t);blds.push(t)}}
   // guardas e arqueiros nas torres
   const pool=reinoPool(df.idade,0),gs=[];for(let i=0;i<df.guardas;i++){const t=pool.at(Math.floor(rr()*pool.length));const q=freeNear(tc.tx,tc.ty,3,3)||{x:cx+2,y:cy+2};const u=mkUnit(1,t,q.x+.5,q.y+.5);u.stance='guard';gs.push(u)}
-  for(const t of towers)for(let k=0;k<(o.L>=6?2:1);k++){const u=mkUnit(1,df.idade>=1?'besteiro':'arqueiro',t.tx+.5,t.ty+.5);if(!garrisonIn(u,t)){const i=ents.indexOf(u);ents.splice(i,1);byId.delete(u.id)}}
+  for(const t of towers)for(let k=0;k<2;k++){const u=mkUnit(1,df.idade>=1?'besteiro':'arqueiro',t.tx+.5,t.ty+.5);if(!garrisonIn(u,t)){const i=ents.indexOf(u);ents.splice(i,1);byId.delete(u.id)}}
+  {const ws=ents.filter(e=>e.o===1&&e.kind==='b'&&e.type===df.muro&&Math.max(Math.abs(e.tx-cx),Math.abs(e.ty-cy))===R+1).sort((a,b)=>(b.ty-a.ty)||(a.tx-b.tx));
+    let put2=0;for(let i=0;i<ws.length&&put2<df.muroArq;i+=Math.max(1,Math.floor(ws.length/df.muroArq))){const w=ws.at(i);const u=mkUnit(1,df.idade>=1?'besteiro':'arqueiro',cx+.5,cy+.5);if(garrisonIn(u,w))put2++;else{const j=ents.indexOf(u);ents.splice(j,1);byId.delete(u.id)}}}
   for(const e of ents)if(e.o===1)e.seen=true;
-  c.ids=ents.filter(e=>e.o===1&&e.kind==='b'&&!e.d.wall&&!e.d.gate).map(e=>[e.id,e.w*e.h]);c.wt=c.ids.reduce((a,[,w])=>a+w,0)||1;c.tc=tc.id;c.t0=G.time;
+  c.ids=ents.filter(e=>e.o===1&&e.kind==='b'&&!e.d.wall&&!e.d.gate).map(e=>[e.id,e.w*e.h]);c.wt=c.ids.reduce((a,[,w])=>a+w,0)||1;c.tc=tc.id;c.t0=G.time;c.R=R+(df.fora?4:1);
   // o exército chega pelo sul
-  let at=null;for(let d=R+12;d<R+30&&!at;d++)for(let dx=0;dx<=12&&!at;dx++)for(const sx of [1,-1]){const x=cx+dx*sx,y=cy+d;if(inb(x,y)&&terr[idx(x,y)]!==1&&!blk[idx(x,y)]){at={x:x+.5,y:y+.5};break}}
+  let at=null;for(let d=R+(df.fora?16:12);d<R+34&&!at;d++)for(let dx=0;dx<=12&&!at;dx++)for(const sx of [1,-1]){const x=cx+dx*sx,y=cy+d;if(inb(x,y)&&terr[idx(x,y)]!==1&&!blk[idx(x,y)]){at={x:x+.5,y:y+.5};break}}
   at=at||{x:cx+.5,y:Math.min(H-3,cy+R+14)+.5};conqClearArea(Math.floor(at.x),Math.floor(at.y),3);
-  const mine=[];for(const q of p.pack){if(!UNITS[q.t])continue;const u=mkUnit(0,q.t,at.x,at.y);u.hp=Math.max(1,Math.round(u.max*q.hp));const f=snapFree(u,at.x+(rnd()-.5)*4,at.y+(rnd()-.5)*4);u.x=f.x;u.y=f.y;mine.push(u)}
-  recount();updVis();setSel(mine);cam.z=Math.min(cam.z,.95);centerCam(at.x,at.y-5);$('conqHud').hidden=false;conqHud();
+  const mine=[];for(let i=0;i<conqRams(o.L);i++){const u=mkUnit(0,'ariete',at.x,at.y+2);const f=snapFree(u,at.x+(i-1)*1.5,at.y+2.5);u.x=f.x;u.y=f.y;u.conqFree=1;mine.push(u)}
+  for(const q of p.pack){if(!UNITS[q.t])continue;const u=mkUnit(0,q.t,at.x,at.y);u.hp=Math.max(1,Math.round(u.max*q.hp));const f=snapFree(u,at.x+(rnd()-.5)*4,at.y+(rnd()-.5)*4);u.x=f.x;u.y=f.y;mine.push(u)}
+  recount();updVis();setSel(mine.filter(u=>!u.conqFree));cam.z=Math.min(cam.z,.95);centerCam(at.x,at.y-5);$('conqHud').hidden=false;conqHud();
   toast('⚔ Ataque ao Reino de '+o.nome+': 3 minutos! Destrói o Centro da Vila e o máximo que puderes.',true);snd('alarm',null,null,{force:1})}
 let CONQ_HT=0;
 function conqTick(dt){const c=G.conq;if(c.done)return;c.left=Math.max(0,CONQ_T-(G.time-c.t0));
@@ -8197,16 +8204,31 @@ function conqTick(dt){const c=G.conq;if(c.done)return;c.left=Math.max(0,CONQ_T-(
   c.stars=(c.pct>=50?1:0)+(!byId.has(c.tc)?1:0)+(c.pct>=100?1:0);
   CONQ_HT-=dt;if(CONQ_HT<=0){CONQ_HT=.25;conqHud()}
   // soldados parados não ficam à espera: vão ao inimigo mais perto, ou ao edifício mais perto (as paredes caem pelo caminho)
-  c.ai=(c.ai||0)-dt;if(c.ai<=0){c.ai=3;const foes=ents.filter(e=>e.o===1&&!e.dead&&(e.kind==='u'||e.kind==='b'));
-    for(const u of ents){if(u.o!==0||u.kind!=='u'||!u.d.mil||u.state!=='idle')continue;let best=null,bd=1e9;
-      for(const e of foes){const q=centerOf(e);let d=hyp(q.x-u.x,q.y-u.y);if(e.kind==='u'){if(d>10)continue;d-=6}else if(e.d.wall)d+=8;if(d<bd){bd=d;best=e}}
-      if(best)orderAttack(u,best)}}
-  const vivos=ents.some(e=>e.o===0&&e.kind==='u'&&e.d.mil&&!e.dead);if(c.pct>=100||c.left<=0||!vivos)conqEnd()}
+  c.ai=(c.ai||0)-dt;if(c.ai<=0){c.ai=1;const foes=ents.filter(e=>e.o===1&&!e.dead&&(e.kind==='u'||e.kind==='b'));
+    const gates=foes.filter(e=>e.kind==='b'&&e.d.gate);
+    for(const u of ents){if(u.o!==0||u.kind!=='u'||!u.d.mil)continue;
+      // a bater num edifício com um inimigo em cima: vira-se para ele (como faria quem está a comandar)
+      const busyB=u.state==='attack'&&u.target&&u.target.kind==='b';
+      // a andar à volta da muralha (o destino fica lá dentro): ao chegar perto dela, ataca em vez de a contornar
+      const tcN=byId.get(c.tc),nearW=u.state==='move'&&tcN&&Math.max(Math.abs(u.x-centerOf(tcN).x),Math.abs(u.y-centerOf(tcN).y))<=c.R+4;
+      if(u.state!=='idle'&&!busyB&&!nearW)continue;let best=null,bd=1e9;
+      // inimigos perto primeiro; depois o portão mais perto (é por onde se entra); sem portões, o edifício mais perto
+      for(const e of foes){if(e.kind!=='u'||e.inBld)continue;const d=hyp(e.x-u.x,e.y-u.y);if(d<=(busyB?4:10)&&d<bd){bd=d;best=e}}
+      if(busyB){if(best)orderAttack(u,best);continue}
+      // o portão da muralha mais de fora que ainda está de pé (o de dentro não se alcança antes de passar o de fora)
+      if(!best&&gates.length){const tcB=byId.get(c.tc),q0=tcB?centerOf(tcB):{x:u.x,y:u.y};const far=g=>Math.max(Math.abs(g.tx+.5-q0.x),Math.abs(g.ty+.5-q0.y));const fm=Math.max(...gates.map(far));
+        for(const g of gates){if(far(g)<fm-1)continue;const d=hyp(g.tx+.5-u.x,g.ty+.5-u.y);if(d<bd){bd=d;best=g}}}
+      if(!best)for(const e of foes.filter(e=>e.kind==='b'&&!e.d.wall)){const q=centerOf(e),d=hyp(q.x-u.x,q.y-u.y);if(d<bd){bd=d;best=e}}
+      if(best)orderAttack(u,best)}
+    // a guarnição sai ao encontro do exército quando ele chega às muralhas (só os de corpo a corpo; os arqueiros ficam nas torres e nos muros)
+    c.so=(c.so||0)-1;if(G.time-c.t0>15&&c.so<=0){c.so=5;const mine=ents.filter(e=>e.o===0&&e.kind==='u'&&!e.dead);if(mine.length){const mx=mine.reduce((a,e)=>a+e.x,0)/mine.length,my=mine.reduce((a,e)=>a+e.y,0)/mine.length,tcB=byId.get(c.tc),q=tcB?centerOf(tcB):{x:mx,y:my};
+      if(hyp(mx-q.x,my-q.y)<c.R+10){const out=ents.filter(e=>e.o===1&&e.kind==='u'&&e.state==='idle'&&!e.d.range&&!e.inBld);const k=Math.ceil(out.length*.6);if(k)groupMove(out.slice(0,k),mx,my,true,'livre')}}}}
+  const vivos=ents.some(e=>e.o===0&&e.kind==='u'&&e.d.mil&&!e.dead&&!e.conqFree);if(c.pct>=100||c.left<=0||!vivos)conqEnd()}
 function conqHud(){const c=G&&G.conq;const el=$('conqHud');if(!c||!el)return;const s=Math.ceil(c.left??CONQ_T);
   el.innerHTML=`<b>⚔ Reino de ${esc(c.opp.nome)}</b><span class="t${s<=30?' low':''}">${Math.floor(s/60)}:${String(s%60).padStart(2,'0')}</span><span>${c.pct}%</span><span class="st">${'★'.repeat(c.stars)}${'☆'.repeat(3-c.stars)}</span>`}
 function conqEnd(){const c=G.conq;if(c.done)return;c.done=1;G.over=true;conqHud();
   const p=conqPend()||{opp:c.opp,pack:[]},o=c.opp,f=conqLootPct(c.pct);const loot={};for(const k of KINDS)loot[k]=Math.floor((o.loot[k]||0)*f);
-  const surv=ents.filter(e=>e.o===0&&e.kind==='u'&&e.d.mil&&!e.dead).map(u=>({t:u.type,hp:+(u.hp/u.max).toFixed(3)}));
+  const surv=ents.filter(e=>e.o===0&&e.kind==='u'&&e.d.mil&&!e.dead&&!e.conqFree).map(u=>({t:u.type,hp:+(u.hp/u.max).toFixed(3)}));
   const d=conqData(),win=c.stars>=1,dtr=win?Math.max(8,Math.round(10+c.stars*9+(o.tr-d.tr)/25)):-Math.max(6,Math.round(14+(d.tr-o.tr)/25));
   p.res={stars:c.stars,pct:c.pct,loot,surv,dtr,win};conqSetPend(p);
   snd(win?'victory':'defeat',null,null,{force:1});

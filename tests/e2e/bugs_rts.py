@@ -144,7 +144,7 @@ CASES = {
  #     voltar ao reino com o saque e os sobreviventes; batalha abandonada devolve o exército
  'conquista': """async ()=>{reinoFound(false);await new Promise(r=>setTimeout(r,500));G.reino.calm=9999;P[0].age=1;const h=reinoHome();const T=['espadachim','arqueiro','cavaleiro','lanceiro'];
    for(let i=0;i<20;i++)mkUnit(0,T[i%4],h.x+3+(i%6)*.6,h.y+4+(i/6|0)*.6);recount();localStorage.removeItem(conqPendKey());localStorage.removeItem(conqKey());const g0=P[0].res.gold;
-   conqOpen();const o=CONQ_OPP;conqAttack();const c=G.conq;const ok_batalha=!!c&&!G.reino&&c.ids.length>3&&ents.filter(e=>e.o===0&&e.kind==='u').length===20;
+   conqOpen();const o=CONQ_OPP;conqAttack();const c=G.conq;const ok_batalha=!!c&&!G.reino&&c.ids.length>3&&ents.filter(e=>e.o===0&&e.kind==='u'&&!e.conqFree).length===20&&ents.some(e=>e.conqFree&&e.type==='ariete');
    G.amoveNext=true;command(ents.filter(e=>e.o===0&&e.kind==='u'),null,centerOf(byId.get(c.tc)));for(let t=0;t<200*30&&!c.done;t++)step(1/30);const R=conqPend().res;
    conqReturn();const mil=ents.filter(e=>e.o===0&&e.kind==='u'&&e.d.mil&&!e.d.king).length;
    return {ok_batalha,acabou:!!c.done,estrelas:R.stars,pct:R.pct,saque_ok:Math.round(P[0].res.gold-g0)===R.loot.gold,volta_ok:!!G.reino&&mil===R.surv.length,trofeus:conqData().tr,pend:conqPend()}}""",
