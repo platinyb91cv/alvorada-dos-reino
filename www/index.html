@@ -3064,9 +3064,11 @@ function chunkCS(){return MOB?(DPR>=1.75?1.5:1.25):(DPR>1.25?2:1.5)}
 const GTEX={K:.62,VS:.72}; // escala da textura do chão no ecrã (VS achata na vertical: perspetiva isométrica)
 let GTMP=null;
 function groundTex(c,img,X0,Y0,cs){const p=c.createPattern(img,'repeat');p.setTransform(new DOMMatrix().translate(-X0*cs,-Y0*cs).scale(cs*GTEX.K,cs*GTEX.K*GTEX.VS));return p}
+let CH_PH=null;function chunkPH(){if(!CH_PH){CH_PH=mkCanvas(4,2);const c=CH_PH.getContext('2d');c.fillStyle='#55702f';c.fillRect(0,0,4,2)}return CH_PH}
 function groundChunk(i,j){
   const key=i+','+j;let ch=CHUNKS.get(key);if(ch&&((ch.cs===CH_CS&&!ch.dirty)||CH_BUD<=0)){ch.t=performance.now();return ch.cv}
-  CH_BUD--;if(ch)CHUNKS.delete(key);
+  CH_BUD--;if(!ch&&CH_BUD<-6)return chunkPH(); // muitos pedaços em falta na mesma imagem: os restantes ficam com a cor da relva e vêm nas imagens seguintes
+  if(ch)CHUNKS.delete(key);
   // pedaço novo além dos 2 primeiros deste frame (ex.: a câmara saltou para longe): faz já uma versão leve (1/4 dos píxeis ou menos) e a nítida vem nos frames seguintes;
   // antes refazia-os todos de uma vez e o jogo parava 0,3-1 s
   const X0=-H*HW+i*CHW,Y0=j*CHH,cs=!ch&&CH_BUD<-1?Math.min(CH_CS,.5):CH_CS;const cv=mkCanvas(CHW*cs,CHH*cs),c=cv.getContext('2d');
@@ -4915,7 +4917,7 @@ function render0(){UCFM=0;U3TMS=0;{const zn=performance.now();if(cam&&cam.z!==ZP
   const flat=()=>c.setTransform(z,0,0,z,-cam.x*z,-cam.y*z);
   const V=viewTiles();
   // chão
-  flat();c.imageSmoothingEnabled=true;CH_CS=chunkCS();CH_FR=(CH_FR+1)%(MOB?3:2);CH_BUD=!CHUNKS.size?99:(ZOOMING||CH_FR)?0:1; // ao mudar o zoom, refaz 1 pedaço por frame (os outros esticam até lá)
+  flat();c.imageSmoothingEnabled=true;CH_CS=chunkCS();CH_FR=(CH_FR+1)%(MOB?3:2);CH_BUD=!CHUNKS.size?2:(ZOOMING||CH_FR)?0:1; /* chão vazio (carregar, rodar a câmara, mudar o tamanho): 2 pedaços nítidos e os outros numa versão rápida; antes eram todos nítidos de uma vez e a imagem levava 1-6 s */ // ao mudar o zoom, refaz 1 pedaço por frame (os outros esticam até lá)
   {const i0=Math.floor((cam.x+H*HW)/CHW),i1=Math.floor((cam.x+vw/cam.z+H*HW)/CHW),j0=Math.floor(cam.y/CHH),j1=Math.floor((cam.y+vh/cam.z)/CHH);
     for(let j=Math.max(0,j0);j<=j1;j++)for(let i=Math.max(0,i0);i<=i1;i++){if(-H*HW+i*CHW>W*HW||j*CHH>(W+H)*HH)continue;c.drawImage(groundChunk(i,j),-H*HW+i*CHW-.5,j*CHH-.5,CHW+1,CHH+1)}}
   for(const e of ents)if(e.kind==='b'&&e.d.walk&&seenBy0(e)){const q=bAnch(e),mr=bMir(e);if(!onScreen(q.x,q.y+48,160))continue;
