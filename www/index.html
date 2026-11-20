@@ -3069,7 +3069,7 @@ function buildTerrain(){
     if(tN&&r()<.025){decos.push({x:x+.3+r()*.4,y:y+.3+r()*.4,k:'logs',v:(r()*3)|0});continue}
     if(r()<.11){const k=r();decos.push({x:x+.15+r()*.7,y:y+.15+r()*.7,k:terr[i]===2?(k<.5?'shell':'pebble'):k<.4?'tuft':k<.6?'flower':k<.74?'pebble':k<.86?'moss':'shrub',v:(r()*3)|0})}}
 }
-const CHW=512,CHH=256;let CHUNKS=new Map(),CH_CS=1,CH_BUD=99,CH_FR=0;
+const CHW=512,CHH=256;let CHUNKS=new Map(),CH_CS=1,CH_BUD=99,CH_FR=0,CH_VIS=0,CH_FT=0;
 function resetChunks(){CHUNKS=new Map();CH_CS=DPR>1?1.5:1}
 // resolução dos pedaços do chão: acompanha o zoom (relva nítida de perto, leve de longe)
 // resolução dos pedaços do chão fixa por aparelho: não depende do zoom, por isso o zoom nunca obriga a refazer o chão
@@ -3138,7 +3138,9 @@ function groundChunk(i,j){
   c.globalAlpha=1;
   CHUNKS.set(key,{cv,t:performance.now(),cs,b:cv.width*cv.height*4});
   // limite de memória: no máximo 34 pedaços e ~90 MB (50 MB no telemóvel)
-  for(;;){let tot=0;for(const v of CHUNKS.values())tot+=v.b;if(CHUNKS.size<=34&&(tot<=(MOB?50e6:90e6)||CHUNKS.size<=12))break;let old=null,ot=1e18;for(const [k,v] of CHUNKS)if(v.t<ot){ot=v.t;old=k}CHUNKS.delete(old)}
+  // nunca apaga um pedaço que está no ecrã nesta imagem (antes, com o zoom afastado, viam-se ~40 pedaços e só cabiam 34: apagava e refazia o chão em todas as imagens)
+  const cap=Math.max(34,CH_VIS+8),mem=Math.max(MOB?50e6:90e6,(CH_VIS+8)*cv.width*cv.height*4);
+  for(;;){let tot=0;for(const v of CHUNKS.values())tot+=v.b;if(CHUNKS.size<=cap&&(tot<=mem||CHUNKS.size<=12))break;let old=null,ot=1e18;for(const [k,v] of CHUNKS)if(v.t<ot&&v.t<CH_FT){ot=v.t;old=k}if(old==null)break;CHUNKS.delete(old)}
   return cv;
 }
 
@@ -3301,7 +3303,8 @@ function drawBaseTufts(c,e,t){if(!TUF.img||GFX!=='alto'||cam.z<.6||e.type==='doc
     for(let k=0;k<n;k++){const u=r(),o=.02+r()*.16;if(r()<.5)add(e.tx+u*e.w,e.ty-o);else add(e.tx-o,e.ty+u*e.h)}
     BTUF.set(e,L)}
   const F=TUF.F,dir=Math.sign(WIND_SX)||1,amp=.06+.16*WIND_S,dc=dep(e.tx+e.w/2,e.ty+e.h/2);
-  const LV=L.filter(u=>dep(u.x,u.y)>dc).sort((a,b)=>dep(a.x,a.y)-dep(b.x,b.y)); // só os tufos à frente do edifício nesta vista
+  let LV=e._tufV;if(!LV||e._tufR!==ROT){LV=L.filter(u=>dep(u.x,u.y)>dc).sort((a,b)=>dep(a.x,a.y)-dep(b.x,b.y));e._tufV=LV;e._tufR=ROT} // só os tufos à frente do edifício nesta vista (guardado por vista)
+  if(cam.z<.9){for(const u of LV){const [fx,fy,fw,fh]=F[u.f],p=proj(u.x,u.y),S=u.s;c.drawImage(TUF.img,fx,fy,fw,fh,p.x-fw*S/2,p.y-fh*S+1,fw*S,fh*S)}return} // de longe: parados, sem transformações
   for(const u of LV){const [fx,fy,fw,fh]=F[u.f],p=proj(u.x,u.y),S=u.s,sk=dir*amp*(fh/90)*(.5*Math.sin(t*2.3+u.ph)+.8*Math.max(0,Math.sin(t*.85-(u.x+u.y)*.42))+.2);
     c.save();c.translate(p.x,p.y);c.transform(u.fl,0,-sk,1,0,0);c.drawImage(TUF.img,fx,fy,fw,fh,-fw*S/2,-fh*S+1,fw*S,fh*S);c.restore()}}
 function drawTufts(c,t,V,z){
@@ -4933,6 +4936,7 @@ function render0(){UCFM=0;U3TMS=0;{const zn=performance.now();if(cam&&cam.z!==ZP
   // chão
   flat();c.imageSmoothingEnabled=true;CH_CS=chunkCS();CH_FR=(CH_FR+1)%(MOB?3:2);CH_BUD=!CHUNKS.size?2:(ZOOMING||CH_FR)?0:1; /* chão vazio (carregar, rodar a câmara, mudar o tamanho): 2 pedaços nítidos e os outros numa versão rápida; antes eram todos nítidos de uma vez e a imagem levava 1-6 s */ // ao mudar o zoom, refaz 1 pedaço por frame (os outros esticam até lá)
   {const i0=Math.floor((cam.x+H*HW)/CHW),i1=Math.floor((cam.x+vw/cam.z+H*HW)/CHW),j0=Math.floor(cam.y/CHH),j1=Math.floor((cam.y+vh/cam.z)/CHH);
+    CH_VIS=(j1-Math.max(0,j0)+1)*(i1-Math.max(0,i0)+1);CH_FT=performance.now();
     for(let j=Math.max(0,j0);j<=j1;j++)for(let i=Math.max(0,i0);i<=i1;i++){if(-H*HW+i*CHW>W*HW||j*CHH>(W+H)*HH)continue;c.drawImage(groundChunk(i,j),-H*HW+i*CHW-.5,j*CHH-.5,CHW+1,CHH+1)}}
   for(const e of ents)if(e.kind==='b'&&e.d.walk&&seenBy0(e)){const q=bAnch(e),mr=bMir(e);if(!onScreen(q.x,q.y+48,160))continue;
     if(BLDART.ready||e.d.pasture){const s2=bldSprite(e.type,bAge(e),e.o,'');c.globalAlpha=e.done?1:.35+.6*e.prog;bImg(c,mr,e.done||!visibleTo0(e)?s2.cv:darkOf(s2.cv),q.x,-s2.ox,q.y-s2.oy,s2.CW,s2.CH);c.globalAlpha=1}
@@ -5918,7 +5922,7 @@ function snapState(){
   for(const e of byId.values())reach(e);for(const e of ents)reach(e);
   const P2=projs.map(enc);
   const order=[...byId.values()].map(e=>e.__sid??(e.__sid=SID++)),eorder=ents.map(e=>e.__sid??(e.__sid=SID++));
-  while(queue.length){const e=queue.shift();const sid=e.__sid??(e.__sid=SID++);const o={};for(const k in e){if(k==='__sid'||k==='_shd'||k==='_vf'||k==='_vv'||typeof e[k]==='function')continue;o[k]=k==='d'?{$d:defKey(e.d)}:enc(e[k])}E[sid]=o}
+  while(queue.length){const e=queue.shift();const sid=e.__sid??(e.__sid=SID++);const o={};for(const k in e){if(k==='__sid'||k==='_shd'||k==='_vf'||k==='_vv'||k==='_tufV'||k==='_tufR'||typeof e[k]==='function')continue;o[k]=k==='d'?{$d:defKey(e.d)}:enc(e[k])}E[sid]=o}
   for(const e of seen)delete e.__sid;
   return{v:GAME_VER,E,order,eorder,projs:P2,nid,rng:RNG.s,
     G:{seed:G.seed,time:G.time,starts:G.starts,wonder:G.wonder?{...G.wonder}:null,fishRespawn:G.fishRespawn.map(f=>({...f})),lake:G.lake,over:G.over,...gExtra()},
