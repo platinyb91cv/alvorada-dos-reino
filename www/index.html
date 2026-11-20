@@ -8047,16 +8047,18 @@ function endGame(win,wonder,why){
 $('endTabs').addEventListener('click',ev=>{const b=ev.target.closest('button');if(!b)return;for(const x of $('endTabs').children)x.classList.toggle('on',x===b);endChart(+b.dataset.k)});
 
 /* ---------------- ciclo principal ---------------- */
-function step(dt){
-  G.time+=dt;econTick(dt);
+// medidor de desempenho: quanto tempo cada parte leva (só lê o relógio; não mexe na simulação)
+const PT={};let PTt=0;const ptMark=k=>{const n=performance.now();PT[k]=(PT[k]||0)+n-PTt;PTt=n};
+function step(dt){PTt=performance.now();
+  G.time+=dt;econTick(dt);ptMark('economia');
   for(const e of ents.slice()){if(e.dead)continue;if(e.kind==='u')updUnit(e,dt);else if(e.kind==='b')updBld(e,dt)}
-  separate(dt);
+  ptMark('unidades_edificios');separate(dt);ptMark('separar');
   for(const e of ents){if(e.kind!=='u')continue;if(e.lx!=null){const vx=(e.x-e.lx)/dt,vy=(e.y-e.ly)/dt;if(vx*vx+vy*vy>36){e.vx=0;e.vy=0}else{e.vx=(e.vx||0)*.5+vx*.5;e.vy=(e.vy||0)*.5+vy*.5}}else{e.vx=0;e.vy=0}e.lx=e.x;e.ly=e.y}
-  updProjs(dt);
+  updProjs(dt);ptMark('projeteis');
   for(let i=fx.length-1;i>=0;i--){fx[i].t+=dt;if(fx[i].t>=fx[i].life){const f=fx[i];fx.splice(i,1);if(f.type==='spark'||f.type==='hit'||f.type==='dust'){if(FXPOOL.length<200)FXPOOL.push(f)}}}
-  recount();
-  aiUpdate(dt);if(BOT.on)botDirector(dt);
-  visT-=dt;if(visT<=0){visT=.2;updVis()}
+  recount();ptMark('efeitos_contagem');
+  aiUpdate(dt);if(BOT.on)botDirector(dt);ptMark('ia');
+  visT-=dt;if(visT<=0){visT=.2;updVis()}ptMark('nevoeiro');
   for(let i=G.fishRespawn.length-1;i>=0;i--){const f=G.fishRespawn[i];f.t-=dt;if(f.t<=0){G.fishRespawn.splice(i,1);addFish(f.x,f.y,150)}}
   if(G.wonder){const w=byId.get(G.wonder.id);
     if(!w){toast(G.wonder.o===ME?'A nossa Maravilha foi destruída!':'Destruímos a Maravilha do rival!',G.wonder.o===ME);const nw=ents.find(e=>e.kind==='b'&&e.type==='maravilha'&&e.done&&!e.dead);G.wonder=nw?{o:nw.o,id:nw.id,t:300}:null}
@@ -8064,12 +8066,19 @@ function step(dt){
   if(G.tut)tutTick(dt);
   trackTick();if((G.time|0)!==((G.time-dt)|0))achvTick(1);
   if(G.vic==='sobrevivencia'&&!G.over)survTick(dt);
-  relicTick(dt);natureTick(dt);mktTick(dt);formTick();villageTick(dt);cartTick(dt);atlasGC();
+  ptMark('outros');relicTick(dt);natureTick(dt);mktTick(dt);formTick();ptMark('natureza_mercado');villageTick(dt);ptMark('vida_aldeia');cartTick(dt);ptMark('carrocas');atlasGC();
   if(G.camp!=null&&!G.over)campTick(dt);
-  if(G.hero)heroTick(dt);
-  if(G.reino&&!G.over)reinoTick(dt);
-  checkEnd();
+  if(G.hero)heroTick(dt);ptMark('rei_herois');
+  if(G.reino&&!G.over)reinoTick(dt);ptMark('missao_reino');
+  checkEnd();ptMark('fim');
 }
+// imagem muito lenta (> 300 ms): regista o que gastou o tempo, para «Copiar erros» no menu (no máximo 1 registo a cada 20 s)
+let PERF_LAST=-99,PF={};
+function perfWatch(total){if(total<300||!G||!running||G.time<15||performance.now()/1000-PERF_LAST<20){for(const k in PT)delete PT[k];PF={};return}PERF_LAST=performance.now()/1000;
+  const parts=Object.assign({},PT,PF),top=Object.entries(parts).filter(([,v])=>v>=5).sort((a,b)=>b[1]-a[1]).map(([k,v])=>k+' '+Math.round(v)+'ms').join(', ');
+  const st={};for(const e of ents)if(e.kind==='u')st[e.state]=(st[e.state]||0)+1;
+  errNote('lento',('imagem de '+Math.round(total)+' ms — '+top+' | ents '+ents.length+' fx '+fx.length+' proj '+projs.length+' estados '+JSON.stringify(st)+' zoom '+cam.z.toFixed(2)+' missao '+(G.reino&&G.reino.ms?G.reino.ms.k:'-')));
+  for(const k in PT)delete PT[k];PF={}}
 let last=performance.now(),uiT=0;
 // Um erro dentro de step() ou render() parava o ciclo para sempre: o ecrã ficava congelado ("trava e não vai a lado nenhum").
 // Agora o próximo quadro é pedido antes de tudo, o erro fica registado (localStorage alv_erros) e o jogo continua.
@@ -8077,18 +8086,19 @@ const ERRLOG=[];function errNote(where,e){try{const m=where+': '+((e&&e.stack)||
   ERRLOG.push({m,n:1,t:Math.round(G&&G.time||0)});if(ERRLOG.length>20)ERRLOG.shift();localStorage.setItem('alv_erros',JSON.stringify(ERRLOG));console.error(m)}catch(_){}}
 window.addEventListener('error',ev=>errNote('global',ev.error||ev.message));window.addEventListener('unhandledrejection',ev=>errNote('promessa',ev.reason));
 function frame(ts){requestAnimationFrame(frame);try{frameBody(ts)}catch(e){errNote('frame',e)}}
-function frameBody(ts){
+function frameBody(ts){const F0=performance.now();
   const raw=Math.min(.1,(ts-last)/1000);last=ts;
   if(running&&!paused){
     perfTick(raw);keyPan(raw);
     if(NET.game)netTick(raw);
     else{let dt=raw*speed;while(dt>0){const s=Math.min(dt,1/30);try{step(s)}catch(e){errNote('step',e)}dt-=s}}
-    uiT-=raw;if(uiT<=0||uiDirty){uiT=.2;try{updateTop();updateUI()}catch(e){errNote('ui',e)}}
-    if(!NET.on){G.saveT=(G.saveT||0)+raw;if(G.saveT>45){G.saveT=0;try{saveGame(true)}catch(e){errNote('save',e)}}}
-    miniT-=raw;if(miniT<=0){miniT=.25;try{renderMini()}catch(e){errNote('mini',e)}}
+    let q=performance.now();uiT-=raw;if(uiT<=0||uiDirty){uiT=.2;try{updateTop();updateUI()}catch(e){errNote('ui',e)}}PF.interface=performance.now()-q;q=performance.now();
+    if(!NET.on){G.saveT=(G.saveT||0)+raw;if(G.saveT>45){G.saveT=0;try{saveGame(true)}catch(e){errNote('save',e)}}}PF.gravar=performance.now()-q;q=performance.now();
+    miniT-=raw;if(miniT<=0){miniT=.25;try{renderMini()}catch(e){errNote('mini',e)}}PF.minimapa=performance.now()-q;
   }
-  try{render()}catch(e){errNote('render',e);try{if(ctx.reset)ctx.reset();else{ctx.globalAlpha=1;ctx.globalCompositeOperation='source-over';ctx.filter='none'}}catch(_){}} // limpa save()/estado deixados a meio
-  try{audioFrame(raw)}catch(e){}
+  const q0=performance.now();try{render()}catch(e){errNote('render',e);try{if(ctx.reset)ctx.reset();else{ctx.globalAlpha=1;ctx.globalCompositeOperation='source-over';ctx.filter='none'}}catch(_){}} // limpa save()/estado deixados a meio
+  PF.desenho=performance.now()-q0;try{audioFrame(raw)}catch(e){}
+  try{perfWatch(performance.now()-F0)}catch(e){}
 }
 window.addEventListener('resize',resize);
 resize();accInit();
