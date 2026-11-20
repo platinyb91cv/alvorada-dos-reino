@@ -855,6 +855,12 @@ input{font-family:inherit;-webkit-user-select:text;user-select:text;touch-action
 
 <script src="vendor/supabase.js"></script>
 <script>
+// imagens grandes (atlas de 3–4 MB): o jogo só as dá como prontas depois de o navegador as descomprimir em segundo plano;
+// sem isto a descompressão acontecia a meio da primeira imagem que as desenhava e o jogo parava 1–3 s
+(()=>{const NI=window.Image;function DImage(w,h){const im=w!=null?new NI(w,h):new NI();let cb=null;
+  Object.defineProperty(im,'onload',{configurable:true,get(){return cb},set(f){cb=f}});
+  im.addEventListener('load',()=>{const go=()=>{if(cb)try{cb.call(im)}catch(e){console.warn(e)}};if(im.decode)im.decode().then(go,go);else go()});return im}
+  DImage.prototype=NI.prototype;window.Image=DImage})();
 'use strict';
 /* =====================================================================
    ALVORADA DOS REINOS — RTS original em HTML5 Canvas
@@ -3080,7 +3086,7 @@ function groundTex(c,img,X0,Y0,cs){const p=c.createPattern(img,'repeat');p.setTr
 let CH_PH=null;function chunkPH(){if(!CH_PH){CH_PH=mkCanvas(4,2);const c=CH_PH.getContext('2d');c.fillStyle='#55702f';c.fillRect(0,0,4,2)}return CH_PH}
 function groundChunk(i,j){
   const key=i+','+j;let ch=CHUNKS.get(key);if(ch&&((ch.cs===CH_CS&&!ch.dirty)||CH_BUD<=0)){ch.t=performance.now();return ch.cv}
-  CH_BUD--;if(!ch&&CH_BUD<-6)return chunkPH(); // muitos pedaços em falta na mesma imagem: os restantes ficam com a cor da relva e vêm nas imagens seguintes
+  CH_BUD--;if(!ch&&CH_BUD<-3)return chunkPH(); // muitos pedaços em falta na mesma imagem: os restantes ficam com a cor da relva e vêm nas imagens seguintes
   if(ch)CHUNKS.delete(key);
   // pedaço novo além dos 2 primeiros deste frame (ex.: a câmara saltou para longe): faz já uma versão leve (1/4 dos píxeis ou menos) e a nítida vem nos frames seguintes;
   // antes refazia-os todos de uma vez e o jogo parava 0,3-1 s
@@ -3279,9 +3285,10 @@ function trailsRebuild(){
     c.fillStyle=gr;c.beginPath();c.ellipse(X,Y,R*1.08,R,.3,0,7);c.fill()}
 }
 function trailsTick(){
-  if(!G||!TL||!FLORA.tex.dirt)return;const now=performance.now();if(now-TRAILS.t<1500)return;TRAILS.t=now;
+  if(!G||!TL||!FLORA.tex.dirt)return;const now=performance.now();if(!TRAILS.t){TRAILS.t=now+1500;return}if(now-TRAILS.t<1500)return;TRAILS.t=now;
+  if(TRAILS.cv&&now-(TRAILS.rb||0)<20000)return;
   const sig=trailBuildings().map(e=>e.id+':'+e.tx+','+e.ty).sort().join('|');if(sig===TRAILS.sig&&TRAILS.cv)return;
-  TRAILS.sig=sig;trailsRebuild();chunksDirtyAll()}
+  TRAILS.sig=sig;TRAILS.rb=now;trailsRebuild();chunksDirtyAll()}
 // ── tufos de relva com vento (folha do Kimi: arte/terreno, 16 tufos a 2x do mundo) ──
 // espalhados em manchas pelo prado, longe de edifícios, caminhos, terra e árvores; ondas de vento atravessam o campo
 const TUF={img:null,F:[[2,48,70,45],[74,42,69,51],[145,54,66,39],[213,48,63,45],[278,6,67,87],[347,2,72,91],[421,6,71,87],[494,10,66,83],[562,24,76,69],[640,27,72,66],[714,23,70,70],[786,36,75,57],[863,33,72,60],[937,30,72,63],[1011,45,72,48],[1085,44,71,49]],K:'ccccaaaafffttscc',list:null,map:null};
@@ -4817,7 +4824,7 @@ const SHMAP=new WeakMap();
 function shAlphaAt(sh,x,y){let m=SHMAP.get(sh);if(!m){const k=sh.cv.width/sh.w,W2=Math.ceil(sh.w/2),H2=Math.ceil(sh.h/2),t=mkCanvas(W2,H2),tc=t.getContext('2d',{willReadFrequently:true});tc.drawImage(sh.cv,0,0,W2,H2);
   const d=tc.getImageData(0,0,W2,H2).data,a=new Uint8Array(W2*H2);for(let i=0;i<a.length;i++)a[i]=d[i*4+3];m={a,W2,H2};SHMAP.set(sh,m)}
   const ix=(x/2)|0,iy=(y/2)|0;if(ix<0||iy<0||ix>=m.W2||iy>=m.H2)return 0;return m.a[iy*m.W2+ix]}
-function unitShade(u,p){if(GFX!=='alto'||u.o===2||u.d.naval||!G)return 1;const tx=u.x|0,ty=u.y|0,now=performance.now();
+function unitShade(u,p){if(GFX!=='alto'||u.o===2||u.d.naval||!G||WARM.until)return 1;const tx=u.x|0,ty=u.y|0,now=performance.now();
   const S=u._shd;if(S&&S.tx===tx&&S.ty===ty&&S.r===ROT&&now-S.t<1000)return S.v;const v=unitShade0(u,p,tx,ty);u._shd={tx,ty,r:ROT,t:now,v};return v}
 function unitShade0(u,p,tx,ty){let best=0,seen=null;
   for(let y=ty-6;y<=ty+(ROT?6:2);y++)for(let x=tx-(ROT?6:2);x<=tx+6;x++){if(!inb(x,y))continue;const id=bldAt[idx(x,y)];if(!id||seen===id)continue;seen=id;const b=byId.get(id);if(!b||!b.done||b.d.walk||b.d.wall||b.d.gate||!(b.o===ME||b.seen))continue;
@@ -4941,7 +4948,7 @@ function render0(){UCFM=0;U3TMS=0;{const zn=performance.now();if(cam&&cam.z!==ZP
   const flat=()=>c.setTransform(z,0,0,z,-cam.x*z,-cam.y*z);
   const V=viewTiles();
   // chão
-  flat();c.imageSmoothingEnabled=true;CH_CS=chunkCS();CH_FR=(CH_FR+1)%(MOB?3:2);CH_BUD=!CHUNKS.size?2:(ZOOMING||CH_FR)?0:1; /* chão vazio (carregar, rodar a câmara, mudar o tamanho): 2 pedaços nítidos e os outros numa versão rápida; antes eram todos nítidos de uma vez e a imagem levava 1-6 s */ // ao mudar o zoom, refaz 1 pedaço por frame (os outros esticam até lá)
+  flat();c.imageSmoothingEnabled=true;CH_CS=chunkCS();CH_FR=(CH_FR+1)%(MOB?3:2);CH_BUD=!CHUNKS.size?1:(ZOOMING||CH_FR)?0:1; /* chão vazio (carregar, rodar a câmara, mudar o tamanho): 2 pedaços nítidos e os outros numa versão rápida; antes eram todos nítidos de uma vez e a imagem levava 1-6 s */ // ao mudar o zoom, refaz 1 pedaço por frame (os outros esticam até lá)
   {const i0=Math.floor((cam.x+H*HW)/CHW),i1=Math.floor((cam.x+vw/cam.z+H*HW)/CHW),j0=Math.floor(cam.y/CHH),j1=Math.floor((cam.y+vh/cam.z)/CHH);
     CH_VIS=(j1-Math.max(0,j0)+1)*(i1-Math.max(0,i0)+1);CH_FT=performance.now();
     for(let j=Math.max(0,j0);j<=j1;j++)for(let i=Math.max(0,i0);i<=i1;i++){if(-H*HW+i*CHW>W*HW||j*CHH>(W+H)*HH)continue;c.drawImage(groundChunk(i,j),-H*HW+i*CHW-.5,j*CHH-.5,CHW+1,CHH+1)}}
@@ -6826,14 +6833,14 @@ $('bAgain').onclick=()=>{if(NET.on){netLeaveGame();NET.reported=false;$('sEnd').
 const LOAD_BTNS=new Set(['bSetupGo','bTut','bBuild','bAgain','bCont','bCampGo','bReinoDaily','bDaily']);let loadBusy=false;
 document.addEventListener('click',ev=>{if(!ev.isTrusted||loadBusy)return;const b=ev.target.closest&&ev.target.closest('button');if(!b||!LOAD_BTNS.has(b.id)||b.disabled)return;
   ev.stopImmediatePropagation();ev.preventDefault();loadBusy=true;$('sLoad').hidden=false;
-  const done=()=>requestAnimationFrame(()=>requestAnimationFrame(()=>{$('sLoad').hidden=true;loadBusy=false}));
+  const done=()=>requestAnimationFrame(()=>requestAnimationFrame(()=>{if(!WARM.until)$('sLoad').hidden=true;loadBusy=false}));
   requestAnimationFrame(()=>requestAnimationFrame(()=>setTimeout(()=>{try{b.click()}catch(e){console.warn(e)}done()},0)))},true);
 $('bEndMenu').onclick=()=>{if(NET.on||NET.room)netEndMatch();netLeaveGame();$('sEnd').hidden=true;showMenu()};
 try{const d=localStorage.getItem('alv_diff');if(d!=null){difficulty=+d;document.querySelectorAll('#diffRow button').forEach(x=>x.classList.toggle('sel',+x.dataset.d===difficulty))}}catch(e){}
 audioLoad();$('bSound').textContent='Som: '+(AUD.on?'ligado':'desligado');$('vMusic').value=Math.round(AUD.vol.music*100);$('vSfx').value=Math.round(AUD.vol.sfx*100);$('vAmb').value=Math.round(AUD.vol.amb*100);$('vVoz').value=Math.round((AUD.vol.voz??.9)*100);
 
 /* ---------------- início / fim ---------------- */
-function startGame(seed,opts){GOAL_OFF=false;BOT.on=false;BOT.cam=null;document.body.classList.remove('bot');
+function startGame(seed,opts){warmStart();GOAL_OFF=false;BOT.on=false;BOT.cam=null;document.body.classList.remove('bot');
   const mode=NET.on?'normal':gameMode;seed=seed??Math.floor(Math.random()*1e9);
   const O=opts||(NET.on?{}:setupOpts(seed));
   G={seed,time:0,starts:null,amoveNext:false,over:false,fishRespawn:[],form:'livre',cmdMode:null,mode,
@@ -6956,7 +6963,7 @@ function loadGame(key){
   if(!SPR.oak)makeSprites();buildTerrain();resetChunks();FCACHE.clear();
   cam=d.cam||{x:0,y:0,z:1};resize();clampCam();
   recount();updVis();
-  audioGameStart();running=true;paused=false;speed=1;$('bSpeed').textContent='1×';netModeUI();document.body.classList.add('ingame');$('bAlert').hidden=true;try{objRender()}catch(e){$('objBox').hidden=true}
+  audioGameStart();running=true;paused=false;speed=1;warmStart();$('bSpeed').textContent='1×';netModeUI();document.body.classList.add('ingame');$('bAlert').hidden=true;try{objRender()}catch(e){$('objBox').hidden=true}
   for(const id of ['sMenu','sEnd','sHelp','sPause','sOnline'])$(id).hidden=true;
   kingRulesUp();kingLooksInit();uiDirty=true;resDirty=true;toast('Jogo carregado');tutShow();
   return true;
@@ -8114,9 +8121,11 @@ function step(dt){PTt=performance.now();
   checkEnd();ptMark('fim');
 }
 // imagem muito lenta (> 300 ms): regista o que gastou o tempo, para «Copiar erros» no menu (no máximo 1 registo a cada 20 s)
-let PERF_LAST=-99,PF={};var PERFLOG=PERFLOG||[];
+let PERF_LAST=-99,PF={};const WARM={until:0,n:0};
+function warmStart(){WARM.until=performance.now()+6000;WARM.n=0;TRAILS.t=0;TRAILS.rb=0;try{$('sLoad').hidden=false}catch(e){}}var PERFLOG=PERFLOG||[];
 function perfNote(m){try{PERFLOG.push({m,t:Math.round(G.time)});if(PERFLOG.length>8)PERFLOG.shift();localStorage.setItem('alv_lento',JSON.stringify(PERFLOG));errUI()}catch(e){}}
-function perfWatch(total){if(total<300||!G||!running||G.time<15||performance.now()/1000-PERF_LAST<20){for(const k in PT)delete PT[k];PF={};return}PERF_LAST=performance.now()/1000;
+function perfWatch(total){if(WARM.until){WARM.n++;if((WARM.n>=6&&total<200)||performance.now()>WARM.until){WARM.until=0;try{$('sLoad').hidden=true}catch(e){}}for(const k in PT)delete PT[k];PF={};return}
+  if(total<300||!G||!running||G.time<15||performance.now()/1000-PERF_LAST<20){for(const k in PT)delete PT[k];PF={};return}PERF_LAST=performance.now()/1000;
   const parts=Object.assign({},PT,PF),top=Object.entries(parts).filter(([,v])=>v>=5).sort((a,b)=>b[1]-a[1]).map(([k,v])=>k+' '+Math.round(v)+'ms').join(', ');
   const st={};for(const e of ents)if(e.kind==='u')st[e.state]=(st[e.state]||0)+1;
   perfNote(('imagem de '+Math.round(total)+' ms — '+top+' | ents '+ents.length+' fx '+fx.length+' proj '+projs.length+' estados '+JSON.stringify(st)+' zoom '+cam.z.toFixed(2)+' res '+DPR+'x '+cv.width+'x'+cv.height+' gfx '+GFX+' missao '+(G.reino&&G.reino.ms?G.reino.ms.k:'-')));
