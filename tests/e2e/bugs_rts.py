@@ -132,6 +132,14 @@ CASES = {
    const jT=ents.find(e=>e.d&&e.d.wall&&e.tx===r.cx-R&&e.ty===r.cy-3);
    const cant=ents.find(e=>e.d&&e.d.wall&&e.tx===r.cx-R&&e.ty===top);
    return{dentro_reta:reta(dentro),fora_reta:reta(fora),anel_reto:m(anel)===5,tee_liga:!!(m(tee[0])&4),canto:m(cant),ligT:!!(m(jT)&1)}}""",
+ # 17) missão 8 (O Rei em perigo): o Senhor da Guerra abrigado numa torre continua vivo; ao fim de 4 min sai do forte e marcha contra a
+ #     vila (a missão nunca fica parada); matá-lo cumpre a missão; se o alvo se perder, volta a aparecer
+ 'missao_rei': """async ()=>{reinoFound(false);await new Promise(r=>setTimeout(r,500));const R=G.reino;R.n=7;R.ms=null;R.calm=0.1;AIs[0]=null;
+   const run=s=>{for(let t=0;t<s*30;t++)step(1/30)};run(2);const m=R.ms;const id=m.ids[0];const home=reinoHome();const d=()=>{const w=reinoWhere(reinoFind(id));return w?Math.round(hyp(w.x-home.x,w.y-home.y)):null};
+   const o={k:m.k,d0:d()};const b=byId.get(id);const tw=ents.find(e=>e.o===1&&e.type==='torre');o.abrigado=!!(tw&&garrisonIn(b,tw));o.abrigado_vivo=aliveIds(m.ids);
+   if(o.abrigado){tw.garr=tw.garr.filter(u=>u!==b);ents.push(b);byId.set(b.id,b);b.inBoat=null;b.inBld=0;b.state='idle'}
+   run(262);o.marcha=m.march;o.d1=d();kill(reinoFind(id));run(3);o.cumprida=!R.ms&&R.n===8;
+   R.n=7;R.ms=null;R.calm=.1;run(3);if(R.ms){R.ms.ids=[];run(5);o.reparado=R.ms.ids.length===1&&!!reinoFind(R.ms.ids[0])}return o}""",
  # 13) viagem longa à volta de um lago grande (o A* devolve caminho parcial): a unidade continua até ao destino em vez de parar a meio
  'viagem_longa_a_volta_do_lago': """()=>{startGame(7,{map:'lagos',vic:'classico',civ:['planicies','planicies']});AIs[0]=null;AIs[1]=null;AI=null;try{tutEnd(true)}catch(e){}
    const a=G.starts[0],b=G.starts[1];const u=mkUnit(0,'guerreiro',a.x+3.5,a.y+3.5);let dst=null;for(let r=3;r<10&&!dst;r++)for(let k=0;k<16&&!dst;k++){const x=Math.round(b.x+Math.cos(k)*r),y=Math.round(b.y+Math.sin(k)*r);if(inb(x,y)&&blk[idx(x,y)]===0)dst={x:x+.5,y:y+.5}}
@@ -170,6 +178,7 @@ async def main():
          'quinta_limite': max(g('quinta_limite').get('tres_quintas', [99])) <= 5 and sum(g('quinta_limite').get('tres_quintas', [0])) == 15 and g('quinta_limite').get('uma_quinta', 99) <= 5,
          'curral_enche_sozinho': g('curral_enche_sozinho').get('dentro', 0) == g('curral_enche_sozinho').get('cap', -1) and all(x in ('gather', 'return') for x in g('curral_enche_sozinho').get('pastores', ['x'])),
          'muralha_paralela': (lambda q: q.get('dentro_reta') and q.get('fora_reta') and q.get('anel_reto') and q.get('tee_liga') and q.get('ligT') and q.get('canto') == 3)(g('muralha_paralela')),
+         'missao_rei': (lambda q: q.get('k') == 'rei' and q.get('abrigado_vivo') == 1 and q.get('marcha') == 1 and (q.get('d1') or 99) < (q.get('d0') or 0) - 10 and q.get('cumprida') and q.get('reparado'))(g('missao_rei')),
          'viagem_longa_a_volta_do_lago': g('viagem_longa_a_volta_do_lago').get('falta', 99) < 1.5,
          'sem_erros': not r['erros'] and not pe}
         r['ok'] = ok

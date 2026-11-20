@@ -6695,7 +6695,7 @@ function goalText(){const o=ME,p=P[o];if(!p)return null;const v=cntU(o,'aldeao')
   if(!has('ferreiro'))return 'Constrói um Ferreiro e pesquisa armas e armaduras';
   if(G.mode==='build')return 'Faz crescer a cidade: melhora casas e edifícios até ao Nv.3';
   return G.vic==='sobrevivencia'?'Aguenta as vagas: mais torres, muralhas e soldados':'Derruba o Centro da Vila do rival ou constrói uma Maravilha'}
-function goalHud(dt){const b=$('goal');if(!b)return;GOAL_T-=dt||0;if(GOAL_T>0)return;GOAL_T=2;const show=running&&G&&!G.over&&!G.tut&&!GOAL_OFF&&G.camp==null;
+function goalHud(dt){const b=$('goal');if(!b)return;GOAL_T-=dt||0;if(GOAL_T>0)return;GOAL_T=2;const show=running&&G&&!G.over&&!G.tut&&!GOAL_OFF&&G.camp==null&&!(G.reino&&G.reino.ms);
   if(!show){if(!b.hidden)b.hidden=true;return}const t=goalText();if(!t){b.hidden=true;return}const el=b.querySelector('.gt');if(el.textContent!==t){el.textContent=t;b.title='Próximo objetivo: '+t+' (toca para esconder)'}b.hidden=false}
 function hapHud(){const b=$('rs_hap');if(!b)return;const on=econOn(ME);b.hidden=!on;if(!on)return;
   if(!G.taxSeen&&!G.taxHint&&P[ME]&&P[ME].pop>10&&!G.tut){G.taxHint=1;b.classList.add('pulse');setTimeout(()=>b.classList.remove('pulse'),5200);toast('O povo já paga impostos e come comida: toca em 🙂💰 lá em cima (ou no Centro da Vila → 💰 Impostos) para escolher o imposto')}const e=econOf(ME),h=Math.round(e.hap);$('r_hap').textContent=h;b.querySelector('.hf').textContent=hapFace(h);
@@ -7659,6 +7659,7 @@ function kingLooksInit(){if(!G)return;const mine=kingLookClean(kingLookMine());G
 // Um só mapa e uma só cidade. As missões vão-se seguindo: 6 de história e depois capítulos sem fim,
 // cada vez mais difíceis. O desafio diário também acontece dentro do reino. Grava sozinho.
 const REINO_CALM=30;
+const REINO_MARCH=240; // o Senhor da Guerra espera no forte 4 min; depois vem ele próprio buscar o Rei (a missão nunca fica parada)
 const reinoKey=()=>ukey('alv_reino_v1'),reinoCkKey=()=>ukey('alv_reino_ck'),reinoMetaKey=()=>ukey('alv_reino_meta');
 function reinoMeta(){try{return JSON.parse(localStorage.getItem(reinoMetaKey())||'null')}catch(e){return null}}
 function reinoHas(){try{return !!localStorage.getItem(reinoKey())}catch(e){return false}}
@@ -7669,7 +7670,10 @@ const R_TIT={raids:['Saqueadores do norte','A horda das colinas','Velas no horiz
   cerco:['O grande cerco','Muralhas a arder','A noite mais longa','O cerco do inverno','A última defesa']};
 const R_KINDS=['raids','fort','econ','boss','cerco'];
 const milCount=o=>ents.filter(e=>e.o===o&&e.kind==='u'&&e.d.mil&&!e.d.king).length;
-const aliveIds=ids=>(ids||[]).filter(id=>{const e=byId.get(id);return e&&!e.dead}).length;
+// alvos das missões: um alvo abrigado num edifício (o Senhor da Guerra ferido esconde-se numa torre) ou num barco continua vivo
+function reinoFind(id){const e=byId.get(id);if(e)return e.dead?null:e;for(const c of ents){const inn=c.garr||c.cargo;if(inn)for(const u of inn)if(u.id===id&&!u.dead)return u}return null}
+function reinoWhere(e){if(!e)return null;if(e.kind==='b')return centerOf(e);if(e.inBoat){const c=byId.get(e.inBoat);if(c)return c.kind==='b'?centerOf(c):{x:c.x,y:c.y}}return {x:e.x,y:e.y}}
+const aliveIds=ids=>(ids||[]).filter(id=>!!reinoFind(id)).length;
 // definição de cada missão (só dados: tem de caber na gravação)
 function reinoDef(n){
   const S=[
@@ -7702,7 +7706,7 @@ function reinoObjs(m){const k=m.k,O=[];const g=G.reino;
   if(k==='lobos')O.push(['Ter 6 soldados',milCount(0)>=6],['Matar 8 lobos ('+Math.min(8,kills('lobo'))+'/8)',kills('lobo')>=8],['Avançar para a Idade do Bronze',P[0].age>=1]);
   if(k==='raids'){const w=m.wv||0,left=aliveIds(m.ids);O.push(['Aguentar '+m.waves+' vagas ('+Math.min(w,m.waves)+'/'+m.waves+')',w>=m.waves&&!left])}
   if(k==='rival')O.push(['Destruir o Centro da Vila do reino vizinho',m.ids&&m.ids.length&&!aliveIds(m.ids)]);
-  if(k==='rei')O.push(['Manter o teu Rei vivo',hasUnitWhere(0,u=>u.d.king)],['Derrotar o Senhor da Guerra',m.ids&&m.ids.length&&!aliveIds(m.ids)]);
+  if(k==='rei')O.push(['Manter o teu Rei vivo',hasUnitWhere(0,u=>u.d.king)],['Derrotar o Senhor da Guerra'+(m.ids&&m.ids.length&&aliveIds(m.ids)?(m.march?' (marcha contra a vila!)':' (forte assinalado no minimapa · sai em '+fmtT(Math.max(0,REINO_MARCH-(G.time-m.t0)))+')'):''),m.ids&&m.ids.length&&!aliveIds(m.ids)]);
   if(k==='maravilha')O.push(['Chegar à Idade do Ferro',P[0].age>=2],['Construir uma Maravilha',!!(g.wb||ents.some(e=>e.o===0&&e.type==='maravilha'&&e.done))],['Defender a Maravilha 5 minutos'+(G.wonder&&G.wonder.o===0&&!g.wok?' ('+fmtT(Math.max(0,G.wonder.t))+')':''),!!g.wok]);
   if(k==='fort'){const a=aliveIds(m.ids);O.push(['Arrasar o forte inimigo ('+(m.ids?m.ids.length-a:0)+'/'+(m.ids?m.ids.length:0)+')',m.ids&&m.ids.length&&!a])}
   if(k==='boss')O.push(['Derrotar '+(m.boss||'o campeão inimigo'),m.ids&&m.ids.length&&!aliveIds(m.ids)]);
@@ -7771,12 +7775,28 @@ function reinoTick(dt){const R=G.reino;if(!R||R.demo)return;
     if(m.k==='maravilha'){if(ents.some(e=>e.o===0&&e.type==='maravilha'&&e.done))R.wb=1;
       if(G.wonder&&G.wonder.o===0&&!R.wok){m.nx=(m.nx??60)-dt;if(m.nx<=0){m.nx=80;m.wv=(m.wv||0)+1;m.L=Math.max(m.L||0,2+m.wv);reinoRaid(m)}}}
     if(m.k==='rei'&&!hasUnitWhere(0,u=>u.d.king)&&!G.over){reinoFail('O teu Rei caiu nas mãos do Senhor da Guerra.');return}
+    reinoGuide(m,dt);
     if(m.bmax&&m.ids)for(const id of m.ids){const b=byId.get(id);if(b&&b.max<m.bmax){b.max=m.bmax;b.hp=Math.min(b.hp,b.max)}}
   }
   // inimigos parados vão atacar (menos os guardas dos fortes e o reino rival, que tem IA própria)
   R.ctl=(R.ctl||0)-dt;if(R.ctl<=0){R.ctl=2;const gd=new Set(m&&m.guard||[]);const foes=AIs[1]?[]:ents.filter(e=>e.o===1&&e.kind==='u'&&e.d.mil&&e.state==='idle'&&!gd.has(e.id)&&!e.d.king);
     if(foes.length){const t=aiTarget(0,{x:foes[0].x,y:foes[0].y});if(t){const c=centerOf(t);groupMove(foes,c.x,c.y,true,'livre')}}}
   R.ot=(R.ot||0)-dt;if(R.ot<=0){R.ot=1;objRender();if(m&&reinoObjs(m).every(o=>o.ok))reinoDone()}}
+// missões com alvo (Senhor da Guerra, campeão, forte, reino rival): nunca ficam sem saída
+function reinoGuide(m,dt){const K=['rei','boss','fort','rival'];if(!K.includes(m.k)||G.time-m.t0<3)return;
+  // alvo perdido (gravação antiga, alvo que nunca chegou a nascer): volta a aparecer
+  if(!(m.ids&&m.ids.length)&&!m.healed){m.healed=1;if(m.k==='rei'){m.towers=1;m.guards=6;reinoFort(m,true)}else if(m.k==='fort')reinoFort(m,false);else if(m.k==='boss')reinoBoss(m);else reinoRival(m);return}
+  const alive=(m.ids||[]).map(reinoFind).filter(Boolean);if(!alive.length)return;
+  // o Senhor da Guerra sai do forte com a escolta que lhe resta e vem buscar o Rei
+  if(m.k==='rei'&&!m.march&&G.time-m.t0>=REINO_MARCH){const b=alive[0];m.march=1;
+    if(!b.inBoat){const gs=(m.guard||[]).map(id=>byId.get(id)).filter(u=>u&&u.kind==='u'&&!u.dead&&u!==b);b.kpost=null;b.stance=null;const home=reinoHome();groupMove([b,...gs],home.x,home.y,true,'livre');m.guard=[]}
+    else m.guard=(m.guard||[]).filter(id=>id===b.id);
+    const w=reinoWhere(b);toast('⚠️ O Senhor da Guerra saiu do forte e marcha contra a vila para capturar o Rei!',true);snd('alarm',null,null,{force:1});buzz([150,80,150]);
+    if(w){fx.push({t:0,life:6,type:'ping',x:w.x,y:w.y,col:'#ff6b5a'});G.lastAttack={x:w.x,y:w.y}}m.pg=30;return}
+  // assinalar o alvo no minimapa enquanto não se vê (o botão de alerta leva lá)
+  m.pg=(m.pg??20)-dt;if(m.pg<=0){m.pg=40;const e=alive[0];
+    if(m.k==='rei'&&m.march&&!e.inBoat&&e.kind==='u'&&e.state==='idle'){const home=reinoHome();if(hyp(e.x-home.x,e.y-home.y)>12){e.kpost=null;groupMove([e],home.x,home.y,true,'livre')}} // parou pelo caminho (abrigou-se e saiu curado): continua a marcha
+if(!visibleTo0(e)){const w=reinoWhere(e);if(w){fx.push({t:0,life:5,type:'ping',x:w.x,y:w.y,col:'#ff6b5a'});G.lastAttack={x:w.x,y:w.y}}}}}
 function reinoDone(){const R=G.reino,m=R.ms;const prize=reinoPrize(m);heroGain(0,m.daily?60:40+(m.n||0)*6);for(const k of KINDS)P[0].res[k]+=prize;R.gl=(R.gl||0)+(m.daily?15:m.story?10:10+(m.L||0)*3);resDirty=true;
   if(m.k==='rival'){AIs[1]=null;AI=null}
   if(m.daily){const secs=Math.round(G.time-m.t0);reinoDailySubmit(m.daily,secs);toast('🏆 Desafio de hoje cumprido em '+fmtT(secs)+'! +'+prize+' de cada recurso');achv('diario');
