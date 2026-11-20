@@ -881,8 +881,7 @@ const PERF={ema:16,t:0,good:0};
 const MOB=(()=>{try{return matchMedia('(pointer:coarse)').matches||/Android|iPhone|iPad/i.test(navigator.userAgent)}catch(e){return false}})(); // telemóvel/tablet: orçamentos de memória mais pequenos
 function perfTick(raw){if(document.hidden)return;PERF.ema+=(raw*1000-PERF.ema)*.05;PERF.t+=raw;if(PERF.t<3)return;PERF.t=0;
   // desenho muito lento (cidades enormes, computador sem placa gráfica): primeiro gráficos leves, depois menos resolução, aos poucos
-  if((PERF.dr||0)>110&&G&&G.time>10){if(GFX==='alto'){GFX='leve';document.body.classList.add('gfx-leve');try{$('bGfx').textContent='Gráficos: leve'}catch(e){}toast('O jogo estava lento a desenhar: liguei os gráficos leves (podes mudar no menu).');PERF.dr=60;return}
-    if(DPR>.76){DPREMER=Math.max(.75,Math.round((DPR-.25)*4)/4);resize();toast('O jogo estava lento a desenhar: baixei a resolução para '+String(DPREMER).replace('.',',')+'×.');PERF.dr=60;return}}
+  if((PERF.dr||0)>110&&G&&G.time>10&&QUAL!=='baixa'){setQual(QUAL==='alta'?'media':'baixa',false);toast('O jogo estava lento: passei a qualidade para '+QUALS[QUAL].nome+' (podes mudar no menu).');PERF.dr=60;return}
   const dev=devDPR();let cap=Math.min(DPRCAP,dev);
   if(PERF.ema>(RES==='hd'?40:30)&&DPR>dprFloor()){cap=Math.max(dprFloor(),Math.round((cap-.25)*4)/4);PERF.good=0}
   else if(PERF.ema<18.5){PERF.good+=3;if(PERF.good>=15&&cap<dev){cap=Math.min(dev,cap+.25);PERF.good=0}}else PERF.good=0;
@@ -3146,6 +3145,14 @@ function groundChunk(i,j){
 
 /* ---------------- luz: sombras projetadas, chão gasto, nuvens e cor ---------------- */
 let GFX='alto';try{if(localStorage.getItem('alv_gfx')==='leve')GFX='leve'}catch(e){}
+const QUALS={alta:{gfx:'alto',zmin:.6,dpr:9,nome:'Alta'},media:{gfx:'leve',zmin:.75,dpr:1,nome:'Média'},baixa:{gfx:'leve',zmin:.9,dpr:.75,nome:'Baixa'}};
+let QUAL=GFX==='leve'?'media':'alta';try{const q=localStorage.getItem('alv_qual');if(QUALS[q])QUAL=q}catch(e){}
+let ZMIN=QUALS[QUAL].zmin;
+function setQual(q,user){const Q=QUALS[q]||QUALS.alta;QUAL=QUALS[q]?q:'alta';GFX=Q.gfx;ZMIN=Q.zmin;document.body.classList.toggle('gfx-leve',GFX==='leve');
+  try{$('bGfx').textContent='Qualidade: '+Q.nome}catch(e){}
+  if(typeof DPREMER!=='undefined'&&DPREMER!==Q.dpr&&(user||Q.dpr<9)){DPREMER=Q.dpr;try{resize()}catch(e){}}
+  if(typeof cam!=='undefined'&&cam.z<ZMIN)cam.z=ZMIN;
+  if(user){try{localStorage.setItem('alv_qual',QUAL);localStorage.setItem('alv_gfx',GFX)}catch(e){}toast('Qualidade '+Q.nome+': '+(QUAL==='alta'?'gráficos completos':QUAL==='media'?'gráficos leves, zoom até 0,75':'gráficos leves, menos resolução, zoom até 0,9'))}}
 const SHADOW=new WeakMap();
 // silhueta do sprite deitada no chão: sol da esquerda (como as sombras das árvores e unidades), sombra para a direita e para a frente
 const CONTACT=new WeakMap();
@@ -6622,7 +6629,7 @@ cv.addEventListener('pointermove',e=>{
   if(g.type==='pinch'&&pointers.size>=2){
     const [a,b]=[...pointers.values()];const d=hyp(a.x-b.x,a.y-b.y);const mx=(a.x+b.x)/2,my=(a.y+b.y)/2;
     const wpt=s2p(g.mx,g.my);
-    cam.z=clamp(g.z0*d/g.d0,.45,2.2);
+    cam.z=clamp(g.z0*d/g.d0,ZMIN,2.2);
     cam.x=wpt.x-mx/cam.z;cam.y=wpt.y-my/cam.z;g.mx=mx;g.my=my;g.z0=cam.z;g.d0=d;clampCam();return;
   }
   g.cx=e.clientX;g.cy=e.clientY;
@@ -6643,7 +6650,7 @@ function endPointer(e){
   }else if(g&&g.type==='pinch'&&pointers.size===1){const [a]=[...pointers.values()];gesture={type:'pan',sx:a.x,sy:a.y,cx:a.x,cy:a.y,lx:a.x,ly:a.y,touch:true}}
 }
 cv.addEventListener('pointerup',endPointer);cv.addEventListener('pointercancel',e=>{pointers.delete(e.pointerId);if(!pointers.size)gesture=null});
-cv.addEventListener('wheel',e=>{e.preventDefault();if(!running)return;const w=s2p(e.clientX,e.clientY);cam.z=clamp(cam.z*(e.deltaY<0?1.12:1/1.12),.45,2.2);cam.x=w.x-e.clientX/cam.z;cam.y=w.y-e.clientY/cam.z;clampCam()},{passive:false});
+cv.addEventListener('wheel',e=>{e.preventDefault();if(!running)return;const w=s2p(e.clientX,e.clientY);cam.z=clamp(cam.z*(e.deltaY<0?1.12:1/1.12),ZMIN,2.2);cam.x=w.x-e.clientX/cam.z;cam.y=w.y-e.clientY/cam.z;clampCam()},{passive:false});
 const keys=new Set();
 window.addEventListener('keydown',e=>{if(e.target&&e.target.tagName==='INPUT')return;keys.add(e.key.toLowerCase());
   if(!running)return;
@@ -6759,7 +6766,8 @@ $('txBtns').addEventListener('click',ev=>{const b=ev.target.closest('[data-t]');
 function resUI(){const b=$('bRes');if(b)b.textContent=RES==='hd'?'Resolução: HD':'Resolução: auto (poupa bateria)'}
 $('bRes').onclick=()=>{sfx('click');RES=RES==='hd'?'auto':'hd';try{for(const t of Object.keys(UNIT3D_HD_DATA))if(UNIT3D[t]&&!!UNIT3D[t].hd!==unit3dHdOn())loadUnit3dPreferred(t,UNIT3D[t])}catch(e){}try{for(const t of Object.keys(UNIT3D_CAVHD_DATA))if(UNIT3D[t]&&!!UNIT3D[t].hd!==unit3dHdOn())cavLoad(t)}catch(e){}try{localStorage.setItem('alv_res',RES)}catch(e){}DPRCAP=devDPR();try{localStorage.setItem('alv_dpr',String(DPRCAP))}catch(e){}PERF.good=0;PERF.ema=17;resize();resUI();if(typeof resetChunks==='function'&&running)resetChunks();toast(RES==='hd'?'Resolução HD: nítido, à resolução do ecrã':'Resolução automática: baixa um pouco se o jogo ficar lento')};resUI();
 $('bConq').onclick=()=>conqOpen();$('cqX').onclick=()=>{sfx('click');conqClose()};$('cqNext').onclick=()=>conqNext();$('cqGo').onclick=()=>conqAttack();$('cqBack').onclick=()=>conqReturn();
-$('bGfx').onclick=()=>{GFX=GFX==='alto'?'leve':'alto';document.body.classList.toggle('gfx-leve',GFX==='leve');$('bGfx').textContent='Gráficos: '+GFX;try{localStorage.setItem('alv_gfx',GFX)}catch(e){}};$('bGfx').textContent='Gráficos: '+GFX;document.body.classList.toggle('gfx-leve',GFX==='leve');
+// Qualidade (menu): Alta · Média · Baixa — gráficos, até onde o zoom afasta (menos coisas para desenhar) e resolução
+$('bGfx').onclick=()=>{setQual(QUAL==='alta'?'media':QUAL==='media'?'baixa':'alta',true)};setQual(QUAL,false);
 $('bVib').onclick=()=>{vibrateOn=!vibrateOn;$('bVib').textContent='Vibração: '+(vibrateOn?'ligada':'desligada');try{localStorage.setItem('alv_vib',vibrateOn?'1':'0')}catch(e){}if(vibrateOn)buzz(60)};
 try{if(localStorage.getItem('alv_vib')==='0'){vibrateOn=false;$('bVib').textContent='Vibração: desligada'}}catch(e){}
 $('bVoz').onclick=()=>{VOZ.on=!VOZ.on;$('bVoz').textContent='Voz: '+(VOZ.on?'ligada':'desligada');try{localStorage.setItem('alv_voz',VOZ.on?'1':'0')}catch(e){}if(VOZ.on){VOZ.last.paz=-1e9;voz('paz',1)}};
