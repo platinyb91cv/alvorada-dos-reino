@@ -2386,10 +2386,10 @@ function botSet(on){if(on&&(!botAllowed()||NET.on||!running))return;BOT.on=!!on;
 function botUI(){const b=$('bBot');if(!b)return;b.hidden=!(botAllowed()&&!NET.on&&running);b.classList.toggle('on',BOT.on);b.textContent=BOT.on?'🤖 Bot: ligado':'🤖 Bot: desligado'}
 $('bBot').onclick=()=>{sfx('click');botSet(!BOT.on);if(BOT.on&&paused)togglePause()};
 // erros apanhados pelo ciclo do jogo (o jogo já não congela): botão para os copiar e enviar
-function errSaved(){if(ERRLOG.length)return ERRLOG;try{return JSON.parse(localStorage.getItem('alv_erros')||'[]')}catch(e){return[]}}
+function errSaved(){let e=ERRLOG.length?ERRLOG:[],l=PERFLOG&&PERFLOG.length?PERFLOG:[];try{if(!e.length)e=JSON.parse(localStorage.getItem('alv_erros')||'[]');if(!l.length)l=JSON.parse(localStorage.getItem('alv_lento')||'[]')}catch(_){}return e.concat(l.map(x=>({m:'lento: '+x.m,t:x.t})))}
 function errUI(){const b=$('bErros');if(!b)return;const n=errSaved().length;b.hidden=!n;b.textContent='⚠️ Copiar erros ('+n+')'}
 $('bErros').onclick=()=>{sfx('click');const t='Alvorada dos Reinos — erros\n'+navigator.userAgent+'\n'+JSON.stringify(errSaved(),null,1);
-  const ok=()=>{toast('Erros copiados. Cola-os numa mensagem para o programador.');try{localStorage.removeItem('alv_erros')}catch(e){}ERRLOG.length=0;errUI()};
+  const ok=()=>{toast('Erros copiados. Cola-os numa mensagem para o programador.');try{localStorage.removeItem('alv_erros');localStorage.removeItem('alv_lento')}catch(e){}ERRLOG.length=0;if(PERFLOG)PERFLOG.length=0;errUI()};
   try{navigator.clipboard.writeText(t).then(ok,()=>toast('Não foi possível copiar',true))}catch(e){toast('Não foi possível copiar',true)}};
 function botDirector(dt){if(!G||!running)return;BOT.next-=dt;const now=performance.now();
   // se o jogador mexeu na câmara (arrastar, pinça, roda, teclas, minimapa), a câmara fica com ele durante 15 s; com "🎥 Livre" nunca é puxada
@@ -8066,18 +8066,19 @@ function step(dt){PTt=performance.now();
   if(G.tut)tutTick(dt);
   trackTick();if((G.time|0)!==((G.time-dt)|0))achvTick(1);
   if(G.vic==='sobrevivencia'&&!G.over)survTick(dt);
-  ptMark('outros');relicTick(dt);natureTick(dt);mktTick(dt);formTick();ptMark('natureza_mercado');villageTick(dt);ptMark('vida_aldeia');cartTick(dt);ptMark('carrocas');atlasGC();
+  ptMark('outros');relicTick(dt);natureTick(dt);mktTick(dt);formTick();villageTick(dt);cartTick(dt);atlasGC();ptMark('natureza_aldeia_carrocas');
   if(G.camp!=null&&!G.over)campTick(dt);
   if(G.hero)heroTick(dt);ptMark('rei_herois');
   if(G.reino&&!G.over)reinoTick(dt);ptMark('missao_reino');
   checkEnd();ptMark('fim');
 }
 // imagem muito lenta (> 300 ms): regista o que gastou o tempo, para «Copiar erros» no menu (no máximo 1 registo a cada 20 s)
-let PERF_LAST=-99,PF={};
+let PERF_LAST=-99,PF={};var PERFLOG=PERFLOG||[];
+function perfNote(m){try{PERFLOG.push({m,t:Math.round(G.time)});if(PERFLOG.length>8)PERFLOG.shift();localStorage.setItem('alv_lento',JSON.stringify(PERFLOG));errUI()}catch(e){}}
 function perfWatch(total){if(total<300||!G||!running||G.time<15||performance.now()/1000-PERF_LAST<20){for(const k in PT)delete PT[k];PF={};return}PERF_LAST=performance.now()/1000;
   const parts=Object.assign({},PT,PF),top=Object.entries(parts).filter(([,v])=>v>=5).sort((a,b)=>b[1]-a[1]).map(([k,v])=>k+' '+Math.round(v)+'ms').join(', ');
   const st={};for(const e of ents)if(e.kind==='u')st[e.state]=(st[e.state]||0)+1;
-  errNote('lento',('imagem de '+Math.round(total)+' ms — '+top+' | ents '+ents.length+' fx '+fx.length+' proj '+projs.length+' estados '+JSON.stringify(st)+' zoom '+cam.z.toFixed(2)+' missao '+(G.reino&&G.reino.ms?G.reino.ms.k:'-')));
+  perfNote(('imagem de '+Math.round(total)+' ms — '+top+' | ents '+ents.length+' fx '+fx.length+' proj '+projs.length+' estados '+JSON.stringify(st)+' zoom '+cam.z.toFixed(2)+' missao '+(G.reino&&G.reino.ms?G.reino.ms.k:'-')));
   for(const k in PT)delete PT[k];PF={}}
 let last=performance.now(),uiT=0;
 // Um erro dentro de step() ou render() parava o ciclo para sempre: o ecrã ficava congelado ("trava e não vai a lado nenhum").

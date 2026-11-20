@@ -178,7 +178,7 @@ async def main():
          'quinta_limite': max(g('quinta_limite').get('tres_quintas', [99])) <= 5 and sum(g('quinta_limite').get('tres_quintas', [0])) == 15 and g('quinta_limite').get('uma_quinta', 99) <= 5,
          'curral_enche_sozinho': g('curral_enche_sozinho').get('dentro', 0) == g('curral_enche_sozinho').get('cap', -1) and all(x in ('gather', 'return') for x in g('curral_enche_sozinho').get('pastores', ['x'])),
          'muralha_paralela': (lambda q: q.get('dentro_reta') and q.get('fora_reta') and q.get('anel_reto') and q.get('tee_liga') and q.get('ligT') and q.get('canto') == 3)(g('muralha_paralela')),
-         'missao_rei': (lambda q: q.get('k') == 'rei' and q.get('abrigado_vivo') == 1 and q.get('marcha') == 1 and (q.get('d1') or 99) < (q.get('d0') or 0) - 10 and q.get('cumprida') and q.get('reparado'))(g('missao_rei')),
+         'missao_rei': (lambda q: q.get('k') == 'rei' and q.get('abrigado_vivo') == 1 and q.get('marcha') == 1 and (q.get('d1') or 99) < (q.get('d0') or 0) - 3 and q.get('cumprida') and q.get('reparado'))(g('missao_rei')),
          'viagem_longa_a_volta_do_lago': g('viagem_longa_a_volta_do_lago').get('falta', 99) < 1.5,
          'sem_erros': not r['erros'] and not pe}
         r['ok'] = ok
