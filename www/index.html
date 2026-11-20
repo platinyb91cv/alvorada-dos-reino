@@ -118,6 +118,11 @@ body:not(.ingame) #grp{display:none}
 .taxc{max-width:420px;width:min(420px,92vw)}.taxhap{display:flex;align-items:center;gap:10px;margin:10px 0}.taxhap>span{font-size:28px}.taxhap .bar{flex:1;min-width:180px;display:block;height:12px;border-radius:7px;background:rgba(255,255,255,.12);position:relative;overflow:hidden}
 .taxhap .bar i{position:absolute;inset:0 auto 0 0;background:linear-gradient(90deg,#d9534f,#f0c04a 45%,#6fcf5a);border-radius:7px}.taxhap .bar b{position:absolute;top:-2px;bottom:-2px;width:2px;background:#fff}
 .taxbtns{display:grid;grid-template-columns:repeat(5,1fr);gap:5px}.taxbtns button{padding:8px 2px;border-radius:9px;border:1px solid rgba(255,220,150,.3);background:rgba(0,0,0,.25);color:inherit;font:inherit;font-size:12px;cursor:pointer}
+#mConq,#mConqEnd{z-index:61}#mConq .mcard,#mConqEnd .mcard{max-width:480px;width:min(480px,94vw);max-height:96vh;overflow:auto;gap:9px;padding:14px 18px}#mConq .mcard>*,#mConqEnd .mcard>*{width:100%}
+.cqme{text-align:center;font-size:13.5px;color:var(--muted)}.cqme b{color:#ffd77a}.cqopp{display:flex;flex-direction:column;gap:6px;padding:10px 12px;border-radius:10px;background:rgba(0,0,0,.28);border:1px solid rgba(255,220,150,.25)}
+.cqhead{display:flex;justify-content:space-between;align-items:baseline;gap:8px;flex-wrap:wrap}.cqhead b{font:700 17px var(--f-display);color:#ffe2ad}.cqhead span{font-size:13px;color:var(--muted)}.cqdef{font-size:13.5px}.cqloot{display:flex;flex-direction:column;gap:2px;font-size:14px}.cqloot small{font-size:11.5px;color:var(--muted)}
+.cqarmy{font-size:13px;line-height:1.4}.cqarmy .bad,#cqEndB .bad{color:#ff9a8a}#cqEndB .good{color:#9be37f}.cqinfo{font-size:11.5px;color:var(--muted);text-align:center;margin:0}.cqstars{font-size:34px;letter-spacing:6px;color:#ffd447;text-align:center;text-shadow:0 2px 0 #000}#mConqEnd h2{text-align:center}#cqEndB p{margin:4px 0;text-align:center;font-size:14px}
+#conqHud{position:absolute;left:50%;transform:translateX(-50%);top:calc(env(safe-area-inset-top,0px) + 44px);z-index:7;display:flex;gap:12px;align-items:center;padding:6px 14px;border-radius:999px;background:rgba(16,11,7,.86);border:1px solid rgba(255,210,122,.5);font:700 14px var(--f-body);color:#f6ead2;pointer-events:none;white-space:nowrap}#conqHud .t{font-variant-numeric:tabular-nums;color:#ffd77a}#conqHud .t.low{color:#ff8a7a}#conqHud .st{color:#ffd447;letter-spacing:2px}
 #mMkt{z-index:60}#mMkt .mcard{max-width:460px;width:min(460px,94vw);max-height:96vh;overflow:auto;gap:6px;padding:12px 18px}#mMkt .mcard>*{width:100%}#mMkt .row{justify-content:center}
 @media (max-height:480px){#mMkt .mcard{padding:8px 14px;gap:4px}#mMkt .mkrow{padding:3px 0}#mMkt .mkrow button{padding:4px 3px}#mMkt .mkinfo{font-size:11px;line-height:1.35;margin-top:2px}#mMkt .row .big{padding:6px 22px}#mMkt .mkgold{margin:2px 0 4px}}
 .mkgold{display:flex;justify-content:space-between;align-items:center;margin:6px 0 10px;font-size:14px}.mkqty{display:flex;gap:4px}.mkqty button{padding:4px 10px;border-radius:8px;border:1px solid rgba(255,220,150,.3);background:rgba(0,0,0,.25);color:inherit;font:inherit;font-size:12px;cursor:pointer}.mkqty button.on{background:linear-gradient(180deg,#f6c75e,#c7862c);color:#2b1706;font-weight:700}
@@ -537,6 +542,7 @@ input{font-family:inherit;-webkit-user-select:text;user-select:text;touch-action
     </div>
     <div class="sgrp" aria-label="Jogo">
       <button id="bChat" title="Conversar" hidden><i data-ic="chat"></i></button>
+      <button id="bConq" title="Conquista: procurar adversário" aria-label="Procurar adversário" hidden>⚔</button>
       <button id="bSpeed" title="Velocidade">1×</button>
     </div>
   </div>
@@ -762,6 +768,13 @@ input{font-family:inherit;-webkit-user-select:text;user-select:text;touch-action
       <div class="taxinfo" id="txInfo"></div>
       <div class="row"><button class="big" id="txClose">Fechar</button></div></div>
   </div>
+  <div id="mConq" class="modal" hidden role="dialog" aria-label="Conquista">
+    <div class="mcard"><div class="sub">⚔ Conquista — procurar adversário</div><div id="cqMe" class="cqme"></div><div id="cqOpp" class="cqopp"></div><div id="cqArmy" class="cqarmy"></div>
+      <div class="row"><button class="big pri" id="cqGo">⚔ Atacar</button><button class="big" id="cqNext">Próximo</button><button class="big" id="cqX">Fechar</button></div>
+      <p class="cqinfo">Batalha de 3 minutos. ★ 50% destruído · ★ Centro da Vila · ★ 100%. Os soldados que enviares saem do reino até voltarem.</p></div></div>
+  <div id="mConqEnd" class="modal" hidden role="dialog" aria-label="Resultado do ataque">
+    <div class="mcard"><h2 id="cqEndT">Vitória</h2><div id="cqEndS" class="cqstars">★★★</div><div id="cqEndB"></div><div class="row"><button class="big pri" id="cqBack">Voltar ao reino</button></div></div></div>
+  <div id="conqHud" hidden></div>
   <div id="mMkt" class="modal" hidden role="dialog" aria-label="Mercado">
     <div class="mcard"><div class="sub">Mercado — trocar recursos por ouro</div>
       <div class="mkgold"><span>Tens <b id="mkGold">0</b> 🪙</span><span class="mkqty" id="mkQty"><button data-q="1" class="on">×100</button><button data-q="5">×500</button></span></div>
@@ -2911,6 +2924,7 @@ function aiTarget(en,from){
 /* ---------------- visibilidade ---------------- */
 let visT=0;
 function updVis(){
+  if(G&&G.conq){vis.fill(2);return} // o batedor já viu a cidade toda
   for(let i=0;i<W*H;i++)if(vis[i]===2)vis[i]=1;
   for(const e of ents){if(e.o!==ME)continue;
     const c=centerOf(e);const s=(1-.22*nightAmt())*(e.kind==='u'?e.d.sight:(e.done?(e.type==='torre'&&TOWER[e.lvl||1].sight||e.d.sight):2))+(e.kind==='b'?Math.max(e.w,e.h)/2:0);
@@ -6270,6 +6284,7 @@ function costHTML(c){return Object.entries(c).map(([k,v])=>ri(k)+v).join(' ')}
 function costText(c){return Object.entries(c).map(([k,v])=>ri(k)+v).join('')}
 const HUDV={};
 function updateTop(){
+  {const b=$('bConq');if(b)b.hidden=!(G&&G.reino&&!G.reino.demo&&!G.over&&!G.conq)}
   const p=P[ME];const work={food:0,wood:0,gold:0,stone:0};let idle=0,army=0;
   for(const e of ents){if(e.kind!=='u'||e.o!==ME)continue;if(e.d.mil)army++;
     if(e.type==='aldeao'){if(e.state==='idle')idle++;else if((e.state==='gather'||e.state==='return'||(e.state==='attack'&&e.target&&e.target.o===2))&&e.gkind)work[e.gkind==='food'||e.state==='attack'?'food':e.gkind]++}
@@ -6706,7 +6721,7 @@ function goalText(){const o=ME,p=P[o];if(!p)return null;const v=cntU(o,'aldeao')
   if(!has('ferreiro'))return 'Constrói um Ferreiro e pesquisa armas e armaduras';
   if(G.mode==='build')return 'Faz crescer a cidade: melhora casas e edifícios até ao Nv.3';
   return G.vic==='sobrevivencia'?'Aguenta as vagas: mais torres, muralhas e soldados':'Derruba o Centro da Vila do rival ou constrói uma Maravilha'}
-function goalHud(dt){const b=$('goal');if(!b)return;GOAL_T-=dt||0;if(GOAL_T>0)return;GOAL_T=2;const show=running&&G&&!G.over&&!G.tut&&!GOAL_OFF&&G.camp==null&&!(G.reino&&G.reino.ms);
+function goalHud(dt){const b=$('goal');if(!b)return;GOAL_T-=dt||0;if(GOAL_T>0)return;GOAL_T=2;const show=running&&G&&!G.over&&!G.tut&&!GOAL_OFF&&G.camp==null&&!(G.reino&&G.reino.ms)&&!G.conq;
   if(!show){if(!b.hidden)b.hidden=true;return}const t=goalText();if(!t){b.hidden=true;return}const el=b.querySelector('.gt');if(el.textContent!==t){el.textContent=t;b.title='Próximo objetivo: '+t+' (toca para esconder)'}b.hidden=false}
 function hapHud(){const b=$('rs_hap');if(!b)return;const on=econOn(ME);b.hidden=!on;if(!on)return;
   if(!G.taxSeen&&!G.taxHint&&P[ME]&&P[ME].pop>10&&!G.tut){G.taxHint=1;b.classList.add('pulse');setTimeout(()=>b.classList.remove('pulse'),5200);toast('O povo já paga impostos e come comida: toca em 🙂💰 lá em cima (ou no Centro da Vila → 💰 Impostos) para escolher o imposto')}const e=econOf(ME),h=Math.round(e.hap);$('r_hap').textContent=h;b.querySelector('.hf').textContent=hapFace(h);
@@ -6739,6 +6754,7 @@ $('rs_hap').onclick=taxOpen;try{$('bTaxP').onclick=()=>{if(typeof togglePause===
 $('txBtns').addEventListener('click',ev=>{const b=ev.target.closest('[data-t]');if(b){act('tax',{v:+b.dataset.t});setTimeout(taxRender,50)}});
 function resUI(){const b=$('bRes');if(b)b.textContent=RES==='hd'?'Resolução: HD':'Resolução: auto (poupa bateria)'}
 $('bRes').onclick=()=>{sfx('click');RES=RES==='hd'?'auto':'hd';try{for(const t of Object.keys(UNIT3D_HD_DATA))if(UNIT3D[t]&&!!UNIT3D[t].hd!==unit3dHdOn())loadUnit3dPreferred(t,UNIT3D[t])}catch(e){}try{for(const t of Object.keys(UNIT3D_CAVHD_DATA))if(UNIT3D[t]&&!!UNIT3D[t].hd!==unit3dHdOn())cavLoad(t)}catch(e){}try{localStorage.setItem('alv_res',RES)}catch(e){}DPRCAP=devDPR();try{localStorage.setItem('alv_dpr',String(DPRCAP))}catch(e){}PERF.good=0;PERF.ema=17;resize();resUI();if(typeof resetChunks==='function'&&running)resetChunks();toast(RES==='hd'?'Resolução HD: nítido, à resolução do ecrã':'Resolução automática: baixa um pouco se o jogo ficar lento')};resUI();
+$('bConq').onclick=()=>conqOpen();$('cqX').onclick=()=>{sfx('click');conqClose()};$('cqNext').onclick=()=>conqNext();$('cqGo').onclick=()=>conqAttack();$('cqBack').onclick=()=>conqReturn();
 $('bGfx').onclick=()=>{GFX=GFX==='alto'?'leve':'alto';document.body.classList.toggle('gfx-leve',GFX==='leve');$('bGfx').textContent='Gráficos: '+GFX;try{localStorage.setItem('alv_gfx',GFX)}catch(e){}};$('bGfx').textContent='Gráficos: '+GFX;document.body.classList.toggle('gfx-leve',GFX==='leve');
 $('bVib').onclick=()=>{vibrateOn=!vibrateOn;$('bVib').textContent='Vibração: '+(vibrateOn?'ligada':'desligada');try{localStorage.setItem('alv_vib',vibrateOn?'1':'0')}catch(e){}if(vibrateOn)buzz(60)};
 try{if(localStorage.getItem('alv_vib')==='0'){vibrateOn=false;$('bVib').textContent='Vibração: desligada'}}catch(e){}
@@ -6809,7 +6825,7 @@ function startGame(seed,opts){GOAL_OFF=false;BOT.on=false;BOT.cam=null;document.
   const mode=NET.on?'normal':gameMode;seed=seed??Math.floor(Math.random()*1e9);
   const O=opts||(NET.on?{}:setupOpts(seed));
   G={seed,time:0,starts:null,amoveNext:false,over:false,fishRespawn:[],form:'livre',cmdMode:null,mode,
-    map:O.map||'rios',vic:mode==='build'?'classico':(O.vic||'classico'),civ:O.civ||['mar','planicies'],camp:O.camp??null,daily:O.daily||null,reino:O.reino||null};
+    map:O.map||'rios',vic:mode==='build'?'classico':(O.vic||'classico'),civ:O.civ||['mar','planicies'],camp:O.camp??null,daily:O.daily||null,reino:O.reino||null,conq:O.conq||null};
   P=mkPlayers();setMapSize(O.reino&&O.map==='reino'?REINO_N:MAP_N); // o "Meu Reino" no mundo grande
   if(mode==='build')for(const k of KINDS)P[ME].res[k]+=800;
   if(!NET.on){const mc=myColor();P[ME].col=mc[0];P[ME].dark=mc[1]}
@@ -6823,13 +6839,14 @@ function startGame(seed,opts){GOAL_OFF=false;BOT.on=false;BOT.cam=null;document.
     if(mode==='build'&&o!==ME)continue; // sem reino rival
     if(G.vic==='sobrevivencia'&&o===1)continue; // os invasores não têm base
     if(G.reino&&o===1)continue; // no reino os inimigos chegam com as missões
+    if(G.conq)continue; // na Conquista a cidade e o exército são postos à parte (conqBattle)
     const s=G.starts[o];const tc=mkBld(o,'centro',s.x-1,s.y-1,true);
     for(let k=0;k<4;k++){const p=freeNear(tc.tx,tc.ty,3,3);mkUnit(o,'aldeao',p.x+.5,p.y+.5)} // começa com 4 aldeões + o Rei
     {const p=freeFront(tc.tx,tc.ty,3,3);mkUnit(o,'rei',p.x+.5,p.y+.5);G.hero[o].k=1}
   }
   kingLooksInit();
-  spawnFauna();spawnFish();if(G.vic!=='sobrevivencia'&&mode!=='build')placeRelics();
-  spawnVillages();
+  spawnFauna();spawnFish();if(G.vic!=='sobrevivencia'&&mode!=='build'&&!G.conq)placeRelics();
+  if(!G.conq)spawnVillages();
   aiInit();recount();
   if(!SPR.oak)makeSprites();buildTerrain();resetChunks();FCACHE.clear();CLOUDS=null;setTimeout(bldWarm,0);
   cam={x:0,y:0,z:vw<700?.85:1};
@@ -6883,6 +6900,7 @@ function saveGame(silent){ // devolve {ok,msg}; confirma lendo de volta o que es
   if(G.reino&&G.reino.demo)return r(false,'Modo demonstração: não é guardado (não afeta o teu reino).');
   if(NET.on)return r(false,'Partida online: usa «Gravar e sair» para guardar nos dois telemóveis');
   if(G.over)return r(false,'A partida já terminou: não há nada para guardar');
+  if(G.conq)return r(false,'Durante um ataque não se grava: o teu reino ficou guardado antes de o exército partir');
   try{const key=G.reino?reinoKey():normalSaveKey(),data=serialize();localStorage.setItem(key,data);if(localStorage.getItem(key)!==data)throw new Error('verify');if(G.reino)reinoSaveMeta();G.savedAt=Date.now();return r(true,'Jogo guardado ✔')}
   catch(e){return r(false,'Não foi possível guardar (memória do telemóvel cheia?)')}}
 function saveBtnFlash(res){const b=$('bSave');if(!b)return;clearTimeout(b._t);if(!b._txt)b._txt=b.textContent;const t=new Date();
@@ -7117,7 +7135,7 @@ function lostKingdom(o){
   if(G.vic==='regicidio'&&G.king)return !hasUnitWhere(o,u=>u.d.king);
   return !ents.some(e=>e.o===o&&e.kind==='b'&&e.type==='centro')&&!hasUnitWhere(o,()=>true)}
 function checkEnd(){
-  if(G.over)return;
+  if(G.over)return;if(G.conq)return;
   if(G.reino){reinoCheckFall();return}
   if(G.camp!=null&&campCheck())return;
   for(let o=0;o<2;o++){
@@ -7268,7 +7286,7 @@ async function cloudWriteSlot(c,slot,value){let first;for(let attempt=0;attempt<
     if(res.data&&res.data.length)return true;
   }throw new Error('A gravação mudou noutro dispositivo. Tenta guardar novamente.')}
 function cloudPut(slot,value,c=cloudContext()){if(slot!=='normal'&&slot!=='reino')throw new Error('Lugar de gravação inválido');return cloudQueue(c,()=>cloudWriteSlot(c,slot,value))}
-async function cloudSave(quiet){const c=cloudContext();if(!c||!running||NET.on||G.over||(G.reino&&G.reino.demo))return false;
+async function cloudSave(quiet){const c=cloudContext();if(!c||!running||NET.on||G.over||G.conq||(G.reino&&G.reino.demo))return false;
   try{const obj=JSON.parse(serialize());await cloudPut(obj.X&&obj.X.reino?'reino':'normal',obj,c);if(!quiet&&cloudCurrent(c))toast('Guardado também na nuvem ☁️');return true}
   catch(e){if(!quiet&&cloudCurrent(c))toast('Não foi possível guardar na nuvem. A cópia local continua guardada.',true);return false}}
 async function cloudClearNormal(){const c=cloudContext();if(!c)return false;try{return await cloudPut('normal',null,c)}catch(e){return false}}
@@ -7951,7 +7969,7 @@ function reinoLoad(fromCk){mobileLandscape();netLeaveGame();if(fromCk){try{const
   if(!loadGame(reinoKey()))return false;if(!G.reino){toast('Gravação do reino inválida',true);return false}
   if(!G.hero){G.hero=[heroNew(),heroNew()];if(!hasUnitWhere(0,u=>u.d.king))heroSpawnKing(0)}
   {const R=G.reino;if(R.demo)delete R.demo;if(!R.ms&&!(R.calm>=0&&R.calm<=3600))R.calm=REINO_CALM} // repara saves antigos com contador preso (demo gravada por versões antigas)
-  G.over=false;objRender();const m=G.reino.ms;toast(m?(m.daily?'Desafio de hoje: ':m.story?'Missão '+(m.n+1)+': ':'Capítulo '+(m.n+1)+': ')+m.t:'O reino continua.');return true}
+  G.over=false;objRender();try{conqApply()}catch(e){errNote('conquista',e)}const m=G.reino.ms;toast(m?(m.daily?'Desafio de hoje: ':m.story?'Missão '+(m.n+1)+': ':'Capítulo '+(m.n+1)+': ')+m.t:'O reino continua.');return true}
 function reinoRetry(){$('sEnd').hidden=true;$('sPause').hidden=true;if(!reinoLoad(true))reinoFound()}
 function reinoSaveMeta(){const R=G&&G.reino;if(!R)return;const m=R.ms&&R.ms.daily?R.susp:R.ms;try{localStorage.setItem(reinoMetaKey(),JSON.stringify({n:R.n,t:(m||reinoDef(R.n)).t,gl:R.gl||0,age:P[0].age,pop:P[0].pop,klv:G.hero&&G.hero[0]?G.hero[0].lv:1,time:Math.round(G.time),done:(R.hist||[]).slice(-8),big:(W>=REINO_N?1:0)}))}catch(e){}}
 // --- desafio diário dentro do reino ---
@@ -8080,7 +8098,7 @@ function step(dt){PTt=performance.now();
   ptMark('outros');relicTick(dt);natureTick(dt);mktTick(dt);formTick();villageTick(dt);cartTick(dt);atlasGC();ptMark('natureza_aldeia_carrocas');
   if(G.camp!=null&&!G.over)campTick(dt);
   if(G.hero)heroTick(dt);ptMark('rei_herois');
-  if(G.reino&&!G.over)reinoTick(dt);ptMark('missao_reino');
+  if(G.reino&&!G.over)reinoTick(dt);if(G.conq&&!G.over)conqTick(dt);ptMark('missao_reino');
   checkEnd();ptMark('fim');
 }
 // imagem muito lenta (> 300 ms): regista o que gastou o tempo, para «Copiar erros» no menu (no máximo 1 registo a cada 20 s)
@@ -8097,6 +8115,118 @@ let last=performance.now(),uiT=0;
 const ERRLOG=[];function errNote(where,e){try{const m=where+': '+((e&&e.stack)||String(e)).slice(0,400),l=ERRLOG[ERRLOG.length-1];if(l&&l.m===m){l.n++;return}
   ERRLOG.push({m,n:1,t:Math.round(G&&G.time||0)});if(ERRLOG.length>20)ERRLOG.shift();localStorage.setItem('alv_erros',JSON.stringify(ERRLOG));console.error(m)}catch(_){}}
 window.addEventListener('error',ev=>errNote('global',ev.error||ev.message));window.addEventListener('unhandledrejection',ev=>errNote('promessa',ev.reason));
+// ===================== CONQUISTA (Fase 1: adversários do computador) =====================
+// No reino: «⚔ Procurar adversário» mostra um reino rival (do computador, para já) com nível, troféus, defesas e saque possível.
+// «Atacar» manda o teu exército (os soldados selecionados, ou os 30 mais fortes): eles saem do reino, o reino fica guardado,
+// e abre-se uma batalha de 3 minutos contra a cidade amuralhada desse rival, defendida por torres e guardas.
+// Estrelas: 50% destruído · Centro da Vila destruído · 100%. Saque: 5/12/20/30% do que o rival tem guardado, conforme a destruição.
+// No fim volta-se ao reino com o saque e os soldados que sobreviveram; os troféus sobem ou descem e dão a liga.
+// Se a batalha for abandonada (fechar o jogo, sair para o menu), o exército volta inteiro, sem saque, e conta como derrota.
+const CONQ_T=180,CONQ_ARMY=30,CONQ_SKIP=30;
+const conqKey=()=>ukey('alv_conq_v1'),conqPendKey=()=>ukey('alv_conq_pend');
+function conqData(){const z={tr:0,w:0,l:0,best:0,n:0,stars:0};try{return Object.assign(z,JSON.parse(localStorage.getItem(conqKey())||'{}'))}catch(e){return z}}
+function conqSaveData(d){try{localStorage.setItem(conqKey(),JSON.stringify(d))}catch(e){}}
+function conqPend(){try{return JSON.parse(localStorage.getItem(conqPendKey())||'null')}catch(e){return null}}
+function conqSetPend(p){try{if(p)localStorage.setItem(conqPendKey(),JSON.stringify(p));else localStorage.removeItem(conqPendKey())}catch(e){}}
+const CONQ_ILHAS=['Santiago','São Vicente','Santo Antão','Sal','Boa Vista','Fogo','Brava','Maio','São Nicolau'];
+const CONQ_NOMES=['Ribeira Grande','Pedra Badejo','Tarrafal','Porto Novo','Ponta do Sol','Cova Figueira','Chã das Caldeiras','Calheta','Fajã','Furna','Mosteiros','Pombas','Assomada','Ribeira Brava','Rabil','Morro','Espargos','Salamansa','Cidade Velha','Achada Fátima'];
+const CONQ_LIGAS=[[0,'Bronze','🥉'],[400,'Prata','🥈'],[900,'Ouro','🥇'],[1600,'Diamante','💎'],[2500,'Lenda','👑']];
+function conqLiga(tr){let L=CONQ_LIGAS[0];for(const l of CONQ_LIGAS)if(tr>=l[0])L=l;return L}
+// o que a cidade de nível L tem (igual no cartão e na batalha)
+function conqDefs(L){return{R:L<=2?0:6+Math.floor((L-3)/3),muro:L>=6?'muralhaPedra':L>=3?'muralhaMadeira':null,portao:L>=6?'portaoPedra':'portaoMadeira',
+  torres:Math.min(8,1+Math.floor(L/3)),tlv:L>=8?3:L>=5?2:1,guardas:2+L,casas:3+L,tc:L>=7?3:L>=4?2:1,idade:L>=7?2:L>=3?1:0}}
+function conqOpp(n){const d=conqData(),seed0=(G&&G.seed|0)||1;const r=mulberry32(seed0*31+n*7919+d.n*104729);const pick=a=>a.at(Math.floor(r()*a.length));
+  const base=clamp(1+(P[0]?P[0].age:0)*2+Math.floor(d.tr/400),1,10),L=clamp(base+Math.floor(r()*3)-1,1,10);
+  const k=.6+r()*.8,loot={food:Math.round((500+L*420)*k),wood:Math.round((500+L*420)*(.6+r()*.8)),gold:Math.round((250+L*300)*(.6+r()*.8)),stone:Math.round(L*160*(.6+r()*.8))};
+  return{n,seed:Math.floor(r()*1e9),nome:pick(CONQ_NOMES),ilha:pick(CONQ_ILHAS),L,tr:Math.max(0,d.tr+Math.round((r()-.45)*240)),loot,civ:pick(CIV_KEYS)}}
+function conqArmy(){let a=sel.filter(u=>alive(u)&&u.kind==='u'&&u.o===ME&&u.d.mil&&!u.d.king&&!u.d.naval);
+  if(a.length<3)a=ents.filter(u=>u.kind==='u'&&u.o===ME&&u.d.mil&&!u.d.king&&!u.d.naval&&!u.dead).sort((x,y)=>aiStr(y)-aiStr(x)||x.id-y.id);return a.slice(0,CONQ_ARMY)}
+let CONQ_OPP=null;
+const conqLootPct=p=>p>=100?.30:p>=70?.20:p>=40?.12:p>0?.05:0;
+function conqOpen(){if(!G||!G.reino||G.reino.demo||G.over||G.conq){toast('A Conquista abre-se a partir do teu reino',true);return}sfx('click');
+  if(!CONQ_OPP)CONQ_OPP=conqOpp(0);paused=true;$('mConq').hidden=false;conqRender()}
+function conqClose(){$('mConq').hidden=true;paused=false}
+function conqRender(){const o=CONQ_OPP,d=conqData(),lg=conqLiga(d.tr),df=conqDefs(o.L),army=conqArmy();
+  const cnt={};for(const u of army)cnt[u.type]=(cnt[u.type]||0)+1;
+  const ri=k=>`<i class="ri">${IC[k]}</i>`;
+  $('cqMe').innerHTML=`${lg[2]} Liga ${lg[1]} · <b>${d.tr}</b> troféus · ${d.w} vitórias`;
+  $('cqOpp').innerHTML=`<div class="cqhead"><b>Reino de ${esc(o.nome)}</b><span>${esc(o.ilha)} · Nv ${o.L} · 🏆 ${o.tr}</span></div>
+   <div class="cqdef">${df.muro?(df.muro==='muralhaPedra'?'🧱 Muralha de pedra':'🪵 Paliçada'):'Sem muralha'} · 🗼 ${df.torres} torre${df.torres>1?'s':''} · ⚔ ${df.guardas} guardas</div>
+   <div class="cqloot"><small>Saque possível (destruição total)</small><span>${KINDS.map(k=>ri(k)+' '+Math.floor(o.loot[k]*.3)).join(' · ')}</span></div>`;
+  $('cqArmy').innerHTML=army.length?`O teu exército: <b>${army.length}</b> soldados — ${Object.entries(cnt).map(([t,n])=>n+' '+(UNITS[t]?UNITS[t].name:t)).join(', ')}`+(sel.some(u=>u.d&&u.d.mil)?'':' <small>(os mais fortes; seleciona soldados antes para escolher)</small>'):'<span class="bad">Não tens soldados para atacar: treina-os no Quartel.</span>';
+  $('cqGo').disabled=army.length<3;$('cqNext').textContent='Próximo ('+CONQ_SKIP+' ouro)'}
+function conqNext(){if(P[ME].res.gold<CONQ_SKIP){toast('Ouro insuficiente para procurar outro',true);return}P[ME].res.gold-=CONQ_SKIP;resDirty=true;sfx('click');CONQ_OPP=conqOpp(CONQ_OPP.n+1);conqRender()}
+function conqAttack(){const o=CONQ_OPP,army=conqArmy();if(army.length<3){toast('Precisas de pelo menos 3 soldados',true);return}
+  const pack=army.map(u=>({t:u.type,hp:+(u.hp/u.max).toFixed(3)}));
+  const p={opp:o,pack,civ:G.civ[0],civ1:o.civ,age:P[0].age,techs:Object.assign({},P[0].techs||{}),col:P[0].col,t:Date.now()};
+  conqSetPend(p); // primeiro a nota (se algo falhar, o exército volta), depois tirar os soldados e guardar o reino
+  for(const u of army){const i=ents.indexOf(u);if(i>=0)ents.splice(i,1);byId.delete(u.id);u.dead=true}
+  sel=[];recount();const sv=saveGame(true);if(!sv.ok){conqSetPend(null);toast('Não foi possível guardar o reino antes do ataque',true);return}
+  $('mConq').hidden=true;paused=false;CONQ_OPP=null;conqBattle(p)}
+function conqClearArea(cx,cy,r){for(let y=cy-r;y<=cy+r;y++)for(let x=cx-r;x<=cx+r;x++){if(!inb(x,y))continue;const i=idx(x,y),q=resAt[i];if(q){byId.delete(q.id);resAt[i]=null;q.dead=true}if(terr[i]!==1&&!bldAt[i])blk[i]=0}}
+function conqBattle(p){mobileLandscape();netLeaveGame();gameMode='normal';const d0=difficulty;difficulty=1;
+  startGame(p.opp.seed,{map:'continental',vic:'classico',civ:[p.civ,p.civ1],conq:{opp:p.opp,ids:[],wt:1,tc:0,pct:0,stars:0}});difficulty=d0;
+  AIs[0]=null;AIs[1]=null;AI=null;try{tutEnd(true)}catch(e){}
+  const o=p.opp,df=conqDefs(o.L),c=G.conq;P[0].age=p.age;P[0].techs=p.techs||{};P[1].age=df.idade;for(const k of KINDS){P[0].res[k]=99999;P[1].res[k]=99999}
+  // fauna fora (lobos a meio da batalha só estorvam)
+  for(const e of ents.slice())if(e.kind==='u'&&e.o===2&&!e.d.meat){const i=ents.indexOf(e);ents.splice(i,1);byId.delete(e.id)}
+  const s=G.starts[1],cx=clamp(Math.round(s.x),16,W-17),cy=clamp(Math.round(s.y),16,H-24);const R=Math.max(5,df.R);conqClearArea(cx,cy,R+3);
+  const tc=mkBld(1,'centro',cx-1,cy-1,true);tc.lvl=df.tc;
+  const rr=mulberry32(o.seed);const put=(t,r0,r1)=>{for(let k=0;k<80;k++){const a=rr()*6.283,d=r0+rr()*(r1-r0),x=Math.round(cx+Math.cos(a)*d),y=Math.round(cy+Math.sin(a)*d);if(canPlace(t,x,y,1,0,true))return mkBld(1,t,x,y,true)}return null};
+  const blds=[tc];const lv=b=>{if(b){b.lvl=Math.min(3,1+Math.floor(o.L/4));blds.push(b)}};
+  for(let i=0;i<df.casas;i++)lv(put('casa',3,R-1.5));lv(put('quartel',3,R-2));if(o.L>=3)lv(put('arquearia',3,R-2));lv(put('armazem',3,R-2));if(o.L>=4)lv(put('mercado',3,R-2));if(o.L>=5)lv(put('ferreiro',3,R-2));if(o.L>=6)lv(put('templo',3,R-2));
+  // muralha com portão virado a sul (de onde vem o atacante)
+  if(df.muro){const RR=R+1,sp=gateSpan(df.portao);for(let k=-RR;k<=RR;k++)for(const [x,y] of [[cx+k,cy-RR],[cx+k,cy+RR],[cx-RR,cy+k],[cx+RR,cy+k]]){if(!inb(x,y)||bldAt[idx(x,y)]||terr[idx(x,y)]===1)continue;
+      if(y===cy+RR&&x===cx){mkBld(1,df.portao,x,y,true);continue}if(y===cy+RR&&Math.abs(x-cx)<=sp)continue;mkBld(1,df.muro,x,y,true)}syncGateFlanks()}
+  const towers=[];const tp=[[-1,-1],[1,1],[1,-1],[-1,1],[0,-1],[-1,0],[1,0],[0,1]];for(let i=0;i<df.torres;i++){const [a,b]=tp.at(i);const x=cx+Math.round(a*(R-1.5))-(a>0?1:0),y=cy+Math.round(b*(R-1.5))-(b>0?1:0);
+    let t=canPlace('torre',x,y,1,0,true)?mkBld(1,'torre',x,y,true):put('torre',R-3,R-1);if(t){t.lvl=df.tlv;towers.push(t);blds.push(t)}}
+  // guardas e arqueiros nas torres
+  const pool=reinoPool(df.idade,0),gs=[];for(let i=0;i<df.guardas;i++){const t=pool.at(Math.floor(rr()*pool.length));const q=freeNear(tc.tx,tc.ty,3,3)||{x:cx+2,y:cy+2};const u=mkUnit(1,t,q.x+.5,q.y+.5);u.stance='guard';gs.push(u)}
+  for(const t of towers)for(let k=0;k<(o.L>=6?2:1);k++){const u=mkUnit(1,df.idade>=1?'besteiro':'arqueiro',t.tx+.5,t.ty+.5);if(!garrisonIn(u,t)){const i=ents.indexOf(u);ents.splice(i,1);byId.delete(u.id)}}
+  for(const e of ents)if(e.o===1)e.seen=true;
+  c.ids=ents.filter(e=>e.o===1&&e.kind==='b'&&!e.d.wall&&!e.d.gate).map(e=>[e.id,e.w*e.h]);c.wt=c.ids.reduce((a,[,w])=>a+w,0)||1;c.tc=tc.id;c.t0=G.time;
+  // o exército chega pelo sul
+  let at=null;for(let d=R+12;d<R+30&&!at;d++)for(let dx=0;dx<=12&&!at;dx++)for(const sx of [1,-1]){const x=cx+dx*sx,y=cy+d;if(inb(x,y)&&terr[idx(x,y)]!==1&&!blk[idx(x,y)]){at={x:x+.5,y:y+.5};break}}
+  at=at||{x:cx+.5,y:Math.min(H-3,cy+R+14)+.5};conqClearArea(Math.floor(at.x),Math.floor(at.y),3);
+  const mine=[];for(const q of p.pack){if(!UNITS[q.t])continue;const u=mkUnit(0,q.t,at.x,at.y);u.hp=Math.max(1,Math.round(u.max*q.hp));const f=snapFree(u,at.x+(rnd()-.5)*4,at.y+(rnd()-.5)*4);u.x=f.x;u.y=f.y;mine.push(u)}
+  recount();updVis();setSel(mine);cam.z=Math.min(cam.z,.95);centerCam(at.x,at.y-5);$('conqHud').hidden=false;conqHud();
+  toast('⚔ Ataque ao Reino de '+o.nome+': 3 minutos! Destrói o Centro da Vila e o máximo que puderes.',true);snd('alarm',null,null,{force:1})}
+let CONQ_HT=0;
+function conqTick(dt){const c=G.conq;if(c.done)return;c.left=Math.max(0,CONQ_T-(G.time-c.t0));
+  let dead=0;for(const [id,w] of c.ids)if(!byId.has(id))dead+=w;c.pct=Math.min(100,Math.round(100*dead/c.wt));if(dead>=c.wt)c.pct=100;
+  c.stars=(c.pct>=50?1:0)+(!byId.has(c.tc)?1:0)+(c.pct>=100?1:0);
+  CONQ_HT-=dt;if(CONQ_HT<=0){CONQ_HT=.25;conqHud()}
+  // soldados parados não ficam à espera: vão ao inimigo mais perto, ou ao edifício mais perto (as paredes caem pelo caminho)
+  c.ai=(c.ai||0)-dt;if(c.ai<=0){c.ai=3;const foes=ents.filter(e=>e.o===1&&!e.dead&&(e.kind==='u'||e.kind==='b'));
+    for(const u of ents){if(u.o!==0||u.kind!=='u'||!u.d.mil||u.state!=='idle')continue;let best=null,bd=1e9;
+      for(const e of foes){const q=centerOf(e);let d=hyp(q.x-u.x,q.y-u.y);if(e.kind==='u'){if(d>10)continue;d-=6}else if(e.d.wall)d+=8;if(d<bd){bd=d;best=e}}
+      if(best)orderAttack(u,best)}}
+  const vivos=ents.some(e=>e.o===0&&e.kind==='u'&&e.d.mil&&!e.dead);if(c.pct>=100||c.left<=0||!vivos)conqEnd()}
+function conqHud(){const c=G&&G.conq;const el=$('conqHud');if(!c||!el)return;const s=Math.ceil(c.left??CONQ_T);
+  el.innerHTML=`<b>⚔ Reino de ${esc(c.opp.nome)}</b><span class="t${s<=30?' low':''}">${Math.floor(s/60)}:${String(s%60).padStart(2,'0')}</span><span>${c.pct}%</span><span class="st">${'★'.repeat(c.stars)}${'☆'.repeat(3-c.stars)}</span>`}
+function conqEnd(){const c=G.conq;if(c.done)return;c.done=1;G.over=true;conqHud();
+  const p=conqPend()||{opp:c.opp,pack:[]},o=c.opp,f=conqLootPct(c.pct);const loot={};for(const k of KINDS)loot[k]=Math.floor((o.loot[k]||0)*f);
+  const surv=ents.filter(e=>e.o===0&&e.kind==='u'&&e.d.mil&&!e.dead).map(u=>({t:u.type,hp:+(u.hp/u.max).toFixed(3)}));
+  const d=conqData(),win=c.stars>=1,dtr=win?Math.max(8,Math.round(10+c.stars*9+(o.tr-d.tr)/25)):-Math.max(6,Math.round(14+(d.tr-o.tr)/25));
+  p.res={stars:c.stars,pct:c.pct,loot,surv,dtr,win};conqSetPend(p);
+  snd(win?'victory':'defeat',null,null,{force:1});
+  const ri=k=>`<i class="ri">${IC[k]}</i>`;
+  $('cqEndT').textContent=win?(c.stars===3?'Vitória total!':'Vitória!'):'Derrota';
+  $('cqEndS').textContent='★'.repeat(c.stars)+'☆'.repeat(3-c.stars);
+  $('cqEndB').innerHTML=`<p>${c.pct}% do Reino de ${esc(o.nome)} destruído${!byId.has(c.tc)?' · Centro da Vila arrasado':''}</p>
+    <p class="cqloot">${f?'Saque: '+KINDS.map(k=>ri(k)+' '+loot[k]).join(' · '):'Sem saque'}</p>
+    <p>Soldados que regressam: <b>${surv.length}</b> de ${p.pack.length} · Troféus: <b class="${dtr>=0?'good':'bad'}">${dtr>=0?'+':''}${dtr}</b></p>`;
+  setTimeout(()=>{if(G&&G.conq&&G.conq.done)$('mConqEnd').hidden=false},900)}
+function conqReturn(){sfx('click');$('mConqEnd').hidden=true;$('conqHud').hidden=true;if(!reinoLoad(false)){toast('Não encontrei o teu reino guardado',true);return}}
+// chamado ao abrir o reino: aplica o resultado do ataque (ou devolve o exército se a batalha foi abandonada)
+function conqApply(){const p=conqPend();if(!p||!G||!G.reino)return;conqSetPend(null);
+  const r=p.res||{stars:0,pct:0,loot:{},surv:p.pack,dtr:-10,win:false,abandon:true};
+  for(const k of KINDS)P[0].res[k]+=r.loot[k]||0;resDirty=true;
+  const tc=ents.find(e=>e.o===0&&e.kind==='b'&&e.type==='centro')||ents.find(e=>e.o===0&&e.kind==='b');
+  for(const s of r.surv||[]){if(!UNITS[s.t])continue;const q=tc?freeNear(tc.tx,tc.ty,tc.w,tc.h):null,h=reinoHome();const u=mkUnit(0,s.t,q?q.x+.5:h.x,q?q.y+.5:h.y);u.hp=Math.max(1,Math.round(u.max*s.hp))}
+  const d=conqData();d.tr=Math.max(0,d.tr+r.dtr);d.best=Math.max(d.best,d.tr);d.n++;if(r.win)d.w++;else d.l++;d.stars+=r.stars||0;conqSaveData(d);
+  recount();uiDirty=true;try{saveGame(true)}catch(e){}
+  const lg=conqLiga(d.tr);toast(r.abandon?'O ataque ficou a meio: o exército voltou sem saque.':(r.win?'⚔ O exército voltou com o saque! ':'⚔ O ataque falhou. ')+'Troféus: '+d.tr+' ('+lg[1]+')',!r.win)}
 function frame(ts){requestAnimationFrame(frame);try{frameBody(ts)}catch(e){errNote('frame',e)}}
 function frameBody(ts){const F0=performance.now();
   const raw=Math.min(.1,(ts-last)/1000);last=ts;

@@ -140,6 +140,14 @@ CASES = {
    if(o.abrigado){tw.garr=tw.garr.filter(u=>u!==b);ents.push(b);byId.set(b.id,b);b.inBoat=null;b.inBld=0;b.state='idle'}
    run(262);o.marcha=m.march;o.d1=d();kill(reinoFind(id));run(3);o.cumprida=!R.ms&&R.n===8;
    R.n=7;R.ms=null;R.calm=.1;run(3);if(R.ms){R.ms.ids=[];run(5);o.reparado=R.ms.ids.length===1&&!!reinoFind(R.ms.ids[0])}return o}""",
+ # 18) Conquista: procurar adversário no reino, atacar (o exército sai do reino), batalha de 3 min, resultado com estrelas/saque,
+ #     voltar ao reino com o saque e os sobreviventes; batalha abandonada devolve o exército
+ 'conquista': """async ()=>{reinoFound(false);await new Promise(r=>setTimeout(r,500));G.reino.calm=9999;P[0].age=1;const h=reinoHome();const T=['espadachim','arqueiro','cavaleiro','lanceiro'];
+   for(let i=0;i<20;i++)mkUnit(0,T[i%4],h.x+3+(i%6)*.6,h.y+4+(i/6|0)*.6);recount();localStorage.removeItem(conqPendKey());localStorage.removeItem(conqKey());const g0=P[0].res.gold;
+   conqOpen();const o=CONQ_OPP;conqAttack();const c=G.conq;const ok_batalha=!!c&&!G.reino&&c.ids.length>3&&ents.filter(e=>e.o===0&&e.kind==='u').length===20;
+   G.amoveNext=true;command(ents.filter(e=>e.o===0&&e.kind==='u'),null,centerOf(byId.get(c.tc)));for(let t=0;t<200*30&&!c.done;t++)step(1/30);const R=conqPend().res;
+   conqReturn();const mil=ents.filter(e=>e.o===0&&e.kind==='u'&&e.d.mil&&!e.d.king).length;
+   return {ok_batalha,acabou:!!c.done,estrelas:R.stars,pct:R.pct,saque_ok:Math.round(P[0].res.gold-g0)===R.loot.gold,volta_ok:!!G.reino&&mil===R.surv.length,trofeus:conqData().tr,pend:conqPend()}}""",
  # 13) viagem longa à volta de um lago grande (o A* devolve caminho parcial): a unidade continua até ao destino em vez de parar a meio
  'viagem_longa_a_volta_do_lago': """()=>{startGame(7,{map:'lagos',vic:'classico',civ:['planicies','planicies']});AIs[0]=null;AIs[1]=null;AI=null;try{tutEnd(true)}catch(e){}
    const a=G.starts[0],b=G.starts[1];const u=mkUnit(0,'guerreiro',a.x+3.5,a.y+3.5);let dst=null;for(let r=3;r<10&&!dst;r++)for(let k=0;k<16&&!dst;k++){const x=Math.round(b.x+Math.cos(k)*r),y=Math.round(b.y+Math.sin(k)*r);if(inb(x,y)&&blk[idx(x,y)]===0)dst={x:x+.5,y:y+.5}}
@@ -179,6 +187,7 @@ async def main():
          'curral_enche_sozinho': g('curral_enche_sozinho').get('dentro', 0) == g('curral_enche_sozinho').get('cap', -1) and all(x in ('gather', 'return') for x in g('curral_enche_sozinho').get('pastores', ['x'])),
          'muralha_paralela': (lambda q: q.get('dentro_reta') and q.get('fora_reta') and q.get('anel_reto') and q.get('tee_liga') and q.get('ligT') and q.get('canto') == 3)(g('muralha_paralela')),
          'missao_rei': (lambda q: q.get('k') == 'rei' and q.get('abrigado_vivo') == 1 and q.get('marcha') == 1 and (q.get('d1') or 99) < (q.get('d0') or 0) - 3 and q.get('cumprida') and q.get('reparado'))(g('missao_rei')),
+         'conquista': (lambda q: q.get('ok_batalha') and q.get('acabou') and q.get('saque_ok') and q.get('volta_ok') and q.get('pend') is None)(g('conquista')),
          'viagem_longa_a_volta_do_lago': g('viagem_longa_a_volta_do_lago').get('falta', 99) < 1.5,
          'sem_erros': not r['erros'] and not pe}
         r['ok'] = ok
